@@ -1,0 +1,46 @@
+Informação para compilar e executar a aplicação
+-----------------------------------------------
+
+	O lab01b foi construido sob a plataforma linux, no folder de entrega existem os fontes 
+e o programa compilado (lab01). Para compila-lo novamente, basta utilizar o MakeFile que segue 
+com a aplicação e via xterm executar o comando make (make clean; make). Para executar aplicação utilizar a seguinte 
+entrada: ./lab01 "in.txt".
+
+
+Log e Comentarios
+-----------------
+
+	O lab foi construido utilizando uma biblioteca de debug, onde a maior parte dos comentarios da 
+aplicação foram logados, assim como metodos e parametros de entrada e saida. Para acessar o log acessar 
+o arquivo out.log.txt que é gerado em tempo de execução da aplicação.
+
+
+Internacionalização
+-------------------
+
+	A aplicação conta com um suporte a internacionalização, onde todas as mensagens de aplicação esta em um arquivo de resource (resources_pt_BR.properties,resources_en_US.properties,resources_fr_FR.properties), onde a entrada utilizada pela aplicação esta me config.propeties, na propriedade 'system.message.file'.
+
+Arquivo de configuração
+-----------------------
+
+	A aplicação conta com um mecanismo de resource onde constantes e valores uteis para a aplicação são fornecidas externamente, evitando que a aplicação tenha que ser recompilada para configura-la. Vide config.properties.
+
+
+Tests Cases
+-----------
+
+	A programa foi construido pensando em reuso, ou seja, todos as funcionalidades basicas exigidas, foram separadas 
+na biblioteca utlis.o, desta forma, criamos um topico na aplicação para executar testes unitarios dessa biblioteca.
+Para executar os testes unitarios da aplicação basta escolhar a opção 5 no menu.
+
+ * Entrada 1 ./lab01 "cristiano  jose      miranda" 083382
+	opção 1 => cristiano  jose      miranda - 083382
+	opção 2 => CRISTIANO JOSE MIRANDA
+	opção 3 => "cristiano", "jose", "miranda"
+	opção 4 => utilizar como entrada o caracter 'i', deve retornar 3
+
+ * Entrada 2 ./lab01 "magda   DE          ALmEida      SilvA               " 082070
+	opção 1 => magda   DE          ALmEida      SilvA               - 082070
+	opção 2 => MAGDA DE ALMEIDA SILVA
+	opção 3 => "magda", "DE", "ALmEida", "SilvA"
+	opção 4 => utilizar como entrada o caracter 'A', deve retornar 5
