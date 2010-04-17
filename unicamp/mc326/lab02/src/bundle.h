@@ -19,10 +19,8 @@
 
 #define BUNDLE_TOKEN ("=")
 #define READ_BUFFER_SIZE (1024)
-#define BUNDLE_FILE ("c:/debug/config.properties")
-
-#define KEY_MAX_LENGTH (256)
-#define PROPERTY_MAX_LENGTH (512)
+#define BUNDLE_FILE ("/home/cristiano/debug/config.properties")
+/* #define BUNDLE_FILE ("config.properties") */
 
 #define SYSTEM_MESSAGE_FILE ("system.message.file")
 
@@ -56,4 +54,9 @@ char* getMessage(char* key);
  *
  */
 void loadMap(char* file, map_t map);
+
+/**
+ * Libera as hashmaps da memoria.
+ */
+void freeBundle();
 
