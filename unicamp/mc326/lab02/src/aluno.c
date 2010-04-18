@@ -30,6 +30,11 @@ Aluno newAluno(char *value) {
 	 error(getMessage("lab01b.label.ra_numerico"), "\n\n");
 	 }*/
 
+	// Obtem a posição do ultimo caracter de arquivo fixo
+	int sizeLine = atoi(getProperty("aluno.field.end.fimregistro"));
+	if (value == NULL || strlen(value) < sizeLine)
+		return NULL;
+
 	// Monta o aluno
 	Aluno aln = MEM_ALLOC(Aluno);
 
@@ -101,16 +106,20 @@ int indexByRa(int ra) {
  */
 void showAluno(Aluno aluno) {
 
-	printf(getMessage("aluno.label.dados.ra"), "\n\n\t", aluno->ra, "\n");
-	printf(getMessage("aluno.label.dados.nome"), "\t\t", aluno->nome, "\n");
-	printf(getMessage("aluno.label.dados.cidade"), "\t\t", aluno->cidade, "\n");
-	printf(getMessage("aluno.label.dados.tel_contato"), "\t\t",
-			aluno->telContato, "\n");
-	printf(getMessage("aluno.label.dados.tel_alternativo"), "\t\t",
-			aluno->telAlternativo, "\n");
-	printf(getMessage("aluno.label.dados.sexo"), "\t\t", SEXO(aluno->sexo),
-			"\n");
-	printf(getMessage("aluno.label.dados.curso"), "\t\t", aluno->curso, "\n\n");
+	if (aluno != NULL && aluno->nome != NULL) {
+		printf(getMessage("aluno.label.dados.ra"), "\n\n\t", aluno->ra, "\n");
+		printf(getMessage("aluno.label.dados.nome"), "\t\t", aluno->nome, "\n");
+		printf(getMessage("aluno.label.dados.cidade"), "\t\t", aluno->cidade,
+				"\n");
+		printf(getMessage("aluno.label.dados.tel_contato"), "\t\t",
+				aluno->telContato, "\n");
+		printf(getMessage("aluno.label.dados.tel_alternativo"), "\t\t",
+				aluno->telAlternativo, "\n");
+		printf(getMessage("aluno.label.dados.sexo"), "\t\t", SEXO(aluno->sexo),
+				"\n");
+		printf(getMessage("aluno.label.dados.curso"), "\t\t", aluno->curso,
+				"\n\n");
+	}
 
 }
 
@@ -122,8 +131,11 @@ void showAluno(Aluno aluno) {
  */
 Aluno processarArquivoFormatoVariavel(char *inputFile, char *outputFile) {
 
+	// Variaveis de estatistica
+	long countRecords = 0;
+
 	FILE *inFile = Fopen(inputFile, "r");
-	FILE *outFile = Fopen(outputFile, "a");
+	FILE *outFile = Fopen(outputFile, "w");
 
 	char line[READ_BUFFER_SIZE];
 
@@ -131,25 +143,41 @@ Aluno processarArquivoFormatoVariavel(char *inputFile, char *outputFile) {
 	while (fgets(line, READ_BUFFER_SIZE, inFile) != NULL) {
 
 		Aluno a = newAluno(line);
+		if (a != NULL && a->nome != NULL)
+			countRecords++;
+
 		writeFileFormatoVariavel(outFile, a);
 		showAluno(a);
-		free(a);
 
 	}
 
-	fclose(inFile);
 	fclose(outFile);
+	fclose(inFile);
+
+	printf(getMessage("aluno.label.processarArquivo.registrosLidos"), "\n\n\t",
+			countRecords, "\n");
+	printf(getMessage("aluno.label.processarArquivo.tamanhoArqOriginal"), "\t",
+			inputFile, fileSize(inputFile), "\n");
+	printf(getMessage("aluno.label.processarArquivo.tamanhoArqConvertido"),
+			"\t", outputFile, fileSize(outputFile), "\n\n");
 
 	return list;
 
 }
 
+/**
+ *
+ */
 void writeFileFormatoVariavel(FILE *file, Aluno aln) {
 
-	char *separete = getProperty("aluno.arquivo.variavel.token");
-	fprintf(file, "%i%s%s%s%s%s%s%s%s%s%c%s%i\n", aln->ra, separete, aln->nome,
-			separete, aln->cidade, separete, aln->telContato, separete,
-			aln->telAlternativo, separete, aln->sexo, separete, aln->curso);
+	if (file != NULL && aln != NULL && aln->nome != NULL) {
+		char *separete = getProperty("aluno.arquivo.variavel.token");
+		char *endLine = getProperty("aluno.arquivo.variavel.fimregistro");
+
+		fprintf(file, "%i%s%s%s%s%s%s%s%s%s%c%s%i%s\n", aln->ra, separete,
+				strip(aln->nome), separete, strip(aln->cidade), separete,
+				strip(aln->telContato), separete, strip(aln->telAlternativo),
+				separete, aln->sexo, separete, aln->curso, endLine);
+	}
 
 }
-
