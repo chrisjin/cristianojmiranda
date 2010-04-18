@@ -56,13 +56,8 @@ char* getProperty(char* key) {
 	if (error == MAP_OK) {
 		debugs("Propriedade encontrada: ", value->property);
 
-		char *result = MEM_ALLOC_N(char, strlen(value->property));
-		strcpy(result, value->property);
-		free(value);
-
+		return value->property;
 		lastMethodName();
-
-		return result;
 
 	} else {
 		debug("Propriedade não encontrada");
