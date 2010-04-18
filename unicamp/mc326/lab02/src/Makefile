@@ -5,8 +5,8 @@ CPP  = g++
 CC   = gcc -Wall -g
 WINDRES = windres.exe
 RES  = 
-OBJ  = log.o utils.o bundle.o hashmap.o aluno.o lab02.o $(RES)
-LINKOBJ  = log.o utils.o bundle.o hashmap.o aluno.o lab02.o  $(RES)
+OBJ  = log.o utils.o mem.o io.o bundle.o hashmap.o aluno.o lab02.o $(RES)
+LINKOBJ  = log.o utils.o mem.o io.o bundle.o hashmap.o aluno.o lab02.o  $(RES)
 LIBS =   
 INCS = 
 CXXINCS = 
@@ -23,13 +23,19 @@ clean: clean-custom
 	${RM} $(OBJ) $(BIN)
 
 $(BIN): $(OBJ)
-	$(CC) $(LINKOBJ) -o "lab02.exe" -g $(LIBS)
+	$(CC) $(LINKOBJ) -o "lab02" -g $(LIBS)
+	
+mem.o: mem.c
+	$(CC)  -c mem.c -o mem.o $(CFLAGS)
 
 log.o: log.c
 	$(CC)  -c log.c -o log.o $(CFLAGS)
 
 utils.o: utils.c
 	$(CC)  -c utils.c -o utils.o $(CFLAGS)
+
+io.o: io.c
+	$(CC)  -c io.c -o io.o $(CFLAGS)
 
 bundle.o: bundle.c
 	$(CC)  -c bundle.c -o bundle.o $(CFLAGS)
