@@ -19,8 +19,8 @@
 
 #define BUNDLE_TOKEN ("=")
 #define READ_BUFFER_SIZE (1024)
-#define BUNDLE_FILE ("/home/cristiano/debug/config.properties")
-/* #define BUNDLE_FILE ("config.properties") */
+//#define BUNDLE_FILE ("/home/cristiano/debug/config.properties")
+#define BUNDLE_FILE ("config.properties")
 
 #define SYSTEM_MESSAGE_FILE ("system.message.file")
 
