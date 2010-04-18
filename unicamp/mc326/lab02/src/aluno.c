@@ -120,9 +120,10 @@ void showAluno(Aluno aluno) {
  * param inputFile - Nome do arquivo de entrada.
  * param outputFile - Nome do arquivo de saida.
  */
-Aluno processarArquivoFormatoVariavel(char *inputFile, char outputFile) {
+Aluno processarArquivoFormatoVariavel(char *inputFile, char *outputFile) {
 
 	FILE *inFile = Fopen(inputFile, "r");
+	FILE *outFile = Fopen(outputFile, "a");
 
 	char line[READ_BUFFER_SIZE];
 
@@ -130,13 +131,25 @@ Aluno processarArquivoFormatoVariavel(char *inputFile, char outputFile) {
 	while (fgets(line, READ_BUFFER_SIZE, inFile) != NULL) {
 
 		Aluno a = newAluno(line);
+		writeFileFormatoVariavel(outFile, a);
 		showAluno(a);
+		free(a);
 
 	}
 
 	fclose(inFile);
+	fclose(outFile);
 
 	return list;
+
+}
+
+void writeFileFormatoVariavel(FILE *file, Aluno aln) {
+
+	char *separete = getProperty("aluno.arquivo.variavel.token");
+	fprintf(file, "%i%s%s%s%s%s%s%s%s%s%c%s%i\n", aln->ra, separete, aln->nome,
+			separete, aln->cidade, separete, aln->telContato, separete,
+			aln->telAlternativo, separete, aln->sexo, separete, aln->curso);
 
 }
 
