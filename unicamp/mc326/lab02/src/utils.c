@@ -20,7 +20,6 @@
 #include <fcntl.h>
 #include "log.h"
 #include "mem.h"
-#include "io.h"
 #include "utils.h"
 
 /**
