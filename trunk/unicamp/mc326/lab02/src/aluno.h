@@ -20,8 +20,11 @@
 #define SEXO(a) (a == 'M' ? getMessage("aluno.label.sexo.masculino") : getMessage("aluno.label.sexo.feminino"))
 #define INDEX_NOT_FOUND_FOR_ALUNO -1
 
+/** Apontador para Aluno */
+typedef struct AlunoStr *Aluno;
+
 /**Struct para guardar os dados do aluno */
-typedef struct Aluno {
+typedef struct AlunoStr {
 	int ra;
 	char *nome;
 	char *cidade;
@@ -29,7 +32,9 @@ typedef struct Aluno {
 	char *telAlternativo;
 	char sexo;
 	int curso;
-} Aluno;
+
+	Aluno nextAluno;
+} AlunoStr;
 
 /**
  * Obtem os dados de um aluno pelo RA.
@@ -42,3 +47,14 @@ Aluno findAlunoByRa(int ra, FILE *file);
  *
  */
 void showAluno(Aluno aluno);
+
+/**
+ * Cria o arquivo de formato variavel.
+ *
+ * param inputFile - Nome do arquivo de entrada.
+ * param outputFile - Nome do arquivo de saida.
+ */
+void processarArquivoFormatoVariavel(char *inputFile, char outputFile);
+
+/** Guarda dados do aluno em struct */
+Aluno newAluno(char *value);
