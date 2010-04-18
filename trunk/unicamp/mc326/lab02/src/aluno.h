@@ -54,7 +54,9 @@ void showAluno(Aluno aluno);
  * param inputFile - Nome do arquivo de entrada.
  * param outputFile - Nome do arquivo de saida.
  */
-Aluno processarArquivoFormatoVariavel(char *inputFile, char outputFile);
+Aluno processarArquivoFormatoVariavel(char *inputFile, char *outputFile);
+
+void writeFileFormatoVariavel(FILE *file, Aluno aln);
 
 /** Guarda dados do aluno em struct */
 Aluno newAluno(char *value);
