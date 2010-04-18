@@ -77,3 +77,7 @@ boolean isNumeric(char *ra);
  */
 FILE* Fopen(char *fileName, char* flag);
 
+/**
+ * Calcula o tamanho do arquivo.
+ */
+long fileSize(char *fileName);

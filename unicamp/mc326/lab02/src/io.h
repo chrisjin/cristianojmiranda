@@ -122,4 +122,9 @@ void stripNewLine(char s[]);
  */
 void stripWhiteSpace(char str[]);
 
+/**
+ * Remove whitespace from the beginning and the end of string.
+ */
+char *strip(char *value);
+
 #endif
