@@ -27,8 +27,7 @@ Aluno newAluno(char *value) {
 
 	/*	debug("Valida se o RA do aluno é numerico");
 	 if (!isNumeric(dados[1])) {
-	 printf(getMessage("lab01b.label.ra_numerico"), "\n\n");
-	 exit(-1);
+	 error(getMessage("lab01b.label.ra_numerico"), "\n\n");
 	 }*/
 
 	// Monta o aluno
@@ -41,8 +40,39 @@ Aluno newAluno(char *value) {
 	char *ra = strSubString(value, inicio, fim);
 	aln->ra = atoi(ra);
 
-	aln->nome = strSubString(value, atoi(getProperty("aluno.field.start.ra")),
-			atoi(getProperty("aluno.field.end.ra")));
+	inicio = atoi(getProperty("aluno.field.start.nome"));
+	fim = atoi(getProperty("aluno.field.end.nome"));
+	char *data = strSubString(value, inicio, fim);
+	aln->nome = MEM_ALLOC_N(char, strlen(data));
+	strcat(aln->nome, data);
+
+	inicio = atoi(getProperty("aluno.field.start.cidade"));
+	fim = atoi(getProperty("aluno.field.end.cidade"));
+	data = strSubString(value, inicio, fim);
+	aln->cidade = MEM_ALLOC_N(char, strlen(data));
+	strcat(aln->cidade, data);
+
+	inicio = atoi(getProperty("aluno.field.start.telContato"));
+	fim = atoi(getProperty("aluno.field.end.telContato"));
+	data = strSubString(value, inicio, fim);
+	aln->telContato = MEM_ALLOC_N(char, strlen(data));
+	strcat(aln->telContato, data);
+
+	inicio = atoi(getProperty("aluno.field.start.telAlternativo"));
+	fim = atoi(getProperty("aluno.field.end.telAlternativo"));
+	data = strSubString(value, inicio, fim);
+	aln->telAlternativo = MEM_ALLOC_N(char, strlen(data));
+	strcat(aln->telAlternativo, data);
+
+	inicio = atoi(getProperty("aluno.field.start.sexo"));
+	fim = atoi(getProperty("aluno.field.end.sexo"));
+	data = strSubString(value, inicio, fim);
+	aln->sexo = data[0];
+
+	inicio = atoi(getProperty("aluno.field.start.curso"));
+	fim = atoi(getProperty("aluno.field.end.curso"));
+	data = strSubString(value, inicio, fim);
+	aln->curso = atoi(data);
 
 	return aln;
 }
@@ -90,19 +120,23 @@ void showAluno(Aluno aluno) {
  * param inputFile - Nome do arquivo de entrada.
  * param outputFile - Nome do arquivo de saida.
  */
-void processarArquivoFormatoVariavel(char *inputFile, char outputFile) {
+Aluno processarArquivoFormatoVariavel(char *inputFile, char outputFile) {
 
 	FILE *inFile = Fopen(inputFile, "r");
 
 	char line[READ_BUFFER_SIZE];
 
+	Aluno list;
 	while (fgets(line, READ_BUFFER_SIZE, inFile) != NULL) {
 
 		Aluno a = newAluno(line);
+		showAluno(a);
 
 	}
 
 	fclose(inFile);
+
+	return list;
 
 }
 

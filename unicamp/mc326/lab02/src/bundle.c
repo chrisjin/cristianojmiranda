@@ -48,7 +48,7 @@ char* getProperty(char* key) {
 	}
 
 	data_bundle_t* value;
-	value = malloc(sizeof(data_bundle_t));
+	value = MEM_ALLOC(data_bundle_t);
 
 	debug("Obtendo property na hash");
 	int error = hashmap_get(configMap, key, (void**) (&value));
@@ -135,6 +135,7 @@ void loadMap(char* file, map_t map) {
 
 	char* token;
 	char line[READ_BUFFER_SIZE];
+	stripWhiteSpace(line);
 
 	while (fgets(line, READ_BUFFER_SIZE, bundleFile) != NULL) {
 
@@ -145,9 +146,11 @@ void loadMap(char* file, map_t map) {
 			value = MEM_ALLOC(data_bundle_t);
 
 			debug("Armazena a chave");
-			value->key = MEM_ALLOC_N(char, strlen(token));
+			value->key = MEM_ALLOC_N(char, strlen(token) * 2);
+			stripWhiteSpace(value->key);
 			debugs("Key: ", token);
-			strcpy(value->key, token);
+			//strcpy(value->key, token);
+			strcat(value->key, token);
 
 			// Obtem a propriedade
 			token = strtok(END_STR_TOKEN, BUNDLE_TOKEN);
@@ -159,7 +162,6 @@ void loadMap(char* file, map_t map) {
 				char *mrg = strMerge(token, END_OF_LINE, STR_END_TOKEN);
 				strcpy(value->property, mrg);
 
-				// TODO: tratar mais de um separador !
 				if (hashmap_put(map, value->key, value) != MAP_OK) {
 					error("Problema ao salvar o atributo na hash.");
 				}
