@@ -39,20 +39,23 @@ void initializeLog() {
 	// Verifica se deve ativar o log
 	if (enabledLog != NULL && strcmp(enabledLog, "true") == 0) {
 
-		// Ativa o log
-		debugEnabled = 1;
-
 		fileLogName = getProperty(PROPERTY_LOG_FILE);
 		if (fileLogName == NULL) {
 			fileLogName = LOG_FILE;
 		}
 
+		// Obtem output
 		output = getProperty(PROPERTY_LOG_OUTPUT);
+
+		// Ativa o log
+		debugEnabled = 1;
+
 		if (output != NULL) {
 
 			setConfig(atoi(output));
 
 		}
+
 	}
 
 }

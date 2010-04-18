@@ -4,16 +4,16 @@
 
  by Cristiano J. Miranda         01/09/2008
 
- TODO: Incluir funcionalidade de identanção dos metodos logados
+ TODO: Incluir funcionalidade de identanï¿½ï¿½o dos metodos logados
  Incluir outros niveis de log
- Incluir funcionalidade de externalização dos metodos a serem logados,
- por arquivo de configuração
- Incluir arquivo padrao de configuração de log
- Incluir manutenção dos arquivos logados, especificando um
- tamanho maximo e processar a geração de outros arquivos
- Incluir funcionalidade de obtenção de estatisticas de metodos,
- tempo de execução, quantidade de vezes executados, numero de
- iterações....
+ Incluir funcionalidade de externalizaï¿½ï¿½o dos metodos a serem logados,
+ por arquivo de configuraï¿½ï¿½o
+ Incluir arquivo padrao de configuraï¿½ï¿½o de log
+ Incluir manutenï¿½ï¿½o dos arquivos logados, especificando um
+ tamanho maximo e processar a geraï¿½ï¿½o de outros arquivos
+ Incluir funcionalidade de obtenï¿½ï¿½o de estatisticas de metodos,
+ tempo de execuï¿½ï¿½o, quantidade de vezes executados, numero de
+ iteraï¿½ï¿½es....
 
 
  *******************************************************************************/
@@ -34,10 +34,10 @@
 void initializeLog();
 
 /** Enumerator para tipos predefinido de log */
-enum SAIDA {PROMPT, ARQUIVO};
+enum SAIDA {PROMPT = 0, ARQUIVO = 1};
 
 /**
- setConfig - Metodo que seta a configuração padrao do log
+ setConfig - Metodo que seta a configuraï¿½ï¿½o padrao do log
  param saida - enum SAIDA - referente ao tipo de log a ser executado
  */
 void setConfig(int value);
@@ -65,7 +65,7 @@ void lastMethodName();
 
 /**
  debug* - metodos utilitarios de debug,
- loga as informaçõa passadas como parametro
+ loga as informaï¿½ï¿½a passadas como parametro
  */
 void debug(char* message);
 void debugi(char* message, int value);
@@ -80,12 +80,12 @@ void debugl(char* message, long value);
 void debugHeader();
 
 /**
- stop - Causa uma interrupção no andamento do programa,
+ stop - Causa uma interrupï¿½ï¿½o no andamento do programa,
  permitindo o usuario proseguir, facilitando a analise do log.
  */
 void stop();
 
 /**
- Trata exceção do sistema
+ Trata exceï¿½ï¿½o do sistema
  */
 void error(char* s);
