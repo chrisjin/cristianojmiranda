@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "utils.h"
 #include "io.h"
 #include "mem.h"
 
@@ -112,6 +113,44 @@ char * str_join(const char *a, const char *b) {
 	ret[sz_a + sz_b] = '\0';
 
 	return ret;
+}
+
+char *strip(char *value) {
+
+	int i, inicio = false, fim = false;
+	if (value[0] == ' ') {
+		for (i = 0; i < strlen(value); i++) {
+
+			if (value[i] != ' ' && value[i] != NULL) {
+				inicio = i;
+				break;
+			}
+
+		}
+	}
+
+	if (value[strlen(value) - 1] == ' ') {
+
+		for (i = strlen(value) - 1; i >= 0; i = i - 1) {
+
+			if (value[i] != ' ' && value[i] != NULL) {
+
+				fim = i;
+				break;
+
+			}
+
+		}
+
+	}
+
+	char *result = MEM_ALLOC_N(char, fim - inicio);
+	stripWhiteSpace(result);
+
+	result = strSubString(value, inicio, ++fim);
+
+	return result;
+
 }
 
 void stripNewLine(char s[]) {

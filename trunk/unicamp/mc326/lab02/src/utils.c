@@ -267,3 +267,22 @@ char* getLine() {
 	else
 		return NULL;
 }
+
+/**
+ * Calcula o tamanho do arquivo.
+ */
+long fileSize(char *fileName) {
+
+	FILE *arquivo = Fopen(fileName, "r");
+
+	// guarda tamanho do arquivo
+	long tamanho = 0;
+
+	// calcula o tamanho
+	fseek(arquivo, 0, SEEK_END);
+	tamanho = ftell(arquivo);
+
+	fclose(arquivo);
+
+	return tamanho;
+}

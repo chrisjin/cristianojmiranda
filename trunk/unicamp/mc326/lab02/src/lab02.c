@@ -54,7 +54,7 @@ int main(int argc, char * argv[]) {
 		switch (opcao) {
 
 		case '1':
-			processarArquivoFormatoVariavel((char*) argv[1], (char*)argv[2]);
+			processarArquivoFormatoVariavel((char*) argv[1], (char*) argv[2]);
 			break;
 		case '2':
 			break;
@@ -85,9 +85,9 @@ int main(int argc, char * argv[]) {
 void showMenu() {
 	printf(getMessage("lab02.label.menu"), "\n");
 	printf(getMessage("lab02.label.menu.processar_arquivo_variavel"), "\n");
-	printf(getMessage("lab02.label.menu.insert"), "\n");
-	printf(getMessage("lab02.label.menu.remove"), "\n");
-	printf(getMessage("lab02.label.menu.find"), "\n");
+	//printf(getMessage("lab02.label.menu.insert"), "\n");
+	//printf(getMessage("lab02.label.menu.remove"), "\n");
+	//printf(getMessage("lab02.label.menu.find"), "\n");
 	printf(getMessage("lab02.label.menu.encerrar"), "\n");
 }
 
