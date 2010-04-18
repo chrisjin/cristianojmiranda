@@ -249,3 +249,21 @@ FILE* Fopen(char *fileName, char* flag) {
 	return file;
 }
 
+char* copyStr(char* str) {
+
+	char *p = (char*) malloc(strlen(str) + 1);
+	strcpy(p, str);
+	return p;
+
+}
+
+char* getLine() {
+
+	char line[256];
+
+	if (gets(line) != NULL)
+		return copyStr(line);
+
+	else
+		return NULL;
+}
