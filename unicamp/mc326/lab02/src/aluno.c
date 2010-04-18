@@ -19,23 +19,32 @@
 #include "log.h"
 #include "utils.h"
 #include "bundle.h"
+#include "mem.h"
 #include "aluno.h"
 
-/** Guarda dados do aluno numa Struct */
-Aluno newAluno(char **dados) {
+/** Guarda dados do aluno em struct */
+Aluno newAluno(char *value) {
 
-	debug("Valida se o RA do aluno é numerico");
-	if (!isNumeric(dados[1])) {
-		printf(getMessage("lab01b.label.ra_numerico"), "\n\n");
-		exit(-1);
-	}
+	/*	debug("Valida se o RA do aluno é numerico");
+	 if (!isNumeric(dados[1])) {
+	 printf(getMessage("lab01b.label.ra_numerico"), "\n\n");
+	 exit(-1);
+	 }*/
 
-	Aluno arq1;
-	arq1.nome = dados[0];
-	arq1.ra = atoi(dados[1]);
-	//arq1.c = dados[2][0];
+	// Monta o aluno
+	Aluno aln = MEM_ALLOC(Aluno);
 
-	return arq1;
+	int inicio = atoi(getProperty("aluno.field.start.ra"));
+	int fim = atoi(getProperty("aluno.field.end.ra"));
+
+	// Obtem o ra do aluno
+	char *ra = strSubString(value, inicio, fim);
+	aln->ra = atoi(ra);
+
+	aln->nome = strSubString(value, atoi(getProperty("aluno.field.start.ra")),
+			atoi(getProperty("aluno.field.end.ra")));
+
+	return aln;
 }
 
 /**
@@ -62,15 +71,38 @@ int indexByRa(int ra) {
  */
 void showAluno(Aluno aluno) {
 
-	printf(getMessage("aluno.label.dados.ra"), "\n\n\t", aluno.ra, "\n");
-	printf(getMessage("aluno.label.dados.nome"), "\t\t", aluno.nome, "\n");
-	printf(getMessage("aluno.label.dados.cidade"), "\t\t", aluno.cidade, "\n");
+	printf(getMessage("aluno.label.dados.ra"), "\n\n\t", aluno->ra, "\n");
+	printf(getMessage("aluno.label.dados.nome"), "\t\t", aluno->nome, "\n");
+	printf(getMessage("aluno.label.dados.cidade"), "\t\t", aluno->cidade, "\n");
 	printf(getMessage("aluno.label.dados.tel_contato"), "\t\t",
-			aluno.telContato, "\n");
+			aluno->telContato, "\n");
 	printf(getMessage("aluno.label.dados.tel_alternativo"), "\t\t",
-			aluno.telAlternativo, "\n");
-	printf(getMessage("aluno.label.dados.sexo"), "\t\t", SEXO(aluno.sexo), "\n");
-	printf(getMessage("aluno.label.dados.curso"), "\t\t", aluno.curso, "\n\n");
+			aluno->telAlternativo, "\n");
+	printf(getMessage("aluno.label.dados.sexo"), "\t\t", SEXO(aluno->sexo),
+			"\n");
+	printf(getMessage("aluno.label.dados.curso"), "\t\t", aluno->curso, "\n\n");
+
+}
+
+/**
+ * Cria o arquivo de formato variavel.
+ *
+ * param inputFile - Nome do arquivo de entrada.
+ * param outputFile - Nome do arquivo de saida.
+ */
+void processarArquivoFormatoVariavel(char *inputFile, char outputFile) {
+
+	FILE *inFile = Fopen(inputFile, "r");
+
+	char line[READ_BUFFER_SIZE];
+
+	while (fgets(line, READ_BUFFER_SIZE, inFile) != NULL) {
+
+		Aluno a = newAluno(line);
+
+	}
+
+	fclose(inFile);
 
 }
 
