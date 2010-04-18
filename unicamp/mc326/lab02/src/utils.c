@@ -19,6 +19,8 @@
 #include <ctype.h>
 #include <fcntl.h>
 #include "log.h"
+#include "mem.h"
+#include "io.h"
 #include "utils.h"
 
 /**
@@ -29,7 +31,7 @@
  * return apontador para a String upper
  *
  */
-char *strUpperCase(char *value) {
+void strUpperCase(char *value, char *output) {
 
 	setMethodName("strUpperCase");
 
@@ -38,7 +40,6 @@ char *strUpperCase(char *value) {
 	}
 	debugs("Param value: ", value);
 
-	char *output = NULL;
 	output = malloc(sizeof(char) * (1 + strlen(value)));
 
 	int i = 0;
@@ -51,73 +52,6 @@ char *strUpperCase(char *value) {
 
 	lastMethodName();
 
-	return output;
-
-}
-
-/**
- * Quebra um String utilizando um caracter como curinga.
- *
- * param value - String a ser quebrada.
- * param size  - Tamanho do array de String a ser retornado.
- * param token - Token curinga para quebrar a String.
- * return array de String.
- */
-char **strSplit(char *value, char *token, int *size) {
-
-	setMethodName("strSplit");
-	debugs("Param value: ", value);
-	debugs("Param token: ", token);
-
-	if (value == NULL)
-		return NULL;
-
-	if (token == NULL)
-		return NULL;
-
-	int j = 0, i;
-	char *parte = NULL;
-	char *copia = malloc(strlen(value));
-	char **split = NULL;
-	strcpy(copia, value);
-
-	debug("Verificando o tamanho do array de retorno");
-	parte = strtok(copia, token);
-	if (parte) {
-		j++;
-	}
-
-	do {
-		parte = strtok(NULL, token);
-		debugs("nodes: ", parte);
-		if (parte) {
-			j++;
-		}
-	} while (parte);
-
-	debugi("Alocando tamanho do array de retorno: ", j);
-	split = (char**) malloc(j * sizeof(char*));
-	if (split == NULL) {
-		debug("Erro ao alocar memoria");
-		exit(-1);
-	}
-
-	debug("Montando array de retorno");
-	strcpy(copia, value);
-	parte = strtok(copia, token);
-	for (i = 0; i < j; i++) {
-		debugs("Alocando array para o valor: ", parte);
-		split[i] = malloc(sizeof(parte) + 1);
-		strcpy(split[i], parte);
-		parte = strtok(NULL, token);
-	}
-
-	lastMethodName();
-	*size = j;
-	free(parte);
-	free(copia);
-
-	return split;
 }
 
 /**
@@ -136,30 +70,30 @@ char *strMerge(char *value, char *token, char *mergeToken) {
 	debugs("Param token: ", token);
 	debugs("Param mergeToken: ", mergeToken);
 
-	int i, size, tamanhoPalavra = 0;
-	char **palavras = strSplit(value, token, &size);
+	char *aux = NULL;
+	int i = 0, size = 0;
+	char *split = strtok(value, token);
 
-	debug("Calcula o tamanho da memoria a ser alocada");
-	for (i = 0; i < size; i++) {
-		tamanhoPalavra += strlen(palavras[i]);
-	}
+	if (split) {
 
-	char *aux = malloc(tamanhoPalavra + 1 + (size * strlen(mergeToken)));
-	for (i = 0; i < size; i++) {
-		if (palavras[i] != NULL) {
-			strcpy(aux, palavras[i]);
+		while (split) {
 
-			if (i != (size - 1)) {
-				strcpy(aux, mergeToken);
+			size = strlen(split) + strlen(mergeToken);
+			if (aux == NULL) {
+				aux = MEM_ALLOC_N(char, size);
+			} else {
+				aux = realloc(aux, size);
 			}
+			strcpy(aux, str_join(split, mergeToken));
+			split = strtok(END_STR_TOKEN, token);
+
 		}
+
+		debugs("Return: ", aux);
+		lastMethodName();
+
+		return aux;
 	}
-
-	strArrayFree(palavras, size);
-	debugs("Return: ", aux);
-	lastMethodName();
-
-	return aux;
 }
 
 /**
@@ -185,7 +119,7 @@ int strCharCount(char *value, char key, boolean caseSensitive) {
 		copy = malloc((sizeof(char) * strlen(value)) + 1);
 		strcpy(copy, value);
 	} else {
-		copy = strUpperCase(value);
+		strUpperCase(value, &copy);
 		ch = toupper(key);
 	}
 
@@ -208,29 +142,40 @@ int strCharCount(char *value, char key, boolean caseSensitive) {
 }
 
 /**
- * Desaloca um array de String da memoria.
+ * Obtem uma substring apartir de uma posição inicial e final.
  *
- * param value - Array de String a ser desalocado.
- * param size - Tamanho do Array.
  */
-void strArrayFree(char **value, int size) {
+char *strSubString(char *value, int start, int end) {
 
-	setMethodName("strArrayFree");
-	debugi("Param size: ", size);
+	return substring(value, start, (end - start));
 
-	int i;
-	for (i = 0; i < size; i++) {
-		if (value[i] != NULL) {
-			debugs("Position: ", value[i]);
-			free(value[i]);
-		}
+}
+
+/**
+ * Obtem uma substring apartir de uma posição inicial e quantidade de caracteres.
+ */
+char *substring(char *origem, int inicio, int quant) {
+	char *res = origem;
+	int i = 0;
+
+	// posição inicial menor que 0 ou
+	// posição inicial muito exagerada?
+	if ((inicio < 0) || (inicio > strlen(origem)))
+		inicio = 0;
+
+	// quantidade de caracteres muito exagerada?
+	if (quant > inicio + strlen(origem))
+		quant = strlen(origem) - inicio;
+
+	// obtem os caracteres desejados
+	for (i = 0; i <= quant - 1; i++) {
+		res[i] = origem[inicio + i];
 	}
 
-	if (value != NULL) {
-		free(value);
-	}
+	// marca o fim da string
+	res[i] = END_STR_TOKEN;
 
-	lastMethodName();
+	return res;
 }
 
 /**

@@ -30,17 +30,7 @@
  * return apontador para a String upper
  *
  */
-char *strUpperCase(char *value);
-
-/**
- * Quebra um String utilizando um caracter como curinga.
- *
- * param value - String a ser quebrada.
- * param token - Token curinga para quebrar a String.
- * param size  - Tamanho do array de String a ser retornado.
- * return array de String.
- */
-char **strSplit(char *value, char *token, int *size);
+void strUpperCase(char *value, char *output);
 
 /**
  * Faz o merge de uma String quebrando por um token especifico e 
@@ -64,12 +54,15 @@ char *strMerge(char *value, char *token, char *mergeToken);
 int strCharCount(char *value, char key, boolean caseSensitive);
 
 /**
- * Desaloca um array de String da memoria.
+ * Obtem uma substring apartir de uma posição inicial e final.
  *
- * param value - Array de String a ser desalocado.
- * param size - Tamanho do Array.
  */
-void strArrayFree(char **value, int size);
+char *strSubString(char *value, int start, int end);
+
+/**
+ * Obtem uma substring apartir de uma posição inicial e quantidade de caracteres.
+ */
+char *substring(char *origem, int inicio, int quant);
 
 /**
  * Verifica se a string tem apenas caracteres numericos.
