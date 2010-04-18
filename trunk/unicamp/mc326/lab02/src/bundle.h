@@ -56,6 +56,11 @@ char* getMessage(char* key);
 void loadMap(char* file, map_t map);
 
 /**
+ * Verifica se a linha deve ser ignorada.
+ */
+int ignoreLineBundle(char *line);
+
+/**
  * Libera as hashmaps da memoria.
  */
 void freeBundle();

@@ -111,6 +111,21 @@ char* getMessage(char* key) {
 }
 
 /**
+ * Verifica se a linha deve ser ignorada.
+ */
+boolean ignoreLineBundle(char *line) {
+
+	if (line == NULL)
+		return true;
+
+	if (line[0] == ' ' || line[0] == '#' || line[0] == '/')
+		return true;
+
+	return false;
+
+}
+
+/**
  * Carrega uma hashmap apartir de um arquivo especifico,
  * seguindo o formato, "chave=propriedade".
  *
@@ -134,34 +149,38 @@ void loadMap(char* file, map_t map) {
 
 	while (fgets(line, READ_BUFFER_SIZE, bundleFile) != NULL) {
 
-		// Obtem a chave
-		token = strtok(line, BUNDLE_TOKEN);
-		if (token) {
+		// Verifica se a linha do bundle deve ser ignorada
+		if (!ignoreLineBundle(line)) {
 
-			value = MEM_ALLOC(data_bundle_t);
-
-			debug("Armazena a chave");
-			value->key = MEM_ALLOC_N(char, strlen(token) * 2);
-			stripWhiteSpace(value->key);
-			debugs("Key: ", token);
-			//strcpy(value->key, token);
-			strcat(value->key, token);
-
-			// Obtem a propriedade
-			token = strtok(END_STR_TOKEN, BUNDLE_TOKEN);
+			// Obtem a chave
+			token = strtok(line, BUNDLE_TOKEN);
 			if (token) {
 
-				value->property = MEM_ALLOC_N(char, strlen(token));
-				debugs("Value: ", token);
+				value = MEM_ALLOC(data_bundle_t);
 
-				char *mrg = strMerge(token, END_OF_LINE, STR_END_TOKEN);
-				strcpy(value->property, mrg);
+				debug("Armazena a chave");
+				value->key = MEM_ALLOC_N(char, strlen(token) * 2);
+				stripWhiteSpace(value->key);
+				debugs("Key: ", token);
+				//strcpy(value->key, token);
+				strcat(value->key, token);
 
-				if (hashmap_put(map, value->key, value) != MAP_OK) {
-					error("Problema ao salvar o atributo na hash.");
+				// Obtem a propriedade
+				token = strtok(END_STR_TOKEN, BUNDLE_TOKEN);
+				if (token) {
+
+					value->property = MEM_ALLOC_N(char, strlen(token));
+					debugs("Value: ", token);
+
+					char *mrg = strMerge(token, END_OF_LINE, STR_END_TOKEN);
+					strcpy(value->property, mrg);
+
+					if (hashmap_put(map, value->key, value) != MAP_OK) {
+						error("Problema ao salvar o atributo na hash.");
+					}
 				}
-			}
 
+			}
 		}
 
 	}

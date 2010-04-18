@@ -21,7 +21,7 @@
 #define INDEX_NOT_FOUND_FOR_ALUNO -1
 
 /** Apontador para Aluno */
-typedef struct AlunoStr *Aluno;
+typedef struct AlunoStr* Aluno;
 
 /**Struct para guardar os dados do aluno */
 typedef struct AlunoStr {
