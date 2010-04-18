@@ -155,7 +155,9 @@ char *strSubString(char *value, int start, int end) {
  * Obtem uma substring apartir de uma posição inicial e quantidade de caracteres.
  */
 char *substring(char *origem, int inicio, int quant) {
-	char *res = origem;
+
+	char *res = MEM_ALLOC_N(char, strlen(origem));
+	strcpy(res, origem);
 	int i = 0;
 
 	// posição inicial menor que 0 ou
