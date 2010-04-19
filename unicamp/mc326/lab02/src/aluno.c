@@ -22,6 +22,8 @@
 #include "mem.h"
 #include "aluno.h"
 
+int alternate = true;
+
 /** Guarda dados do aluno em struct */
 Aluno newAluno(char *value) {
 
@@ -223,35 +225,6 @@ void opcao3(FILE *arqVariavel) {
 
 }
 
-AlunoFixo newAlunoFixo(Aluno aluno) {
-
-	int i;
-	AlunoFixo fixo = MEM_ALLOC(AlunoFixo);
-
-	fixo->ra = aluno->ra;
-
-	clearString(fixo->nome);
-	strcpy(fixo->nome, aluno->nome);
-
-	clearString(fixo->cidade);
-	strcpy(fixo->cidade, aluno->cidade);
-
-	clearString(fixo->telContato);
-	strcpy(fixo->telContato, aluno->telContato);
-
-	clearString(fixo->telAlternativo);
-	strcpy(fixo->telAlternativo, aluno->telAlternativo);
-
-	if (aluno->sexo == NULL)
-		fixo->sexo = ' ';
-	else
-		fixo->sexo = aluno->sexo;
-
-	fixo->curso = aluno->curso;
-
-	return fixo;
-}
-
 char *processarArquivoFormatoFixo(char *inputFile) {
 
 	// Variaveis de estatistica
@@ -267,14 +240,11 @@ char *processarArquivoFormatoFixo(char *inputFile) {
 	while (fgets(line, READ_BUFFER_SIZE, inFile) != NULL) {
 
 		Aluno a = newAluno(line);
-		AlunoFixo f;
-		f = newAlunoFixo(a);
-		if (f != NULL)
+		if (a != NULL)
 			countRecords++;
 
-		writeFileFormatoHTML(outFile, f);
-		showAlunoFixo(f);
-		free(f);
+		writeFileFormatoHTML(outFile, a);
+		showAluno(a);
 
 	}
 
@@ -290,14 +260,25 @@ void writeFileFormatoHTML_inicio(FILE *file) {
 	fprintf(file, cabecalho);
 }
 
-void writeFileFormatoHTML(FILE *file, AlunoFixo aln) {
+void writeFileFormatoHTML(FILE *file, Aluno aln) {
 
 	if (file != NULL && aln != NULL && aln->nome != NULL) {
-		fprintf(
-				file,
-				"<tr><td><pre>%i</pre></td><td><pre>%s</pre></td><td><pre>%s</pre></td><td><pre>%s</pre></td><td><pre>%s</pre></td><td><pre>%c</pre></td><td><pre>%i</pre></td></tr>",
-				aln->ra, aln->nome, aln->cidade, aln->telContato,
-				aln->telAlternativo, aln->sexo, aln->curso);
+
+		if (alternate) {
+			fprintf(
+					file,
+					"<tr style='background: gray;' ><td><pre>%i</pre></td><td><pre>%s</pre></td><td><pre>%s</pre></td><td><pre>%s</pre></td><td><pre>%s</pre></td><td><pre>%c</pre></td><td><pre>%i</pre></td></tr>",
+					aln->ra, aln->nome, aln->cidade, aln->telContato,
+					aln->telAlternativo, aln->sexo, aln->curso);
+
+		} else {
+			fprintf(
+					file,
+					"<tr style='background: white;' ><td><pre>%i</pre></td><td><pre>%s</pre></td><td><pre>%s</pre></td><td><pre>%s</pre></td><td><pre>%s</pre></td><td><pre>%c</pre></td><td><pre>%i</pre></td></tr>",
+					aln->ra, aln->nome, aln->cidade, aln->telContato,
+					aln->telAlternativo, aln->sexo, aln->curso);
+		}
+		alternate = !alternate;
 	}
 
 }
@@ -306,21 +287,3 @@ void writeFileFormatoHTML_fim(FILE *file) {
 	fprintf(file, FIM_HTML);
 }
 
-void showAlunoFixo(AlunoFixo aluno) {
-
-	if (aluno != NULL && aluno->nome != NULL) {
-		printf(getMessage("aluno.label.dados.ra"), "\n\n\t", aluno->ra, "\n");
-		printf(getMessage("aluno.label.dados.nome"), "\t\t", aluno->nome, "\n");
-		printf(getMessage("aluno.label.dados.cidade"), "\t\t", aluno->cidade,
-				"\n");
-		printf(getMessage("aluno.label.dados.tel_contato"), "\t\t",
-				aluno->telContato, "\n");
-		printf(getMessage("aluno.label.dados.tel_alternativo"), "\t\t",
-				aluno->telAlternativo, "\n");
-		printf(getMessage("aluno.label.dados.sexo"), "\t\t", SEXO(aluno->sexo),
-				"\n");
-		printf(getMessage("aluno.label.dados.curso"), "\t\t", aluno->curso,
-				"\n\n");
-	}
-
-}
