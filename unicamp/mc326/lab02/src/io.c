@@ -117,7 +117,7 @@ char * str_join(const char *a, const char *b) {
 
 char *strip(char *value) {
 
-	int i, inicio = false, fim = false;
+	int i, inicio = 0, fim = strlen(value);
 	if (value[0] == ' ') {
 		for (i = 0; i < strlen(value); i++) {
 
@@ -210,4 +210,17 @@ void stripWhiteSpace(char str[]) {
 	str[pos] = '\0';
 
 	free(buffer);
+}
+
+void clearString(char *value) {
+
+	if (value == NULL)
+		return;
+
+	int i;
+	for (i = 0; i < strlen(value); i++) {
+
+		value[i] = ' ';
+	}
+
 }
