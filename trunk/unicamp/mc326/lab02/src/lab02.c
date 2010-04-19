@@ -38,6 +38,8 @@ int main(int argc, char * argv[]) {
 
 	debug("Abrindo o arquivo de dados");
 	FILE* inFile = Fopen(argv[1], "r");
+	FILE *arqVariavel;
+	char *file;
 
 	debug("Declarando variaveis da aplicação");
 	char opcao;
@@ -57,10 +59,14 @@ int main(int argc, char * argv[]) {
 			processarArquivoFormatoVariavel((char*) argv[1], (char*) argv[2]);
 			break;
 		case '2':
+			file = processarArquivoFormatoFixo((char*) argv[1]);
+			if (file != NULL) {
+				system(str_join("firefox ", str_join(file, " &")));
+			}
 			break;
 		case '3':
-			break;
-		case '4':
+			arqVariavel = fopen(argv[2], "r");
+			opcao3(arqVariavel);
 			break;
 		case '5':
 			break;
@@ -85,6 +91,8 @@ int main(int argc, char * argv[]) {
 void showMenu() {
 	printf(getMessage("lab02.label.menu"), "\n");
 	printf(getMessage("lab02.label.menu.processar_arquivo_variavel"), "\n");
+	printf(getMessage("lab02.label.menu.listar_arquivo_fixo"), "\n");
+	printf(getMessage("lab02.label.menu.listar_arquivo_variavel"), "\n");
 	//printf(getMessage("lab02.label.menu.insert"), "\n");
 	//printf(getMessage("lab02.label.menu.remove"), "\n");
 	//printf(getMessage("lab02.label.menu.find"), "\n");
