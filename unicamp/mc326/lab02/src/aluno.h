@@ -19,9 +19,13 @@
 
 #define SEXO(a) (a == 'M' ? getMessage("aluno.label.sexo.masculino") : getMessage("aluno.label.sexo.feminino"))
 #define INDEX_NOT_FOUND_FOR_ALUNO -1
+#define ARQUIVO_CONSULTA_FIXO_HTML "arquivo_consulta_fixo.html"
+#define cabecalho "<HTML><HEAD><TITLE>Cadastro de Alunos da Unicamp.</TITLE></HEAD><body></body><table border='1'>"
+#define FIM_HTML "</table></body></html>"
 
 /** Apontador para Aluno */
 typedef struct AlunoStr* Aluno;
+typedef struct AlunoF* AlunoFixo;
 
 /**Struct para guardar os dados do aluno */
 typedef struct AlunoStr {
@@ -35,6 +39,17 @@ typedef struct AlunoStr {
 
 	Aluno nextAluno;
 } AlunoStr;
+
+typedef struct AlunoF {
+	int ra;
+	char nome[30];
+	char cidade[15];
+	char telContato[8];
+	char telAlternativo[8];
+	char sexo;
+	int curso;
+	Aluno prox;
+} AlunoF;
 
 /**
  * Obtem os dados de um aluno pelo RA.
@@ -60,3 +75,17 @@ void writeFileFormatoVariavel(FILE *file, Aluno aln);
 
 /** Guarda dados do aluno em struct */
 Aluno newAluno(char *value);
+
+void opcao3(FILE *arqVariavel);
+
+AlunoFixo newAlunoFixo(Aluno aluno);
+
+char *processarArquivoFormatoFixo(char *inputFile);
+
+void writeFileFormatoHTML_inicio(FILE *file);
+
+void writeFileFormatoHTML(FILE *file, AlunoFixo aln);
+
+void writeFileFormatoHTML_fim(FILE *file);
+
+void showAlunoFixo(AlunoFixo aluno);
