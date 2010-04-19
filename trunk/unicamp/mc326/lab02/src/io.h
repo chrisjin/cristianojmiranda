@@ -127,4 +127,6 @@ void stripWhiteSpace(char str[]);
  */
 char *strip(char *value);
 
+void clearString(char *value);
+
 #endif
