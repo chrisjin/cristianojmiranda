@@ -236,9 +236,9 @@ void showInformacoesArquivoVariavel(char *arqVariavel, LIST alunos) {
 
 		if (fim - inicio != 0) {
 			printf(getMessage("aluno.label.processarArquivo.inicioRegistro"),
-					"\n", inicio, "\n");
+					"\n", inicio);
 			printf(getMessage("aluno.label.processarArquivo.tamanhoRegistro"),
-					"\n", (fim - inicio), "\n");
+					"\n", (fim - inicio));
 
 			inicio = fim;
 		}
@@ -281,7 +281,7 @@ char *showArquivoFormatoFixo(LIST alunos) {
 			break;
 		}
 
-		n = n->prev;
+		n = n->next;
 
 	}
 
@@ -378,5 +378,32 @@ void freeAlunoList(LIST alunos) {
 		freeList(alunos, freeAluno);
 
 	}
+
+}
+
+/**
+ * Obtem um aluno pelo ra.
+ */
+Aluno findAlunoByRaList(LIST alunos, int ra) {
+
+	if (alunos != NULL && alunos->count > 0) {
+		nodeptr n = alunos->content;
+		int count = 0;
+		while (n != NULL) {
+
+			Aluno a = n->value;
+			if (a->ra == ra)
+				return a;
+
+			n = n->next;
+			count++;
+
+			if (count >= listSize(alunos)) {
+				return NULL;
+			}
+		}
+	}
+
+	return NULL;
 
 }

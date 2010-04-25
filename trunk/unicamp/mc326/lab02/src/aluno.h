@@ -127,3 +127,8 @@ void freeAluno(Aluno aluno);
  * param alunos - Estrutura de alunos a serem liberadas.
  */
 void freeAlunoList(LIST aluno);
+
+/**
+ * Obtem um aluno pelo ra.
+ */
+Aluno findAlunoByRaList(LIST alunos, int ra);
