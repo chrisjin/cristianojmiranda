@@ -19,4 +19,4 @@ void showMenu();
 /**
  * Cria a estrutura de alunos.
  */
-void loadAlunos(LIST alunos, char *input, char *output);
+LIST loadAlunos(LIST alunos, char *input, char *output);
