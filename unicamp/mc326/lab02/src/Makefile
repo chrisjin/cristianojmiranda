@@ -5,8 +5,8 @@ CPP  = g++
 CC   = gcc -Wall -g
 WINDRES = windres.exe
 RES  = 
-OBJ  = log.o utils.o mem.o io.o bundle.o hashmap.o aluno.o lab02.o $(RES)
-LINKOBJ  = log.o utils.o mem.o io.o bundle.o hashmap.o aluno.o lab02.o  $(RES)
+OBJ  = log.o utils.o mem.o io.o bundle.o hashmap.o mylist.o aluno.o lab02.o $(RES)
+LINKOBJ  = log.o utils.o mem.o io.o bundle.o hashmap.o  mylist.o aluno.o lab02.o  $(RES)
 LIBS =   
 INCS = 
 CXXINCS = 
@@ -42,6 +42,9 @@ bundle.o: bundle.c
 
 hashmap.o: hashmap.c
 	$(CC) -c hashmap.c -o hashmap.o $(CFLAGS)
+
+mylist.o: mylist.c
+	$(CC) -c mylist.c -o mylist.o $(CFLAGS)
 
 aluno.o: aluno.c
 	$(CC) -c aluno.c -o aluno.o $(CFLAGS)
