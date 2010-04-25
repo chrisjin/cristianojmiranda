@@ -77,9 +77,10 @@ int main(int argc, char * argv[]) {
 						(char*) argv[2]);
 			}
 
-			showInformacoesArquivoVariavel((char *) argv[2], alunos);
+			showInformacoesArquivoVariavel((char *) argv[2]);
 			break;
 		case 4:
+			alunos = carregarAlunoArquivoVariavel((char*) argv[2], alunos);
 			break;
 		case 5:
 			break;
