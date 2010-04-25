@@ -59,10 +59,10 @@ int main(int argc, char * argv[]) {
 
 		case 1:
 			debug("Processa o arquivo de tamanho variavel");
-			loadAlunos(alunos, (char*) argv[1], (char*) argv[2]);
+			alunos = loadAlunos(alunos, (char*) argv[1], (char*) argv[2]);
 			break;
 		case 2:
-			loadAlunos(alunos, (char*) argv[1], (char*) argv[2]);
+			alunos = loadAlunos(alunos, (char*) argv[1], (char*) argv[2]);
 			fileOutputArqFixo = showArquivoFormatoFixo(alunos);
 			if (fileOutputArqFixo != NULL) {
 				system(str_join("firefox ", str_join(fileOutputArqFixo, " &")));
@@ -84,7 +84,7 @@ int main(int argc, char * argv[]) {
 		case 5:
 			break;
 		case 6:
-			loadAlunos(alunos, (char*) argv[1], (char*) argv[2]);
+			alunos = loadAlunos(alunos, (char*) argv[1], (char*) argv[2]);
 			extractFileKey(alunos);
 			break;
 		default:
@@ -119,7 +119,7 @@ void showMenu() {
 /**
  * Cria a estrutura de alunos.
  */
-void loadAlunos(LIST alunos, char *input, char *output) {
+LIST loadAlunos(LIST alunos, char *input, char *output) {
 
 	debug("Verifica se a lista de alunos foi criada");
 	if (alunos == NULL) {
@@ -129,7 +129,6 @@ void loadAlunos(LIST alunos, char *input, char *output) {
 	}
 
 	nodeptr n = alunos->content;
-	//n = n->next;
 	int count = 0;
 	printf("============================\n");
 	while (n != NULL) {
@@ -139,10 +138,12 @@ void loadAlunos(LIST alunos, char *input, char *output) {
 		n = n->next;
 		count++;
 
-		if (count >= listSize(alunos) /* || n == n->next */)
+		if (count >= listSize(alunos))
 			break;
 
 	}
 	printf("============================\n");
+
+	return alunos;
 
 }
