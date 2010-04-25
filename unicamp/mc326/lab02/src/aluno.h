@@ -16,6 +16,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include<ctype.h>
+#include "mylist.h"
 
 #define SEXO(a) (a == 'M' ? getMessage("aluno.label.sexo.masculino") : getMessage("aluno.label.sexo.feminino"))
 #define INDEX_NOT_FOUND_FOR_ALUNO -1
@@ -23,20 +24,37 @@
 #define cabecalho "<HTML><HEAD><TITLE>Cadastro de Alunos da Unicamp.</TITLE></HEAD><body></body><table style='border: 1px solid black;'>"
 #define FIM_HTML "</table></body></html>"
 
+#define INDEX_ALUNO_FILE "index_aluno.txt"
+
 /** Apontador para Aluno */
 typedef struct AlunoStr* Aluno;
 
 /**Struct para guardar os dados do aluno */
 typedef struct AlunoStr {
+	// Ra do aluno
 	int ra;
+
+	// Nome do aluno
 	char *nome;
+
+	// Cidade do aluno
 	char *cidade;
+
+	// Telefone de contato do aluno
 	char *telContato;
+
+	// Telefone alternativo
 	char *telAlternativo;
+
+	// Sexo do aluno
 	char sexo;
+
+	// Codigo do curso na unicamp
 	int curso;
 
-	Aluno nextAluno;
+	// Posição em byte do aluno no arquivo variavel
+	int byteIndex;
+
 } AlunoStr;
 
 /**
@@ -50,26 +68,62 @@ Aluno findAlunoByRa(int ra, FILE *file);
  *
  */
 void showAluno(Aluno aluno);
-
 /**
  * Cria o arquivo de formato variavel.
  *
  * param inputFile - Nome do arquivo de entrada.
  * param outputFile - Nome do arquivo de saida.
  */
-Aluno processarArquivoFormatoVariavel(char *inputFile, char *outputFile);
+LIST processarArquivoFormatoVariavel(char *inputFile, char *outputFile);
 
+/**
+ * Cria o arquivo de formato variavel.
+ */
 void writeFileFormatoVariavel(FILE *file, Aluno aln);
 
 /** Guarda dados do aluno em struct */
 Aluno newAluno(char *value);
 
-void opcao3(FILE *arqVariavel);
+/**
+ * Exibe as informacoes do arquivo de tamanho variavel.
+ *
+ * param arqVariavel nome do arquivo variavel
+ * param alunos estrutura de alunos processados
+ */
+void showInformacoesArquivoVariavel(char *arqVariavel, listptr alunos);
 
-char *processarArquivoFormatoFixo(char *inputFile);
+/**
+ * Exibe a estrutura do arquivo de tamanho fixo.
+ *
+ * param alunos - Estrutura de alunos processados.
+ */
+char *showArquivoFormatoFixo(LIST alunos);
 
 void writeFileFormatoHTML_inicio(FILE *file);
 
+/**
+ * Escreve o aluno no html de consulta.
+ */
 void writeFileFormatoHTML(FILE *file, Aluno aln);
 
 void writeFileFormatoHTML_fim(FILE *file);
+
+/**
+ * Monta o arquivo com as chaves para indexar o arquivo de tamanho variavel.
+ *
+ */
+void extractFileKey(LIST alunos);
+
+/**
+ * Libera da memoria a estrutura de alunos.
+ *
+ * param alunos - Estrutura de alunos a serem liberadas.
+ */
+void freeAluno(Aluno aluno);
+
+/**
+ * Libera da memoria a estrutura de alunos.
+ *
+ * param alunos - Estrutura de alunos a serem liberadas.
+ */
+void freeAlunoList(LIST aluno);

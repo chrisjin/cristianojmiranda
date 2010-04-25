@@ -32,18 +32,20 @@ Aluno newAluno(char *value) {
 	 error(getMessage("lab01b.label.ra_numerico"), "\n\n");
 	 }*/
 
+	debug("Cria um novo aluno apartir ");
+
 	// Obtem a posição do ultimo caracter de arquivo fixo
 	int sizeLine = atoi(getProperty("aluno.field.end.fimregistro"));
 	if (value == NULL || strlen(value) < sizeLine)
 		return NULL;
 
 	// Monta o aluno
-	Aluno aln = MEM_ALLOC(Aluno);
+	Aluno aln = (Aluno) MEM_ALLOC(Aluno);
 
 	int inicio = atoi(getProperty("aluno.field.start.ra"));
 	int fim = atoi(getProperty("aluno.field.end.ra"));
 
-	// Obtem o ra do aluno
+	debug("Obtem o ra do aluno");
 	char *ra = strSubString(value, inicio, fim);
 	aln->ra = atoi(ra);
 
@@ -131,33 +133,40 @@ void showAluno(Aluno aluno) {
  * param inputFile - Nome do arquivo de entrada.
  * param outputFile - Nome do arquivo de saida.
  */
-Aluno processarArquivoFormatoVariavel(char *inputFile, char *outputFile) {
+LIST processarArquivoFormatoVariavel(char *inputFile, char *outputFile) {
 
-	// Variaveis de estatistica
-	long countRecords = 0;
+	debug(
+			"Processando criacao do arquivo variavel e retornando estrutura de alunos");
 
 	FILE *inFile = Fopen(inputFile, "r");
 	FILE *outFile = Fopen(outputFile, "w");
 
 	char line[READ_BUFFER_SIZE];
 
-	Aluno list;
+	debug("Aloca a lista de alunos");
+	LIST list = newList();
+	list->content = NULL;
+	list->count = 0;
+
+	debug("Processa o arquivo de tamanho fixo, criando a lista de alunos");
+	Aluno aluno = NULL;
 	while (fgets(line, READ_BUFFER_SIZE, inFile) != NULL) {
 
-		Aluno a = newAluno(line);
-		if (a != NULL && a->nome != NULL)
-			countRecords++;
+		debug("Criando um novo aluno apartir da linha de tamanho fixo");
+		aluno = newAluno(line);
 
-		writeFileFormatoVariavel(outFile, a);
-		showAluno(a);
+		writeFileFormatoVariavel(outFile, aluno);
+		showAluno(aluno);
 
+		debug("Adiciona o aluno a lista");
+		rearInsert(list, aluno);
 	}
 
 	fclose(outFile);
 	fclose(inFile);
 
 	printf(getMessage("aluno.label.processarArquivo.registrosLidos"), "\n\n\t",
-			countRecords, "\n");
+			list->count, "\n");
 	printf(getMessage("aluno.label.processarArquivo.tamanhoArqOriginal"), "\t",
 			inputFile, fileSize(inputFile), "\n");
 	printf(getMessage("aluno.label.processarArquivo.tamanhoArqConvertido"),
@@ -184,74 +193,101 @@ void writeFileFormatoVariavel(FILE *file, Aluno aln) {
 
 }
 
-void opcao3(FILE *arqVariavel) {
+/**
+ * Exibe as informacoes do arquivo de tamanho variavel.
+ *
+ * param arqVariavel nome do arquivo variavel
+ * param alunos estrutura de alunos processados
+ */
+void showInformacoesArquivoVariavel(char *arqVariavel, LIST alunos) {
+
+	debug("Exibe as informacoes do arquivo variavel para consulta");
+
+	if (arqVariavel == NULL)
+		return;
+
 	char aux;
 	int inicio = 0;
 	int fim = 0;
 
-	if (arqVariavel != NULL) {
+	debug("Libera a estrutura de aluno da memoria");
+	freeAluno(alunos);
 
-		while (!feof(arqVariavel)) {
+	Aluno tmp = NULL;
 
-			aux = fgetc(arqVariavel);
+	debug("Abre o arquivo para leitura");
+	FILE *fl = Fopen(arqVariavel, "r");
 
-			while (aux != EOF && aux != getProperty(
-					"aluno.arquivo.variavel.fimregistro")[0]) {
-				fim++;
-				if (aux == getProperty("aluno.arquivo.variavel.token")[0]) {
-					printf(" ");
-				} else {
-					printf("%c", aux);
-				}
+	while (!feof(fl)) {
 
-				aux = fgetc(arqVariavel);
+		aux = fgetc(fl);
+
+		while (aux != EOF && aux != getProperty(
+				"aluno.arquivo.variavel.fimregistro")[0]) {
+			fim++;
+			if (aux == getProperty("aluno.arquivo.variavel.token")[0]) {
+				printf(" ");
+			} else {
+				printf("%c", aux);
 			}
 
-			if (fim - inicio != 0) {
-				printf("\n");
-				printf("Inicio registro: byte %d\n", inicio);
-				printf("Tamanho registro: %d bytes", fim - inicio);
-
-				inicio = fim;
-			}
-
-			printf("\n");
-
+			aux = fgetc(fl);
 		}
 
-		fclose(arqVariavel);
+		if (fim - inicio != 0) {
+			printf(getMessage("aluno.label.processarArquivo.inicioRegistro"),
+					"\n", inicio, "\n");
+			printf(getMessage("aluno.label.processarArquivo.tamanhoRegistro"),
+					"\n", (fim - inicio), "\n");
+
+			inicio = fim;
+		}
+
+		printf("\n");
 
 	}
 
+	fclose(fl);
+
 }
 
-char *processarArquivoFormatoFixo(char *inputFile) {
+/**
+ * Exibe a estrutura do arquivo de tamanho fixo.
+ *
+ * param alunos - Estrutura de alunos processados.
+ */
+char *showArquivoFormatoFixo(LIST alunos) {
 
-	// Variaveis de estatistica
-	long countRecords = 0;
+	debug("Exibe o arquivo de tamanho fixo para consulta");
 
-	FILE *inFile = Fopen(inputFile, "r");
+	debug("Escreve output de consulta em html");
 	FILE *outFile = Fopen(ARQUIVO_CONSULTA_FIXO_HTML, "w");
-
-	char line[READ_BUFFER_SIZE];
 
 	writeFileFormatoHTML_inicio(outFile);
 
-	while (fgets(line, READ_BUFFER_SIZE, inFile) != NULL) {
+	debug("Obtem o primeiro item da lista");
 
-		Aluno a = newAluno(line);
-		if (a != NULL)
-			countRecords++;
+	int i = 0;
+	nodeptr n = alunos->content;
+	while (n != NULL) {
 
-		writeFileFormatoHTML(outFile, a);
-		showAluno(a);
+		Aluno aluno = n->value;
+
+		writeFileFormatoHTML(outFile, aluno);
+		showAluno(aluno);
+
+		i++;
+		if (i >= listSize(alunos)) {
+			break;
+		}
+
+		n = n->prev;
 
 	}
 
 	writeFileFormatoHTML_fim(outFile);
 
 	fclose(outFile);
-	fclose(inFile);
 
 	return ARQUIVO_CONSULTA_FIXO_HTML;
 }
@@ -287,3 +323,60 @@ void writeFileFormatoHTML_fim(FILE *file) {
 	fprintf(file, FIM_HTML);
 }
 
+/**
+ * Monta o arquivo com as chaves para indexar o arquivo de tamanho variavel.
+ *
+ */
+void extractFileKey(LIST alunos) {
+
+	int i;
+	Aluno aluno;
+	if (alunos != NULL && alunos->count > 0) {
+
+		debug("Cria o arquivo de index de aluno");
+		FILE *indexFile = Fopen(INDEX_ALUNO_FILE, "w");
+
+		for (i = 0; i < listSize(alunos); i++) {
+
+			aluno = getElement(alunos, i);
+			fprintf(indexFile, "%i %i", aluno->ra, aluno->byteIndex);
+
+		}
+
+		debug("Fecha o arquivo de index");
+		fclose(indexFile);
+
+	}
+
+}
+
+/**
+ * Libera da memoria a estrutura de alunos.
+ *
+ * param alunos - Estrutura de alunos a serem liberadas.
+ */
+void freeAluno(Aluno aluno) {
+
+	debug("Removendo aluno da memoria");
+
+	if (aluno != NULL) {
+		debugi("Removendo da memoria aluno ", aluno->ra);
+		free(aluno);
+	}
+
+}
+
+/**
+ * Libera da memoria a estrutura de alunos.
+ *
+ * param alunos - Estrutura de alunos a serem liberadas.
+ */
+void freeAlunoList(LIST alunos) {
+
+	if (alunos != NULL) {
+
+		freeList(alunos, freeAluno);
+
+	}
+
+}
