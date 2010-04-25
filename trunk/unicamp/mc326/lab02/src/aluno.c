@@ -199,7 +199,7 @@ void writeFileFormatoVariavel(FILE *file, Aluno aln) {
  * param arqVariavel nome do arquivo variavel
  * param alunos estrutura de alunos processados
  */
-void showInformacoesArquivoVariavel(char *arqVariavel, LIST alunos) {
+void showInformacoesArquivoVariavel(char *arqVariavel) {
 
 	debug("Exibe as informacoes do arquivo variavel para consulta");
 
@@ -209,9 +209,6 @@ void showInformacoesArquivoVariavel(char *arqVariavel, LIST alunos) {
 	char aux;
 	int inicio = 0;
 	int fim = 0;
-
-	debug("Libera a estrutura de aluno da memoria");
-	freeAluno(alunos);
 
 	Aluno tmp = NULL;
 
@@ -248,6 +245,111 @@ void showInformacoesArquivoVariavel(char *arqVariavel, LIST alunos) {
 	}
 
 	fclose(fl);
+
+}
+
+/**
+ * Processa a lista de arquivo de tamanho variavel.
+ */
+LIST carregarAlunoArquivoVariavel(char *inputFile, LIST alunos) {
+
+	debug("Verifica se a lista de alunos não foi criada");
+	if (alunos == NULL) {
+		debug("Cria a lista de alunos");
+		alunos = newList();
+	}
+
+	debug("Abre o arquivo de tamanho variavel para leitura");
+	FILE *arq = Fopen(inputFile, "r");
+
+	debug("Obtem o token que separa os registros para arquivo variavel");
+	char *token = getProperty("aluno.arquivo.variavel.token");
+
+	char line[READ_BUFFER_SIZE];
+	int ra = -1, countRec = 0;
+	int index = 0;
+	boolean inList = false;
+	Aluno aluno = NULL;
+	while (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
+
+		countRec = 1;
+
+		debugs("Processando linha: ", line);
+		char *registro = strtok(line, token);
+
+		debug("Obtem o ra");
+		ra = atoi(registro);
+
+		debug("Verifica se o aluno existe na lista");
+		aluno = findAlunoByRaList(alunos, ra);
+		if (aluno == NULL) {
+
+			inList = false;
+			aluno = MEM_ALLOC(Aluno);
+
+		} else {
+			inList = true;
+		}
+
+		debug("Seta a posicao no arquivo");
+		aluno->byteIndex = index;
+
+		while (registro) {
+			printf("- %s\n", registro);
+
+			if (!inList) {
+				switch (countRec) {
+
+				case 1:
+					aluno->ra = ra;
+					break;
+				case 2:
+					aluno->nome = MEM_ALLOC_N(char, strlen(registro));
+					strcat(aluno->nome, registro);
+					break;
+				case 3:
+					aluno->cidade = MEM_ALLOC_N(char, strlen(registro));
+					strcat(aluno->cidade, registro);
+					break;
+				case 4:
+					aluno->telContato = MEM_ALLOC_N(char, strlen(registro));
+					strcat(aluno->telContato, registro);
+					break;
+				case 5:
+					aluno->telAlternativo = MEM_ALLOC_N(char, strlen(registro));
+					strcat(aluno->telAlternativo, registro);
+					break;
+				case 6:
+					aluno->sexo = registro[0];
+					break;
+				case 7:
+					aluno->curso = atoi(registro);
+					break;
+				default:
+					break;
+				}
+			}
+
+			registro = strtok(END_STR_TOKEN, token);
+			countRec++;
+		}
+
+		debug("Incrementa a posicao em byte no arquivo");
+		index += strlen(line);
+
+		if (!inList) {
+			debug("Insere o novo aluno na lista");
+			rearInsert(alunos, aluno);
+		}
+
+		debug("Exibe os dados do aluno");
+		showAluno(aluno);
+
+	}
+
+	fclose(arq);
+
+	return alunos;
 
 }
 
