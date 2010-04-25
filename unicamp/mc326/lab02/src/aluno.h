@@ -75,6 +75,10 @@ void showAluno(Aluno aluno);
  * param outputFile - Nome do arquivo de saida.
  */
 LIST processarArquivoFormatoVariavel(char *inputFile, char *outputFile);
+/**
+ * Processa a lista de arquivo de tamanho variavel.
+ */
+LIST carregarAlunoArquivoVariavel(char *inputFile, LIST alunos);
 
 /**
  * Cria o arquivo de formato variavel.
@@ -90,7 +94,7 @@ Aluno newAluno(char *value);
  * param arqVariavel nome do arquivo variavel
  * param alunos estrutura de alunos processados
  */
-void showInformacoesArquivoVariavel(char *arqVariavel, listptr alunos);
+void showInformacoesArquivoVariavel(char *arqVariavel);
 
 /**
  * Exibe a estrutura do arquivo de tamanho fixo.
