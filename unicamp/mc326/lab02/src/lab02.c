@@ -44,6 +44,8 @@ int main(int argc, char * argv[]) {
 
 	debug("Declarando variaveis da aplicação");
 	int opcao;
+	int RA;
+	Aluno aluno;
 
 	do {
 
@@ -52,8 +54,13 @@ int main(int argc, char * argv[]) {
 
 		debug("Obtendo a opção do sistema");
 		//read_int("\nEntre com uma opcao:", opcao, 2);
-		scanf("%i", &opcao);
-		//getchar();
+		//scanf("%i", &opcao);
+		char *str_opcao = getLine();
+
+		opcao = -1;
+		if (isNumeric(str_opcao)) {
+			opcao = atoi(str_opcao);
+		}
 
 		switch (opcao) {
 
@@ -69,24 +76,45 @@ int main(int argc, char * argv[]) {
 			}
 			break;
 		case 3:
-			debug("Verifica se a lista de alunos foi criada");
-			if (alunos == NULL) {
-				debug(
-						"Caso a lista de alunos não tenha sido processada, cria o arquivo de tamanho variavel");
-				processarArquivoFormatoVariavel((char*) argv[1],
-						(char*) argv[2]);
-			}
-
-			showInformacoesArquivoVariavel((char *) argv[2]);
+			alunos
+					= carregarAlunoArquivoVariavel((char*) argv[2], alunos,
+							true);
 			break;
 		case 4:
-			alunos = carregarAlunoArquivoVariavel((char*) argv[2], alunos);
+			printf(getMessage("aluno.label.digite_ra_aluno"), "\n\n", "\n");
+			char *str_ra = getLine();
+			RA = -1;
+			if (isNumeric(str_ra)) {
+				RA = atoi(str_ra);
+				aluno = findAlunoByRaArquivoVariavel(RA, (char *) argv[2]);
+
+				if (aluno == NULL) {
+
+					printf(getMessage("aluno.label.registroInexistente"), "\n");
+
+				} else {
+					showAluno(aluno);
+				}
+			} else {
+				printf(getMessage("lab02.label.opcao_invalida"), " RA.\n");
+			}
+
 			break;
 		case 5:
 			break;
 		case 6:
-			alunos = loadAlunos(alunos, (char*) argv[1], (char*) argv[2]);
-			extractFileKey(alunos);
+			extractFileKey((char *) argv[2]);
+			break;
+		case 7:
+			sortFileKey((char *) argv[2]);
+			break;
+		case 8:
+			extractFileKey((char *) argv[2]);
+			showFile(INDEX_ALUNO_FILE);
+			break;
+		case 9:
+			sortFileKey((char *) argv[2]);
+			showFile(INDEX_ALUNO_FILE_SORTED);
 			break;
 		default:
 			if (opcao != 13) {
@@ -98,7 +126,8 @@ int main(int argc, char * argv[]) {
 	} while (opcao != 13);
 
 	debug("Libera a memoria alocada e finaliza o programa");
-	freeAluno(alunos);
+	freeAlunoList(alunos);
+	freeAluno(aluno);
 	finalizeLog();
 	freeBundle();
 	return 0;
@@ -111,9 +140,11 @@ void showMenu() {
 	printf(getMessage("lab02.label.menu.processar_arquivo_variavel"), "\n");
 	printf(getMessage("lab02.label.menu.listar_arquivo_fixo"), "\n");
 	printf(getMessage("lab02.label.menu.listar_arquivo_variavel"), "\n");
-	//printf(getMessage("lab02.label.menu.insert"), "\n");
-	//printf(getMessage("lab02.label.menu.remove"), "\n");
-	//printf(getMessage("lab02.label.menu.find"), "\n");
+	printf(getMessage("lab02.label.menu.find_aluno_ra"), "\n");
+	printf(getMessage("lab02.label.menu.extracao_chaves"), "\n");
+	printf(getMessage("lab02.label.menu.classificacao_chaves"), "\n");
+	printf(getMessage("lab02.label.menu.listar_chaves"), "\n");
+	printf(getMessage("lab02.label.menu.listar_chaves_classificadas"), "\n");
 	printf(getMessage("lab02.label.menu.encerrar"), "\n");
 }
 
@@ -128,22 +159,6 @@ LIST loadAlunos(LIST alunos, char *input, char *output) {
 				"Caso a lista de alunos não tenha sido processada, cria o arquivo de tamanho variavel");
 		alunos = processarArquivoFormatoVariavel(input, output);
 	}
-
-	nodeptr n = alunos->content;
-	int count = 0;
-	printf("============================\n");
-	while (n != NULL) {
-
-		Aluno a = n->value;
-		printf("%i - %s\n", a->ra, a->nome);
-		n = n->next;
-		count++;
-
-		if (count >= listSize(alunos))
-			break;
-
-	}
-	printf("============================\n");
 
 	return alunos;
 
