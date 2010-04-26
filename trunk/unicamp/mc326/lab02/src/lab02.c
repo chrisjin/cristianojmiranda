@@ -127,7 +127,7 @@ int main(int argc, char * argv[]) {
 
 	debug("Libera a memoria alocada e finaliza o programa");
 	freeAlunoList(alunos);
-	freeAluno(aluno);
+	//freeAluno(aluno);
 	finalizeLog();
 	freeBundle();
 	return 0;
@@ -153,12 +153,9 @@ void showMenu() {
  */
 LIST loadAlunos(LIST alunos, char *input, char *output) {
 
-	debug("Verifica se a lista de alunos foi criada");
-	if (alunos == NULL) {
-		debug(
-				"Caso a lista de alunos não tenha sido processada, cria o arquivo de tamanho variavel");
-		alunos = processarArquivoFormatoVariavel(input, output);
-	}
+	debug(
+			"Caso a lista de alunos não tenha sido processada, cria o arquivo de tamanho variavel");
+	alunos = processarArquivoFormatoVariavel(input, output);
 
 	return alunos;
 
