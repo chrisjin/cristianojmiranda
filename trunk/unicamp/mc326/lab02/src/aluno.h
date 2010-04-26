@@ -25,6 +25,7 @@
 #define FIM_HTML "</table></body></html>"
 
 #define INDEX_ALUNO_FILE "index_aluno.txt"
+#define INDEX_ALUNO_FILE_SORTED "index_aluno.txt.sorted"
 
 /** Apontador para Aluno */
 typedef struct AlunoStr* Aluno;
@@ -78,7 +79,8 @@ LIST processarArquivoFormatoVariavel(char *inputFile, char *outputFile);
 /**
  * Processa a lista de arquivo de tamanho variavel.
  */
-LIST carregarAlunoArquivoVariavel(char *inputFile, LIST alunos);
+LIST carregarAlunoArquivoVariavel(char *inputFile, LIST alunos,
+		boolean showAluno);
 
 /**
  * Cria o arquivo de formato variavel.
@@ -116,7 +118,12 @@ void writeFileFormatoHTML_fim(FILE *file);
  * Monta o arquivo com as chaves para indexar o arquivo de tamanho variavel.
  *
  */
-void extractFileKey(LIST alunos);
+void extractFileKey(char *inputFile);
+
+/**
+ * Ordena o arquivo de index
+ */
+void sortFileKey(char *inputFile);
 
 /**
  * Libera da memoria a estrutura de alunos.
@@ -136,3 +143,9 @@ void freeAlunoList(LIST aluno);
  * Obtem um aluno pelo ra.
  */
 Aluno findAlunoByRaList(LIST alunos, int ra);
+
+/**
+ * Obtem um aluno no arquivo variavel.
+ */
+Aluno findAlunoByRaArquivoVariavel(int ra, char *fileName);
+
