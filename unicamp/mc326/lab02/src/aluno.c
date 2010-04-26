@@ -122,6 +122,8 @@ void showAluno(Aluno aluno) {
 		printf(getMessage("aluno.label.dados.sexo"), "\t\t", SEXO(aluno->sexo),
 				"\n");
 		printf(getMessage("aluno.label.dados.curso"), "\t\t", aluno->curso,
+				"\n");
+		printf(getMessage("aluno.label.posicao"), "\t\t", aluno->byteIndex,
 				"\n\n");
 	}
 
@@ -251,7 +253,8 @@ void showInformacoesArquivoVariavel(char *arqVariavel) {
 /**
  * Processa a lista de arquivo de tamanho variavel.
  */
-LIST carregarAlunoArquivoVariavel(char *inputFile, LIST alunos) {
+LIST carregarAlunoArquivoVariavel(char *inputFile, LIST alunos,
+		boolean exibirAluno) {
 
 	debug("Verifica se a lista de alunos não foi criada");
 	if (alunos == NULL) {
@@ -267,10 +270,14 @@ LIST carregarAlunoArquivoVariavel(char *inputFile, LIST alunos) {
 
 	char line[READ_BUFFER_SIZE];
 	int ra = -1, countRec = 0;
-	int index = 0;
+	int index = 0, lineSize = 0;
 	boolean inList = false;
 	Aluno aluno = NULL;
+	char *tmp;
 	while (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
+
+		debug("Obtem o tamanho da linha");
+		lineSize = strlen(line);
 
 		countRec = 1;
 
@@ -291,11 +298,8 @@ LIST carregarAlunoArquivoVariavel(char *inputFile, LIST alunos) {
 			inList = true;
 		}
 
-		debug("Seta a posicao no arquivo");
-		aluno->byteIndex = index;
-
 		while (registro) {
-			printf("- %s\n", registro);
+			tmp = strip(registro);
 
 			if (!inList) {
 				switch (countRec) {
@@ -304,26 +308,27 @@ LIST carregarAlunoArquivoVariavel(char *inputFile, LIST alunos) {
 					aluno->ra = ra;
 					break;
 				case 2:
-					aluno->nome = MEM_ALLOC_N(char, strlen(registro));
-					strcat(aluno->nome, registro);
+					aluno->nome = MEM_ALLOC_N(char, strlen(tmp));
+					strcpy(aluno->nome, tmp);
 					break;
 				case 3:
-					aluno->cidade = MEM_ALLOC_N(char, strlen(registro));
-					strcat(aluno->cidade, registro);
+					aluno->cidade = MEM_ALLOC_N(char, strlen(tmp) );
+					strcpy(aluno->cidade, tmp);
 					break;
 				case 4:
-					aluno->telContato = MEM_ALLOC_N(char, strlen(registro));
-					strcat(aluno->telContato, registro);
+					aluno->telContato = MEM_ALLOC_N(char, strlen(tmp));
+					strcpy(aluno->telContato, tmp);
 					break;
 				case 5:
-					aluno->telAlternativo = MEM_ALLOC_N(char, strlen(registro));
-					strcat(aluno->telAlternativo, registro);
+					aluno->telAlternativo = MEM_ALLOC_N(char, strlen(tmp));
+					strcpy(aluno->telAlternativo, tmp);
 					break;
 				case 6:
 					aluno->sexo = registro[0];
 					break;
 				case 7:
-					aluno->curso = atoi(registro);
+					aluno->curso
+							= atoi(strSubString(tmp, 0, (strlen(tmp) - 2)));
 					break;
 				default:
 					break;
@@ -334,22 +339,114 @@ LIST carregarAlunoArquivoVariavel(char *inputFile, LIST alunos) {
 			countRec++;
 		}
 
+		debug("Seta a posicao no arquivo");
+		aluno->byteIndex = index;
+
 		debug("Incrementa a posicao em byte no arquivo");
-		index += strlen(line);
+		index += lineSize;
 
 		if (!inList) {
 			debug("Insere o novo aluno na lista");
 			rearInsert(alunos, aluno);
 		}
 
-		debug("Exibe os dados do aluno");
-		showAluno(aluno);
+		if (exibirAluno) {
+			debug("Exibe os dados do aluno");
+			showAluno(aluno);
+		}
 
 	}
 
 	fclose(arq);
 
 	return alunos;
+
+}
+
+/**
+ * Obtem um aluno no arquivo variavel.
+ */
+Aluno findAlunoByRaArquivoVariavel(int ra, char *fileName) {
+
+	debug("Abre o arquivo de tamanho variavel para leitura");
+	FILE *arq = Fopen(fileName, "r");
+
+	debug("Obtem o token que separa os registros para arquivo variavel");
+	char *token = getProperty("aluno.arquivo.variavel.token");
+
+	char line[READ_BUFFER_SIZE];
+	int ra_registro = -1, countRec = 0;
+	int index = 0, lineSize = 0;
+	Aluno aluno = NULL;
+	char *tmp;
+	while (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
+
+		lineSize = strlen(line);
+		countRec = 1;
+
+		debugs("Processando linha: ", line);
+		char *registro = strtok(line, token);
+
+		debug("Obtem o ra");
+		ra_registro = atoi(registro);
+
+		debug("Verifica se eh o RA procurado");
+		if (ra_registro != ra) {
+			index += lineSize;
+			debug("RA invalido. Pulando para o proximo registro.");
+			continue;
+		}
+
+		debug("Aloca memoria para o aluno");
+		aluno = MEM_ALLOC(Aluno);
+		aluno->byteIndex = index;
+
+		while (registro) {
+			tmp = strip(registro);
+
+			switch (countRec) {
+
+			case 1:
+				aluno->ra = ra_registro;
+				break;
+			case 2:
+				aluno->nome = MEM_ALLOC_N(char, strlen(tmp));
+				strcpy(aluno->nome, tmp);
+				break;
+			case 3:
+				aluno->cidade = MEM_ALLOC_N(char, strlen(tmp) );
+				strcpy(aluno->cidade, tmp);
+				break;
+			case 4:
+				aluno->telContato = MEM_ALLOC_N(char, strlen(tmp));
+				strcpy(aluno->telContato, tmp);
+				break;
+			case 5:
+				aluno->telAlternativo = MEM_ALLOC_N(char, strlen(tmp));
+				strcpy(aluno->telAlternativo, tmp);
+				break;
+			case 6:
+				aluno->sexo = registro[0];
+				break;
+			case 7:
+				aluno->curso = atoi(strSubString(tmp, 0, (strlen(tmp) - 2)));
+				break;
+			default:
+				break;
+			}
+
+			registro = strtok(END_STR_TOKEN, token);
+			countRec++;
+		}
+
+		if (aluno != NULL)
+			break;
+
+	}
+
+	fclose(arq);
+
+	return aluno;
 
 }
 
@@ -429,26 +526,57 @@ void writeFileFormatoHTML_fim(FILE *file) {
  * Monta o arquivo com as chaves para indexar o arquivo de tamanho variavel.
  *
  */
-void extractFileKey(LIST alunos) {
+void extractFileKey(char *inputFile) {
 
-	int i;
-	Aluno aluno;
-	if (alunos != NULL && alunos->count > 0) {
+	if (inputFile != NULL) {
 
 		debug("Cria o arquivo de index de aluno");
 		FILE *indexFile = Fopen(INDEX_ALUNO_FILE, "w");
 
-		for (i = 0; i < listSize(alunos); i++) {
+		debug("Abre o arquivo de tamanho variavel para leitura");
+		FILE *arq = Fopen(inputFile, "r");
 
-			aluno = getElement(alunos, i);
-			fprintf(indexFile, "%i %i", aluno->ra, aluno->byteIndex);
+		debug("Obtem o token que separa os registros para arquivo variavel");
+		char *token = getProperty("aluno.arquivo.variavel.token");
+
+		char line[READ_BUFFER_SIZE];
+		int ra = -1;
+		int index = 0, lineSize = 0;
+		while (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
+
+			debug("Obtem o tamanho da linha");
+			lineSize = strlen(line);
+
+			debugs("Processando linha: ", line);
+			char *registro = strtok(line, token);
+
+			debug("Obtem o ra");
+			ra = atoi(registro);
+			fprintf(indexFile, "%i=%i\n", ra, index);
+
+			debug("Incrementa a posicao em byte no arquivo");
+			index += lineSize;
 
 		}
 
+		fclose(arq);
+
 		debug("Fecha o arquivo de index");
 		fclose(indexFile);
-
 	}
+
+}
+
+/**
+ * Ordena o arquivo de index
+ */
+void sortFileKey(char *inputFile) {
+
+	debug("Cria o arquivo de indexes");
+	extractFileKey(inputFile);
+
+	system(str_join("sort ", str_join(INDEX_ALUNO_FILE, str_join(" > ",
+			INDEX_ALUNO_FILE_SORTED))));
 
 }
 
