@@ -285,3 +285,20 @@ long fileSize(char *fileName) {
 
 	return tamanho;
 }
+
+/**
+ * Exibe os dados de um arquivo na tela.
+ */
+void showFile(char *fileName) {
+
+	FILE *arq = Fopen(fileName, "r");
+	char line[READ_BUFFER_SIZE];
+	int ra = -1;
+	int index = 0, lineSize = 0;
+	while (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
+		printf("%s", line);
+	}
+
+	fclose(arq);
+
+}
