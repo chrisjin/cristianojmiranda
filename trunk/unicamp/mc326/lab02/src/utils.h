@@ -21,6 +21,7 @@
 #define STR_END_TOKEN "\0"
 #define END_OF_LINE "\n"
 #define ERROR_EXECUTION -1
+#define READ_BUFFER_SIZE (1024)
 
 /**
  * Converte todos os carateres de uma String
@@ -81,3 +82,8 @@ FILE* Fopen(char *fileName, char* flag);
  * Calcula o tamanho do arquivo.
  */
 long fileSize(char *fileName);
+
+/**
+ * Exibe os dados de um arquivo na tela.
+ */
+void showFile(char *fileName);
