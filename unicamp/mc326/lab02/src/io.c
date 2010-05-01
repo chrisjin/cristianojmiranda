@@ -224,3 +224,71 @@ void clearString(char *value) {
 	}
 
 }
+
+/**
+ * Concatena um token no inicio de uma string com tamanho fixo.
+ *
+ * @param value - String a ser concatenada
+ * @param token - Token para preencher a string
+ * @param size - Tamanho da String
+ */
+char *strConcanteStart(char *value, char *token, int size) {
+
+	// Nao concatena spacos
+	if (token == " ")
+		return value;
+
+	// Caso a string seja do tamanho desejado
+	if (strlen(value) == size) {
+
+		return value;
+
+	} else if (strlen(value) > size) {
+
+		// Caso a string seja maior
+		return substring(value, 0, size);
+
+	} else {
+
+		char *result = strip(value);
+		while (strlen(result) != size) {
+
+			result = str_join(token, result);
+
+		}
+
+		return result;
+
+	}
+
+}
+
+/**
+ * Repete um string value j vezes.
+ */
+char *repeatString(char *value, int j) {
+
+	char *result = strip(value);
+
+	int i = 0;
+	for (i = 1; i < j; i++) {
+
+		result = str_join(value, result);
+
+	}
+
+	return result;
+}
+
+/**
+ * Converte um int para um String.
+ */
+char *itoa(int value) {
+
+	char buffer[50];
+	stripWhiteSpace(buffer);
+	sprintf(buffer, "%d", value);
+
+	return strip(buffer);
+
+}

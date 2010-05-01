@@ -129,4 +129,23 @@ char *strip(char *value);
 
 void clearString(char *value);
 
+/**
+ * Concatena um token no inicio de uma string com tamanho fixo.
+ *
+ * @param value - String a ser concatenada
+ * @param token - Token para preencher a string
+ * @param size - Tamanho da String
+ */
+char *strConcanteStart(char *value, char *token, int size);
+
+/**
+ * Repete um string value j vezes.
+ */
+char *repeatString(char *value, int j);
+
+/**
+ * Converte um int para um String.
+ */
+char *itoa(int value);
+
 #endif
