@@ -138,6 +138,27 @@ int main(int argc, char * argv[]) {
 			}
 
 			break;
+		case 12:
+			sortFileKey((char *) argv[2]);
+
+			printf(getMessage("aluno.label.digite_ra_aluno"), "\n\n", "\n");
+			str_ra = getLine();
+			RA = -1;
+			if (isNumeric(str_ra)) {
+				RA = atoi(str_ra);
+				if (deleteAluno(RA, INDEX_ALUNO_FILE_SORTED, (char *) argv[2])
+						< 0) {
+					printf(getMessage("aluno.label.registroInexistente"), "\n");
+
+				} else {
+					printf(getMessage("aluno.label.registroDeletado"), "\n");
+				}
+			} else {
+				printf(getMessage("lab02.label.opcao_invalida"), " RA.\n");
+			}
+
+			break;
+
 		default:
 			if (opcao != 13) {
 				printf(getMessage("lab02.label.opcao_invalida"), "\n");
@@ -168,6 +189,7 @@ void showMenu() {
 	printf(getMessage("lab02.label.menu.listar_chaves"), "\n");
 	printf(getMessage("lab02.label.menu.listar_chaves_classificadas"), "\n");
 	printf(getMessage("lab02.label.menu.pesquisar_pelo_index"), "\n");
+	printf(getMessage("lab02.label.menu.remocao_registro"), "\n");
 	printf(getMessage("lab02.label.menu.encerrar"), "\n");
 }
 
