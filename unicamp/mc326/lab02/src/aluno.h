@@ -24,6 +24,7 @@
 #define cabecalho "<HTML><HEAD><TITLE>Cadastro de Alunos da Unicamp.</TITLE></HEAD><body></body><table style='border: 1px solid black;'>"
 #define FIM_HTML "</table></body></html>"
 
+#define INDEX_ALUNO_RECORD_TOKEN "="
 #define INDEX_ALUNO_FILE "index_aluno.txt"
 #define INDEX_ALUNO_FILE_SORTED "index_aluno.txt.sorted"
 
@@ -62,7 +63,7 @@ typedef struct AlunoStr {
  * Obtem os dados de um aluno pelo RA.
  *
  */
-Aluno findAlunoByRa(int ra, FILE *file);
+Aluno findAlunoIndexByRa(int ra, char *indexFile, char *variableFile);
 
 /**
  * Exibe os dados de um aluno.
@@ -149,3 +150,17 @@ Aluno findAlunoByRaList(LIST alunos, int ra);
  */
 Aluno findAlunoByRaArquivoVariavel(int ra, char *fileName);
 
+/**
+ * Obtem um aluno no arquivo variavel, considerando um arquivo de index.
+ */
+Aluno findIndexAlunoByRa(int ra, char *fileName);
+
+/**
+ * Obtem o Ra na linha do arquivo de index
+ */
+int getRaLineIndex(FILE *arq, int ra, int *index);
+
+/**
+ * Realizar busca binaria no arquivo para localizar o ra do aluno desejado.
+ */
+int indexByRa(int ra, char *indexFile);
