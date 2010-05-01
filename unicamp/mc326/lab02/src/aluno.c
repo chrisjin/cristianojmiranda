@@ -27,11 +27,6 @@ int alternate = true;
 /** Guarda dados do aluno em struct */
 Aluno newAluno(char *value) {
 
-	/*	debug("Valida se o RA do aluno é numerico");
-	 if (!isNumeric(dados[1])) {
-	 error(getMessage("lab01b.label.ra_numerico"), "\n\n");
-	 }*/
-
 	debug("Cria um novo aluno apartir ");
 
 	// Obtem a posição do ultimo caracter de arquivo fixo
@@ -90,9 +85,9 @@ Aluno newAluno(char *value) {
  * Obtem os dados de um aluno pelo RA.
  *
  */
-Aluno findAlunoByRa(int ra, FILE *file) {
+Aluno findAlunoIndexByRa(int ra, char *indexFile) {
 
-	Aluno a;
+	Aluno a = NULL;
 
 	if (indexByRa(ra) == INDEX_NOT_FOUND_FOR_ALUNO) {
 	}
@@ -100,7 +95,43 @@ Aluno findAlunoByRa(int ra, FILE *file) {
 	return a;
 }
 
-int indexByRa(int ra) {
+int indexByRa(int ra, char *indexFile) {
+
+	debug("Abre o arquivo para leitura");
+	FILE *arq = Fopen(indexFile, "r");
+
+	int tmpRa = 0;
+	char split = NULL;
+	char line[READ_BUFFER_SIZE];
+
+	debug("Localizando a chave no arquivo ");
+	while (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
+
+		split = strtok(strip(line), " ");
+		if (split != NULL) {
+
+			tmpRa = atoi(split);
+			debugi("Lendo RA: ", tmpRa);
+			if (tmpRa == ra) {
+
+				debug("Ra localizado. Obtendo posicao");
+
+				split = strtok(END_STR_TOKEN, " ");
+				if (split == NULL) {
+					error("Arquivo de indexes corrompido");
+				} else {
+
+					break;
+				}
+
+			}
+
+		}
+
+	}
+
+	debug("Fechando o arquivo de indexes");
+
 	return INDEX_NOT_FOUND_FOR_ALUNO;
 }
 
@@ -637,3 +668,4 @@ Aluno findAlunoByRaList(LIST alunos, int ra) {
 	return NULL;
 
 }
+
