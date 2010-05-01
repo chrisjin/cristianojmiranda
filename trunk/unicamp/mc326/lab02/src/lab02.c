@@ -45,6 +45,7 @@ int main(int argc, char * argv[]) {
 	debug("Declarando variaveis da aplicação");
 	int opcao;
 	int RA;
+	char *str_ra = NULL;
 	Aluno aluno;
 
 	do {
@@ -53,8 +54,6 @@ int main(int argc, char * argv[]) {
 		showMenu();
 
 		debug("Obtendo a opção do sistema");
-		//read_int("\nEntre com uma opcao:", opcao, 2);
-		//scanf("%i", &opcao);
 		char *str_opcao = getLine();
 
 		opcao = -1;
@@ -82,7 +81,7 @@ int main(int argc, char * argv[]) {
 			break;
 		case 4:
 			printf(getMessage("aluno.label.digite_ra_aluno"), "\n\n", "\n");
-			char *str_ra = getLine();
+			str_ra = getLine();
 			RA = -1;
 			if (isNumeric(str_ra)) {
 				RA = atoi(str_ra);
@@ -116,6 +115,29 @@ int main(int argc, char * argv[]) {
 			sortFileKey((char *) argv[2]);
 			showFile(INDEX_ALUNO_FILE_SORTED);
 			break;
+		case 11:
+			sortFileKey((char *) argv[2]);
+
+			printf(getMessage("aluno.label.digite_ra_aluno"), "\n\n", "\n");
+			str_ra = getLine();
+			RA = -1;
+			if (isNumeric(str_ra)) {
+				RA = atoi(str_ra);
+				aluno = findAlunoIndexByRa(RA, INDEX_ALUNO_FILE_SORTED,
+						(char *) argv[2]);
+
+				if (aluno == NULL) {
+
+					printf(getMessage("aluno.label.registroInexistente"), "\n");
+
+				} else {
+					showAluno(aluno);
+				}
+			} else {
+				printf(getMessage("lab02.label.opcao_invalida"), " RA.\n");
+			}
+
+			break;
 		default:
 			if (opcao != 13) {
 				printf(getMessage("lab02.label.opcao_invalida"), "\n");
@@ -145,6 +167,7 @@ void showMenu() {
 	printf(getMessage("lab02.label.menu.classificacao_chaves"), "\n");
 	printf(getMessage("lab02.label.menu.listar_chaves"), "\n");
 	printf(getMessage("lab02.label.menu.listar_chaves_classificadas"), "\n");
+	printf(getMessage("lab02.label.menu.pesquisar_pelo_index"), "\n");
 	printf(getMessage("lab02.label.menu.encerrar"), "\n");
 }
 
