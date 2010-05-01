@@ -219,7 +219,7 @@ int deleteAluno(int ra, char *indexFile, char *variableFile) {
 			fseek(arq, index, SEEK_SET);
 			Aluno a = newAlunoVariableLine(line);
 			a->ativo = DELETED_RECORD;
-			char *lnAluno = converAlunoToVariableLine(a);
+			char *lnAluno = converAlunoToVariableLine(a, false);
 			fprintf(arq, lnAluno);
 			result = 0;
 		}
@@ -461,7 +461,7 @@ void writeFileFormatoVariavel(FILE *file, Aluno aln) {
 
 	if (file != NULL && aln != NULL && aln->nome != NULL) {
 		aln->ativo = ENABLE_RECORD;
-		fprintf(file, converAlunoToVariableLine(aln));
+		fprintf(file, converAlunoToVariableLine(aln, true));
 	}
 
 }
@@ -469,17 +469,25 @@ void writeFileFormatoVariavel(FILE *file, Aluno aln) {
 /**
  * Converte um aluno para uma string variavel para escrever no arquivo.
  */
-char *converAlunoToVariableLine(Aluno aln) {
+char *converAlunoToVariableLine(Aluno aln, boolean escape) {
 	char line[READ_BUFFER_SIZE];
 
 	char *separete = getProperty("aluno.arquivo.variavel.token");
 	char *endLine = getProperty("aluno.arquivo.variavel.fimregistro");
 
-	sprintf(line, "%i%s%s%s%s%s%s%s%s%s%c%s%i%s%c%s%s\n", aln->ra, separete,
-			strip(aln->nome), separete, strip(aln->cidade), separete, strip(
-					aln->telContato), separete, strip(aln->telAlternativo),
-			separete, aln->sexo, separete, aln->curso, separete, aln->ativo,
-			separete, endLine);
+	if (escape) {
+		sprintf(line, "%i%s%s%s%s%s%s%s%s%s%c%s%i%s%c%s%s\n", aln->ra,
+				separete, strip(aln->nome), separete, strip(aln->cidade),
+				separete, strip(aln->telContato), separete, strip(
+						aln->telAlternativo), separete, aln->sexo, separete,
+				aln->curso, separete, aln->ativo, separete, endLine);
+	} else {
+		sprintf(line, "%i%s%s%s%s%s%s%s%s%s%c%s%i%s%c%s%s", aln->ra, separete,
+				strip(aln->nome), separete, strip(aln->cidade), separete,
+				strip(aln->telContato), separete, strip(aln->telAlternativo),
+				separete, aln->sexo, separete, aln->curso, separete,
+				aln->ativo, separete, endLine);
+	}
 
 	return strip(line);
 }
