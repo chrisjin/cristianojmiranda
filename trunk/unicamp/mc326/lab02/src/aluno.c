@@ -82,57 +82,240 @@ Aluno newAluno(char *value) {
 }
 
 /**
+ * Cria um arquivo apartir de um linha de tamanho variavel.
+ *
+ */
+Aluno newAlunoVariableLine(char *line) {
+
+	int countRec = 1;
+	int lineSize = strlen(line);
+
+	debug("Obtem o token que separa os registros para arquivo variavel");
+	char *token = getProperty("aluno.arquivo.variavel.token");
+
+	debugs("Processando linha: ", line);
+	char *registro = strtok(line, token);
+
+	debug("Obtem o ra");
+	int ra_registro = atoi(registro);
+
+	debug("Aloca memoria para o aluno");
+	Aluno aluno = MEM_ALLOC(Aluno);
+
+	char *tmp = NULL;
+	while (registro) {
+		tmp = (char*) strip(registro);
+
+		switch (countRec) {
+
+		case 1:
+			aluno->ra = ra_registro;
+			break;
+		case 2:
+			aluno->nome = MEM_ALLOC_N(char, strlen(tmp));
+			strcpy(aluno->nome, tmp);
+			break;
+		case 3:
+			aluno->cidade = MEM_ALLOC_N(char, strlen(tmp) );
+			strcpy(aluno->cidade, tmp);
+			break;
+		case 4:
+			aluno->telContato = MEM_ALLOC_N(char, strlen(tmp));
+			strcpy(aluno->telContato, tmp);
+			break;
+		case 5:
+			aluno->telAlternativo = MEM_ALLOC_N(char, strlen(tmp));
+			strcpy(aluno->telAlternativo, tmp);
+			break;
+		case 6:
+			aluno->sexo = registro[0];
+			break;
+		case 7:
+			aluno->curso = atoi(strSubString(tmp, 0, (strlen(tmp) - 2)));
+			break;
+		default:
+			break;
+		}
+
+		registro = strtok(END_STR_TOKEN, token);
+		countRec++;
+	}
+
+	return aluno;
+}
+
+/**
  * Obtem os dados de um aluno pelo RA.
  *
  */
-Aluno findAlunoIndexByRa(int ra, char *indexFile) {
+Aluno findAlunoIndexByRa(int ra, char *indexFile, char *variableFile) {
 
 	Aluno a = NULL;
 
-	if (indexByRa(ra) == INDEX_NOT_FOUND_FOR_ALUNO) {
+	int index = indexByRa(ra, indexFile);
+	if (index != INDEX_NOT_FOUND_FOR_ALUNO) {
+
+		debug("Abre o arquivo variavel para leitura");
+		FILE *arq = Fopen(variableFile, "r");
+
+		debug("Posiciona o arquivo no index");
+		fseek(arq, index, SEEK_SET);
+
+		char line[READ_BUFFER_SIZE];
+		if (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
+			a = newAlunoVariableLine(line);
+		}
+
+		debug("Fechar o arquivo variavel");
+		fclose(arq);
+
 	}
 
 	return a;
 }
 
+/**
+ * Realizar busca binaria no arquivo para localizar o ra do aluno desejado.
+ */
 int indexByRa(int ra, char *indexFile) {
+
+	debug("Obtem o tamanho de cada registro do arquivo de index");
+	int recSize = atoi(getProperty("aluno.index.file.record.size"));
+
+	debug("Obtem o tamanho do arquivo de indexes");
+	int pFim = fileSize(indexFile);
+	int recordCount = pFim / recSize;
+	pFim = pFim - recSize;
 
 	debug("Abre o arquivo para leitura");
 	FILE *arq = Fopen(indexFile, "r");
 
-	int tmpRa = 0;
-	char split = NULL;
-	char line[READ_BUFFER_SIZE];
+	debug("Variaveis de controle da busca binaria");
+	int pInicio = 0, pMeio;
+	int index = -1;
+	int lineRa, raInicio, raFim;
 
+	int count = 0;
 	debug("Localizando a chave no arquivo ");
-	while (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
+	while (count <= recordCount) {
 
-		split = strtok(strip(line), " ");
-		if (split != NULL) {
+		debug("Posiciona o cursor no inicio do periodo");
+		fseek(arq, pInicio, SEEK_SET);
 
-			tmpRa = atoi(split);
-			debugi("Lendo RA: ", tmpRa);
-			if (tmpRa == ra) {
+		debug("Le a linha do inicio do periodo");
+		raInicio = getRaLineIndex(arq, ra, &index);
 
-				debug("Ra localizado. Obtendo posicao");
-
-				split = strtok(END_STR_TOKEN, " ");
-				if (split == NULL) {
-					error("Arquivo de indexes corrompido");
-				} else {
-
-					break;
-				}
-
-			}
-
+		debug("Caso tenha localizado");
+		if (index != -1) {
+			break;
 		}
+
+		debug("Caso o Ra procurado seja menor que o Ra do inicio do periodo");
+		if (pInicio == 0 && ra < raInicio) {
+			break;
+		}
+
+		debug("Posiciona o curso no final do periodo");
+		fseek(arq, pFim, SEEK_SET);
+
+		debug("Le a linha do fim do periodo");
+		raFim = getRaLineIndex(arq, ra, &index);
+
+		debug("Caso tenha localizado");
+		if (index != -1) {
+			break;
+		}
+
+		debug("Caso o Ra procurado seja maior que o Ra do fim do periodo");
+		if (pInicio == 0 && ra > raFim) {
+			break;
+		}
+
+		debug("Verifica se o ra procurado esta no periodo no entre meio");
+		pMeio = (pFim - pInicio) / 2;
+
+		debug("Posiciona o curso no meio do periodo");
+		fseek(arq, pMeio, SEEK_SET);
+
+		debug("Le a linha do meio do periodo");
+		raInicio = getRaLineIndex(arq, ra, &index);
+
+		debug("Caso tenha localizado");
+		if (index != -1) {
+			break;
+		}
+
+		debug("Caso o Ra esteje no periodo inferior");
+		if (ra > raInicio) {
+			pInicio = pMeio;
+		} else {
+			pFim = pMeio;
+		}
+
+		count++;
 
 	}
 
-	debug("Fechando o arquivo de indexes");
+	debug("Fecha o arquivo de indexes");
+	fclose(arq);
 
+	debug("Retorna o index caso tenha encontrado o RA");
+	if (index != -1) {
+		return index;
+	}
+
+	debug("Arquivo nao encontrado");
 	return INDEX_NOT_FOUND_FOR_ALUNO;
+}
+
+/**
+ * Obtem o Ra na linha do arquivo de index
+ */
+int getRaLineIndex(FILE *arq, int ra, int *index) {
+
+	*index = -1;
+	char *split = NULL;
+	char line[READ_BUFFER_SIZE];
+	if (fgets(line, READ_BUFFER_SIZE, arq) == NULL) {
+
+		debug("Linha nao retornada, possivel fim do arquivo");
+		return -1;
+
+	} else {
+
+		debugs("Linha do index a ser processada: ", line);
+
+		debug("Normaliza a linha");
+		char *tmp_line = (char*) strip(strMerge(line, END_OF_LINE,
+				STR_END_TOKEN));
+
+		split = strtok(tmp_line, INDEX_ALUNO_RECORD_TOKEN);
+		if (split) {
+
+			debug("Obtem o ra da linha");
+			int line_ra = atoi(split);
+
+			debugi("Ra da linha: ", line_ra);
+
+			debug("Verifica se eh o ra procurado");
+			if (line_ra == ra) {
+
+				debug("RA encontrado!");
+				split = strtok(END_STR_TOKEN, INDEX_ALUNO_RECORD_TOKEN);
+				if (split) {
+					debugs("Index a ser retornado: ", split);
+					*index = atoi(split);
+				}
+			}
+
+			return line_ra;
+
+		} else {
+			debug("Linha inconsistente");
+			return -1;
+		}
+
+	}
 }
 
 /**
@@ -571,7 +754,6 @@ void extractFileKey(char *inputFile) {
 		char *token = getProperty("aluno.arquivo.variavel.token");
 
 		char line[READ_BUFFER_SIZE];
-		int ra = -1;
 		int index = 0, lineSize = 0;
 		while (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
 
@@ -580,10 +762,15 @@ void extractFileKey(char *inputFile) {
 
 			debugs("Processando linha: ", line);
 			char *registro = strtok(line, token);
+			char *str_index = itoa(index);
 
-			debug("Obtem o ra");
-			ra = atoi(registro);
-			fprintf(indexFile, "%i=%i\n", ra, index);
+			debugi("Index Processado: ", index);
+			debugs("Index Convertido: ", str_index);
+
+			debug("Escreve a linha do index");
+			fprintf(indexFile, "%s%s%s\n", strConcanteStart(registro, "0", 10),
+					INDEX_ALUNO_RECORD_TOKEN, strConcanteStart(str_index, "0",
+							10));
 
 			debug("Incrementa a posicao em byte no arquivo");
 			index += lineSize;
