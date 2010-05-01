@@ -174,5 +174,5 @@ int indexByRa(int ra, char *indexFile);
 /**
  * Converte um aluno para uma string variavel para escrever no arquivo.
  */
-char *converAlunoToVariableLine(Aluno aln);
+char *converAlunoToVariableLine(Aluno aln, boolean escape);
 
