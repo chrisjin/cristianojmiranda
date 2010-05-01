@@ -24,6 +24,9 @@
 #define cabecalho "<HTML><HEAD><TITLE>Cadastro de Alunos da Unicamp.</TITLE></HEAD><body></body><table style='border: 1px solid black;'>"
 #define FIM_HTML "</table></body></html>"
 
+#define ENABLE_RECORD 'T'
+#define DELETED_RECORD 'F'
+
 #define INDEX_ALUNO_RECORD_TOKEN "="
 #define INDEX_ALUNO_FILE "index_aluno.txt"
 #define INDEX_ALUNO_FILE_SORTED "index_aluno.txt.sorted"
@@ -53,6 +56,9 @@ typedef struct AlunoStr {
 
 	// Codigo do curso na unicamp
 	int curso;
+
+	// Indica se o registro esta ativo ou deletado
+	char ativo;
 
 	// Posição em byte do aluno no arquivo variavel
 	int byteIndex;
@@ -164,3 +170,9 @@ int getRaLineIndex(FILE *arq, int ra, int *index);
  * Realizar busca binaria no arquivo para localizar o ra do aluno desejado.
  */
 int indexByRa(int ra, char *indexFile);
+
+/**
+ * Converte um aluno para uma string variavel para escrever no arquivo.
+ */
+char *converAlunoToVariableLine(Aluno aln);
+

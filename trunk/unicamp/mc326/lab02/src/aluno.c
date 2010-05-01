@@ -27,7 +27,8 @@ int alternate = true;
 /** Guarda dados do aluno em struct */
 Aluno newAluno(char *value) {
 
-	debug("Cria um novo aluno apartir ");
+	debug("Cria um novo aluno apartir das linhas do arquivo de tamanho fixo ");
+	debugs("Linha: ", value);
 
 	// Obtem a posição do ultimo caracter de arquivo fixo
 	int sizeLine = atoi(getProperty("aluno.field.end.fimregistro"));
@@ -77,6 +78,9 @@ Aluno newAluno(char *value) {
 	fim = atoi(getProperty("aluno.field.end.curso"));
 	data = strSubString(value, inicio, fim);
 	aln->curso = atoi(data);
+
+	debug("Seta o aluno como ativo");
+	aln->ativo = ENABLE_RECORD;
 
 	return aln;
 }
@@ -133,6 +137,12 @@ Aluno newAlunoVariableLine(char *line) {
 		case 7:
 			aluno->curso = atoi(strSubString(tmp, 0, (strlen(tmp) - 2)));
 			break;
+		case 8:
+			tmp = strMerge(tmp, getProperty(
+					"aluno.arquivo.variavel.fimregistro"), " ");
+			tmp = strip(tmp);
+			aluno->ativo = tmp[0];
+			break;
 		default:
 			break;
 		}
@@ -152,7 +162,11 @@ Aluno findAlunoIndexByRa(int ra, char *indexFile, char *variableFile) {
 
 	Aluno a = NULL;
 
+	debug("Localiza o ra do aluno no index.");
 	int index = indexByRa(ra, indexFile);
+
+	debugi("Index: ", index);
+
 	if (index != INDEX_NOT_FOUND_FOR_ALUNO) {
 
 		debug("Abre o arquivo variavel para leitura");
@@ -164,6 +178,11 @@ Aluno findAlunoIndexByRa(int ra, char *indexFile, char *variableFile) {
 		char line[READ_BUFFER_SIZE];
 		if (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
 			a = newAlunoVariableLine(line);
+
+			if (a->ativo == DELETED_RECORD) {
+				debug("Aluno deletado");
+				a = NULL;
+			}
 		}
 
 		debug("Fechar o arquivo variavel");
@@ -172,6 +191,47 @@ Aluno findAlunoIndexByRa(int ra, char *indexFile, char *variableFile) {
 	}
 
 	return a;
+}
+
+/**
+ * Deleta um registro logicamente no arquivo variavel.
+ *
+ */
+int deleteAluno(int ra, char *indexFile, char *variableFile) {
+
+	int result = -1;
+
+	debug("Localiza o ra do aluno no index.");
+	int index = indexByRa(ra, indexFile);
+
+	debugi("Index: ", index);
+
+	if (index != INDEX_NOT_FOUND_FOR_ALUNO) {
+
+		debug("Abre o arquivo variavel para leitura");
+		FILE *arq = Fopen(variableFile, "r+");
+
+		debug("Posiciona o arquivo no index");
+		fseek(arq, index, SEEK_SET);
+
+		char line[READ_BUFFER_SIZE];
+		if (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
+			fseek(arq, index, SEEK_SET);
+			Aluno a = newAlunoVariableLine(line);
+			a->ativo = DELETED_RECORD;
+			char *lnAluno = converAlunoToVariableLine(a);
+			fprintf(arq, lnAluno);
+			result = 0;
+		}
+
+		debug("Fechar o arquivo variavel");
+		fclose(arq);
+
+	}
+
+	debug("Aluno nao encontrado");
+	return result;
+
 }
 
 /**
@@ -232,7 +292,7 @@ int indexByRa(int ra, char *indexFile) {
 		}
 
 		debug("Verifica se o ra procurado esta no periodo no entre meio");
-		pMeio = (pFim - pInicio) / 2;
+		pMeio = pInicio + ((pFim - pInicio) / 2);
 
 		debug("Posiciona o curso no meio do periodo");
 		fseek(arq, pMeio, SEEK_SET);
@@ -337,6 +397,8 @@ void showAluno(Aluno aluno) {
 				"\n");
 		printf(getMessage("aluno.label.dados.curso"), "\t\t", aluno->curso,
 				"\n");
+		printf(getMessage("aluno.label.dados.ativo"), "\t\t", aluno->ativo,
+				"\n");
 		printf(getMessage("aluno.label.posicao"), "\t\t", aluno->byteIndex,
 				"\n\n");
 	}
@@ -398,15 +460,28 @@ LIST processarArquivoFormatoVariavel(char *inputFile, char *outputFile) {
 void writeFileFormatoVariavel(FILE *file, Aluno aln) {
 
 	if (file != NULL && aln != NULL && aln->nome != NULL) {
-		char *separete = getProperty("aluno.arquivo.variavel.token");
-		char *endLine = getProperty("aluno.arquivo.variavel.fimregistro");
-
-		fprintf(file, "%i%s%s%s%s%s%s%s%s%s%c%s%i%s\n", aln->ra, separete,
-				strip(aln->nome), separete, strip(aln->cidade), separete,
-				strip(aln->telContato), separete, strip(aln->telAlternativo),
-				separete, aln->sexo, separete, aln->curso, endLine);
+		aln->ativo = ENABLE_RECORD;
+		fprintf(file, converAlunoToVariableLine(aln));
 	}
 
+}
+
+/**
+ * Converte um aluno para uma string variavel para escrever no arquivo.
+ */
+char *converAlunoToVariableLine(Aluno aln) {
+	char line[READ_BUFFER_SIZE];
+
+	char *separete = getProperty("aluno.arquivo.variavel.token");
+	char *endLine = getProperty("aluno.arquivo.variavel.fimregistro");
+
+	sprintf(line, "%i%s%s%s%s%s%s%s%s%s%c%s%i%s%c%s%s\n", aln->ra, separete,
+			strip(aln->nome), separete, strip(aln->cidade), separete, strip(
+					aln->telContato), separete, strip(aln->telAlternativo),
+			separete, aln->sexo, separete, aln->curso, separete, aln->ativo,
+			separete, endLine);
+
+	return strip(line);
 }
 
 /**
