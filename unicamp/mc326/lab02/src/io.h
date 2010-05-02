@@ -130,6 +130,11 @@ char *strip(char *value);
 void clearString(char *value);
 
 /**
+ * Verifica se um string eh vazia.
+ */
+boolean isEmptyString(char *value);
+
+/**
  * Concatena um token no inicio de uma string com tamanho fixo.
  *
  * @param value - String a ser concatenada

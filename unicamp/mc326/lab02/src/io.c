@@ -153,6 +153,27 @@ char *strip(char *value) {
 
 }
 
+/**
+ * Verifica se um string eh vazia.
+ */
+boolean isEmptyString(char *value) {
+
+	if (value == NULL) {
+		return true;
+	}
+
+	int i = 0;
+	for (i = 0; i < strlen(strip(value)); i++) {
+
+		if (value[i] != ' ') {
+			return false;
+		}
+
+	}
+
+	return true;
+}
+
 void stripNewLine(char s[]) {
 	char *pos = strchr(s, '\n');
 	int c;
