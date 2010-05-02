@@ -83,6 +83,13 @@ FILE* Fopen(char *fileName, char* flag);
  */
 long fileSize(char *fileName);
 
+/*
+ Implementação de uma função fileExists() em C. Se
+ o arquivo existir o valor true será retornado. Caso
+ contrário a função retornará false.
+ */
+boolean fileExists(const char *filename);
+
 /**
  * Exibe os dados de um arquivo na tela.
  */
