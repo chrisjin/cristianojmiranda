@@ -30,7 +30,7 @@
  * return apontador para a String upper
  *
  */
-void strUpperCase(char *value, char *output) {
+char *strUpperCase(char *value) {
 
 	setMethodName("strUpperCase");
 
@@ -39,7 +39,7 @@ void strUpperCase(char *value, char *output) {
 	}
 	debugs("Param value: ", value);
 
-	output = malloc(sizeof(char) * (1 + strlen(value)));
+	char *output = malloc(sizeof(char) * (1 + strlen(value)));
 
 	int i = 0;
 	for (i = 0; i < strlen(value); i++) {
@@ -50,6 +50,8 @@ void strUpperCase(char *value, char *output) {
 	debugs("Output value: ", output);
 
 	lastMethodName();
+
+	return output;
 
 }
 
@@ -118,7 +120,7 @@ int strCharCount(char *value, char key, boolean caseSensitive) {
 		copy = malloc((sizeof(char) * strlen(value)) + 1);
 		strcpy(copy, value);
 	} else {
-		strUpperCase(value, &copy);
+		copy = strUpperCase(value);
 		ch = toupper(key);
 	}
 
@@ -256,15 +258,20 @@ char* copyStr(char* str) {
 
 }
 
-char* getLine() {
+/**
+ * Le da entrada de dados.
+ */
+char *getLine() {
 
 	char line[256];
 
-	if (gets(line) != NULL)
+	if (gets(line) != NULL) {
 		return copyStr(line);
+	}
 
-	else
+	else {
 		return NULL;
+	}
 }
 
 /**
