@@ -74,7 +74,7 @@ int main(int argc, char * argv[]) {
 		case 1:
 			debug("Processa o arquivo de tamanho variavel");
 			fileOutputArqFixo = processarArquivoFormatoVariavel(
-					(char *) argv[1], (char *) argv[2], false, false, true);
+					(char *) argv[1], (char *) argv[2], false, true, true);
 			break;
 		case 2:
 
@@ -222,18 +222,54 @@ int main(int argc, char * argv[]) {
 		case 12:
 			sortFileKey((char *) argv[2]);
 
-			printf(getMessage("aluno.label.digite_ra_aluno"), "\n\n", "\n");
+			printf(getMessage("aluno.label.digite_ra_aluno_deletar"), "\n\n",
+					"\n");
 			strRaInput = getLine(false);
 			raInput = -1;
 			if (isNumeric(strRaInput)) {
 				raInput = atoi(strRaInput);
-				if (deleteAluno(raInput, INDEX_ALUNO_FILE_SORTED,
-						(char *) argv[2]) < 0) {
+
+				debug("Localizar o aluno a ser deletado");
+				aluno = findAlunoIndexByRa(raInput, INDEX_ALUNO_FILE_SORTED,
+						(char *) argv[2]);
+
+				if (aluno == NULL) {
+
 					printf(getMessage("aluno.label.registroInexistente"), "\n");
 
 				} else {
-					printf(getMessage("aluno.label.registroDeletado"), "\n");
+
+					debug("Exibe o aluno a ser excluido");
+					showAluno(aluno);
+
+					strcpy(str_opcao, "**");
+					while (strcmp(strUpperCase(str_opcao), sim) != 0 && strcmp(
+							strUpperCase(str_opcao), nao) != 0) {
+						printf(
+								getMessage(
+										"aluno.label.remover.confirmaDelecao"),
+								"\n\t", "\n");
+						str_opcao = getLine();
+					}
+
+					debug("Caso aceite deletar o aluno");
+					if (strcmp(strUpperCase(str_opcao), sim) == 0) {
+
+						if (deleteAluno(raInput, INDEX_ALUNO_FILE_SORTED,
+								(char *) argv[2], aluno->byteIndex) < 0) {
+							printf(
+									getMessage(
+											"aluno.label.registroInexistente"),
+									"\n");
+
+						} else {
+							printf(getMessage("aluno.label.registroDeletado"),
+									"\n");
+						}
+					}
+
 				}
+
 			} else {
 				printf(getMessage("lab02.label.opcao_invalida"), " RA.\n");
 			}
