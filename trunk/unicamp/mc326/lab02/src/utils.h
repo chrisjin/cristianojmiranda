@@ -31,7 +31,7 @@
  * return apontador para a String upper
  *
  */
-void strUpperCase(char *value, char *output);
+char *strUpperCase(char *value);
 
 /**
  * Faz o merge de uma String quebrando por um token especifico e 
@@ -94,3 +94,8 @@ boolean fileExists(const char *filename);
  * Exibe os dados de um arquivo na tela.
  */
 void showFile(char *fileName);
+
+/**
+ * Le da entrada de dados.
+ */
+char* getLine();
