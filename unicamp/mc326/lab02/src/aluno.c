@@ -42,7 +42,6 @@ Aluno newAluno(char *value) {
 
 	debug("Alocando memoria para aluno");
 	Aluno aln = (Aluno) MEM_ALLOC(Aluno);
-	aln->byteIndex = -1;
 
 	debug("Obtendo posicao para ra");
 	int inicio = atoi(getProperty("aluno.field.start.ra"));
@@ -63,16 +62,17 @@ Aluno newAluno(char *value) {
 	inicio = atoi(getProperty("aluno.field.start.nome"));
 	fim = atoi(getProperty("aluno.field.end.nome"));
 	char *data = strSubString(value, inicio, fim);
-	aln->nome = MEM_ALLOC_N(char, strlen(data));
-	strcat(aln->nome, data);
 
 	debug("Verifica se o nome foi fornecido");
-	if (strlen(strip(aln->nome)) == 0) {
+	if (isEmptyString(data)) {
 
 		debug("Nome nao preenchido. Descartando registro.");
 		return NULL;
 
 	}
+
+	aln->nome = MEM_ALLOC_N(char, strlen(data));
+	strcat(aln->nome, data);
 
 	debug("Obtendo cidade do aluno");
 	inicio = atoi(getProperty("aluno.field.start.cidade"));
@@ -89,7 +89,7 @@ Aluno newAluno(char *value) {
 	strcat(aln->telContato, data);
 
 	debug("Verifica se o telefone de contato foi fornecido");
-	if (strlen(strip(aln->telContato)) == 0) {
+	if (isEmptyString(aln->telContato)) {
 
 		debug("Telefone de contato nao preenchido. Descartando registro.");
 		return NULL;
@@ -122,7 +122,7 @@ Aluno newAluno(char *value) {
 	data = strSubString(value, inicio, fim);
 
 	debug("Verifica se o curso foi fornecido");
-	if (strlen(strip(data)) == 0) {
+	if (isEmptyString(data)) {
 
 		debug("Curso nao preenchido. Descartando registro.");
 		return NULL;
@@ -140,6 +140,7 @@ Aluno newAluno(char *value) {
 
 	debug("Seta o aluno como ativo");
 	aln->ativo = ENABLED_RECORD;
+	aln->byteIndex = -1;
 
 	return aln;
 }
@@ -174,16 +175,10 @@ Aluno newAlunoVariableLine(char *line, int *index) {
 	debug("Aloca memoria para o aluno");
 	Aluno aluno = MEM_ALLOC(Aluno);
 
-	debug("Seta a posicao do index do registro em relacao ao arquivo");
-	aluno->byteIndex = *index;
-
-	debug("Atualiza o index");
-	*index += lineSize;
-
 	char *tmp = NULL;
 	char *curso = NULL;
 	while (registro) {
-		tmp = (char*) strip(registro);
+		tmp = strip(registro);
 
 		switch (countRec) {
 
@@ -212,7 +207,7 @@ Aluno newAlunoVariableLine(char *line, int *index) {
 		case 7:
 			curso = strip(tmp);
 			debug("Verifica se o curso foi fornecido");
-			if (strlen(strip(curso)) == 0) {
+			if (isEmptyString(curso)) {
 
 				debug("Curso nao preenchido. Descartando registro.");
 				return NULL;
@@ -249,7 +244,7 @@ Aluno newAlunoVariableLine(char *line, int *index) {
 	}
 
 	debug("Verifica se o nome foi fornecido");
-	if (strlen(strip(aluno->nome)) == 0) {
+	if (isEmptyString(aluno->nome)) {
 
 		debug("Nome nao preenchido. Descartando registro.");
 		return NULL;
@@ -257,7 +252,7 @@ Aluno newAlunoVariableLine(char *line, int *index) {
 	}
 
 	debug("Verifica se o telefone de contato foi fornecido");
-	if (strlen(strip(aluno->telContato)) == 0) {
+	if (isEmptyString(aluno->telContato)) {
 
 		debug("Telefone de contato nao preenchido. Descartando registro.");
 		return NULL;
@@ -271,6 +266,12 @@ Aluno newAlunoVariableLine(char *line, int *index) {
 		return NULL;
 
 	}
+
+	debug("Seta a posicao do index do registro em relacao ao arquivo");
+	aluno->byteIndex = *index;
+
+	debug("Atualiza o index");
+	*index += lineSize;
 
 	return aluno;
 }
@@ -317,13 +318,22 @@ Aluno findAlunoIndexByRa(int ra, char *indexFile, char *variableFile) {
 /**
  * Deleta um registro logicamente no arquivo variavel.
  *
+ * @param ra - Ra do aluno a ser deletado.
+ * @param indexFile - Nome do arquivo de indexes.
+ * @param pIndex - Index do aluno a ser excluido, para facilitar a delecao.
+ *
  */
-int deleteAluno(int ra, char *indexFile, char *variableFile) {
+int deleteAluno(int ra, char *indexFile, char *variableFile, int pIndex) {
 
 	int result = -1;
+	int index = -1;
 
-	debug("Localiza o ra do aluno no index.");
-	int index = indexByRa(ra, indexFile);
+	if (pIndex < 0) {
+		debug("Localiza o ra do aluno no index.");
+		index = indexByRa(ra, indexFile);
+	} else {
+		index = pIndex;
+	}
 
 	debugi("Index: ", index);
 

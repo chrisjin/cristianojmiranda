@@ -195,3 +195,13 @@ int indexByRa(int ra, char *indexFile);
  */
 char *converAlunoToVariableLine(Aluno aln, boolean escape);
 
+/**
+ * Deleta um registro logicamente no arquivo variavel.
+ *
+ * @param ra - Ra do aluno a ser deletado.
+ * @param indexFile - Nome do arquivo de indexes.
+ * @param pIndex - Index do aluno a ser excluido, para facilitar a delecao.
+ *
+ */
+int deleteAluno(int ra, char *indexFile, char *variableFile, int pIndex);
+
