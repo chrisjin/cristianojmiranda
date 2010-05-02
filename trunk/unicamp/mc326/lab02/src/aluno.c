@@ -30,38 +30,71 @@ Aluno newAluno(char *value) {
 	debug("Cria um novo aluno apartir das linhas do arquivo de tamanho fixo ");
 	debugs("Linha: ", value);
 
-	// Obtem a posição do ultimo caracter de arquivo fixo
+	debug("Obtem a posição do ultimo caracter de arquivo fixo ");
 	int sizeLine = atoi(getProperty("aluno.field.end.fimregistro"));
-	if (value == NULL || strlen(value) < sizeLine)
+	if (value == NULL || strlen(value) < sizeLine) {
+
+		debug(
+				"Linha nao apresenta o tamanho minimo. Registro corrompido. Descartando registro.");
+
 		return NULL;
+	}
 
-	// Monta o aluno
+	debug("Alocando memoria para aluno");
 	Aluno aln = (Aluno) MEM_ALLOC(Aluno);
+	aln->byteIndex = -1;
 
+	debug("Obtendo posicao para ra");
 	int inicio = atoi(getProperty("aluno.field.start.ra"));
 	int fim = atoi(getProperty("aluno.field.end.ra"));
 
 	debug("Obtem o ra do aluno");
 	char *ra = strSubString(value, inicio, fim);
+
+	debug("Verificando se ra eh numerico");
+	if (!isNumeric(ra)) {
+		debug("RA do aluno deve ser numerico. Registro descartado.");
+		return NULL;
+	}
+
 	aln->ra = atoi(ra);
 
+	debug("Obtendo nome do aluno");
 	inicio = atoi(getProperty("aluno.field.start.nome"));
 	fim = atoi(getProperty("aluno.field.end.nome"));
 	char *data = strSubString(value, inicio, fim);
 	aln->nome = MEM_ALLOC_N(char, strlen(data));
 	strcat(aln->nome, data);
 
+	debug("Verifica se o nome foi fornecido");
+	if (strlen(strip(aln->nome)) == 0) {
+
+		debug("Nome nao preenchido. Descartando registro.");
+		return NULL;
+
+	}
+
+	debug("Obtendo cidade do aluno");
 	inicio = atoi(getProperty("aluno.field.start.cidade"));
 	fim = atoi(getProperty("aluno.field.end.cidade"));
 	data = strSubString(value, inicio, fim);
 	aln->cidade = MEM_ALLOC_N(char, strlen(data));
 	strcat(aln->cidade, data);
 
+	debug("Obtendo telefone de contato do aluno");
 	inicio = atoi(getProperty("aluno.field.start.telContato"));
 	fim = atoi(getProperty("aluno.field.end.telContato"));
 	data = strSubString(value, inicio, fim);
 	aln->telContato = MEM_ALLOC_N(char, strlen(data));
 	strcat(aln->telContato, data);
+
+	debug("Verifica se o telefone de contato foi fornecido");
+	if (strlen(strip(aln->telContato)) == 0) {
+
+		debug("Telefone de contato nao preenchido. Descartando registro.");
+		return NULL;
+
+	}
 
 	inicio = atoi(getProperty("aluno.field.start.telAlternativo"));
 	fim = atoi(getProperty("aluno.field.end.telAlternativo"));
@@ -69,18 +102,44 @@ Aluno newAluno(char *value) {
 	aln->telAlternativo = MEM_ALLOC_N(char, strlen(data));
 	strcat(aln->telAlternativo, data);
 
+	debug("Obtendo sexo do aluno");
 	inicio = atoi(getProperty("aluno.field.start.sexo"));
 	fim = atoi(getProperty("aluno.field.end.sexo"));
 	data = strSubString(value, inicio, fim);
 	aln->sexo = data[0];
 
+	debug("Validando dominio para sexo");
+	if (aln->sexo != SEXO_MASCULINO && aln->sexo != SEXO_FEMININO) {
+
+		debug("Sexo nao confere. Registro invalido");
+		return NULL;
+
+	}
+
+	debug("Obtendo curso do aluno");
 	inicio = atoi(getProperty("aluno.field.start.curso"));
 	fim = atoi(getProperty("aluno.field.end.curso"));
 	data = strSubString(value, inicio, fim);
+
+	debug("Verifica se o curso foi fornecido");
+	if (strlen(strip(data)) == 0) {
+
+		debug("Curso nao preenchido. Descartando registro.");
+		return NULL;
+
+	}
+
+	debug("Verificando se o curso é numerico");
+	if (!isNumeric(data)) {
+
+		debug("Curso deveria ser numerico. Descartando registro");
+		return NULL;
+	}
+
 	aln->curso = atoi(data);
 
 	debug("Seta o aluno como ativo");
-	aln->ativo = ENABLE_RECORD;
+	aln->ativo = ENABLED_RECORD;
 
 	return aln;
 }
@@ -88,8 +147,11 @@ Aluno newAluno(char *value) {
 /**
  * Cria um arquivo apartir de um linha de tamanho variavel.
  *
+ * @param line linha do arquivo variavel
+ * @param index contador de posicao dos registros no arquivo, para indexacao.
+ *
  */
-Aluno newAlunoVariableLine(char *line) {
+Aluno newAlunoVariableLine(char *line, int *index) {
 
 	int countRec = 1;
 	int lineSize = strlen(line);
@@ -100,13 +162,26 @@ Aluno newAlunoVariableLine(char *line) {
 	debugs("Processando linha: ", line);
 	char *registro = strtok(line, token);
 
+	debug("Verificando se ra eh numerico");
+	if (!isNumeric(registro)) {
+		debug("RA do aluno deve ser numerico. Registro descartado.");
+		return NULL;
+	}
+
 	debug("Obtem o ra");
 	int ra_registro = atoi(registro);
 
 	debug("Aloca memoria para o aluno");
 	Aluno aluno = MEM_ALLOC(Aluno);
 
+	debug("Seta a posicao do index do registro em relacao ao arquivo");
+	aluno->byteIndex = *index;
+
+	debug("Atualiza o index");
+	*index += lineSize;
+
 	char *tmp = NULL;
+	char *curso = NULL;
 	while (registro) {
 		tmp = (char*) strip(registro);
 
@@ -135,13 +210,35 @@ Aluno newAlunoVariableLine(char *line) {
 			aluno->sexo = registro[0];
 			break;
 		case 7:
-			aluno->curso = atoi(strSubString(tmp, 0, (strlen(tmp) - 2)));
+			curso = strip(tmp);
+			debug("Verifica se o curso foi fornecido");
+			if (strlen(strip(curso)) == 0) {
+
+				debug("Curso nao preenchido. Descartando registro.");
+				return NULL;
+
+			}
+
+			debug("Verificando se o curso é numerico");
+			if (!isNumeric(curso)) {
+
+				debug("Curso deveria ser numerico. Descartando registro");
+				return NULL;
+			}
+			aluno->curso = atoi(curso);
 			break;
 		case 8:
 			tmp = strMerge(tmp, getProperty(
-					"aluno.arquivo.variavel.fimregistro"), " ");
+					"aluno.arquivo.variavel.fimregistro"), ESPACE);
 			tmp = strip(tmp);
 			aluno->ativo = tmp[0];
+
+			if (aluno->ativo != ENABLED_RECORD && aluno->ativo
+					!= DISABLED_RECORD) {
+				debug("Inativando o registro por falta de dominio de valor");
+				aluno->ativo = DISABLED_RECORD;
+			}
+
 			break;
 		default:
 			break;
@@ -149,6 +246,30 @@ Aluno newAlunoVariableLine(char *line) {
 
 		registro = strtok(END_STR_TOKEN, token);
 		countRec++;
+	}
+
+	debug("Verifica se o nome foi fornecido");
+	if (strlen(strip(aluno->nome)) == 0) {
+
+		debug("Nome nao preenchido. Descartando registro.");
+		return NULL;
+
+	}
+
+	debug("Verifica se o telefone de contato foi fornecido");
+	if (strlen(strip(aluno->telContato)) == 0) {
+
+		debug("Telefone de contato nao preenchido. Descartando registro.");
+		return NULL;
+
+	}
+
+	debug("Validando dominio para sexo");
+	if (aluno->sexo != SEXO_MASCULINO && aluno->sexo != SEXO_FEMININO) {
+
+		debug("Sexo nao confere. Registro invalido");
+		return NULL;
+
 	}
 
 	return aluno;
@@ -177,9 +298,9 @@ Aluno findAlunoIndexByRa(int ra, char *indexFile, char *variableFile) {
 
 		char line[READ_BUFFER_SIZE];
 		if (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
-			a = newAlunoVariableLine(line);
+			a = newAlunoVariableLine(line, &index);
 
-			if (a->ativo == DELETED_RECORD) {
+			if (a->ativo == DISABLED_RECORD) {
 				debug("Aluno deletado");
 				a = NULL;
 			}
@@ -217,11 +338,15 @@ int deleteAluno(int ra, char *indexFile, char *variableFile) {
 		char line[READ_BUFFER_SIZE];
 		if (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
 			fseek(arq, index, SEEK_SET);
-			Aluno a = newAlunoVariableLine(line);
-			a->ativo = DELETED_RECORD;
-			char *lnAluno = converAlunoToVariableLine(a, false);
-			fprintf(arq, lnAluno);
-			result = 0;
+			Aluno a = newAlunoVariableLine(line, &index);
+
+			debug("Verifica se o registro esta ativo");
+			if (a->ativo == ENABLED_RECORD) {
+				a->ativo = DISABLED_RECORD;
+				char *lnAluno = converAlunoToVariableLine(a, false);
+				fprintf(arq, lnAluno);
+				result = 0;
+			}
 		}
 
 		debug("Fechar o arquivo variavel");
@@ -253,7 +378,7 @@ int indexByRa(int ra, char *indexFile) {
 	debug("Variaveis de controle da busca binaria");
 	int pInicio = 0, pMeio;
 	int index = -1;
-	int lineRa, raInicio, raFim;
+	int raInicio, raFim;
 
 	int count = 0;
 	debug("Localizando a chave no arquivo ");
@@ -384,7 +509,7 @@ int getRaLineIndex(FILE *arq, int ra, int *index) {
  */
 void showAluno(Aluno aluno) {
 
-	if (aluno != NULL && aluno->nome != NULL) {
+	if (aluno != NULL && aluno->nome != NULL && aluno->ativo == ENABLED_RECORD) {
 		printf(getMessage("aluno.label.dados.ra"), "\n\n\t", aluno->ra, "\n");
 		printf(getMessage("aluno.label.dados.nome"), "\t\t", aluno->nome, "\n");
 		printf(getMessage("aluno.label.dados.cidade"), "\t\t", aluno->cidade,
@@ -397,10 +522,11 @@ void showAluno(Aluno aluno) {
 				"\n");
 		printf(getMessage("aluno.label.dados.curso"), "\t\t", aluno->curso,
 				"\n");
-		printf(getMessage("aluno.label.dados.ativo"), "\t\t", aluno->ativo,
-				"\n");
-		printf(getMessage("aluno.label.posicao"), "\t\t", aluno->byteIndex,
-				"\n\n");
+
+		if (aluno->byteIndex >= 0) {
+			printf(getMessage("aluno.label.posicao"), "\t\t", aluno->byteIndex,
+					"\n\n");
+		}
 	}
 
 }
@@ -410,47 +536,87 @@ void showAluno(Aluno aluno) {
  *
  * param inputFile - Nome do arquivo de entrada.
  * param outputFile - Nome do arquivo de saida.
+ * param showAlunos - Flag para exibir o aluno processado
+ * param showEstatisticas - Flag para exibir as estatisticas da importacao
+ * param generateHtmlOutput - Flag para gerar consulta html.
  */
-LIST processarArquivoFormatoVariavel(char *inputFile, char *outputFile) {
+char *processarArquivoFormatoVariavel(char *inputFile, char *outputFile,
+		boolean showAlunos, boolean showEstatisticas,
+		boolean generateHtmlOutput) {
 
 	debug(
 			"Processando criacao do arquivo variavel e retornando estrutura de alunos");
 
+	FILE *htmlFile = NULL;
 	FILE *inFile = Fopen(inputFile, "r");
 	FILE *outFile = Fopen(outputFile, "w");
 
-	char line[READ_BUFFER_SIZE];
+	if (generateHtmlOutput) {
+		debug("Escreve output de consulta em html");
+		htmlFile = Fopen(ARQUIVO_CONSULTA_FIXO_HTML, "w");
+		writeFileFormatoHTML_inicio(htmlFile);
+	}
 
-	debug("Aloca a lista de alunos");
-	LIST list = newList();
-	list->content = NULL;
-	list->count = 0;
+	debug("Contadores");
+	int linhas = 0;
+	int registrosValidos = 0;
+
+	char line[READ_BUFFER_SIZE];
 
 	debug("Processa o arquivo de tamanho fixo, criando a lista de alunos");
 	Aluno aluno = NULL;
 	while (fgets(line, READ_BUFFER_SIZE, inFile) != NULL) {
 
+		debug("Incrementa contador de linhas do arquivo");
+		linhas++;
+
 		debug("Criando um novo aluno apartir da linha de tamanho fixo");
 		aluno = newAluno(line);
 
-		writeFileFormatoVariavel(outFile, aluno);
-		showAluno(aluno);
+		if (aluno != NULL) {
 
-		debug("Adiciona o aluno a lista");
-		rearInsert(list, aluno);
+			debug("Incrementa registros validos");
+			registrosValidos++;
+
+			debug("Grava o aluno no arquivo de tamanho variavel");
+			writeFileFormatoVariavel(outFile, aluno);
+
+			if (showAlunos) {
+				showAluno(aluno);
+			}
+
+			if (generateHtmlOutput) {
+				writeFileFormatoHTML(htmlFile, aluno);
+			}
+
+		}
+
+	}
+
+	if (generateHtmlOutput) {
+		writeFileFormatoHTML_fim(htmlFile);
+		fclose(htmlFile);
 	}
 
 	fclose(outFile);
 	fclose(inFile);
 
-	printf(getMessage("aluno.label.processarArquivo.registrosLidos"), "\n\n\t",
-			list->count, "\n");
-	printf(getMessage("aluno.label.processarArquivo.tamanhoArqOriginal"), "\t",
-			inputFile, fileSize(inputFile), "\n");
-	printf(getMessage("aluno.label.processarArquivo.tamanhoArqConvertido"),
-			"\t", outputFile, fileSize(outputFile), "\n\n");
+	if (showEstatisticas) {
+		printf(getMessage("aluno.label.processarArquivo.registrosLidos"),
+				"\n\n\t", linhas, "\n");
+		printf(getMessage("aluno.label.processarArquivo.registrosValidos"),
+				"\t", registrosValidos, "\n");
+		printf(getMessage("aluno.label.processarArquivo.tamanhoArqOriginal"),
+				"\t", inputFile, fileSize(inputFile), "\n");
+		printf(getMessage("aluno.label.processarArquivo.tamanhoArqConvertido"),
+				"\t", outputFile, fileSize(outputFile), "\n\n");
+	}
 
-	return list;
+	if (generateHtmlOutput) {
+		return ARQUIVO_CONSULTA_FIXO_HTML;
+	}
+
+	return NULL;
 
 }
 
@@ -460,7 +626,7 @@ LIST processarArquivoFormatoVariavel(char *inputFile, char *outputFile) {
 void writeFileFormatoVariavel(FILE *file, Aluno aln) {
 
 	if (file != NULL && aln != NULL && aln->nome != NULL) {
-		aln->ativo = ENABLE_RECORD;
+		aln->ativo = ENABLED_RECORD;
 		fprintf(file, converAlunoToVariableLine(aln, true));
 	}
 
@@ -548,244 +714,112 @@ void showInformacoesArquivoVariavel(char *arqVariavel) {
 }
 
 /**
- * Processa a lista de arquivo de tamanho variavel.
+ * Exibe os dados do arquivo de tamanho variavel.
+ *
+ * @param inputFile - Arquivo de tamanho variavel
+ * @param exibirAluno - Caso seja necessario exibir os dados do aluno na tela.
+ * @param generatedHtmlOutput - Caso seja necessario criar o arquivo de consulta html
+ * @param arquivoFixo - Arquivo fixo para criacao do variavel caso esse nao exista.
+ * @param nome do arquivo de consulta html.
+ * @return arquivo de consulta HTML.
+ *
  */
-LIST carregarAlunoArquivoVariavel(char *inputFile, LIST alunos,
-		boolean exibirAluno) {
+char *carregarAlunoArquivoVariavel(char *inputFile, boolean exibirAluno,
+		boolean generateHtmlOutput, char *arquivoFixo) {
 
-	debug("Verifica se a lista de alunos não foi criada");
-	if (alunos == NULL) {
-		debug("Cria a lista de alunos");
-		alunos = newList();
+	FILE *htmlFile = NULL;
+
+	debug("Verifica se o arquvo variavel existe");
+	if (!fileExists(inputFile)) {
+		processarArquivoFormatoVariavel(arquivoFixo, inputFile, false, false,
+				false);
 	}
 
 	debug("Abre o arquivo de tamanho variavel para leitura");
 	FILE *arq = Fopen(inputFile, "r");
 
-	debug("Obtem o token que separa os registros para arquivo variavel");
-	char *token = getProperty("aluno.arquivo.variavel.token");
+	if (generateHtmlOutput) {
+		debug("Escreve output de consulta em html");
+		htmlFile = Fopen(ARQUIVO_CONSULTA_FIXO_HTML, "w");
+		writeFileFormatoHTML_inicio(htmlFile);
+	}
 
-	char line[READ_BUFFER_SIZE];
-	int ra = -1, countRec = 0;
-	int index = 0, lineSize = 0;
-	boolean inList = false;
+	debug("Variaveis de iteracao");
+	int index = 0;
 	Aluno aluno = NULL;
-	char *tmp;
+	char line[READ_BUFFER_SIZE];
+
+	debug("Processa o arquivo de tamanho variavel.");
 	while (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
 
-		debug("Obtem o tamanho da linha");
-		lineSize = strlen(line);
-
-		countRec = 1;
-
-		debugs("Processando linha: ", line);
-		char *registro = strtok(line, token);
-
-		debug("Obtem o ra");
-		ra = atoi(registro);
-
-		debug("Verifica se o aluno existe na lista");
-		aluno = findAlunoByRaList(alunos, ra);
-		if (aluno == NULL) {
-
-			inList = false;
-			aluno = MEM_ALLOC(Aluno);
-
-		} else {
-			inList = true;
-		}
-
-		while (registro) {
-			tmp = strip(registro);
-
-			if (!inList) {
-				switch (countRec) {
-
-				case 1:
-					aluno->ra = ra;
-					break;
-				case 2:
-					aluno->nome = MEM_ALLOC_N(char, strlen(tmp));
-					strcpy(aluno->nome, tmp);
-					break;
-				case 3:
-					aluno->cidade = MEM_ALLOC_N(char, strlen(tmp) );
-					strcpy(aluno->cidade, tmp);
-					break;
-				case 4:
-					aluno->telContato = MEM_ALLOC_N(char, strlen(tmp));
-					strcpy(aluno->telContato, tmp);
-					break;
-				case 5:
-					aluno->telAlternativo = MEM_ALLOC_N(char, strlen(tmp));
-					strcpy(aluno->telAlternativo, tmp);
-					break;
-				case 6:
-					aluno->sexo = registro[0];
-					break;
-				case 7:
-					aluno->curso
-							= atoi(strSubString(tmp, 0, (strlen(tmp) - 2)));
-					break;
-				default:
-					break;
-				}
-			}
-
-			registro = strtok(END_STR_TOKEN, token);
-			countRec++;
-		}
-
-		debug("Seta a posicao no arquivo");
-		aluno->byteIndex = index;
-
-		debug("Incrementa a posicao em byte no arquivo");
-		index += lineSize;
-
-		if (!inList) {
-			debug("Insere o novo aluno na lista");
-			rearInsert(alunos, aluno);
-		}
+		debug("Processa a linha referente ao aluno");
+		aluno = newAlunoVariableLine(line, &index);
 
 		if (exibirAluno) {
-			debug("Exibe os dados do aluno");
 			showAluno(aluno);
+		}
+
+		if (generateHtmlOutput && aluno != NULL && aluno->ativo
+				== ENABLED_RECORD) {
+			writeFileFormatoHTML(htmlFile, aluno);
 		}
 
 	}
 
 	fclose(arq);
 
-	return alunos;
+	debug("Finaliza arquivo de consulta HTML");
+	if (generateHtmlOutput) {
+		writeFileFormatoHTML_fim(htmlFile);
+		fclose(htmlFile);
+		return ARQUIVO_CONSULTA_FIXO_HTML;
+	}
+
+	return NULL;
 
 }
 
 /**
  * Obtem um aluno no arquivo variavel.
+ *
+ * @param ra ra do aluno
+ * @param fileName nome do arquivo variavel.
+ * @param arquivoFixo nome do arquivo fixo, caso o variavel nao exista.
+ *
  */
-Aluno findAlunoByRaArquivoVariavel(int ra, char *fileName) {
+Aluno findAlunoByRaArquivoVariavel(int ra, char *fileName, char *arquivoFixo) {
+
+	debug("Verifica se o arquivo variavel existe");
+	if (!fileExists(fileName)) {
+		processarArquivoFormatoVariavel(arquivoFixo, fileName, false, false,
+				false);
+	}
 
 	debug("Abre o arquivo de tamanho variavel para leitura");
 	FILE *arq = Fopen(fileName, "r");
 
-	debug("Obtem o token que separa os registros para arquivo variavel");
-	char *token = getProperty("aluno.arquivo.variavel.token");
-
-	char line[READ_BUFFER_SIZE];
-	int ra_registro = -1, countRec = 0;
-	int index = 0, lineSize = 0;
+	int index = 0;
 	Aluno aluno = NULL;
-	char *tmp;
+	char line[READ_BUFFER_SIZE];
 	while (fgets(line, READ_BUFFER_SIZE, arq) != NULL) {
 
-		lineSize = strlen(line);
-		countRec = 1;
+		aluno = newAlunoVariableLine(line, &index);
 
-		debugs("Processando linha: ", line);
-		char *registro = strtok(line, token);
-
-		debug("Obtem o ra");
-		ra_registro = atoi(registro);
-
-		debug("Verifica se eh o RA procurado");
-		if (ra_registro != ra) {
-			index += lineSize;
-			debug("RA invalido. Pulando para o proximo registro.");
-			continue;
-		}
-
-		debug("Aloca memoria para o aluno");
-		aluno = MEM_ALLOC(Aluno);
-		aluno->byteIndex = index;
-
-		while (registro) {
-			tmp = strip(registro);
-
-			switch (countRec) {
-
-			case 1:
-				aluno->ra = ra_registro;
-				break;
-			case 2:
-				aluno->nome = MEM_ALLOC_N(char, strlen(tmp));
-				strcpy(aluno->nome, tmp);
-				break;
-			case 3:
-				aluno->cidade = MEM_ALLOC_N(char, strlen(tmp) );
-				strcpy(aluno->cidade, tmp);
-				break;
-			case 4:
-				aluno->telContato = MEM_ALLOC_N(char, strlen(tmp));
-				strcpy(aluno->telContato, tmp);
-				break;
-			case 5:
-				aluno->telAlternativo = MEM_ALLOC_N(char, strlen(tmp));
-				strcpy(aluno->telAlternativo, tmp);
-				break;
-			case 6:
-				aluno->sexo = registro[0];
-				break;
-			case 7:
-				aluno->curso = atoi(strSubString(tmp, 0, (strlen(tmp) - 2)));
-				break;
-			default:
-				break;
-			}
-
-			registro = strtok(END_STR_TOKEN, token);
-			countRec++;
-		}
-
-		if (aluno != NULL)
+		if (aluno != NULL && aluno->ra == ra) {
+			debug("Aluno encontrado");
 			break;
+		}
 
 	}
 
 	fclose(arq);
 
-	return aluno;
-
-}
-
-/**
- * Exibe a estrutura do arquivo de tamanho fixo.
- *
- * param alunos - Estrutura de alunos processados.
- */
-char *showArquivoFormatoFixo(LIST alunos) {
-
-	debug("Exibe o arquivo de tamanho fixo para consulta");
-
-	debug("Escreve output de consulta em html");
-	FILE *outFile = Fopen(ARQUIVO_CONSULTA_FIXO_HTML, "w");
-
-	writeFileFormatoHTML_inicio(outFile);
-
-	debug("Obtem o primeiro item da lista");
-
-	int i = 0;
-	nodeptr n = alunos->content;
-	while (n != NULL) {
-
-		Aluno aluno = n->value;
-
-		writeFileFormatoHTML(outFile, aluno);
-		showAluno(aluno);
-
-		i++;
-		if (i >= listSize(alunos)) {
-			break;
-		}
-
-		n = n->next;
-
+	if (aluno->ativo == DISABLED_RECORD) {
+		return NULL;
 	}
 
-	writeFileFormatoHTML_fim(outFile);
+	return aluno;
 
-	fclose(outFile);
-
-	return ARQUIVO_CONSULTA_FIXO_HTML;
 }
 
 void writeFileFormatoHTML_inicio(FILE *file) {
@@ -896,46 +930,3 @@ void freeAluno(Aluno aluno) {
 	}
 
 }
-
-/**
- * Libera da memoria a estrutura de alunos.
- *
- * param alunos - Estrutura de alunos a serem liberadas.
- */
-void freeAlunoList(LIST alunos) {
-
-	if (alunos != NULL) {
-
-		freeList(alunos, freeAluno);
-
-	}
-
-}
-
-/**
- * Obtem um aluno pelo ra.
- */
-Aluno findAlunoByRaList(LIST alunos, int ra) {
-
-	if (alunos != NULL && alunos->count > 0) {
-		nodeptr n = alunos->content;
-		int count = 0;
-		while (n != NULL) {
-
-			Aluno a = n->value;
-			if (a->ra == ra)
-				return a;
-
-			n = n->next;
-			count++;
-
-			if (count >= listSize(alunos)) {
-				return NULL;
-			}
-		}
-	}
-
-	return NULL;
-
-}
-
