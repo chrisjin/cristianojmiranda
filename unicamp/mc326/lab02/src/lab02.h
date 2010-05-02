@@ -15,8 +15,3 @@
 
 /** Exibe o menu da aplicação */
 void showMenu();
-
-/**
- * Cria a estrutura de alunos.
- */
-LIST loadAlunos(LIST alunos, char *input, char *output);

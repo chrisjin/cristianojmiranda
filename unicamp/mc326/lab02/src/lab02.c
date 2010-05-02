@@ -36,17 +36,25 @@ int main(int argc, char * argv[]) {
 		exit(ERROR_EXECUTION);
 	}
 
-	debug("Armazena o tamanho do output para consulta de arquivo fixo");
-	char *fileOutputArqFixo;
-
-	debug("Lista de alunos processados");
-	LIST alunos = NULL;
+	debug("Verifica se o arquivo de entrada existe");
+	if (!fileExists(argv[2])) {
+		printf(getMessage("lab02.label.arquivo_invalido"), argv[2], "\n");
+		exit(ERROR_EXECUTION);
+	}
 
 	debug("Declarando variaveis da aplicação");
+	int raInput;
 	int opcao;
-	int RA;
-	char *str_ra = NULL;
 	Aluno aluno;
+	char *strRaInput = NULL;
+	boolean showBrowser = false;
+
+	debug("Carrega sim-nao");
+	char *sim = strUpperCase(getMessage("lab02.input.sim"));
+	char *nao = strUpperCase(getMessage("lab02.input.nao"));
+
+	debug("Armazena o tamanho do output para consulta de arquivo fixo");
+	char *fileOutputArqFixo = NULL;
 
 	do {
 
@@ -54,7 +62,7 @@ int main(int argc, char * argv[]) {
 		showMenu();
 
 		debug("Obtendo a opção do sistema");
-		char *str_opcao = getLine();
+		char *str_opcao = getLine(false);
 
 		opcao = -1;
 		if (isNumeric(str_opcao)) {
@@ -65,27 +73,69 @@ int main(int argc, char * argv[]) {
 
 		case 1:
 			debug("Processa o arquivo de tamanho variavel");
-			alunos = loadAlunos(alunos, (char*) argv[1], (char*) argv[2]);
+			fileOutputArqFixo = processarArquivoFormatoVariavel(
+					(char *) argv[1], (char *) argv[2], false, false, true);
 			break;
 		case 2:
-			alunos = loadAlunos(alunos, (char*) argv[1], (char*) argv[2]);
-			fileOutputArqFixo = showArquivoFormatoFixo(alunos);
-			if (fileOutputArqFixo != NULL) {
+
+			strcpy(str_opcao, "**");
+			showBrowser = false;
+			while (strcmp(strUpperCase(str_opcao), sim) != 0 && strcmp(
+					strUpperCase(str_opcao), nao) != 0) {
+				printf(getMessage("aluno.label.showArquivo.abrirBrowser"),
+						"\n\t", "\n");
+				str_opcao = getLine();
+			}
+
+			if (strcmp(strUpperCase(str_opcao), sim) == 0) {
+				showBrowser = true;
+			}
+
+			if (!showBrowser && fileOutputArqFixo != NULL) {
+				fileOutputArqFixo = NULL;
+			}
+
+			fileOutputArqFixo = processarArquivoFormatoVariavel(
+					(char *) argv[1], (char *) argv[2], !showBrowser,
+					!showBrowser, showBrowser);
+
+			if (showBrowser && fileOutputArqFixo != NULL) {
 				system(str_join("firefox ", str_join(fileOutputArqFixo, " &")));
 			}
+
 			break;
 		case 3:
-			alunos
-					= carregarAlunoArquivoVariavel((char*) argv[2], alunos,
-							true);
+
+			strcpy(str_opcao, "**");
+			showBrowser = false;
+			while (strcmp(strUpperCase(str_opcao), sim) != 0 && strcmp(
+					strUpperCase(str_opcao), nao) != 0) {
+				printf(getMessage("aluno.label.showArquivo.abrirBrowser"),
+						"\n\t", "\n");
+				str_opcao = getLine();
+			}
+
+			if (strcmp(strUpperCase(str_opcao), sim) == 0) {
+				showBrowser = true;
+			}
+
+			debug("Carrega o arquivo variavel");
+			fileOutputArqFixo = carregarAlunoArquivoVariavel((char*) argv[2],
+					!showBrowser, showBrowser, (char *) argv[1]);
+
+			if (showBrowser && fileOutputArqFixo != NULL) {
+				system(str_join("firefox ", str_join(fileOutputArqFixo, " &")));
+			}
+
 			break;
 		case 4:
 			printf(getMessage("aluno.label.digite_ra_aluno"), "\n\n", "\n");
-			str_ra = getLine();
-			RA = -1;
-			if (isNumeric(str_ra)) {
-				RA = atoi(str_ra);
-				aluno = findAlunoByRaArquivoVariavel(RA, (char *) argv[2]);
+			strRaInput = getLine(false);
+			raInput = -1;
+			if (isNumeric(strRaInput)) {
+				raInput = atoi(strRaInput);
+				aluno = findAlunoByRaArquivoVariavel(raInput, (char *) argv[2],
+						(char *) argv[1]);
 
 				if (aluno == NULL) {
 
@@ -95,35 +145,66 @@ int main(int argc, char * argv[]) {
 					showAluno(aluno);
 				}
 			} else {
-				printf(getMessage("lab02.label.opcao_invalida"), " RA.\n");
+				printf(getMessage("lab02.label.opcao_invalida"), " Ra.\n");
 			}
 
 			break;
 		case 5:
 			break;
 		case 6:
+
+			if (!fileExists((char *) argv[2])) {
+				debug("Processa o arquivo de tamanho variavel");
+				fileOutputArqFixo = processarArquivoFormatoVariavel(
+						(char *) argv[1], (char *) argv[2], false, false, true);
+			}
+
 			extractFileKey((char *) argv[2]);
 			break;
 		case 7:
+			if (!fileExists((char *) argv[2])) {
+				debug("Processa o arquivo de tamanho variavel");
+				fileOutputArqFixo = processarArquivoFormatoVariavel(
+						(char *) argv[1], (char *) argv[2], false, false, true);
+			}
+
 			sortFileKey((char *) argv[2]);
 			break;
 		case 8:
+			if (!fileExists((char *) argv[2])) {
+				debug("Processa o arquivo de tamanho variavel");
+				fileOutputArqFixo = processarArquivoFormatoVariavel(
+						(char *) argv[1], (char *) argv[2], false, false, true);
+			}
 			extractFileKey((char *) argv[2]);
 			showFile(INDEX_ALUNO_FILE);
 			break;
 		case 9:
+
+			if (!fileExists((char *) argv[2])) {
+				debug("Processa o arquivo de tamanho variavel");
+				fileOutputArqFixo = processarArquivoFormatoVariavel(
+						(char *) argv[1], (char *) argv[2], false, false, true);
+			}
+
 			sortFileKey((char *) argv[2]);
 			showFile(INDEX_ALUNO_FILE_SORTED);
 			break;
 		case 11:
+			if (!fileExists((char *) argv[2])) {
+				debug("Processa o arquivo de tamanho variavel");
+				fileOutputArqFixo = processarArquivoFormatoVariavel(
+						(char *) argv[1], (char *) argv[2], false, false, true);
+			}
+
 			sortFileKey((char *) argv[2]);
 
 			printf(getMessage("aluno.label.digite_ra_aluno"), "\n\n", "\n");
-			str_ra = getLine();
-			RA = -1;
-			if (isNumeric(str_ra)) {
-				RA = atoi(str_ra);
-				aluno = findAlunoIndexByRa(RA, INDEX_ALUNO_FILE_SORTED,
+			strRaInput = getLine(false);
+			raInput = -1;
+			if (isNumeric(strRaInput)) {
+				raInput = atoi(strRaInput);
+				aluno = findAlunoIndexByRa(raInput, INDEX_ALUNO_FILE_SORTED,
 						(char *) argv[2]);
 
 				if (aluno == NULL) {
@@ -142,12 +223,12 @@ int main(int argc, char * argv[]) {
 			sortFileKey((char *) argv[2]);
 
 			printf(getMessage("aluno.label.digite_ra_aluno"), "\n\n", "\n");
-			str_ra = getLine();
-			RA = -1;
-			if (isNumeric(str_ra)) {
-				RA = atoi(str_ra);
-				if (deleteAluno(RA, INDEX_ALUNO_FILE_SORTED, (char *) argv[2])
-						< 0) {
+			strRaInput = getLine(false);
+			raInput = -1;
+			if (isNumeric(strRaInput)) {
+				raInput = atoi(strRaInput);
+				if (deleteAluno(raInput, INDEX_ALUNO_FILE_SORTED,
+						(char *) argv[2]) < 0) {
 					printf(getMessage("aluno.label.registroInexistente"), "\n");
 
 				} else {
@@ -169,8 +250,6 @@ int main(int argc, char * argv[]) {
 	} while (opcao != 13);
 
 	debug("Libera a memoria alocada e finaliza o programa");
-	freeAlunoList(alunos);
-	//freeAluno(aluno);
 	finalizeLog();
 	freeBundle();
 	return 0;
@@ -193,15 +272,3 @@ void showMenu() {
 	printf(getMessage("lab02.label.menu.encerrar"), "\n");
 }
 
-/**
- * Cria a estrutura de alunos.
- */
-LIST loadAlunos(LIST alunos, char *input, char *output) {
-
-	debug(
-			"Caso a lista de alunos não tenha sido processada, cria o arquivo de tamanho variavel");
-	alunos = processarArquivoFormatoVariavel(input, output);
-
-	return alunos;
-
-}
