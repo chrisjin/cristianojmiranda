@@ -72,21 +72,21 @@ char *strMerge(char *value, char *token, char *mergeToken) {
 	debugs("Param mergeToken: ", mergeToken);
 
 	char *aux = NULL;
-	int i = 0, size = 0;
-	char *split = strtok(value, token);
+	int size = 0;
+	char *splt = strtok(value, token);
 
-	if (split) {
+	if (splt) {
 
-		while (split) {
+		while (splt) {
 
-			size = strlen(split) + strlen(mergeToken);
+			size = strlen(splt) + strlen(mergeToken);
 			if (aux == NULL) {
 				aux = MEM_ALLOC_N(char, size);
 			} else {
 				aux = realloc(aux, size);
 			}
-			strcpy(aux, str_join(split, mergeToken));
-			split = strtok(END_STR_TOKEN, token);
+			strcat(aux, str_join(splt, mergeToken));
+			splt = strtok(END_STR_TOKEN, token);
 
 		}
 
@@ -95,6 +95,8 @@ char *strMerge(char *value, char *token, char *mergeToken) {
 
 		return aux;
 	}
+
+	return value;
 }
 
 /**
@@ -188,7 +190,9 @@ boolean isNumeric(char *value) {
 
 	setMethodName("isNumeric");
 	debugs("Param value: ", value);
-	debugi("Int value: ", atoi(value));
+
+	if (value == NULL)
+		return false;
 
 	int i;
 	for (i = 0; i < strlen(value); i++) {
