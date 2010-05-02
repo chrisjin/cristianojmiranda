@@ -1,0 +1,22 @@
+/**
+ * Linhas do arquivo: 23 
+ * Registros validos: 5
+ */
+ 
+033381                                                 97331234 M 31#
+082070 Magda de Almeida Silva  Santo Andre    44277218 89727669 F 42#
+073323 Leandro I. Girardi      Sao Paulo      33257805 96459677 M 49#
+
+ asdf as
+
+asdf asdf 
+asdf
+sadf
+sa dfa
+sdf
+
+A071091 Gustavo Ferreira Tiengo Sao Paulo      32945579 91402117 M 42#
+071091 Gustavo Ferreira Tiengo Sao Paulo      32945579 91402117 M 42#
+083382 Cristiano Jose Miranda  Artur Nogueira 38771111 97331234 M 42#
+083381 aaaaaaaaaaaaaaaaaaaaaa  ffffffffffffff 38771111 97331234 M 31#
+033381                                                 97331234 M 31#
