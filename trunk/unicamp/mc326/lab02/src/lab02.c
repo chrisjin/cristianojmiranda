@@ -37,8 +37,8 @@ int main(int argc, char * argv[]) {
 	}
 
 	debug("Verifica se o arquivo de entrada existe");
-	if (!fileExists(argv[2])) {
-		printf(getMessage("lab02.label.arquivo_invalido"), argv[2], "\n");
+	if (!fileExists(argv[1])) {
+		printf(getMessage("lab02.label.arquivo_invalido"), argv[1], "\n");
 		exit(ERROR_EXECUTION);
 	}
 
@@ -62,7 +62,7 @@ int main(int argc, char * argv[]) {
 		showMenu();
 
 		debug("Obtendo a opção do sistema");
-		char *str_opcao = getLine(false);
+		char *str_opcao = getLine();
 
 		opcao = -1;
 		if (isNumeric(str_opcao)) {
@@ -130,7 +130,7 @@ int main(int argc, char * argv[]) {
 			break;
 		case 4:
 			printf(getMessage("aluno.label.digite_ra_aluno"), "\n\n", "\n");
-			strRaInput = getLine(false);
+			strRaInput = getLine();
 			raInput = -1;
 			if (isNumeric(strRaInput)) {
 				raInput = atoi(strRaInput);
@@ -145,7 +145,7 @@ int main(int argc, char * argv[]) {
 					showAluno(aluno);
 				}
 			} else {
-				printf(getMessage("lab02.label.opcao_invalida"), " Ra.\n");
+				printf(getMessage("aluno.label.valorInvalido"), "\n");
 			}
 
 			break;
@@ -200,7 +200,7 @@ int main(int argc, char * argv[]) {
 			sortFileKey((char *) argv[2]);
 
 			printf(getMessage("aluno.label.digite_ra_aluno"), "\n\n", "\n");
-			strRaInput = getLine(false);
+			strRaInput = getLine();
 			raInput = -1;
 			if (isNumeric(strRaInput)) {
 				raInput = atoi(strRaInput);
@@ -215,7 +215,7 @@ int main(int argc, char * argv[]) {
 					showAluno(aluno);
 				}
 			} else {
-				printf(getMessage("lab02.label.opcao_invalida"), " RA.\n");
+				printf(getMessage("aluno.label.valorInvalido"), "\n");
 			}
 
 			break;
@@ -224,7 +224,7 @@ int main(int argc, char * argv[]) {
 
 			printf(getMessage("aluno.label.digite_ra_aluno_deletar"), "\n\n",
 					"\n");
-			strRaInput = getLine(false);
+			strRaInput = getLine();
 			raInput = -1;
 			if (isNumeric(strRaInput)) {
 				raInput = atoi(strRaInput);
@@ -271,7 +271,7 @@ int main(int argc, char * argv[]) {
 				}
 
 			} else {
-				printf(getMessage("lab02.label.opcao_invalida"), " RA.\n");
+				printf(getMessage("aluno.label.valorInvalido"), "\n");
 			}
 
 			break;
