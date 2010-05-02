@@ -53,6 +53,7 @@ Aluno newAluno(char *value) {
 	debug("Verificando se ra eh numerico");
 	if (!isNumeric(ra)) {
 		debug("RA do aluno deve ser numerico. Registro descartado.");
+		free(aln);
 		return NULL;
 	}
 
@@ -580,8 +581,11 @@ char *processarArquivoFormatoVariavel(char *inputFile, char *outputFile,
 		debug("Incrementa contador de linhas do arquivo");
 		linhas++;
 
+		char *tmpLine = MEM_ALLOC_N(char, strlen(line));
+		strcpy(tmpLine, line);
+
 		debug("Criando um novo aluno apartir da linha de tamanho fixo");
-		aluno = newAluno(line);
+		aluno = newAluno(tmpLine);
 
 		if (aluno != NULL) {
 
@@ -824,7 +828,7 @@ Aluno findAlunoByRaArquivoVariavel(int ra, char *fileName, char *arquivoFixo) {
 
 	fclose(arq);
 
-	if (aluno->ativo == DISABLED_RECORD) {
+	if (aluno->ativo == DISABLED_RECORD || aluno->ra != ra) {
 		return NULL;
 	}
 
