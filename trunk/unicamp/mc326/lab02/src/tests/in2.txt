@@ -1,0 +1,91 @@
+/**
+ *  Informações sobre esse arquivo de dados:
+ *  - Total de linhas: 100
+ *  - Total de Registros validos: 10
+ *
+ */
+
+073323 Leandro I. Girardi      Sao Paulo      33257805 96459677 M 49#
+071091 Gustavo Ferreira Tiengo Sao Paulo      32945579 91402117 M 42#
+082070 Magda de Almeida Silva  Santo Andre    44277218 89727669 F 42#
+083382 Cristiano Jose Miranda  Artur Nogueira 38771111 97331234 M 42#
+033381                                                 97331234 M 31#
+033381                                                               
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+1111111111111111111111111111111111111111111111111111111111111111111111
+a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a aa
+######################################################################
+01010101010101000010010100101010010001010111010010100010100101001010010100101010101010101
+
+
+
+batatinha batatinha batatinha.. .. ... .. .. .. . .. ..   . abobrinha
+
+
+
+
+080000 Jose                    Artur Nogueira 38771511 94331234 M 10#
+080001 Marcos                  Holambra       38771101 97633123 M 20#
+080002 Angelica                Limeira        38771771 97371234 M 30#
+080003 Guto                    Piracicaba     66666666 97338234 M 40#
+080004 Beatriz                 Limeira        38776111          M 50#
+080005 Pericles                Sertaozinho    38751111          M 60#
+   080006 Richard                 Ribeirao Preto 33371111          M 50#
+     080007 Claudia                 Ribeirao Preto 33371111          M 50#
+   080008 Jussara                 Ribeirao Preto 33371111          M 50#
+    080009 Antunes                 Ribeirao Preto 33371111          M 50#
+A080010 Capato                  Ribeirao Preto 33371111          M 50#
+    080011 Miranda                 Ribeirao Preto 33371111          M 50#
+080012 Conceicao               Ribeirao Preto 33371111          M 50#
+080013 Bastiao                 Eng. Coelho    33371331 33333334 M 60#
+080014 Pegoraro                Conchal        34471111          M 50#
+080016 Pegoraro                Iguape         34471551          M 70#
+
+080017 Jose Marco              Artur Nogueira 38771511 94331234 M 10#
+080018 Heik Stanislaw          Artur Nogueira 38771511 94331234 M 10#
+       Jose Marco              Artur Nogueira 38771511 94331234 M 10#
+080019                         Artur Nogueira 38771511 94331234 M 10#
+080020 Jose Marco                             38771511 94331234 M 10#
+080021 Jose Marco              Artur Nogueira          94331234 M 10#
+080022 Jose Marco              Artur Nogueira 38771511 94331234   10#
+080023 Jose Marco              Artur Nogueira 38771511 94331234 M   
+080025
+080026 Ana Luiza Maranhao      Andradas       34471111          M 50#
+080027                                                              #
+080028                         Andradas                             #
+080029 Ana Luiza Maranhao      Andradas       34471111          M 50#
+                                                                    #
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+END

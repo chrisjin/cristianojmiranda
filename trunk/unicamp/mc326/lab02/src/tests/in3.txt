@@ -1,0 +1,33 @@
+/**
+ *  Informações sobre esse arquivo de dados:
+ *  - Total de linhas: 33
+ *  - Total de Registros validos: 26
+ *
+ */
+
+000001 aa aa aa aa aaa aa      CIDADE A       2000 222 11 11 11 M 01#
+000002 b bb bbb bbbb bbbbbb bb CIDADE B       32945579 91402117 M 02#
+000003 b bb bbb bbbb bbbbbb bb CIDADE B       32945579 91402117 M 02#
+000004 b bb bbb bbbb bbbbbb bb CIDADE B       32945579 91402117 M 02#
+000005 b bb bbb bbbb bbbbbb bb CIDADE B       32945579 91402117 M 02#
+000006 b bb bbb bbbb bbbbbb bb CIDADE B       32945579 91402117 M 02#
+000007 b bb bbb bbbb bbbbbb bb CIDADE B       32945579 91402117 M 02#
+000008 b bb bbb bbbb bbbbbb bb CIDADE B       32945579 91402117 M 02#
+000009 b bb bbb bbbb bbbbbb bb CIDADE B       32945579 91402117 M 02#
+000010 b bb bbb bbbb bbbbbb bb CIDADE B       32945579 91402117 M 02#
+000011 b bb bbb bbbb bbbbbb bb CIDADE B       32945579 91402117 M 02#
+000012 b bb bbb bbbb bbbbbb bb CIDADE B       32945579 91402117 M 02#
+000013 b bb bbb bbbb bbbbbb bb CIDADE B       32945579 91402117 M 02#
+000014 b bb bbb bbbb bbbbbb bb CIDADE B       32945579 91402117 M 02#
+000015 b bb bbb bbbb bbbbbb bb CIDADE 15      32945579 91402117 M 02#
+000016 b bb bbb bbbb bbbbbb bb CIDADE B   16  32945579 91402117 M 02#
+000017 b bb bbb bbbb bbbbbb bb CIDADE B 17    32945579 91402117 M 02#
+000018 b bb bbb bbbb bbbbbb bb CIDADE 18      32945579 91402117 M 02#
+000019 b bb bbb bbbb bbbbbb bb CIDADE 19      32945579 91402117 M 02#
+000020 b bb bbb bbbb bbbbbb bb CIDADE 20      32945579 91402117 M 02#
+000021 b bb bbb bbbb bbbbbb bb CIDADE 21      32945579 91402117 M 02#
+000022 b bb bbb bbbb bbbbbb bb CIDADE 22      32945579 91402117 M 02#
+000023 b bb bbb bbbb bbbbbb bb CIDADE 23      32945579 91402117 M 02#
+000024 b bb bbb bbbb bbbbbb bb CIDADE 24      32945579 91402117 M 02#
+000025 b bb bbb bbbb bbbbbb bb CIDADE 25      32945579 91402117 M 25#
+000026 b VINTE SEIS            CIDADE 26      26262626 91402117 M 26#
