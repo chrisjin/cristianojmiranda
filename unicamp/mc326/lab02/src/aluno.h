@@ -16,16 +16,25 @@
 #include<stdlib.h>
 #include<string.h>
 #include<ctype.h>
-#include "mylist.h"
 
+// Macro para retornar descricao do sexo
 #define SEXO(a) (a == 'M' ? getMessage("aluno.label.sexo.masculino") : getMessage("aluno.label.sexo.feminino"))
+
+// Flag para registro nao encontrado
 #define INDEX_NOT_FOUND_FOR_ALUNO -1
+
+// Arquivo html temporario para consulta de aluno via browser
 #define ARQUIVO_CONSULTA_FIXO_HTML "arquivo_consulta_fixo.html"
 #define cabecalho "<HTML><HEAD><TITLE>Cadastro de Alunos da Unicamp.</TITLE></HEAD><body></body><table style='border: 1px solid black;'>"
 #define FIM_HTML "</table></body></html>"
 
-#define ENABLE_RECORD 'T'
-#define DELETED_RECORD 'F'
+// Flags de dominio para sexo
+#define SEXO_MASCULINO 'M'
+#define SEXO_FEMININO 'F'
+
+// Flags de controle pra exclusao de registro
+#define ENABLED_RECORD 'E'
+#define DISABLED_RECORD 'D'
 
 #define INDEX_ALUNO_RECORD_TOKEN "="
 #define INDEX_ALUNO_FILE "index_aluno.txt"
@@ -76,18 +85,33 @@ Aluno findAlunoIndexByRa(int ra, char *indexFile, char *variableFile);
  *
  */
 void showAluno(Aluno aluno);
+
 /**
  * Cria o arquivo de formato variavel.
  *
  * param inputFile - Nome do arquivo de entrada.
  * param outputFile - Nome do arquivo de saida.
+ * param showAlunos - Flag para exibir o aluno processado
+ * param showEstatisticas - Flag para exibir as estatisticas da importacao
+ * param generateHtmlOutput - Flag para gerar consulta html.
  */
-LIST processarArquivoFormatoVariavel(char *inputFile, char *outputFile);
+char *processarArquivoFormatoVariavel(char *inputFile, char *outputFile,
+		boolean showAlunos, boolean showEstatisticas,
+		boolean generateHtmlOutput);
+
 /**
- * Processa a lista de arquivo de tamanho variavel.
+ * Exibe os dados do arquivo de tamanho variavel.
+ *
+ * @param inputFile - Arquivo de tamanho variavel
+ * @param exibirAluno - Caso seja necessario exibir os dados do aluno na tela.
+ * @param generatedHtmlOutput - Caso seja necessario criar o arquivo de consulta html
+ * @param arquivoFixo - Arquivo fixo para criacao do variavel caso esse nao exista.
+ * @param nome do arquivo de consulta html.
+ * @return arquivo de consulta HTML.
+ *
  */
-LIST carregarAlunoArquivoVariavel(char *inputFile, LIST alunos,
-		boolean showAluno);
+char *carregarAlunoArquivoVariavel(char *inputFile, boolean exibirAluno,
+		boolean generateHtmlOutput, char *arquivoFixo);
 
 /**
  * Cria o arquivo de formato variavel.
@@ -98,6 +122,15 @@ void writeFileFormatoVariavel(FILE *file, Aluno aln);
 Aluno newAluno(char *value);
 
 /**
+ * Cria um arquivo apartir de um linha de tamanho variavel.
+ *
+ * @param line linha do arquivo variavel
+ * @param index contador de posicao dos registros no arquivo, para indexacao.
+ *
+ */
+Aluno newAlunoVariableLine(char *line, int *index);
+
+/**
  * Exibe as informacoes do arquivo de tamanho variavel.
  *
  * param arqVariavel nome do arquivo variavel
@@ -106,18 +139,11 @@ Aluno newAluno(char *value);
 void showInformacoesArquivoVariavel(char *arqVariavel);
 
 /**
- * Exibe a estrutura do arquivo de tamanho fixo.
- *
- * param alunos - Estrutura de alunos processados.
- */
-char *showArquivoFormatoFixo(LIST alunos);
-
-void writeFileFormatoHTML_inicio(FILE *file);
-
-/**
  * Escreve o aluno no html de consulta.
  */
 void writeFileFormatoHTML(FILE *file, Aluno aln);
+
+void writeFileFormatoHTML_inicio(FILE *file);
 
 void writeFileFormatoHTML_fim(FILE *file);
 
@@ -140,21 +166,14 @@ void sortFileKey(char *inputFile);
 void freeAluno(Aluno aluno);
 
 /**
- * Libera da memoria a estrutura de alunos.
- *
- * param alunos - Estrutura de alunos a serem liberadas.
- */
-void freeAlunoList(LIST aluno);
-
-/**
- * Obtem um aluno pelo ra.
- */
-Aluno findAlunoByRaList(LIST alunos, int ra);
-
-/**
  * Obtem um aluno no arquivo variavel.
+ *
+ * @param ra ra do aluno
+ * @param fileName nome do arquivo variavel.
+ * @param arquivoFixo nome do arquivo fixo, caso o variavel nao exista.
+ *
  */
-Aluno findAlunoByRaArquivoVariavel(int ra, char *fileName);
+Aluno findAlunoByRaArquivoVariavel(int ra, char *fileName, char *arquivoFixo);
 
 /**
  * Obtem um aluno no arquivo variavel, considerando um arquivo de index.
