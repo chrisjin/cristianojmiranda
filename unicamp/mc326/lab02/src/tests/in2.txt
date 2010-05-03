@@ -1,10 +1,3 @@
-/**
- *  Informações sobre esse arquivo de dados:
- *  - Total de linhas: 100
- *  - Total de Registros validos: 10
- *
- */
-
 073323 Leandro I. Girardi      Sao Paulo      33257805 96459677 M 49#
 071091 Gustavo Ferreira Tiengo Sao Paulo      32945579 91402117 M 42#
 082070 Magda de Almeida Silva  Santo Andre    44277218 89727669 F 42#
@@ -25,7 +18,6 @@ batatinha batatinha batatinha.. .. ... .. .. .. . .. ..   . abobrinha
 
 
 080000 Jose                    Artur Nogueira 38771511 94331234 M 10#
-080001 Marcos                  Holambra       38771101 97633123 M 20#
 080002 Angelica                Limeira        38771771 97371234 M 30#
 080003 Guto                    Piracicaba     66666666 97338234 M 40#
 080004 Beatriz                 Limeira        38776111          M 50#
