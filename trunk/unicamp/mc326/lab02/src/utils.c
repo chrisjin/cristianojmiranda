@@ -82,6 +82,7 @@ char *strMerge(char *value, char *token, char *mergeToken) {
 			size = strlen(splt) + strlen(mergeToken);
 			if (aux == NULL) {
 				aux = MEM_ALLOC_N(char, size);
+				//aux = (char*)malloc(size);
 			} else {
 				aux = realloc(aux, size);
 			}
