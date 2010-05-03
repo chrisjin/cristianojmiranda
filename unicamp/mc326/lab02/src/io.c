@@ -144,7 +144,8 @@ char *strip(char *value) {
 
 	}
 
-	char *result = MEM_ALLOC_N(char, fim - inicio);
+	//char *result = MEM_ALLOC_N(char, fim - inicio);
+	char *result = (char *) malloc(fim - inicio);
 	stripWhiteSpace(result);
 
 	result = strSubString(value, inicio, ++fim);
