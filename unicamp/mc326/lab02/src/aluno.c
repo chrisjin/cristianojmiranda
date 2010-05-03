@@ -332,6 +332,7 @@ int deleteAluno(int ra, char *indexFile, char *variableFile, int pIndex) {
 	if (pIndex < 0) {
 		debug("Localiza o ra do aluno no index.");
 		index = indexByRa(ra, indexFile);
+		debugi("Index do RA", index);
 	} else {
 		index = pIndex;
 	}
@@ -429,23 +430,29 @@ int indexByRa(int ra, char *indexFile) {
 
 		debug("Verifica se o ra procurado esta no periodo no entre meio");
 		pMeio = pInicio + ((pFim - pInicio) / 2);
+		if (recordCount % 2 == 0) {
 
-		debug("Posiciona o curso no meio do periodo");
-		fseek(arq, pMeio, SEEK_SET);
+			pInicio += recSize;
 
-		debug("Le a linha do meio do periodo");
-		raInicio = getRaLineIndex(arq, ra, &index);
-
-		debug("Caso tenha localizado");
-		if (index != -1) {
-			break;
-		}
-
-		debug("Caso o Ra esteje no periodo inferior");
-		if (ra > raInicio) {
-			pInicio = pMeio;
 		} else {
-			pFim = pMeio;
+
+			debug("Posiciona o curso no meio do periodo");
+			fseek(arq, pMeio, SEEK_SET);
+
+			debug("Le a linha do meio do periodo");
+			raInicio = getRaLineIndex(arq, ra, &index);
+
+			debug("Caso tenha localizado");
+			if (index != -1) {
+				break;
+			}
+
+			debug("Caso o Ra esteje no periodo inferior");
+			if (ra > raInicio) {
+				pInicio = pMeio;
+			} else {
+				pFim = pMeio;
+			}
 		}
 
 		count++;
@@ -484,6 +491,8 @@ int getRaLineIndex(FILE *arq, int ra, int *index) {
 		debug("Normaliza a linha");
 		char *tmp_line = (char*) strip(strMerge(line, END_OF_LINE,
 				STR_END_TOKEN));
+		//char *tmp_line = strMerge(line, END_OF_LINE, STR_END_TOKEN);
+		//char *tmp_line = strtok(line, END_OF_LINE);
 
 		split = strtok(tmp_line, INDEX_ALUNO_RECORD_TOKEN);
 		if (split) {
