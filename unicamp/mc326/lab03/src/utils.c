@@ -314,3 +314,10 @@ void showFile(char *fileName) {
 	fclose(arq);
 
 }
+
+/**
+ * Funcao vazia.
+ */
+void nop(void* p) {
+
+}

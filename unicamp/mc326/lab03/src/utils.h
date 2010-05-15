@@ -102,3 +102,8 @@ void showFile(char *fileName);
  * Le da entrada de dados.
  */
 char* getLine();
+
+/**
+ * Funcao vazia.
+ */
+void nop(void* p);
