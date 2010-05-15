@@ -33,6 +33,9 @@ int main(int argc, char * argv[]) {
 	debug("Verifica se os parametros de entrada do sistema sao validos");
 	validaEntrada(argc, argv);
 
+	debug("Executa a ordenacao do arquivo");
+	sortArquivoFixo(argv[1], argv[2], atoi(argv[4]), argv[3], true, true);
+
 	debug("Libera a memoria alocada e finaliza o programa");
 	finalizeLog();
 	freeBundle();
