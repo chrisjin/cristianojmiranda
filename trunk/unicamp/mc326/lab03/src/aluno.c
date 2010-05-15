@@ -967,6 +967,12 @@ void freeAluno(Aluno aluno) {
 void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 		boolean showStatistics, boolean generateCsvStatistics) {
 
+	debug("Criando a lista de run files");
+	LIST runFileList = createRunFiles(inFile, memory * 1000, key);
+
+	debug("Executando merge dos run files");
+	// TODO: Gustavo colocar sua implementação aqui !
+
 }
 
 /**
@@ -991,20 +997,13 @@ LIST createRunFiles(char *inFile, int memory, char *key) {
 	int runFileCount = 1;
 	int memoryCount = 0;
 	long memoryFullCount = 0;
-	char buffer[READ_BUFFER_SIZE];
+	char *buffer;
 	char line[READ_BUFFER_SIZE];
+	FILE *runFile = NULL;
+	char *runFileName = NULL;
 
 	debug("Obtendo o tamanho em bytes para um registro no arquivo de tamanho fixo");
 	int recordSize = atoi(getProperty("aluno.field.end.fimregistro")) + 1;
-
-	char *runFileName = generateRunFileName(runFileCount);
-	debugs("Gerando o nome para o arquivo de run", runFileName);
-
-	debug("Criando o primeiro run file");
-	FILE *runFile = Fopen(runFileName, WRITE_FLAG);
-
-	debug("Insere o nome do arquivo run na lista de retorno");
-	frontInsert(runFileList, runFileName);
 
 	debug("Lista para armazenar as runs para fazer sort em memoria");
 	LIST sortListRun = newList();
@@ -1016,12 +1015,13 @@ LIST createRunFiles(char *inFile, int memory, char *key) {
 		readCount++;
 
 		debug("Grava a chave na run");
+		buffer = MEM_ALLOC_N(char, READ_BUFFER_SIZE);
 		stripWhiteSpace(buffer);
 		sprintf(buffer, "%s%s%d", getKeyLine(line, key),
 				INDEX_ALUNO_RECORD_TOKEN, memoryFullCount);
 
-		debug("Insere a run na lista de sorted");
-		frontInsert(sortListRun, buffer);
+		debugs("Insere a run na lista de sorted: ", buffer);
+		rearInsert(sortListRun, buffer);
 
 		debug("Incrementa a quantidade de memoria utilizada.");
 		memoryCount += recordSize;
@@ -1034,6 +1034,32 @@ LIST createRunFiles(char *inFile, int memory, char *key) {
 
 			debug("Memoria de leitura preenchida. Fechando a run.");
 
+			debug("Ordenando a lista de dados de run");
+			// TODO: Magda colocar sua implementação aqui !
+
+			debug("Incrementa o contador de run files");
+			runFileName = generateRunFileName(runFileCount);
+			debugs("Gerando o nome para o arquivo de run", runFileName);
+			runFileCount++;
+
+			debug("Insere o nome do arquivo run na lista de retorno");
+			rearInsert(runFileList, runFileName);
+
+			debug("Criando o run file");
+			runFile = Fopen(runFileName, WRITE_FLAG);
+
+			debug("Escre os dados na run");
+			writeRunFile(sortListRun, runFile);
+
+			debug("Libera a lista de ordenacao da memoria");
+			freeList(sortListRun, nop);
+
+			debug("Fechando o run file");
+			fclose(runFile);
+
+			debug("Libera contador de memoria");
+			memoryCount = 0;
+
 		}
 
 		readCount++;
@@ -1041,7 +1067,61 @@ LIST createRunFiles(char *inFile, int memory, char *key) {
 
 	}
 
+	debug("Cria o ultimo run file");
+	if (sortListRun->count > 0) {
+
+		debug("Ordenando a lista de dados de run");
+		// TODO: Magda colocar sua implementação aqui !
+
+		debug("Incrementa o contador de run files");
+		runFileName = generateRunFileName(runFileCount);
+		debugs("Gerando o nome para o arquivo de run", runFileName);
+		runFileCount++;
+
+		debug("Insere o nome do arquivo run na lista de retorno");
+		rearInsert(runFileList, runFileName);
+
+		debug("Criando o run file");
+		runFile = Fopen(runFileName, WRITE_FLAG);
+
+		debug("Escre os dados na run");
+		writeRunFile(sortListRun, runFile);
+
+		debug("Libera a lista de ordenacao da memoria");
+		freeList(sortListRun, nop);
+
+		debug("Fechando o run file");
+		fclose(runFile);
+	}
+
 	return runFileList;
+
+}
+
+/**
+ * Escreve os dados no run file.
+ * @param dados - lista de dados ordenados a ser gravado na run.
+ * @param runFile - Arquivo de run.
+ */
+void writeRunFile(LIST dados, FILE *runFile) {
+
+	if (dados == NULL || dados->count == 0) {
+		debug("Nao existem dados na lista");
+	} else {
+
+		debug("Obtem o primeiro elemento da lista");
+		nodeptr no = dados->content;
+
+		debug("Itera na lista de dados para escrever na run");
+		int count = 1;
+		while (no != NULL && count <= dados->count) {
+			fprintf(runFile, "%s\n", no->value);
+			no = no->next;
+			count++;
+		}
+
+		debug("Arquivo de run completa");
+	}
 
 }
 
