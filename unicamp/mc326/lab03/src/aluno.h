@@ -229,4 +229,12 @@ char *generateRunFileName(int count);
  * @return chave da linha.
  */
 char *getKeyLine(char *line, char *key);
-
+/**
+ * Cria os arquivos de merge (run files), ordenados apartir de uma chave.
+ *
+ * @param inFile - Arquivo de entrada a ser ordenados
+ * @para memory - Quantidade de memoria limite utilizada pelo processo.
+ * @param key - Chave a ser utilizada para ordenar o arquivo.
+ * @return lista de arquivos runs criados durante o processo.
+ */
+LIST createRunFiles(char *inFile, int memory, char *key);
