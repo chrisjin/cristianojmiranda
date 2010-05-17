@@ -321,3 +321,17 @@ void showFile(char *fileName) {
 void nop(void* p) {
 
 }
+
+/***
+ * Metodo que ordena um arquivo utilizando funcoes do OS.
+ *
+ * @param inFile arquivo a ser ordenado.
+ * @param outFile arquivo de saida ordenado.
+ */
+void sortFile(char *inFile, char *outFile) {
+
+	// TODO: Migrar esses parametros para o arquivo de configuracao para ficar independente da plataforma
+	system(str_join("sort ", str_join(inFile, str_join(" > ", outFile))));
+	system(str_join("rm ", inFile));
+
+}

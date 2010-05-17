@@ -26,6 +26,8 @@
 #define READ_FLAG "r"
 #define WRITE_FLAG "w"
 
+#define CONVERT_MB_TO_BYTE (1000000)
+
 /**
  * Converte todos os carateres de uma String
  * em uppercase.
@@ -107,3 +109,12 @@ char* getLine();
  * Funcao vazia.
  */
 void nop(void* p);
+
+/***
+ * Metodo que ordena um arquivo utilizando funcoes do OS.
+ *
+ * @param inFile arquivo a ser ordenado.
+ * @param outFile arquivo de saida ordenado.
+ */
+void sortFile(char *inFile, char *outFile);
+
