@@ -42,6 +42,7 @@
 #define INDEX_ALUNO_FILE_SORTED "index_aluno.txt.sorted"
 
 // Dados de run file
+#define RUN_FILE_TMP "runfile.tmp"
 #define RUN_FILE "runfile_"
 #define EXTENSAO_RUN_FILE ".run"
 
@@ -238,3 +239,8 @@ char *getKeyLine(char *line, char *key);
  * @return lista de arquivos runs criados durante o processo.
  */
 LIST createRunFiles(char *inFile, int memory, char *key);
+
+/**
+ * Remove todos os arquivos de run processados anteriormente.
+ */
+void deleteRunFiles();
