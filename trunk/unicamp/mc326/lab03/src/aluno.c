@@ -968,7 +968,7 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 		boolean showStatistics, boolean generateCsvStatistics) {
 
 	debug("Criando a lista de run files");
-	LIST runFileList = createRunFiles(inFile, memory * 1000, key);
+	LIST runFileList = createRunFiles(inFile, memory, key);
 
 	debug("Executando merge dos run files");
 	// TODO: Gustavo colocar sua implementação aqui !
@@ -984,6 +984,9 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
  * @return lista de arquivos runs criados durante o processo.
  */
 LIST createRunFiles(char *inFile, int memory, char *key) {
+
+	debug("Deleta todos os run files do diretorio");
+	deleteRunFiles();
 
 	debug("Abre o arquivo de dados para leitura");
 	FILE *alunosFile = Fopen(inFile, "r");
@@ -1034,9 +1037,6 @@ LIST createRunFiles(char *inFile, int memory, char *key) {
 
 			debug("Memoria de leitura preenchida. Fechando a run.");
 
-			debug("Ordenando a lista de dados de run");
-			// TODO: Magda colocar sua implementação aqui !
-
 			debug("Incrementa o contador de run files");
 			runFileName = generateRunFileName(runFileCount);
 			debugs("Gerando o nome para o arquivo de run", runFileName);
@@ -1046,7 +1046,7 @@ LIST createRunFiles(char *inFile, int memory, char *key) {
 			rearInsert(runFileList, runFileName);
 
 			debug("Criando o run file");
-			runFile = Fopen(runFileName, WRITE_FLAG);
+			runFile = Fopen(RUN_FILE_TMP, WRITE_FLAG);
 
 			debug("Escre os dados na run");
 			writeRunFile(sortListRun, runFile);
@@ -1056,6 +1056,9 @@ LIST createRunFiles(char *inFile, int memory, char *key) {
 
 			debug("Fechando o run file");
 			fclose(runFile);
+
+			debug("Ordena o arquivo de run");
+			sortFile(RUN_FILE_TMP, runFileName);
 
 			debug("Libera contador de memoria");
 			memoryCount = 0;
@@ -1070,9 +1073,6 @@ LIST createRunFiles(char *inFile, int memory, char *key) {
 	debug("Cria o ultimo run file");
 	if (sortListRun->count > 0) {
 
-		debug("Ordenando a lista de dados de run");
-		// TODO: Magda colocar sua implementação aqui !
-
 		debug("Incrementa o contador de run files");
 		runFileName = generateRunFileName(runFileCount);
 		debugs("Gerando o nome para o arquivo de run", runFileName);
@@ -1082,7 +1082,7 @@ LIST createRunFiles(char *inFile, int memory, char *key) {
 		rearInsert(runFileList, runFileName);
 
 		debug("Criando o run file");
-		runFile = Fopen(runFileName, WRITE_FLAG);
+		runFile = Fopen(RUN_FILE_TMP, WRITE_FLAG);
 
 		debug("Escre os dados na run");
 		writeRunFile(sortListRun, runFile);
@@ -1092,6 +1092,12 @@ LIST createRunFiles(char *inFile, int memory, char *key) {
 
 		debug("Fechando o run file");
 		fclose(runFile);
+
+		debug("Ordena o arquivo de run");
+		sortFile(RUN_FILE_TMP, runFileName);
+
+		debug("Libera contador de memoria");
+		memoryCount = 0;
 	}
 
 	return runFileList;
@@ -1167,6 +1173,20 @@ char *getKeyLine(char *line, char *key) {
 		pFim = atoi(getProperty("aluno.field.end.ra"));
 
 		return strSubString(line, pInicial, pFim);
+	}
+
+}
+
+/**
+ * Remove todos os arquivos de run processados anteriormente.
+ */
+void deleteRunFiles() {
+
+	debug("Caso exista o primeiro run file, deleta todos.");
+	if (fileExists(generateRunFileName(1))) {
+		debug("Deletando run files...");
+		system(str_join("rm *", str_join(EXTENSAO_RUN_FILE, " &")));
+		debug("Run files deletados");
 	}
 
 }
