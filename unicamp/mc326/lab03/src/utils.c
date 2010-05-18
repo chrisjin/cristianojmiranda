@@ -335,3 +335,19 @@ void sortFile(char *inFile, char *outFile) {
 	system(str_join("rm ", inFile));
 
 }
+
+/**
+ * Verifica se uma string é vazia.
+ *
+ * @param value - String a ser checada.
+ * @return True caso a string seja vazia.
+ */
+boolean isStrEmpty(char *value) {
+
+	if (value == NULL || strlen(strip(value)) == 0) {
+		return true;
+	}
+
+	return false;
+
+}
