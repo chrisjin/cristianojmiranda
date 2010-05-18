@@ -236,9 +236,13 @@ char *getKeyLine(char *line, char *key);
  * @param inFile - Arquivo de entrada a ser ordenados
  * @para memory - Quantidade de memoria limite utilizada pelo processo.
  * @param key - Chave a ser utilizada para ordenar o arquivo.
+ * @param rdCount - Apontador para countador de read.
+ * @param wrCount - Apontador para contador de write.
+ * @param recordCount - Contador de registros processados.
  * @return lista de arquivos runs criados durante o processo.
  */
-LIST createRunFiles(char *inFile, int memory, char *key);
+LIST createRunFiles(char *inFile, int memory, char *key, long *rdCount,
+		long *wrCount, long *recordCount);
 
 /**
  * Remove todos os arquivos de run processados anteriormente.

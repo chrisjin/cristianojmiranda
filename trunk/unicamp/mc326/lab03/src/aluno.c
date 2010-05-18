@@ -967,8 +967,53 @@ void freeAluno(Aluno aluno) {
 void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 		boolean showStatistics, boolean generateCsvStatistics) {
 
+	debug("Variaveis de controle de read and write");
+	long readCount;
+	long writeCount;
+	long recordCount;
+
 	debug("Criando a lista de run files");
-	LIST runFileList = createRunFiles(inFile, memory, key);
+	LIST runFileList = createRunFiles(inFile, memory, key, &readCount,
+			&writeCount, &recordCount);
+
+	debug("Caso seja necessario gravar estatistica do processamento");
+	if (showStatistics || generateCsvStatistics) {
+
+		debug("Cria as string de trace");
+		char strLeituraExecutada[READ_BUFFER_SIZE];
+		char strEscritaExecutada[READ_BUFFER_SIZE];
+		char strQuantidadeRunFiles[READ_BUFFER_SIZE];
+		char strQuantidadeRegistros[READ_BUFFER_SIZE];
+
+		debug("Monta as strings de trace de execucao");
+		sprintf(strLeituraExecutada, getMessage(
+				"aluno.quantidadeLeituraExecutadas"), getMessage(
+				"aluno.processoRunFile"), readCount, END_OF_LINE);
+		sprintf(strEscritaExecutada, getMessage(
+				"aluno.quantidadeEscritaExecutadas"), getMessage(
+				"aluno.processoRunFile"), writeCount, END_OF_LINE);
+		sprintf(strQuantidadeRunFiles, getMessage("aluno.quatidadeRunFiles"),
+				runFileList->count, END_OF_LINE);
+		sprintf(strQuantidadeRegistros, getMessage(
+				"aluno.quantidadeRegistroProcessados"), recordCount,
+				END_OF_LINE);
+
+		debug("Exibe os dados de processamento dos run files");
+		if (showStatistics) {
+
+			debug("Exibe o trace na tela");
+			printf("%s", strEscritaExecutada);
+			printf("%s", strLeituraExecutada);
+			printf("%s", strQuantidadeRegistros);
+			printf("%s", strQuantidadeRunFiles);
+
+		}
+
+		debug("Grava os dados no arquivo de estatisticas de processamento");
+		if (generateCsvStatistics) {
+
+		}
+	}
 
 	debug("Executando merge dos run files");
 	// TODO: Gustavo colocar sua implementação aqui !
@@ -981,9 +1026,13 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
  * @param inFile - Arquivo de entrada a ser ordenados
  * @para memory - Quantidade de memoria limite utilizada pelo processo.
  * @param key - Chave a ser utilizada para ordenar o arquivo.
+ * @param rdCount - Apontador para countador de read.
+ * @param wrCount - Apontador para contador de write.
+ * @param recordCount - Contador de registros processados.
  * @return lista de arquivos runs criados durante o processo.
  */
-LIST createRunFiles(char *inFile, int memory, char *key) {
+LIST createRunFiles(char *inFile, int memory, char *key, long *rdCount,
+		long *wrCount, long *recordCount) {
 
 	debug("Deleta todos os run files do diretorio");
 	deleteRunFiles();
@@ -1014,59 +1063,67 @@ LIST createRunFiles(char *inFile, int memory, char *key) {
 	debug("Le o arquivo de dados");
 	while (fgets(line, READ_BUFFER_SIZE, alunosFile) != NULL) {
 
-		debug("Incrementa o contador de read");
-		readCount++;
+		debug("Verifica se a linha do arquivo principal esta vazia");
+		if (isStrEmpty(line)) {
 
-		debug("Grava a chave na run");
-		buffer = MEM_ALLOC_N(char, READ_BUFFER_SIZE);
-		stripWhiteSpace(buffer);
-		sprintf(buffer, "%s%s%d", getKeyLine(line, key),
-				INDEX_ALUNO_RECORD_TOKEN, memoryFullCount);
+			debugi("Linha vazia. Posicao: ", memoryFullCount);
 
-		debugs("Insere a run na lista de sorted: ", buffer);
-		rearInsert(sortListRun, buffer);
+		} else {
 
-		debug("Incrementa a quantidade de memoria utilizada.");
-		memoryCount += recordSize;
-		memoryFullCount += recordSize;
+			debug("Incrementa o contador de read");
+			readCount++;
 
-		debugi("Memoria utilizada: ", memoryCount);
+			debug("Grava a chave na run");
+			buffer = MEM_ALLOC_N(char, READ_BUFFER_SIZE);
+			stripWhiteSpace(buffer);
+			sprintf(buffer, "%s%s%d", getKeyLine(line, key),
+					INDEX_ALUNO_RECORD_TOKEN, memoryFullCount);
 
-		debug("Verificando se existe memoria de manipulacao disponivel");
-		if ((memoryCount + recordSize) >= memory) {
+			debugs("Insere a run na lista de sorted: ", buffer);
+			rearInsert(sortListRun, buffer);
 
-			debug("Memoria de leitura preenchida. Fechando a run.");
+			debug("Incrementa a quantidade de memoria utilizada.");
+			memoryCount += recordSize;
+			memoryFullCount += recordSize;
 
-			debug("Incrementa o contador de run files");
-			runFileName = generateRunFileName(runFileCount);
-			debugs("Gerando o nome para o arquivo de run", runFileName);
-			runFileCount++;
+			debugi("Memoria utilizada: ", memoryCount);
 
-			debug("Insere o nome do arquivo run na lista de retorno");
-			rearInsert(runFileList, runFileName);
+			debug("Verificando se existe memoria de manipulacao disponivel");
+			if ((memoryCount + recordSize) >= memory) {
 
-			debug("Criando o run file");
-			runFile = Fopen(RUN_FILE_TMP, WRITE_FLAG);
+				debug("Memoria de leitura preenchida. Fechando a run.");
 
-			debug("Escre os dados na run");
-			writeRunFile(sortListRun, runFile);
+				debug("Incrementa o contador de run files");
+				runFileName = generateRunFileName(runFileCount);
+				debugs("Gerando o nome para o arquivo de run", runFileName);
+				runFileCount++;
 
-			debug("Libera a lista de ordenacao da memoria");
-			freeList(sortListRun, nop);
+				debug("Insere o nome do arquivo run na lista de retorno");
+				rearInsert(runFileList, runFileName);
 
-			debug("Fechando o run file");
-			fclose(runFile);
+				debug("Criando o run file");
+				runFile = Fopen(RUN_FILE_TMP, WRITE_FLAG);
 
-			debug("Ordena o arquivo de run");
-			sortFile(RUN_FILE_TMP, runFileName);
+				debug("Escre os dados na run");
+				writeRunFile(sortListRun, runFile);
 
-			debug("Libera contador de memoria");
-			memoryCount = 0;
+				debug("Libera a lista de ordenacao da memoria");
+				freeList(sortListRun, nop);
 
+				debug("Fechando o run file");
+				fclose(runFile);
+
+				debug("Ordena o arquivo de run");
+				sortFile(RUN_FILE_TMP, runFileName);
+
+				debug("Libera contador de memoria");
+				memoryCount = 0;
+
+			}
+
+			readCount++;
+			debugl("Incrementa o contador de reads. Contador atual: ", readCount);
 		}
-
-		readCount++;
-		debugl("Incrementa o contador de reads. Contador atual: ", readCount);
 
 	}
 
@@ -1100,6 +1157,12 @@ LIST createRunFiles(char *inFile, int memory, char *key) {
 		memoryCount = 0;
 	}
 
+	debug("Seta as variaveis de retorno");
+	rdCount = readCount;
+	wrCount = writeCount;
+	readCount = readCount;
+
+	debug("Finalizando o processo e retornando a lista de runFiles");
 	return runFileList;
 
 }
