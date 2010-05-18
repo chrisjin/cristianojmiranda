@@ -118,3 +118,10 @@ void nop(void* p);
  */
 void sortFile(char *inFile, char *outFile);
 
+/**
+ * Verifica se uma string é vazia.
+ *
+ * @param value - String a ser checada.
+ * @return True caso a string seja vazia.
+ */
+boolean isStrEmpty(char *value);
