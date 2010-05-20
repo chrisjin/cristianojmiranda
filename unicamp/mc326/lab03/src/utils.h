@@ -22,6 +22,7 @@
 #define END_OF_LINE "\n"
 #define ERROR_EXECUTION -1
 #define READ_BUFFER_SIZE (1024)
+#define CSV_TOKEN ";"
 
 #define READ_FLAG "r"
 #define WRITE_FLAG "w"
