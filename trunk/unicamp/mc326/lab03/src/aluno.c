@@ -972,6 +972,9 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 	long writeCount;
 	long recordCount;
 
+	debug("Arquivo csv");
+	FILE *csvFile = NULL;
+
 	debug("Criando a lista de run files");
 	LIST runFileList = createRunFiles(inFile, memory, key, &readCount,
 			&writeCount, &recordCount);
@@ -979,44 +982,65 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 	debug("Caso seja necessario gravar estatistica do processamento");
 	if (showStatistics || generateCsvStatistics) {
 
-		debug("Cria as string de trace");
-		char strLeituraExecutada[READ_BUFFER_SIZE];
-		char strEscritaExecutada[READ_BUFFER_SIZE];
-		char strQuantidadeRunFiles[READ_BUFFER_SIZE];
-		char strQuantidadeRegistros[READ_BUFFER_SIZE];
-
-		debug("Monta as strings de trace de execucao");
-		sprintf(strLeituraExecutada, getMessage(
-				"aluno.quantidadeLeituraExecutadas"), getMessage(
-				"aluno.processoRunFile"), readCount, END_OF_LINE);
-		sprintf(strEscritaExecutada, getMessage(
-				"aluno.quantidadeEscritaExecutadas"), getMessage(
-				"aluno.processoRunFile"), writeCount, END_OF_LINE);
-		sprintf(strQuantidadeRunFiles, getMessage("aluno.quatidadeRunFiles"),
-				runFileList->count, END_OF_LINE);
-		sprintf(strQuantidadeRegistros, getMessage(
-				"aluno.quantidadeRegistroProcessados"), recordCount,
-				END_OF_LINE);
-
 		debug("Exibe os dados de processamento dos run files");
 		if (showStatistics) {
 
-			debug("Exibe o trace na tela");
-			printf("%s", strEscritaExecutada);
-			printf("%s", strLeituraExecutada);
-			printf("%s", strQuantidadeRegistros);
-			printf("%s", strQuantidadeRunFiles);
+			printf(getMessage("aluno.quantidadeLeituraExecutadas"), getMessage(
+					"aluno.processoRunFile"), readCount, END_OF_LINE);
+			printf(getMessage("aluno.quantidadeEscritaExecutadas"), getMessage(
+					"aluno.processoRunFile"), writeCount, END_OF_LINE);
+			printf(getMessage("aluno.quatidadeRunFiles"), runFileList->count,
+					END_OF_LINE);
+			printf(getMessage("aluno.quantidadeRegistroProcessados"),
+					recordCount, END_OF_LINE);
 
 		}
 
 		debug("Grava os dados no arquivo de estatisticas de processamento");
 		if (generateCsvStatistics) {
 
+			debug("Cria o arquivo de csv");
+			csvFile = Fopen(generateStatisticSortFileName(), WRITE_FLAG);
+
+			fprintf(csvFile,
+					getMessage("aluno.csv.quantidadeLeituraExecutadas"),
+					getMessage("aluno.processoRunFile"), readCount, END_OF_LINE);
+			fprintf(csvFile,
+					getMessage("aluno.csv.quantidadeEscritaExecutadas"),
+					getMessage("aluno.processoRunFile"), writeCount,
+					END_OF_LINE);
+			fprintf(csvFile, getMessage("aluno.csv.quatidadeRunFiles"),
+					runFileList->count, END_OF_LINE);
+			fprintf(csvFile, getMessage(
+					"aluno.csv.quantidadeRegistroProcessados"), recordCount,
+					END_OF_LINE);
+
 		}
 	}
 
 	debug("Executando merge dos run files");
 	// TODO: Gustavo colocar sua implementação aqui !
+
+
+	debug("Verificando se o arquivo de csv deve ser fechado");
+	if (generateCsvStatistics && csvFile != NULL) {
+
+		debug("Fechando arquivo de estatistica");
+		fclose(csvFile);
+
+	}
+
+}
+
+/**
+ * Gera o nome do arquivo csv para estatistica de sort.
+ */
+char *generateStatisticSortFileName() {
+
+	char dateTime[100];
+	sprintf(dateTime, "%s-%s", __DATE__, __TIME__);
+
+	return str_join(dateTime, STATISTICS_CSV_FILE);
 
 }
 
@@ -1105,7 +1129,7 @@ LIST createRunFiles(char *inFile, int memory, char *key, long *rdCount,
 				runFile = Fopen(RUN_FILE_TMP, WRITE_FLAG);
 
 				debug("Escre os dados na run");
-				writeRunFile(sortListRun, runFile);
+				writeRunFile(sortListRun, runFile, &writeCount);
 
 				debug("Libera a lista de ordenacao da memoria");
 				freeList(sortListRun, nop);
@@ -1142,7 +1166,7 @@ LIST createRunFiles(char *inFile, int memory, char *key, long *rdCount,
 		runFile = Fopen(RUN_FILE_TMP, WRITE_FLAG);
 
 		debug("Escre os dados na run");
-		writeRunFile(sortListRun, runFile);
+		writeRunFile(sortListRun, runFile, &writeCount);
 
 		debug("Libera a lista de ordenacao da memoria");
 		freeList(sortListRun, nop);
@@ -1158,9 +1182,9 @@ LIST createRunFiles(char *inFile, int memory, char *key, long *rdCount,
 	}
 
 	debug("Seta as variaveis de retorno");
-	rdCount = readCount;
-	wrCount = writeCount;
-	readCount = readCount;
+	*rdCount = readCount;
+	*wrCount = writeCount;
+	*recordCount = readCount;
 
 	debug("Finalizando o processo e retornando a lista de runFiles");
 	return runFileList;
@@ -1171,8 +1195,15 @@ LIST createRunFiles(char *inFile, int memory, char *key, long *rdCount,
  * Escreve os dados no run file.
  * @param dados - lista de dados ordenados a ser gravado na run.
  * @param runFile - Arquivo de run.
+ * @param writeCount - Contador de write.
  */
-void writeRunFile(LIST dados, FILE *runFile) {
+void writeRunFile(LIST dados, FILE *runFile, long *writeCount) {
+
+	debug("Escrevendo a lista de runs no arquivo de run");
+	debugi("Tamanho da lista de dados: ", dados->count);
+
+	debug("Contador de write");
+	long wrCount = 0;
 
 	if (dados == NULL || dados->count == 0) {
 		debug("Nao existem dados na lista");
@@ -1185,12 +1216,18 @@ void writeRunFile(LIST dados, FILE *runFile) {
 		int count = 1;
 		while (no != NULL && count <= dados->count) {
 			fprintf(runFile, "%s\n", no->value);
+			debug("Incrementando contador de write");
+			wrCount++;
+			debugl("Contador de write: ", wrCount);
 			no = no->next;
 			count++;
 		}
 
 		debug("Arquivo de run completa");
 	}
+
+	debug("Retornando contador de write");
+	*writeCount = wrCount;
 
 }
 

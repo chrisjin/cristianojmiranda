@@ -41,6 +41,9 @@
 #define INDEX_ALUNO_FILE "index_aluno.txt"
 #define INDEX_ALUNO_FILE_SORTED "index_aluno.txt.sorted"
 
+// Nome do arquivo de estatistica csv
+#define STATISTICS_CSV_FILE "_statistic_sort.csv"
+
 // Dados de run file
 #define RUN_FILE_TMP "runfile.tmp"
 #define RUN_FILE "runfile_"
@@ -248,3 +251,8 @@ LIST createRunFiles(char *inFile, int memory, char *key, long *rdCount,
  * Remove todos os arquivos de run processados anteriormente.
  */
 void deleteRunFiles();
+
+/**
+ * Gera o nome do arquivo csv para estatistica de sort.
+ */
+char *generateStatisticSortFileName();
