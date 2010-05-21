@@ -1358,3 +1358,72 @@ void deleteRunFiles() {
 	}
 
 }
+
+/**
+ *
+ */
+boolean sortFinalFile(char *inFile, char *outFile, char *dataFile) {
+
+	debug("Verificando se o arquivo de indices existe");
+	if (!fileExists(inFile)) {
+		debug("Arquivo de indices nao existe");
+		return false;
+	}
+
+	debug("Verificando se o arquivo de dados existe");
+	if (!fileExists(dataFile)) {
+		debug("Arquivo de dados nao existe");
+		return false;
+	}
+
+	int index = -1;
+
+	debug("Abrindo o arquivo de indices para leitura");
+	FILE *finFile = Fopen(inFile, READ_FLAG);
+
+	debug("Abrindo o arquivo de saida para escrita");
+	FILE *foutFile = Fopen(outFile, WRITE_FLAG);
+
+	debug("Abrindo o arquivo de dados para leitura");
+	FILE *fdataFile = Fopen(dataFile, READ_FLAG);
+
+	char line[READ_BUFFER_SIZE];
+	char lineDados[READ_BUFFER_SIZE];
+
+	debug("Le arquivo de indices linha a linha");
+	while (fgets(line, READ_BUFFER_SIZE, finFile) != NULL) {
+
+		index = getIndiceByLine(line);
+
+		if (index == ERROR_EXECUTION) {
+
+			debugs("linha invalida", line);
+
+		} else {
+
+			debug("posicionando cursor no arquivo de dados");
+			fseek(fdataFile, index, SEEK_SET);
+
+
+		}
+	}
+
+	return true;
+
+}
+
+int getIndiceByLine(char *line) {
+
+	debugs("verificando se a linha e vazia", line);
+	if (isStrEmpty(line)) {
+		return ERROR_EXECUTION;
+	}
+
+	char *temp = strtok(line, INDEX_ALUNO_RECORD_TOKEN);
+	if (temp == NULL) {
+		return ERROR_EXECUTION;
+	}
+
+	return atoi(strtok(line, INDEX_ALUNO_RECORD_TOKEN));
+
+}
