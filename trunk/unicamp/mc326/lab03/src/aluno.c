@@ -16,6 +16,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include<ctype.h>
+#include<time.h>
 #include "log.h"
 #include "utils.h"
 #include "bundle.h"
@@ -975,9 +976,18 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 	debug("Arquivo csv");
 	FILE *csvFile = NULL;
 
+	debug("Variaveis para contabilizar o tempo de execução do processo de run files");
+	time_t inicioRunFiles, fimRunFiles;
+
+	debug("Seta o timer de inicio");
+	time(&inicioRunFiles);
+
 	debug("Criando a lista de run files");
 	LIST runFileList = createRunFiles(inFile, memory, key, &readCount,
 			&writeCount, &recordCount);
+
+	debug("Seta o timer de fim do processo de run files");
+	time(&fimRunFiles);
 
 	debug("Caso seja necessario gravar estatistica do processamento");
 	if (showStatistics || generateCsvStatistics) {
@@ -993,6 +1003,9 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 					END_OF_LINE);
 			printf(getMessage("aluno.quantidadeRegistroProcessados"),
 					recordCount, END_OF_LINE);
+			printf(getMessage("aluno.tempoExecucaoProcesso"), getMessage(
+					"aluno.processoRunFile"), (int) (1000 * difftime(
+					fimRunFiles, inicioRunFiles)), END_OF_LINE);
 
 		}
 
@@ -1014,13 +1027,66 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 			fprintf(csvFile, getMessage(
 					"aluno.csv.quantidadeRegistroProcessados"), recordCount,
 					END_OF_LINE);
+			fprintf(csvFile, getMessage("aluno.csv.tempoExecucaoProcesso"),
+					getMessage("aluno.processoRunFile"), (int) (1000
+							* difftime(fimRunFiles, inicioRunFiles)),
+					END_OF_LINE);
 
 		}
 	}
 
+	debug("Limpa os registros dos contadores");
+	readCount = 0;
+	writeCount = 0;
+
+	debug("Seta o timer de inicio");
+	time(&inicioRunFiles);
 	debug("Executando merge dos run files");
 	// TODO: Gustavo colocar sua implementação aqui !
 
+	debug("Seta o timer de fim");
+	time(&fimRunFiles);
+
+	debug("Caso seja necessario gravar estatistica do processamento");
+	if (showStatistics || generateCsvStatistics) {
+
+		debug("Exibe os dados de processamento dos run files");
+		if (showStatistics) {
+
+			printf(getMessage("aluno.quantidadeLeituraExecutadas"), getMessage(
+					"aluno.processoMerge"), readCount, END_OF_LINE);
+			printf(getMessage("aluno.quantidadeEscritaExecutadas"), getMessage(
+					"aluno.processoMerge"), writeCount, END_OF_LINE);
+			printf(getMessage("aluno.quatidadeRunFiles"), runFileList->count,
+					END_OF_LINE);
+			printf(getMessage("aluno.quantidadeRegistroProcessados"),
+					recordCount, END_OF_LINE);
+			printf(getMessage("aluno.tempoExecucaoProcesso"), getMessage(
+					"aluno.processoMerge"), (int) (1000 * difftime(fimRunFiles,
+					inicioRunFiles)), END_OF_LINE);
+
+		}
+
+		debug("Grava os dados no arquivo de estatisticas de processamento");
+		if (generateCsvStatistics) {
+
+			fprintf(csvFile,
+					getMessage("aluno.csv.quantidadeLeituraExecutadas"),
+					getMessage("aluno.processoMerge"), readCount, END_OF_LINE);
+			fprintf(csvFile,
+					getMessage("aluno.csv.quantidadeEscritaExecutadas"),
+					getMessage("aluno.processoMerge"), writeCount, END_OF_LINE);
+			fprintf(csvFile, getMessage("aluno.csv.quatidadeRunFiles"),
+					runFileList->count, END_OF_LINE);
+			fprintf(csvFile, getMessage(
+					"aluno.csv.quantidadeRegistroProcessados"), recordCount,
+					END_OF_LINE);
+			fprintf(csvFile, getMessage("aluno.csv.tempoExecucaoProcesso"),
+					getMessage("aluno.processoMerge"), (int) (1000 * difftime(
+							fimRunFiles, inicioRunFiles)), END_OF_LINE);
+
+		}
+	}
 
 	debug("Verificando se o arquivo de csv deve ser fechado");
 	if (generateCsvStatistics && csvFile != NULL) {
@@ -1070,6 +1136,7 @@ LIST createRunFiles(char *inFile, int memory, char *key, long *rdCount,
 	debug("Variaveis de controle do processo");
 	long readCount = 0;
 	long writeCount = 0;
+	long writeCountTemp = 0;
 	int runFileCount = 1;
 	int memoryCount = 0;
 	long memoryFullCount = 0;
@@ -1094,12 +1161,11 @@ LIST createRunFiles(char *inFile, int memory, char *key, long *rdCount,
 
 		} else {
 
-			debug("Incrementa o contador de read");
-			readCount++;
-
 			debug("Grava a chave na run");
 			buffer = MEM_ALLOC_N(char, READ_BUFFER_SIZE);
 			stripWhiteSpace(buffer);
+
+			debug("Obtem a chave e a posicao no arquivo de dados.");
 			sprintf(buffer, "%s%s%d", getKeyLine(line, key),
 					INDEX_ALUNO_RECORD_TOKEN, memoryFullCount);
 
@@ -1113,7 +1179,7 @@ LIST createRunFiles(char *inFile, int memory, char *key, long *rdCount,
 			debugi("Memoria utilizada: ", memoryCount);
 
 			debug("Verificando se existe memoria de manipulacao disponivel");
-			if ((memoryCount + recordSize) >= memory) {
+			if ((memoryCount + recordSize) > memory) {
 
 				debug("Memoria de leitura preenchida. Fechando a run.");
 
@@ -1129,7 +1195,8 @@ LIST createRunFiles(char *inFile, int memory, char *key, long *rdCount,
 				runFile = Fopen(RUN_FILE_TMP, WRITE_FLAG);
 
 				debug("Escre os dados na run");
-				writeRunFile(sortListRun, runFile, &writeCount);
+				writeRunFile(sortListRun, runFile, &writeCountTemp);
+				writeCount += writeCountTemp;
 
 				debug("Libera a lista de ordenacao da memoria");
 				freeList(sortListRun, nop);
@@ -1166,7 +1233,8 @@ LIST createRunFiles(char *inFile, int memory, char *key, long *rdCount,
 		runFile = Fopen(RUN_FILE_TMP, WRITE_FLAG);
 
 		debug("Escre os dados na run");
-		writeRunFile(sortListRun, runFile, &writeCount);
+		writeRunFile(sortListRun, runFile, &writeCountTemp);
+		writeCount += writeCountTemp;
 
 		debug("Libera a lista de ordenacao da memoria");
 		freeList(sortListRun, nop);
