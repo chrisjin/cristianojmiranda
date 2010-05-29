@@ -344,10 +344,15 @@ void sortFile(char *inFile, char *outFile) {
  */
 boolean isStrEmpty(char *value) {
 
-	if (value == NULL || strlen(strip(value)) == 0) {
+	trim(value);
+
+	debugs("Verificando se a string eh vazia", value);
+	if (value == NULL || strlen(value) == 0) {
+		debug("Vazia");
 		return true;
 	}
 
+	debug("Nao vazia");
 	return false;
 
 }
