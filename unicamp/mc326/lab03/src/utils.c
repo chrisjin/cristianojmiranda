@@ -283,6 +283,24 @@ long fileSize(char *fileName) {
 	return tamanho;
 }
 
+/**
+ * Calcula o tamanho do arquivo.
+ */
+long fileSizeByRef(FILE *file) {
+
+	// guarda tamanho do arquivo
+	long tamanho = 0;
+
+	long posicaoInicial = ftell(file);
+
+	// calcula o tamanho
+	fseek(file, 0, SEEK_END);
+	tamanho = ftell(file);
+	fseek(file, posicaoInicial, SEEK_SET);
+
+	return tamanho;
+}
+
 /*
  Implementação de uma função fileExists() em C. Se
  o arquivo existir o valor true será retornado. Caso
@@ -363,10 +381,14 @@ boolean isStrEmpty(char *value) {
 
 /* returns random number in range of 0 to 999999, maior que min */
 int genRand(int min) {
+
 	int n;
 	while (n <= min) {
-		n = rand() % 1000000; /* n is random number in range of 0 - 999999 */
+		n = lrand48();
 	}
+
+	debugi("Randon value: ", n);
+
 	return (n);
 }
 
