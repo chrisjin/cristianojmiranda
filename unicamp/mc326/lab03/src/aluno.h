@@ -274,3 +274,22 @@ int getIndiceByLine(char *line);
  * @return true caso o processo tenha executado com sucesso.s
  */
 boolean sortFinalFile(char *inFile, char *outFile, char *dataFile);
+
+/**
+ * Obtem a menor linha do arquivo.
+ */
+char *lessLine(char *l1, char *l2, char *l3, char *l4, char *l5);
+
+/**
+ *
+ */
+char *generatedIndexFileByRunFiles(LIST runFileList);
+
+/**
+ * Executa o merge sorte de ate 5 run files.
+ * @param f1..f5 Arquivos de run a serem processados merge.
+ * @param sizeList - Tamanho da lista de runFiles.
+ * @return nome do arquivo com o merge.
+ */
+char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
+		int sizeList);
