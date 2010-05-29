@@ -1101,6 +1101,9 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 
 	}
 
+	freeList(runFileList, nop);
+	free(runFileList);
+
 }
 
 /**
@@ -1167,7 +1170,7 @@ char *generatedIndexFileByRunFiles(LIST runFileList) {
 	}
 
 	debug("Retorna o arquivo ordenado");
-	return (char *) getElement(runFileList, 0);
+	return (char *) removeFirst(runFileList);
 
 }
 
@@ -1430,6 +1433,7 @@ char *lessLine(char *l1, char *l2, char *l3, char *l4, char *l5) {
 
 		debug("Libera a lista de sort");
 		freeList(lst, nop);
+		free(lst);
 
 		debugs("Menor linha:", result);
 
@@ -1439,6 +1443,7 @@ char *lessLine(char *l1, char *l2, char *l3, char *l4, char *l5) {
 
 	debug("Libera a lista de sort");
 	freeList(lst, nop);
+	free(lst);
 
 	debugs("Menor linha:", result);
 	return result;
