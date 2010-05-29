@@ -91,6 +91,7 @@ void _debug(char* message, char *func) {
 	if (debugEnabled) {
 
 		if (generateFile) {
+			verifySizeofLofFile(logFile);
 			fprintf(logFile, "[DEBUG][%s %s][%s] - %s\n", __DATE__, __TIME__,
 					func, message);
 		}
@@ -166,4 +167,16 @@ void stop() {
 void error(char* s) {
 	perror(s);
 	exit(EXIT_FAILURE);
+}
+
+void verifySizeofLofFile(FILE *file) {
+
+	if (fileSizeByRef(file) > 5000000) {
+
+		fclose(file);
+		remove(fileLogName);
+
+		file = fopen(fileLogName, "a");
+	}
+
 }

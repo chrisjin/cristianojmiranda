@@ -77,3 +77,5 @@ void stop();
  Trata exce��o do sistema
  */
 void error(char* s);
+
+void verifySizeofLofFile(FILE *file);
