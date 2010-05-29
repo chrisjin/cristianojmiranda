@@ -256,3 +256,21 @@ void deleteRunFiles();
  * Gera o nome do arquivo csv para estatistica de sort.
  */
 char *generateStatisticSortFileName();
+
+/**
+ * Obtem o index da linha do arquivo de index.
+ *
+ * @param line - Linha que contem chave e index.
+ * @return index da linha.
+ */
+int getIndiceByLine(char *line);
+
+/**
+ * Ordena o um arquivo de aluno de tamanho fixo se baseando em um arquivo de indexes.
+ *
+ * @param inFile - arquivo de index.
+ * @param outFile - arquivo de saida com os dados ordenados.
+ * @param dataFile - arquivo original com os dados a serem ordenados.
+ * @return true caso o processo tenha executado com sucesso.s
+ */
+boolean sortFinalFile(char *inFile, char *outFile, char *dataFile);
