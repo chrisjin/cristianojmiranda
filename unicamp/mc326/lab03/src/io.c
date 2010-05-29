@@ -154,6 +154,43 @@ char *strip(char *value) {
 
 }
 
+void trim(char *s) {
+	// Trim spaces and tabs from beginning:
+	int i = 0, j;
+	while ((s[i] == ' ') || (s[i] == '\t')) {
+		i++;
+	}
+	if (i > 0) {
+		for (j = 0; j < strlen(s); j++) {
+			s[j] = s[j + i];
+		}
+		s[j] = '\0';
+	}
+
+	// Trim spaces and tabs from end:
+	i = strlen(s) - 1;
+	while ((s[i] == ' ') || (s[i] == '\t')) {
+		i--;
+	}
+	if (i < (strlen(s) - 1)) {
+		s[i + 1] = '\0';
+	}
+}
+
+// Another set of functions using the && operator:
+void rtrim(char * string, char * trim) {
+	int i;
+	for (i = strlen(string) - 1; i >= 0 && strchr(trim, string[i]) != NULL; i--)
+		// replace the string terminator:
+		string[i] = '\0';
+}
+
+void ltrim(char * string, char * trim) {
+	while (string[0] != '\0' && strchr(trim, string[0]) != NULL) {
+		memmove(&string[0], &string[1], strlen(string));
+	}
+}
+
 /**
  * Verifica se um string eh vazia.
  */
