@@ -1360,7 +1360,12 @@ void deleteRunFiles() {
 }
 
 /**
+ * Ordena o um arquivo de aluno de tamanho fixo se baseando em um arquivo de indexes.
  *
+ * @param inFile - arquivo de index.
+ * @param outFile - arquivo de saida com os dados ordenados.
+ * @param dataFile - arquivo original com os dados a serem ordenados.
+ * @return true caso o processo tenha executado com sucesso.s
  */
 boolean sortFinalFile(char *inFile, char *outFile, char *dataFile) {
 
@@ -1395,6 +1400,7 @@ boolean sortFinalFile(char *inFile, char *outFile, char *dataFile) {
 
 		index = getIndiceByLine(line);
 
+		debug("Ve se a linha existe");
 		if (index == ERROR_EXECUTION) {
 
 			debugs("linha invalida", line);
@@ -1403,7 +1409,10 @@ boolean sortFinalFile(char *inFile, char *outFile, char *dataFile) {
 
 			debug("posicionando cursor no arquivo de dados");
 			fseek(fdataFile, index, SEEK_SET);
-
+			debug("Pega a linha no fdataFile e poe em line");
+			fgets(lineDados, READ_BUFFER_SIZE, fdataFile);
+			debug("Escreve o arquivo em foutFile");
+			fprintf(foutFile, lineDados);
 
 		}
 	}
@@ -1412,18 +1421,31 @@ boolean sortFinalFile(char *inFile, char *outFile, char *dataFile) {
 
 }
 
+/**
+ * Obtem o index da linha do arquivo de index.
+ *
+ * @param line - Linha que contem chave e index.
+ * @return index da linha.
+ */
 int getIndiceByLine(char *line) {
 
-	debugs("verificando se a linha e vazia", line);
 	if (isStrEmpty(line)) {
 		return ERROR_EXECUTION;
 	}
 
+	debug("Poe a primeira chamada do strtok numa variavel temp");
 	char *temp = strtok(line, INDEX_ALUNO_RECORD_TOKEN);
+
+	debug("Se temp não existe ele retorna -1");
 	if (temp == NULL) {
 		return ERROR_EXECUTION;
 	}
 
-	return atoi(strtok(line, INDEX_ALUNO_RECORD_TOKEN));
+	debug("Obtem o index de fato");
+	temp = strtok(END_STR_TOKEN, INDEX_ALUNO_RECORD_TOKEN);
+	temp = strMerge(temp, END_OF_LINE, STR_END_TOKEN);
+
+	debugs("Retorna o indice", temp);
+	return atoi(temp);
 
 }
