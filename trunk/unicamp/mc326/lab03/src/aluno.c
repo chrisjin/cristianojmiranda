@@ -1139,7 +1139,7 @@ char *generatedIndexFileByRunFiles(LIST runFileList) {
 		f4 = NULL;
 		f5 = NULL;
 
-		while (runFileList->count > 1) {
+		while (runFileList->count > 0 && index <= 5) {
 
 			if (index == 1) {
 				f1 = removeFirst(runFileList);
@@ -1154,11 +1154,12 @@ char *generatedIndexFileByRunFiles(LIST runFileList) {
 			}
 
 			index++;
-			debug("Executando o merge entre os arquivos");
-			rearInsert(runFileList, sortRunFiles(f1, f2, f3, f4, f5,
-					runFileList->count));
 
 		}
+
+		debug("Executando o merge entre os arquivos");
+		rearInsert(runFileList, sortRunFiles(f1, f2, f3, f4, f5,
+				runFileList->count));
 
 	}
 
@@ -1215,7 +1216,7 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 
 	debugs("Verificando arquivo 2", f2);
 	if (!isStrEmpty(f2) && fileExists(f2)) {
-		file1 = Fopen(f2, READ_FLAG);
+		file2 = Fopen(f2, READ_FLAG);
 
 		debug("Lendo a primeira linha do arquivo 2");
 		fgets(l2, READ_BUFFER_SIZE, file2);
@@ -1223,7 +1224,7 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 
 	debugs("Verificando arquivo 3", f3);
 	if (!isStrEmpty(f3) && fileExists(f3)) {
-		file1 = Fopen(f3, READ_FLAG);
+		file3 = Fopen(f3, READ_FLAG);
 
 		debug("Lendo a primeira linha do arquivo 3");
 		fgets(l3, READ_BUFFER_SIZE, file3);
@@ -1231,7 +1232,7 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 
 	debugs("Verificando arquivo 4", f4);
 	if (!isStrEmpty(f4) && fileExists(f4)) {
-		file1 = Fopen(f4, READ_FLAG);
+		file4 = Fopen(f4, READ_FLAG);
 
 		debug("Lendo a primeira linha do arquivo 4");
 		fgets(l4, READ_BUFFER_SIZE, file4);
@@ -1239,7 +1240,7 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 
 	debugs("Verificando arquivo 5", f5);
 	if (!isStrEmpty(f5) && fileExists(f5)) {
-		file1 = Fopen(f5, READ_FLAG);
+		file5 = Fopen(f5, READ_FLAG);
 
 		debug("Lendo a primeira linha do arquivo 5");
 		fgets(l5, READ_BUFFER_SIZE, file5);
@@ -1248,8 +1249,8 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 	char *menorLinha = NULL;
 
 	debug("Processa o merge entre os arquivos");
-	while (file1 != NULL && file2 != NULL && file3 != NULL && file4 != NULL
-			&& file5 != NULL) {
+	while (file1 != NULL || file2 != NULL || file3 != NULL || file4 != NULL
+			|| file5 != NULL) {
 
 		debug("Obtendo a menor linha entre os arquivos a serem processados");
 		menorLinha = lessLine(l1, l2, l3, l4, l5);
@@ -1270,6 +1271,10 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 				remove(f1);
 			}
 
+		}
+
+		debug("Verificando se a menor linha pertence ao arquivo 2");
+		if (file2 != NULL && strcmp(l2, menorLinha) == 0) {
 			debug("Lendo a proxima linha do arquivo 2");
 			if (fgets(l2, READ_BUFFER_SIZE, file2) == NULL) {
 				debug("Arquivo 2 chegou ao fim");
@@ -1279,7 +1284,10 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 				debug("Remove arquivo 2");
 				remove(f2);
 			}
+		}
 
+		debug("Verificando se a menor linha pertence ao arquivo 3");
+		if (file3 != NULL && strcmp(l3, menorLinha) == 0) {
 			debug("Lendo a proxima linha do arquivo 3");
 			if (fgets(l3, READ_BUFFER_SIZE, file3) == NULL) {
 				debug("Arquivo 3 chegou ao fim");
@@ -1289,7 +1297,10 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 				debug("Remove arquivo 3");
 				remove(f3);
 			}
+		}
 
+		debug("Verificando se a menor linha pertence ao arquivo 4");
+		if (file4 != NULL && strcmp(l4, menorLinha) == 0) {
 			debug("Lendo a proxima linha do arquivo 4");
 			if (fgets(l4, READ_BUFFER_SIZE, file4) == NULL) {
 				debug("Arquivo 4 chegou ao fim");
@@ -1299,7 +1310,10 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 				debug("Remove arquivo 4");
 				remove(f4);
 			}
+		}
 
+		debug("Verificando se a menor linha pertence ao arquivo 5");
+		if (file5 != NULL && strcmp(l5, menorLinha) == 0) {
 			debug("Lendo a proxima linha do arquivo 1");
 			if (fgets(l5, READ_BUFFER_SIZE, file5) == NULL) {
 				debug("Arquivo 5 chegou ao fim");
@@ -1309,9 +1323,7 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 				debug("Remove arquivo 5");
 				remove(f5);
 			}
-
 		}
-
 	}
 
 	return mergeFileName;
