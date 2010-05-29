@@ -89,6 +89,11 @@ FILE* Fopen(char *fileName, char* flag);
  */
 long fileSize(char *fileName);
 
+/**
+ * Calcula o tamanho do arquivo.
+ */
+long fileSizeByRef(FILE *file);
+
 /*
  Implementação de uma função fileExists() em C. Se
  o arquivo existir o valor true será retornado. Caso
