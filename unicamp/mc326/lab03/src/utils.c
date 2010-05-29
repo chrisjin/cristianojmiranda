@@ -344,6 +344,10 @@ void sortFile(char *inFile, char *outFile) {
  */
 boolean isStrEmpty(char *value) {
 
+	if (value == NULL) {
+		return true;
+	}
+
 	trim(value);
 
 	debugs("Verificando se a string eh vazia", value);
@@ -356,3 +360,13 @@ boolean isStrEmpty(char *value) {
 	return false;
 
 }
+
+/* returns random number in range of 0 to 999999, maior que min */
+int genRand(int min) {
+	int n;
+	while (n <= min) {
+		n = rand() % 1000000; /* n is random number in range of 0 - 999999 */
+	}
+	return (n);
+}
+
