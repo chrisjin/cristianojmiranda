@@ -390,8 +390,10 @@ boolean isStrEmpty(char *value) {
 
 }
 
-/* returns random number in range of 0 to 999999, maior que min */
-int genRand(int min) {
+/**
+ * Obtem um numero randomico.
+ */
+int genRand() {
 
 	srand(time(NULL) / 3);
 
@@ -406,7 +408,7 @@ int genRand(int min) {
 	value = rand_r(&tv.tv_usec);
 
 	int n;
-	while (n <= min || n == lastRandonNumber) {
+	while (n == lastRandonNumber) {
 
 		srand(time(NULL) / value);
 
