@@ -132,5 +132,7 @@ void sortFile(char *inFile, char *outFile);
  */
 boolean isStrEmpty(char *value);
 
-/* returns random number in range of 0 to 999999, maior que min */
-int genRand(int min);
+/**
+ * Obtem um numero randomico.
+ */
+int genRand();
