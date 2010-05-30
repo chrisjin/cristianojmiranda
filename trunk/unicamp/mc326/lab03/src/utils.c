@@ -18,9 +18,13 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <fcntl.h>
+#include <time.h>
+#include <sys/time.h>
 #include "log.h"
 #include "mem.h"
 #include "utils.h"
+
+int lastRandonNumber = -9999;
 
 /**
  * Converte todos os carateres de uma String
@@ -366,10 +370,17 @@ boolean isStrEmpty(char *value) {
 		return true;
 	}
 
-	trim(value);
+	boolean empty = true;
+	int i = 0;
+	for (i = 0; i < strlen(value); i++) {
+		if (value[i] != ' ' && value[i] != '\0') {
+			empty = false;
+			break;
+		}
+	}
 
 	debugs("Verificando se a string eh vazia", value);
-	if (value == NULL || strlen(value) == 0) {
+	if (value == NULL || empty) {
 		debug("Vazia");
 		return true;
 	}
@@ -382,10 +393,28 @@ boolean isStrEmpty(char *value) {
 /* returns random number in range of 0 to 999999, maior que min */
 int genRand(int min) {
 
+	srand(time(NULL) / 3);
+
+	int i;
+	unsigned int value;
+	struct timeval tv;
+	struct timezone tz;
+	struct tm *tm;
+	tm = localtime(&tv.tv_sec);
+
+	gettimeofday(&tv, &tz);
+	value = rand_r(&tv.tv_usec);
+
 	int n;
-	while (n <= min) {
+	while (n <= min || n == lastRandonNumber) {
+
+		srand(time(NULL) / value);
+
 		n = lrand48();
+		n + value;
 	}
+
+	lastRandonNumber = n;
 
 	debugi("Randon value: ", n);
 
