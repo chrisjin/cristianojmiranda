@@ -271,9 +271,12 @@ int getIndiceByLine(char *line);
  * @param inFile - arquivo de index.
  * @param outFile - arquivo de saida com os dados ordenados.
  * @param dataFile - arquivo original com os dados a serem ordenados.
- * @return true caso o processo tenha executado com sucesso.s
+ * @param readCount - Contador de leitura
+ * @param writeCount - Contador de escrita
+ * @return true caso o processo tenha executado com sucesso.
  */
-boolean sortFinalFile(char *inFile, char *outFile, char *dataFile);
+boolean sortFinalFile(char *inFile, char *outFile, char *dataFile,
+		long *readCount, long *writeCount);
 
 /**
  * Obtem a menor linha do arquivo.
@@ -281,15 +284,24 @@ boolean sortFinalFile(char *inFile, char *outFile, char *dataFile);
 char *lessLine(char *l1, char *l2, char *l3, char *l4, char *l5);
 
 /**
+ * Executa o merge dos arquivos de run, retornando um arquivo de index.
+ *
+ * @param runFileList - Lista com os arquivos de run
+ * @param mergeCount - Contador de fases de merge
+ * @param readCount - Contador de read
+ * @param writeCount - Contador de write.
+ * @return nome do arquivo de index.
  *
  */
-char *generatedIndexFileByRunFiles(LIST runFileList);
-
+char *generatedIndexFileByRunFiles(LIST runFileList, long *mergeCount,
+		long *readCount, long *writeCount);
 /**
  * Executa o merge sorte de ate 5 run files.
  * @param f1..f5 Arquivos de run a serem processados merge.
  * @param sizeList - Tamanho da lista de runFiles.
+ * @param readCount - Contador de leitura.
+ * @param writeCount - Contador de escrita.
  * @return nome do arquivo com o merge.
  */
 char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
-		int sizeList);
+		long *readCount, long *writeCount);

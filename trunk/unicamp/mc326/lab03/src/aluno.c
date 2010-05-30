@@ -972,6 +972,7 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 	long readCount;
 	long writeCount;
 	long recordCount;
+	long mergeCount;
 
 	debug("Arquivo csv");
 	FILE *csvFile = NULL;
@@ -1042,12 +1043,13 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 	debug("Seta o timer de inicio");
 	time(&inicioRunFiles);
 	debug("Executando merge dos run files");
-	char *indexFile = generatedIndexFileByRunFiles(runFileList);
+	char *indexFile = generatedIndexFileByRunFiles(runFileList, &mergeCount,
+			&readCount, &writeCount);
 
 	debugs("Index file: ", indexFile);
 
 	debug("Ordenando o arquivo principal apartir do arquivo de index gerado");
-	sortFinalFile(indexFile, outFile, inFile);
+	sortFinalFile(indexFile, outFile, inFile, &readCount, &writeCount);
 
 	debug("Seta o timer de fim");
 	time(&fimRunFiles);
@@ -1062,10 +1064,8 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 					"aluno.processoMerge"), readCount, END_OF_LINE);
 			printf(getMessage("aluno.quantidadeEscritaExecutadas"), getMessage(
 					"aluno.processoMerge"), writeCount, END_OF_LINE);
-			printf(getMessage("aluno.quatidadeRunFiles"), runFileList->count,
+			printf(getMessage("aluno.quantidadeFasesMerge"), mergeCount,
 					END_OF_LINE);
-			printf(getMessage("aluno.quantidadeRegistroProcessados"),
-					recordCount, END_OF_LINE);
 			printf(getMessage("aluno.tempoExecucaoProcesso"), getMessage(
 					"aluno.processoMerge"), (int) (1000 * difftime(fimRunFiles,
 					inicioRunFiles)), END_OF_LINE);
@@ -1081,11 +1081,8 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 			fprintf(csvFile,
 					getMessage("aluno.csv.quantidadeEscritaExecutadas"),
 					getMessage("aluno.processoMerge"), writeCount, END_OF_LINE);
-			fprintf(csvFile, getMessage("aluno.csv.quatidadeRunFiles"),
-					runFileList->count, END_OF_LINE);
-			fprintf(csvFile, getMessage(
-					"aluno.csv.quantidadeRegistroProcessados"), recordCount,
-					END_OF_LINE);
+			fprintf(csvFile, getMessage("aluno.csv.quantidadeFasesMerge"),
+					mergeCount, END_OF_LINE);
 			fprintf(csvFile, getMessage("aluno.csv.tempoExecucaoProcesso"),
 					getMessage("aluno.processoMerge"), (int) (1000 * difftime(
 							fimRunFiles, inicioRunFiles)), END_OF_LINE);
@@ -1107,9 +1104,17 @@ void sortArquivoFixo(char *inFile, char *outFile, int memory, char *key,
 }
 
 /**
+ * Executa o merge dos arquivos de run, retornando um arquivo de index.
+ *
+ * @param runFileList - Lista com os arquivos de run
+ * @param mergeCount - Contador de fases de merge
+ * @param readCount - Contador de read
+ * @param writeCount - Contador de write.
+ * @return nome do arquivo de index.
  *
  */
-char *generatedIndexFileByRunFiles(LIST runFileList) {
+char *generatedIndexFileByRunFiles(LIST runFileList, long *mergeCount,
+		long *readCount, long *writeCount) {
 
 	debug("Verifica se existem run files processados");
 	if (runFileList == NULL || runFileList->count == 0) {
@@ -1132,6 +1137,11 @@ char *generatedIndexFileByRunFiles(LIST runFileList) {
 	char *f4 = NULL;
 	char *f5 = NULL;
 
+	debug("Variaveis de estatistica");
+	long rdCount = 0;
+	long wrCount = 0;
+	long mgCount = 0;
+
 	while (runFileList->count > 1) {
 
 		debug("Prepara a proxima iteracao na lista de arquivos");
@@ -1142,6 +1152,7 @@ char *generatedIndexFileByRunFiles(LIST runFileList) {
 		f4 = NULL;
 		f5 = NULL;
 
+		debug("Obtem os proximos arquivos na lista a sofrerem merge");
 		while (runFileList->count > 0 && index <= 5) {
 
 			if (index == 1) {
@@ -1161,13 +1172,21 @@ char *generatedIndexFileByRunFiles(LIST runFileList) {
 		}
 
 		debug("Executando o merge entre os arquivos");
-		char *currentSortFile = sortRunFiles(f1, f2, f3, f4, f5,
-				runFileList->count);
+		char *currentSortFile = sortRunFiles(f1, f2, f3, f4, f5, &rdCount,
+				&wrCount);
 
 		debug("Inserindo o arquivo de merge na lista a ser processado");
 		frontInsert(runFileList, currentSortFile);
 
+		debugl("Incrementa o contador de merge", mgCount);
+		mgCount++;
+
 	}
+
+	debug("Seta as variaveis de estaticas de retorno");
+	*readCount = rdCount;
+	*writeCount = wrCount;
+	*mergeCount = mgCount;
 
 	debug("Retorna o arquivo ordenado");
 	return (char *) removeFirst(runFileList);
@@ -1178,10 +1197,12 @@ char *generatedIndexFileByRunFiles(LIST runFileList) {
  * Executa o merge sorte de ate 5 run files.
  * @param f1..f5 Arquivos de run a serem processados merge.
  * @param sizeList - Tamanho da lista de runFiles.
+ * @param readCount - Contador de leitura.
+ * @param writeCount - Contador de escrita.
  * @return nome do arquivo com o merge.
  */
 char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
-		int sizeList) {
+		long *readCount, long *writeCount) {
 
 	debug("Verificando se ao menos um arquivo foi informado");
 	if (f1 == NULL && f2 == NULL && f3 == NULL && f4 == NULL && f5 == NULL) {
@@ -1191,6 +1212,10 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 		return NULL;
 	}
 
+	debug("Variaveis contadores de estatistica");
+	long rdCount = *readCount;
+	long wrCount = *writeCount;
+
 	debug("Estruturas de arquivo para sort");
 	FILE *file1 = NULL;
 	FILE *file2 = NULL;
@@ -1199,7 +1224,7 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 	FILE *file5 = NULL;
 
 	debug("Gerando o nome do arquivos de merge");
-	char *mergeFileName = generateRunFileName(genRand(sizeList));
+	char *mergeFileName = generateRunFileName(genRand());
 
 	debugs("Abrindo o arquivo de saida", mergeFileName);
 	FILE *outputFile = Fopen(mergeFileName, WRITE_FLAG);
@@ -1217,7 +1242,7 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 
 		debug("Lendo a primeira linha do arquivo 1");
 		fgets(l1, READ_BUFFER_SIZE, file1);
-
+		rdCount++;
 	}
 
 	debugs("Verificando arquivo 2", f2);
@@ -1226,6 +1251,7 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 
 		debug("Lendo a primeira linha do arquivo 2");
 		fgets(l2, READ_BUFFER_SIZE, file2);
+		rdCount++;
 	}
 
 	debugs("Verificando arquivo 3", f3);
@@ -1234,6 +1260,7 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 
 		debug("Lendo a primeira linha do arquivo 3");
 		fgets(l3, READ_BUFFER_SIZE, file3);
+		rdCount++;
 	}
 
 	debugs("Verificando arquivo 4", f4);
@@ -1242,6 +1269,7 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 
 		debug("Lendo a primeira linha do arquivo 4");
 		fgets(l4, READ_BUFFER_SIZE, file4);
+		rdCount++;
 	}
 
 	debugs("Verificando arquivo 5", f5);
@@ -1250,6 +1278,7 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 
 		debug("Lendo a primeira linha do arquivo 5");
 		fgets(l5, READ_BUFFER_SIZE, file5);
+		rdCount++;
 	}
 
 	char *menorLinha = NULL;
@@ -1261,12 +1290,20 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 		debug("Obtendo a menor linha entre os arquivos a serem processados");
 		menorLinha = lessLine(l1, l2, l3, l4, l5);
 
-		debugs("Escrevendo a menor linha no arquivo de saida:", menorLinha);
-		fprintf(outputFile, "%s", menorLinha);
+		if (menorLinha == NULL) {
+
+			debug("Menor linha vazia");
+
+		} else {
+			debugs("Escrevendo a menor linha no arquivo de saida:", menorLinha);
+			fprintf(outputFile, "%s", menorLinha);
+			wrCount++;
+		}
 
 		debug("Verificando se a menor linha pertence ao arquivo 1");
 		if (file1 != NULL && strcmp(l1, menorLinha) == 0) {
 
+			rdCount++;
 			debug("Lendo a proxima linha do arquivo 1");
 			if (fgets(l1, READ_BUFFER_SIZE, file1) == NULL) {
 				clearString(l1);
@@ -1285,6 +1322,8 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 
 		debug("Verificando se a menor linha pertence ao arquivo 2");
 		if (file2 != NULL && strcmp(l2, menorLinha) == 0) {
+
+			rdCount++;
 			debug("Lendo a proxima linha do arquivo 2");
 			if (fgets(l2, READ_BUFFER_SIZE, file2) == NULL) {
 				clearString(l2);
@@ -1302,6 +1341,8 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 
 		debug("Verificando se a menor linha pertence ao arquivo 3");
 		if (file3 != NULL && strcmp(l3, menorLinha) == 0) {
+
+			rdCount++;
 			debug("Lendo a proxima linha do arquivo 3");
 			if (fgets(l3, READ_BUFFER_SIZE, file3) == NULL) {
 				clearString(l3);
@@ -1320,6 +1361,7 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 		debug("Verificando se a menor linha pertence ao arquivo 4");
 		if (file4 != NULL && strcmp(l4, menorLinha) == 0) {
 
+			rdCount++;
 			debug("Lendo a proxima linha do arquivo 4");
 			if (fgets(l4, READ_BUFFER_SIZE, file4) == NULL) {
 				clearString(l4);
@@ -1337,6 +1379,8 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 
 		debug("Verificando se a menor linha pertence ao arquivo 5");
 		if (file5 != NULL && strcmp(l5, menorLinha) == 0) {
+
+			rdCount++;
 			debug("Lendo a proxima linha do arquivo 1");
 			if (fgets(l5, READ_BUFFER_SIZE, file5) == NULL) {
 				clearString(l5);
@@ -1355,6 +1399,10 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 
 	debug("Fechando o arquivo de merge");
 	fclose(outputFile);
+
+	debug("Seta as variaveis de estatistica de retorno");
+	*readCount = rdCount;
+	*writeCount = wrCount;
 
 	return mergeFileName;
 
@@ -1429,11 +1477,11 @@ char *lessLine(char *l1, char *l2, char *l3, char *l4, char *l5) {
 	} else {
 
 		debug("Como a lista contem apenas uma linha, retorna a mesma");
-		result = removeFirst(lst);
+		result = getElement(lst, 0);
 
 		debug("Libera a lista de sort");
-		freeList(lst, nop);
-		free(lst);
+		//freeList(lst, nop);
+		//free(lst);
 
 		debugs("Menor linha:", result);
 
@@ -1442,8 +1490,8 @@ char *lessLine(char *l1, char *l2, char *l3, char *l4, char *l5) {
 	}
 
 	debug("Libera a lista de sort");
-	freeList(lst, nop);
-	free(lst);
+	//freeList(lst, nop);
+	//free(lst);
 
 	debugs("Menor linha:", result);
 	return result;
@@ -1717,9 +1765,15 @@ void deleteRunFiles() {
  * @param inFile - arquivo de index.
  * @param outFile - arquivo de saida com os dados ordenados.
  * @param dataFile - arquivo original com os dados a serem ordenados.
- * @return true caso o processo tenha executado com sucesso.s
+ * @param readCount - Contador de leitura
+ * @param writeCount - Contador de escrita
+ * @return true caso o processo tenha executado com sucesso.
  */
-boolean sortFinalFile(char *inFile, char *outFile, char *dataFile) {
+boolean sortFinalFile(char *inFile, char *outFile, char *dataFile,
+		long *readCount, long *writeCount) {
+
+	long rdCount = *readCount;
+	long wrCount = *writeCount;
 
 	debug("Verificando se o arquivo de indices existe");
 	if (!fileExists(inFile)) {
@@ -1750,6 +1804,9 @@ boolean sortFinalFile(char *inFile, char *outFile, char *dataFile) {
 	debug("Le arquivo de indices linha a linha");
 	while (fgets(line, READ_BUFFER_SIZE, finFile) != NULL) {
 
+		debugl("Incrementa contador de leitura", rdCount);
+		rdCount++;
+
 		index = getIndiceByLine(line);
 
 		debug("Ve se a linha existe");
@@ -1759,15 +1816,24 @@ boolean sortFinalFile(char *inFile, char *outFile, char *dataFile) {
 
 		} else {
 
-			debug("posicionando cursor no arquivo de dados");
+			debug("Posicionando cursor no arquivo de dados");
 			fseek(fdataFile, index, SEEK_SET);
+
 			debug("Pega a linha no fdataFile e poe em line");
 			fgets(lineDados, READ_BUFFER_SIZE, fdataFile);
+
 			debug("Escreve o arquivo em foutFile");
 			fprintf(foutFile, lineDados);
 
+			debugl("Incrementa o contador de escrita", wrCount);
+			wrCount++;
+
 		}
 	}
+
+	debug("Atualiza os contadores de retorno");
+	*readCount = rdCount;
+	*writeCount = wrCount;
 
 	return true;
 
