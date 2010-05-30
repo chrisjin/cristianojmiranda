@@ -155,8 +155,15 @@ char *strip(char *value) {
 }
 
 void trim(char *s) {
-	// Trim spaces and tabs from beginning:
+
+	// Verify empty string
+	if (s == NULL)
+		return;
+
 	int i = 0, j;
+
+	// Trim spaces and tabs from beginning:
+	i = 0;
 	while ((s[i] == ' ') || (s[i] == '\t')) {
 		i++;
 	}
