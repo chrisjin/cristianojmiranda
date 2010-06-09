@@ -1,0 +1,138 @@
+/*******************************************************************************
+
+ Header File com as interfaces utilitarias para manipular Strings.
+
+ <utils.h>
+
+ 
+ Grupo 4: Cristiano J. Miranda  RA: 083382
+ Gustavo F. Tiengo     RA: 071091
+ Magda A. Silva        RA: 082070
+ 15/03/2010
+
+
+ *******************************************************************************/
+#define boolean int
+#define true 1
+#define false 0
+
+#define ESPACE " "
+#define END_STR_TOKEN '\0'
+#define STR_END_TOKEN "\0"
+#define END_OF_LINE "\n"
+#define ERROR_EXECUTION -1
+#define READ_BUFFER_SIZE (1024)
+#define CSV_TOKEN ";"
+
+#define READ_FLAG "r"
+#define WRITE_FLAG "w"
+
+#define CONVERT_MB_TO_BYTE (1000000)
+
+/**
+ * Converte todos os carateres de uma String
+ * em uppercase.
+ *
+ * param value -  String a ser convertida
+ * return apontador para a String upper
+ *
+ */
+char *strUpperCase(char *value);
+
+/**
+ * Faz o merge de uma String quebrando por um token especifico e 
+ * remontando as partes a partir de outro token.
+ * 
+ * param value - String a ser remontada
+ * param token - Token curinga para quebrar a String.
+ * param mergeToken - Token que intercala a String.
+ * return String remontada apartir dos novos parametros.
+ */
+char *strMerge(char *value, char *token, char *mergeToken);
+
+/**
+ * Conta a quantidade de um determinado caracter em um String.
+ *
+ * param value - String de entrada.
+ * param key - caracter a ser contado.
+ * param caseSensitive - Se a contagem sera feita em case sensitive.
+ * return numero de ocorrencias de key em value.
+ */
+int strCharCount(char *value, char key, boolean caseSensitive);
+
+/**
+ * Obtem uma substring apartir de uma posição inicial e final.
+ *
+ */
+char *strSubString(char *value, int start, int end);
+
+/**
+ * Obtem uma substring apartir de uma posição inicial e quantidade de caracteres.
+ */
+char *substring(char *origem, int inicio, int quant);
+
+/**
+ * Verifica se a string tem apenas caracteres numericos.
+ */
+boolean isNumeric(char *ra);
+
+/**
+ * Abre um arquivo.
+ * param fileName - Nome do arquivo a ser aberto.
+ * param flag - Flag de leitura.
+ * return referencia para o arquivo.
+ */
+FILE* Fopen(char *fileName, char* flag);
+
+/**
+ * Calcula o tamanho do arquivo.
+ */
+long fileSize(char *fileName);
+
+/**
+ * Calcula o tamanho do arquivo.
+ */
+long fileSizeByRef(FILE *file);
+
+/*
+ Implementação de uma função fileExists() em C. Se
+ o arquivo existir o valor true será retornado. Caso
+ contrário a função retornará false.
+ */
+boolean fileExists(const char *filename);
+
+/**
+ * Exibe os dados de um arquivo na tela.
+ */
+void showFile(char *fileName);
+
+/**
+ * Le da entrada de dados.
+ */
+char* getLine();
+
+/**
+ * Funcao vazia.
+ */
+void nop(void* p);
+
+/***
+ * Metodo que ordena um arquivo utilizando funcoes do OS.
+ *
+ * @param inFile arquivo a ser ordenado.
+ * @param outFile arquivo de saida ordenado.
+ */
+void sortFile(char *inFile, char *outFile);
+
+/**
+ * Verifica se uma string é vazia.
+ *
+ * @param value - String a ser checada.
+ * @return True caso a string seja vazia.
+ */
+boolean isStrEmpty(char *value);
+
+/**
+ * Obtem um numero randomico.
+ */
+int genRand();

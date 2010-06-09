@@ -1,0 +1,9 @@
+Quantidade leituras executadas(Processo de Run Files);1000;
+Quantidade escrita executadas(Processo de Run Files);1000;
+Quantidade de arquivos temporarios criados durante o processo;36;
+Quantidade de registros processados;1000;
+Tempo de Execucao do Processo de Run Files;0;
+Quantidade leituras executadas(Processo de Merge);6300;
+Quantidade escrita executadas(Processo de Merge);6256;
+Quantidade de fases de merge necessarias;9;
+Tempo de Execucao do Processo de Merge;0;
