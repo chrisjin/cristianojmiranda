@@ -1,0 +1,360 @@
+#include <assert.h>
+#include <ctype.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "utils.h"
+#include "io.h"
+#include "mem.h"
+
+int read_char(char *c) {
+	char input[2 + 1];
+
+	/* We read n+1 from the input to be able to check
+	 * if the user has written exactly n characters */
+	read_value(input, 2);
+
+	if (strlen(input) != 1)
+		return 1;
+	else {
+		*c = input[0];
+		return 0;
+	}
+}
+
+void read_int(const char *inputText, char *dest, size_t length) {
+	int i, invalid;
+
+	invalid = 1;
+
+	while (invalid) {
+		invalid = 0;
+		read_string(inputText, dest, length);
+
+		for (i = 0; i < strlen(dest); i++) {
+			if (!isdigit (dest[i])) {
+				printf("   Entrada invalida.\n");
+				invalid = 1;
+				break;
+			}
+		}
+	}
+}
+
+void read_string(const char *inputText, char *dest, size_t length) {
+	while (1) {
+		printf(inputText);
+		read_value(dest, length);
+
+		if (strlen(dest) == 0) {
+			printf("   Entrada invalida.\n");
+			continue;
+		} else
+			break;
+	}
+}
+
+void read_word(const char *msg, char *dest, size_t length) {
+	char *space;
+
+	read_string(msg, dest, length);
+
+	space = strchr(dest, ' ');
+	if (space)
+		*space = '\0';
+}
+
+void read_value(char s[], size_t length) {
+	fgets(s, length + 1, stdin);
+
+	stripNewLine(s);
+	stripWhiteSpace(s);
+}
+
+char * str_dup(const char *s) {
+	if (s != NULL) {
+		register char *copy = malloc(strlen(s) + 1);
+
+		if (copy != NULL)
+			return strcpy(copy, s);
+	}
+
+	return NULL;
+}
+
+void str_foreach(char *str, void(*callback)(char *, va_list), ...) {
+	char *next;
+	va_list ap;
+
+	va_start (ap, callback);
+
+	/* Get the first word */
+	next = strtok(str, " ");
+	while (next) {
+		callback(next, ap);
+		next = strtok(NULL, " "); /* Read next word */
+	}
+
+	va_end (ap);
+}
+
+char * str_join(const char *a, const char *b) {
+	char *ret;
+	size_t sz_a, sz_b;
+
+	sz_a = strlen(a);
+	sz_b = strlen(b);
+
+	ret = MEM_ALLOC_N (char, sz_a + sz_b + 1);
+
+	memcpy(ret, a, sz_a);
+	memcpy(ret + sz_a, b, sz_b);
+	ret[sz_a + sz_b] = '\0';
+
+	return ret;
+}
+
+char *strip(char *value) {
+
+	int i, inicio = 0, fim = strlen(value);
+	if (value[0] == ' ') {
+		for (i = 0; i < strlen(value); i++) {
+
+			if (value[i] != ' ' && value[i] != NULL) {
+				inicio = i;
+				break;
+			}
+
+		}
+	}
+
+	if (value[strlen(value) - 1] == ' ') {
+
+		for (i = strlen(value) - 1; i >= 0; i = i - 1) {
+
+			if (value[i] != ' ' && value[i] != NULL) {
+
+				fim = i;
+				break;
+
+			}
+
+		}
+
+	}
+
+	//char *result = MEM_ALLOC_N(char, fim - inicio);
+	char *result = (char *) malloc(fim - inicio);
+	stripWhiteSpace(result);
+
+	result = strSubString(value, inicio, ++fim);
+
+	return result;
+
+}
+
+void trim(char *s) {
+
+	// Verify empty string
+	if (s == NULL)
+		return;
+
+	int i = 0, j;
+
+	// Trim spaces and tabs from beginning:
+	i = 0;
+	while ((s[i] == ' ') || (s[i] == '\t')) {
+		i++;
+	}
+	if (i > 0) {
+		for (j = 0; j < strlen(s); j++) {
+			s[j] = s[j + i];
+		}
+		s[j] = '\0';
+	}
+
+	// Trim spaces and tabs from end:
+	i = strlen(s) - 1;
+	while ((s[i] == ' ') || (s[i] == '\t')) {
+		i--;
+	}
+	if (i < (strlen(s) - 1)) {
+		s[i + 1] = '\0';
+	}
+}
+
+// Another set of functions using the && operator:
+void rtrim(char * string, char * trim) {
+	int i;
+	for (i = strlen(string) - 1; i >= 0 && strchr(trim, string[i]) != NULL; i--)
+		// replace the string terminator:
+		string[i] = '\0';
+}
+
+void ltrim(char * string, char * trim) {
+	while (string[0] != '\0' && strchr(trim, string[0]) != NULL) {
+		memmove(&string[0], &string[1], strlen(string));
+	}
+}
+
+/**
+ * Verifica se um string eh vazia.
+ */
+boolean isEmptyString(char *value) {
+
+	if (value == NULL) {
+		return true;
+	}
+
+	int i = 0;
+	for (i = 0; i < strlen(strip(value)); i++) {
+
+		if (value[i] != ' ') {
+			return false;
+		}
+
+	}
+
+	return true;
+}
+
+void stripNewLine(char s[]) {
+	char *pos = strchr(s, '\n');
+	int c;
+
+	if (!pos) {
+		while ((c = getchar()) != '\n' && c != EOF)
+			continue;
+	} else
+		*pos = '\0';
+}
+
+void stripWhiteSpace(char str[]) {
+	int i, j, pos;
+	int len;
+	int space; /* Flag used to indicate if a space has already been immediately read */
+	char *buffer;
+
+	len = strlen(str);
+	if (len < 1)
+		return;
+
+	buffer = MEM_ALLOC_N (char, len);
+
+	/* Skip whitespace at the beginning */
+	for (i = 0; i < len && isspace (str[i]); i++)
+		;
+
+	/* Skip whitespace at the end */
+	for (j = len - 1; j > i && isspace (str[j]); j--)
+		;
+
+	pos = 0;
+	space = 0;
+	for (; i <= j; i++) {
+		/* If this is the first whitespace we see,
+		 * add it to the final string and trigger
+		 * our whitespace-already-seen flag.
+		 */
+		if (isspace (str[i]) && !space) {
+			buffer[pos++] = str[i];
+			space = 1;
+		}
+		/* If this is not a whitespace, copy
+		 * the character to the final string and
+		 * disable our whitespace-already-seen flag.
+		 */
+		else if (!isspace (str[i])) {
+			buffer[pos++] = str[i];
+			space = 0;
+		}
+	}
+
+	/* Replace the original string with the manipulated one. */
+	strncpy(str, buffer, pos);
+	str[pos] = '\0';
+
+	free(buffer);
+}
+
+void clearString(char *value) {
+
+	if (value == NULL)
+		return;
+
+	int i;
+	for (i = 0; i < strlen(value); i++) {
+
+		value[i] = ' ';
+	}
+
+}
+
+/**
+ * Concatena um token no inicio de uma string com tamanho fixo.
+ *
+ * @param value - String a ser concatenada
+ * @param token - Token para preencher a string
+ * @param size - Tamanho da String
+ */
+char *strConcanteStart(char *value, char *token, int size) {
+
+	// Nao concatena spacos
+	if (token == " ")
+		return value;
+
+	// Caso a string seja do tamanho desejado
+	if (strlen(value) == size) {
+
+		return value;
+
+	} else if (strlen(value) > size) {
+
+		// Caso a string seja maior
+		return substring(value, 0, size);
+
+	} else {
+
+		char *result = strip(value);
+		while (strlen(result) != size) {
+
+			result = str_join(token, result);
+
+		}
+
+		return result;
+
+	}
+
+}
+
+/**
+ * Repete um string value j vezes.
+ */
+char *repeatString(char *value, int j) {
+
+	char *result = strip(value);
+
+	int i = 0;
+	for (i = 1; i < j; i++) {
+
+		result = str_join(value, result);
+
+	}
+
+	return result;
+}
+
+/**
+ * Converte um int para um String.
+ */
+char *itoa(int value) {
+
+	char buffer[50];
+	stripWhiteSpace(buffer);
+	sprintf(buffer, "%d", value);
+
+	return strip(buffer);
+
+}
