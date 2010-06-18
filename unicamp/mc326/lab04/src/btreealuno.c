@@ -358,7 +358,7 @@ char *getBTreeIndexFileName() {
 
 }
 
-setBtreeDuplicateFileName(char fileName[1024]) {
+void setBTreeDuplicateFileName(char fileName[1024]) {
 	strcpy(btreeDuplicateFileName, fileName);
 }
 
