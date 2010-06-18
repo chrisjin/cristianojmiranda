@@ -22,6 +22,7 @@
 #include "bundle.h"
 #include "mem.h"
 #include "aluno.h"
+#include "btreealuno.h"
 
 int alternate = true;
 
@@ -1865,5 +1866,109 @@ int getIndiceByLine(char *line) {
 
 	debugs("Retorna o indice", temp);
 	return atoi(temp);
+
+}
+
+/**
+ * Carrega a arvore de index.
+ *
+ * @param inFile - Arquivo de entrada de dados.
+ */
+boolean loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile) {
+
+	debug("Variaveis utilizadas para carregar a b-tree");
+	boolean promoted; /* boolean: tells if a promotion from below */
+	short root, /* rrn of root page                         */
+	promo_rrn; /* rrn promoted from below                  */
+	TAlunoNode promo_key, /* key promoted from below             */
+	key; /* next key to insert in tree               */
+
+	debug("Verifica se o arquivo de entrada existe");
+	if (fileExists(inFile)) {
+
+		debug("Seta o nome de index da b-tree");
+		setBtreeIndexFileName(indexFile);
+
+		debug("Seta o nome do arquivo para registros duplicados na b-tree");
+		setBTreeDuplicateFileName(duplicateFile);
+
+		debug("Variaveis utilizadas no processo");
+		char *line;
+		long memoryFullCount = 0;
+
+		debug("Obtendo o tamanho em bytes para um registro no arquivo de tamanho fixo");
+		int recordSize = atoi(getProperty("aluno.field.end.fimregistro")) + 1;
+
+		debug("Abre o arquivo de dados para leitura");
+		FILE *alunosFile = Fopen(inFile, READ_FLAG);
+
+		debug("Tenta abrir o arquivo de index da b-tree");
+		if (btopen()) {
+			root = getroot();
+		} else {
+
+			debug("Lendo a primeira linha para montar a raiz da arvore");
+			if (fgets(line, READ_BUFFER_SIZE, alunosFile) != NULL) {
+
+				debug("Incrementa a quantidade de memoria utilizada.");
+				memoryFullCount += recordSize;
+
+				debug("Aloca node para arvore");
+				TAlunoNode node;
+				node.ra = atoi(getKeyLine(line, KEY_RA));
+				node.index = memoryFullCount;
+
+				debug("Caso nao exista o arquivo cria a arvore");
+				root = create_tree(node);
+
+			} else {
+
+				debug("Nao foi possivel ler o arquivo de dados");
+				fclose(alunosFile);
+				return false;
+			}
+		}
+
+		debug("Le o arquivo de dados");
+		while (fgets(line, READ_BUFFER_SIZE, alunosFile) != NULL) {
+
+			debug("Verifica se a linha do arquivo principal esta vazia");
+			if (isStrEmpty(line)) {
+
+				debugi("Linha vazia. Posicao: ", memoryFullCount);
+
+			} else {
+
+				debug("Obtem a chave e a posicao no arquivo de dados.");
+				TAlunoNode key;
+				key.ra = atoi(getKeyLine(line, KEY_RA));
+				key.index = memoryFullCount;
+
+				promoted = insert(root, key, &promo_rrn, &promo_key);
+				if (promoted) {
+					root = create_root(promo_key, root, promo_rrn);
+				}
+
+				debug("Incrementa a quantidade de memoria utilizada.");
+				memoryFullCount += recordSize;
+
+				debugi("Memoria utilizada: ", memoryFullCount);
+
+			}
+
+		}
+
+		debug("Fecha o arquivo de dados");
+		fclose(alunosFile);
+
+		debug("Fecha a b-tree");
+		btclose();
+
+		return true;
+
+	}
+
+	debug("Arquivo inexistente retona erro no processamento");
+	return false;
 
 }
