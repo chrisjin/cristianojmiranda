@@ -33,7 +33,7 @@ int main(int argc, char * argv[]) {
 	debug("Verifica se os parametros de entrada do sistema sao validos");
 	if (validaEntrada(argc, argv)) {
 
-		initialize();
+		initialize(argv);
 
 	}
 
@@ -91,7 +91,7 @@ void showMenu() {
 /**
  * Start application.
  */
-void initialize() {
+void initialize(char *argv[]) {
 
 	debug("Iniciando a aplicacao");
 
@@ -113,7 +113,8 @@ void initialize() {
 		switch (opcao) {
 
 		case 1:
-
+			debug("Cria a b-tree");
+			loadBTreeIndex(argv[2], argv[3], argv[4], atoi(argv[1]), true);
 			break;
 		case 2:
 

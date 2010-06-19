@@ -13,3 +13,7 @@
  * Verifica se os parametros de entrada sao validos.
  */
 boolean validaEntrada(int argc, char *argv[]);
+
+void initialize(char *argv[]);
+
+void showMenu();
