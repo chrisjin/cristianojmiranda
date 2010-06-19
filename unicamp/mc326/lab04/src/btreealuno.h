@@ -45,8 +45,20 @@ short create_root(TAlunoNode key, short left, short right);
 short create_tree(TAlunoNode key);
 short getpage();
 short getroot();
-int insert(short rrn, TAlunoNode key, short *promo_r_child,
-		TAlunoNode *promo_key);
+
+/**
+ * Insere um aluno na B-TREE.
+ *
+ * @param rrn - Id da pagina onde o registro sera inserido.
+ * @param key - Chave a ser inserida
+ * @param recordString - Registro na forma de String para tratar duplicidade.
+ * @param promo_r_child - Id do registro a ser promovido.
+ * @param promo_key - Chave a ser promovida acima.
+ * @return True caso haja promoção.
+ */
+int insertAlunoBTree(short rrn, TAlunoNode key, char *recordString,
+		short *promo_r_child, TAlunoNode *promo_key);
+
 void ins_in_page(TAlunoNode key, short r_child, BTPAGE *p_page);
 void pageinit(BTPAGE *p_page);
 void putroot(short root);
@@ -54,12 +66,12 @@ int search_node(int key, BTPAGE *p_page, short *pos);
 void split(TAlunoNode key, short r_child, BTPAGE *p_oldpage,
 		TAlunoNode *promo_key, short *promo_r_child, BTPAGE *p_newpage);
 
-void setBtreeIndexFileName(char fileName[1024]);
+void setBtreeIndexFileName(char *fileName);
 
 char *getBTreeIndexFileName();
 
 char *getBTreeDuplicateFileName();
 
-void setBTreeDuplicateFileName(char fileName[1024]);
+void setBTreeDuplicateFileName(char *fileName);
 
 void setOrderTree(int order);
