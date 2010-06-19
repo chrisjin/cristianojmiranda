@@ -1873,18 +1873,29 @@ int getIndiceByLine(char *line) {
  * Carrega a arvore de index.
  *
  * @param inFile - Arquivo de entrada de dados.
+ * @param indexFile - Nome do arquivo de index da b-tree.
+ * @param duplicateFile - Arquivo para armazenar as chaves duplicadas durante o processamento da b-tree.
+ * @param treeOrder - Ordem da b-tree.
+ * @param newIndex - Flag para recriar o arquivo de index da b-tree.
  */
-boolean loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile) {
-
-	debug("Variaveis utilizadas para carregar a b-tree");
-	boolean promoted; /* boolean: tells if a promotion from below */
-	short root, /* rrn of root page                         */
-	promo_rrn; /* rrn promoted from below                  */
-	TAlunoNode promo_key, /* key promoted from below             */
-	key; /* next key to insert in tree               */
+int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
+		int treeOrder, boolean newIndex) {
 
 	debug("Verifica se o arquivo de entrada existe");
 	if (fileExists(inFile)) {
+
+		debug("Variaveis utilizadas para carregar a b-tree");
+		boolean promoted; /* boolean: tells if a promotion from below */
+		short root, /* rrn of root page                        */
+		promo_rrn; /* rrn promoted from below                  */
+		TAlunoNode promo_key, /* key promoted from below       */
+		key; /* next key to insert in tree                	   */
+
+		debug("Verificando se o index deve ser recriado.");
+		if (newIndex && fileExists(indexFile)) {
+			debug("Deletando o arquivo com o index que foi carregado anteriormente");
+			remove(indexFile);
+		}
 
 		debug("Seta o nome de index da b-tree");
 		setBtreeIndexFileName(indexFile);
@@ -1892,8 +1903,11 @@ boolean loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile) {
 		debug("Seta o nome do arquivo para registros duplicados na b-tree");
 		setBTreeDuplicateFileName(duplicateFile);
 
+		debug("Setando a ordem da arvore.");
+		setOrderTree(treeOrder);
+
 		debug("Variaveis utilizadas no processo");
-		char *line;
+		char line[READ_BUFFER_SIZE];
 		long memoryFullCount = 0;
 
 		debug("Obtendo o tamanho em bytes para um registro no arquivo de tamanho fixo");
@@ -1904,7 +1918,9 @@ boolean loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile) {
 
 		debug("Tenta abrir o arquivo de index da b-tree");
 		if (btopen()) {
+
 			root = getroot();
+
 		} else {
 
 			debug("Lendo a primeira linha para montar a raiz da arvore");
@@ -1917,6 +1933,9 @@ boolean loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile) {
 				TAlunoNode node;
 				node.ra = atoi(getKeyLine(line, KEY_RA));
 				node.index = memoryFullCount;
+
+				debugi("Inserindo RA: ", node.ra);
+				debugi("Index: ", node.index);
 
 				debug("Caso nao exista o arquivo cria a arvore");
 				root = create_tree(node);
@@ -1944,7 +1963,11 @@ boolean loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile) {
 				key.ra = atoi(getKeyLine(line, KEY_RA));
 				key.index = memoryFullCount;
 
-				promoted = insert(root, key, &promo_rrn, &promo_key);
+				debugi("Inserindo RA: ", key.ra);
+				debugi("Index: ", key.index);
+
+				promoted = insertAlunoBTree(root, key, line, &promo_rrn,
+						&promo_key);
 				if (promoted) {
 					root = create_root(promo_key, root, promo_rrn);
 				}
