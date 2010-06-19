@@ -5,8 +5,8 @@ CPP  = g++
 CC   = gcc -Wall -g
 WINDRES = windres.exe
 RES  = 
-OBJ  = log.o utils.o mem.o io.o bundle.o hashmap.o mylist.o aluno.o lab04.o $(RES)
-LINKOBJ  = log.o utils.o mem.o io.o bundle.o hashmap.o  mylist.o aluno.o lab04.o  $(RES)
+OBJ  = log.o utils.o mem.o io.o bundle.o hashmap.o mylist.o aluno.o btreealuno.o lab04.o $(RES)
+LINKOBJ  = log.o utils.o mem.o io.o bundle.o hashmap.o  mylist.o aluno.o btreealuno.o lab04.o  $(RES)
 LIBS =   
 INCS = 
 CXXINCS = 
@@ -17,7 +17,7 @@ RM = rm -f
 
 .PHONY: all all-before all-after clean clean-custom
 
-all: all-before lab01b all-after
+all: all-before lab04 all-after
 
 clean: clean-custom
 	${RM} $(OBJ) $(BIN)
@@ -48,6 +48,10 @@ mylist.o: mylist.c
 
 aluno.o: aluno.c
 	$(CC) -c aluno.c -o aluno.o $(CFLAGS)
+
+btreealuno.o: btreealuno.c
+	$(CC) -c btreealuno.c -o btreealuno.o $(CFLAGS)
+
 
 lab04.o: lab04.c
 	$(CC) -c lab04.c -o lab04.o $(CFLAGS)
