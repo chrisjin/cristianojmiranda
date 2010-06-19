@@ -44,8 +44,19 @@ char btreeDuplicateFileName[1024];
  key:            key to be inserted here or lower
  *promo_key:     key promoted up from here to next level
  */
-boolean insert(short rrn, TAlunoNode key, short *promo_r_child,
-		TAlunoNode *promo_key) {
+
+/**
+ * Insere um aluno na B-TREE.
+ *
+ * @param rrn - Id da pagina onde o registro sera inserido.
+ * @param key - Chave a ser inserida
+ * @param recordString - Registro na forma de String para tratar duplicidade.
+ * @param promo_r_child - Id do registro a ser promovido.
+ * @param promo_key - Chave a ser promovida acima.
+ * @return True caso haja promoção.
+ */
+boolean insertAlunoBTree(short rrn, TAlunoNode key, char *recordString,
+		short *promo_r_child, TAlunoNode *promo_key) {
 
 	debugi("RRN", rrn);
 	debugc("Key", key.ra);
@@ -84,13 +95,24 @@ boolean insert(short rrn, TAlunoNode key, short *promo_r_child,
 	btread(rrn, &page);
 	found = search_node(key.ra, &page, &pos);
 	if (found) {
-		printf("Error: attempt to insert duplicate key: %c \n\007", key);
-		return (0);
+
+		debugi("Chave duplicada", key.ra);
+
+		debug("Inserindo no arquivo de registros duplicados");
+		FILE *duplicateFile = Fopen(getBTreeDuplicateFileName(), "a+");
+		fprintf(duplicateFile, "%s", recordString);
+
+		debug("Fechando o arquivo de registros duplicados");
+		fclose(duplicateFile);
+
+		return false;
 	}
-	promoted = insert(page.child[pos], key, &p_b_rrn, &p_b_key);
+
+	promoted = insertAlunoBTree(page.child[pos], key, recordString, &p_b_rrn,
+			&p_b_key);
 	if (!promoted)
 		return false; /* no promotion */
-	if (page.keycount < MAXKEYS) {
+	if (page.keycount < btOrder) {
 		ins_in_page(p_b_key, p_b_rrn, &page); /* OK to insert key and  */
 		btwrite(rrn, &page); /* pointer in this page. */
 		return false; /* no promotion */
@@ -119,16 +141,17 @@ int btfd; /* global file descriptor for "btree.dat"  */
 
 boolean btopen() {
 
-	debug("Obtendo o nome do arquivo para indexar arvore de aluno");
-	char *indexFileName = getProperty("btreealuno.index.file");
-	debugs("Index file Name:", indexFileName);
-
-	btfd = open(indexFileName, O_RDWR);
+	btfd = open(getBTreeIndexFileName(), O_RDWR);
 	return (btfd > 0);
 }
 
 btclose() {
+
+	debug("Fechando b-tree");
+
 	close(btfd);
+
+	debug("b-tree fechado.");
 }
 
 short getroot() {
@@ -248,12 +271,12 @@ pageinit(BTPAGE *p_page) /* p_page: pointer to a page  */
 {
 	int j;
 
-	for (j = 0; j < MAXKEYS; j++) {
+	for (j = 0; j < btOrder; j++) {
 		p_page->key[j].index = NIL;
 		p_page->key[j].ra = NIL;
 		p_page->child[j] = NIL;
 	}
-	p_page->child[MAXKEYS] = NIL;
+	p_page->child[btOrder] = NIL;
 }
 
 /* pos: position where key is or should be inserted  */
@@ -303,15 +326,15 @@ split(TAlunoNode key, short r_child, BTPAGE *p_oldpage, TAlunoNode *promo_key,
 		short *promo_r_child, BTPAGE *p_newpage) {
 	int i;
 	short mid; /* tells where split is to occur            */
-	TAlunoNode workkeys[MAXKEYS + 1]; /* temporarily holds keys, before split     */
-	short workch[MAXKEYS + 2]; /* temporarily holds children, before split */
+	TAlunoNode workkeys[btOrder + 1]; /* temporarily holds keys, before split     */
+	short workch[btOrder + 2]; /* temporarily holds children, before split */
 
-	for (i = 0; i < MAXKEYS; i++) { /* move keys and children from  */
+	for (i = 0; i < btOrder; i++) { /* move keys and children from  */
 		workkeys[i] = p_oldpage->key[i]; /* old page into work arrays    */
 		workch[i] = p_oldpage->child[i];
 	}
 	workch[i] = p_oldpage->child[i];
-	for (i = MAXKEYS; key.ra < workkeys[i - 1].ra && i > 0; i--) { /* insert new key */
+	for (i = btOrder; key.ra < workkeys[i - 1].ra && i > 0; i--) { /* insert new key */
 		workkeys[i] = workkeys[i - 1];
 		workch[i + 1] = workch[i];
 	}
@@ -321,23 +344,23 @@ split(TAlunoNode key, short r_child, BTPAGE *p_oldpage, TAlunoNode *promo_key,
 	*promo_r_child = getpage(); /* create new page for split,   */
 	pageinit(p_newpage); /* and promote rrn of new page  */
 
-	for (i = 0; i < MINKEYS; i++) { /* move first half of keys and  */
+	for (i = 0; i < (btOrder / 2); i++) { /* move first half of keys and  */
 		p_oldpage->key[i] = workkeys[i]; /* children to old page, second */
 		p_oldpage->child[i] = workch[i]; /*  half to new page            */
-		p_newpage->key[i] = workkeys[i + 1 + MINKEYS];
-		p_newpage->child[i] = workch[i + 1 + MINKEYS];
-		p_oldpage->key[i + MINKEYS].ra = NIL; /* mark second half of old  */
-		p_oldpage->key[i + MINKEYS].index = NIL; /* mark second half of old  */
-		p_oldpage->child[i + 1 + MINKEYS] = NIL; /* page as empty            */
+		p_newpage->key[i] = workkeys[i + 1 + (btOrder / 2)];
+		p_newpage->child[i] = workch[i + 1 + (btOrder / 2)];
+		p_oldpage->key[i + (btOrder / 2)].ra = NIL; /* mark second half of old  */
+		p_oldpage->key[i + (btOrder / 2)].index = NIL; /* mark second half of old  */
+		p_oldpage->child[i + 1 + (btOrder / 2)] = NIL; /* page as empty            */
 	}
-	p_oldpage->child[MINKEYS] = workch[MINKEYS];
-	p_newpage->child[MINKEYS] = workch[i + 1 + MINKEYS];
-	p_newpage->keycount = MAXKEYS - MINKEYS;
-	p_oldpage->keycount = MINKEYS;
-	*promo_key = workkeys[MINKEYS]; /* promote middle key */
+	p_oldpage->child[(btOrder / 2)] = workch[(btOrder / 2)];
+	p_newpage->child[(btOrder / 2)] = workch[i + 1 + (btOrder / 2)];
+	p_newpage->keycount = btOrder - (btOrder / 2);
+	p_oldpage->keycount = (btOrder / 2);
+	*promo_key = workkeys[(btOrder / 2)]; /* promote middle key */
 }
 
-setBtreeIndexFileName(char fileName[1024]) {
+void setBtreeIndexFileName(char *fileName) {
 	strcpy(btreeIndexFileName, fileName);
 }
 
@@ -358,7 +381,7 @@ char *getBTreeIndexFileName() {
 
 }
 
-void setBTreeDuplicateFileName(char fileName[1024]) {
+void setBTreeDuplicateFileName(char *fileName) {
 	strcpy(btreeDuplicateFileName, fileName);
 }
 
@@ -375,7 +398,7 @@ char *getBTreeDuplicateFileName() {
 
 	}
 
-	return btreeIndexFileName;
+	return btreeDuplicateFileName;
 
 }
 
