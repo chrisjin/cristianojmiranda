@@ -305,3 +305,15 @@ char *generatedIndexFileByRunFiles(LIST runFileList, long *mergeCount,
  */
 char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
 		long *readCount, long *writeCount);
+
+/**
+ * Carrega a arvore de index.
+ *
+ * @param inFile - Arquivo de entrada de dados.
+ * @param indexFile - Nome do arquivo de index da b-tree.
+ * @param duplicateFile - Arquivo para armazenar as chaves duplicadas durante o processamento da b-tree.
+ * @param treeOrder - Ordem da b-tree.
+ * @param newIndex - Flag para recriar o arquivo de index da b-tree.
+ */
+int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
+		int treeOrder, boolean newIndex);
