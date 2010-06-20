@@ -1891,6 +1891,10 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 		TAlunoNode promo_key, /* key promoted from below       */
 		key; /* next key to insert in tree                	   */
 
+		debug("Zera o apontador para a chave a ser promovida");
+		promo_key.ra = -1;
+		promo_key.index = -1;
+
 		debug("Verificando se o index deve ser recriado.");
 		if (newIndex && fileExists(indexFile)) {
 			debug("Deletando o arquivo com o index que foi carregado anteriormente");
@@ -1926,9 +1930,6 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 			debug("Lendo a primeira linha para montar a raiz da arvore");
 			if (fgets(line, READ_BUFFER_SIZE, alunosFile) != NULL) {
 
-				debug("Incrementa a quantidade de memoria utilizada.");
-				memoryFullCount += recordSize;
-
 				debug("Aloca node para arvore");
 				TAlunoNode node;
 				node.ra = atoi(getKeyLine(line, KEY_RA));
@@ -1940,6 +1941,9 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 				debug("Caso nao exista o arquivo cria a arvore");
 				root = create_tree(node);
 
+				debug("Incrementa a quantidade de memoria utilizada.");
+				memoryFullCount += recordSize;
+
 			} else {
 
 				debug("Nao foi possivel ler o arquivo de dados");
@@ -1947,6 +1951,10 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 				return false;
 			}
 		}
+
+		// TODO: remove me
+		BTPAGE pg;
+		btread(0, &pg);
 
 		debug("Le o arquivo de dados");
 		while (fgets(line, READ_BUFFER_SIZE, alunosFile) != NULL) {
@@ -1966,7 +1974,7 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 				debugi("Inserindo RA: ", key.ra);
 				debugi("Index: ", key.index);
 
-				promoted = insertAlunoBTree(root, key, line, &promo_rrn,
+				promoted = insert(root, key, &promo_rrn,
 						&promo_key);
 				if (promoted) {
 					root = create_root(promo_key, root, promo_rrn);
@@ -1993,5 +2001,9 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 
 	debug("Arquivo inexistente retona erro no processamento");
 	return false;
+
+}
+
+void findAlunoByRaBTree(int ra) {
 
 }
