@@ -110,8 +110,13 @@ boolean insertAlunoBTree(short rrn, TAlunoNode key, char *recordString,
 
 	promoted = insertAlunoBTree(page.child[pos], key, recordString, &p_b_rrn,
 			&p_b_key);
-	if (!promoted)
-		return false; /* no promotion */
+
+	if (!promoted) {
+
+		debug("Node nao promovido");
+		return false;
+	}
+
 	if (page.keycount < btOrder) {
 		ins_in_page(p_b_key, p_b_rrn, &page); /* OK to insert key and  */
 		btwrite(rrn, &page); /* pointer in this page. */
@@ -225,7 +230,6 @@ void logPage(BTPAGE *page) {
 	if (page != NULL) {
 
 		debugi("Quantidade de chaves", page->keycount);
-		debugc("Chaves: ", page->key);
 
 	} else {
 
@@ -282,7 +286,7 @@ pageinit(BTPAGE *p_page) /* p_page: pointer to a page  */
 /* pos: position where key is or should be inserted  */
 boolean search_node(int key, BTPAGE *p_page, short *pos) {
 
-	debugc("Key: ", key);
+	debugi("Key: ", key);
 
 	debug("Posicionando o cursor onde a chave possa estar");
 	int i;
@@ -299,6 +303,125 @@ boolean search_node(int key, BTPAGE *p_page, short *pos) {
 		debug("Node nao encontrado");
 		return false;
 	}
+}
+
+/**
+ * Pesquisa o index de um aluno na B-TREE pelo RA.
+ *
+ * @param key - Ra a ser pesquisado.
+ * @return index da posição do RA no arquivo de dados. Retorna -1 caso não exista.
+ */
+int findIndexByKey(int key) {
+
+	debug("Tenta abrir o arquivo de index da b-tree");
+	if (btopen()) {
+
+		debug("Obtem a raiz da arvore");
+		short root = getroot();
+
+		debug("Le a pagina da arvore");
+		BTPAGE page;
+		btread(root, &page);
+		short pos;
+
+		if (search_node(key, &page, &pos)) {
+
+		}
+	}
+
+	debug("Chave nao encontrada");
+	return -1;
+
+}
+
+/**
+ * Imprime a arvore de alunos.
+ *
+ * @param fileOutput arquivo de saida da arvore.
+ *
+ */
+void printBTreeAluno(char *fileOutput) {
+
+	debug("Tenta abrir o arquivo de index da b-tree");
+	if (btopen()) {
+
+		debug("Obtem a raiz da arvore");
+		short root = getroot();
+
+		debug("Le a pagina da arvore");
+		BTPAGE page;
+		btread(root, &page);
+
+		debug("Abre o arquivo de outputo para escrita");
+		FILE *treeFile = Fopen(fileOutput, WRITE_FLAG);
+
+		fprintf(treeFile, "{\n");
+
+		debug("Imprime a arvore");
+		printPage(page, treeFile);
+
+		fprintf(treeFile, "}\n");
+
+		debug("Fecha o arquivo de output");
+		fclose(treeFile);
+	}
+
+}
+
+/**
+ * Imprime uma pagina da B-TREE.
+ */
+void printPage(BTPAGE page, FILE *arq) {
+
+	debug("Verifica se eh uma pagina valida");
+	if (page.keycount >= MAXKEYS) {
+		debug("Pagina in valida");
+		return;
+	}
+
+	boolean isKey = false;
+	fprintf(arq, "\n((size=%i),", page.keycount);
+
+	int keyIndex = 0;
+	int pageIndex = 0;
+
+	debug("Intercala chave e paginas");
+	int i = 0;
+	for (i = 0; i <= (page.keycount * 2) + 1; i++) {
+
+		if (isKey) {
+
+			if (page.key[keyIndex].ra >= 0) {
+
+				if (keyIndex == 0) {
+					fprintf(arq, "[ra=%i, Index=%i]", page.key[keyIndex].ra,
+							page.key[keyIndex].index);
+				} else {
+
+					fprintf(arq, ", [ra=%i, Index=%i]", page.key[keyIndex].ra,
+							page.key[keyIndex].index);
+
+				}
+			}
+
+			keyIndex++;
+		} else {
+
+			BTPAGE tmpPage;
+			if (page.child[pageIndex] >= 0) {
+				btread(page.child[pageIndex], &tmpPage);
+				printPage(tmpPage, arq);
+
+			}
+
+			pageIndex++;
+		}
+
+		isKey = !isKey;
+	}
+
+	fprintf(arq, ")");
+
 }
 
 ins_in_page(TAlunoNode key, short r_child, BTPAGE *p_page) {
