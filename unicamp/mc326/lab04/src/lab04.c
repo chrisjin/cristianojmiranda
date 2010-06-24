@@ -30,22 +30,22 @@
 int main(int argc, char * argv[]) {
 
 	/*BTPAGE p;
-	pageinit(&p);
-	p.keycount = 999;
-	p.key[0].ra = 83382;
-	p.key[0].index = 131186;
+	 pageinit(&p);
+	 p.keycount = 999;
+	 p.key[0].ra = 83382;
+	 p.key[0].index = 131186;
 
-	int df = creat("/media/CAE02706E026F879/debug/test.txt", 0755);
-	write(df, p, PAGESIZE);
-	close(df);
+	 int df = creat("/media/CAE02706E026F879/debug/test.txt", 0755);
+	 write(df, p, PAGESIZE);
+	 close(df);
 
-	df = open("/media/CAE02706E026F879/debug/test.txt", O_RDWR);
+	 df = open("/media/CAE02706E026F879/debug/test.txt", O_RDWR);
 
-	p.keycount = 123;
-	read(df, &p, PAGESIZE);
-	close(df);
+	 p.keycount = 123;
+	 read(df, &p, PAGESIZE);
+	 close(df);
 
-	return 1; */
+	 return 1; */
 
 	// Configuração do mecanismo de debug
 	initializeLog();
@@ -101,6 +101,7 @@ boolean validaEntrada(int argc, char *argv[]) {
 void showMenu() {
 
 	debug("Imprime o menu");
+	printf("\n\n\n");
 	printf(getMessage("lab02.menu1"), END_OF_LINE);
 	printf(getMessage("lab02.menu2"), END_OF_LINE);
 	printf(getMessage("lab02.menu3"), END_OF_LINE);
@@ -111,7 +112,7 @@ void showMenu() {
 /**
  * Executa a pesquisa de um RA na b-tree.
  */
-void findByRa() {
+void findByRa(char *inFile) {
 
 	debug("Obtem o ra a ser pesquisado");
 	int ra = -1;
@@ -127,6 +128,7 @@ void findByRa() {
 		} else {
 
 			ra = atoi(strRa);
+			findAlunoBTREEByRA(inFile, ra);
 
 		}
 
@@ -165,13 +167,13 @@ void initialize(char *argv[]) {
 		case 2:
 			debug("Cria a b-tree");
 			loadBTreeIndex(argv[2], argv[3], argv[4], atoi(argv[1]), true);
-			//printBTreeAluno(argv[5]);
+			printArvore(argv[5]);
 			break;
 		case 3:
 			debug("Cria a b-tree");
 			loadBTreeIndex(argv[2], argv[3], argv[4], atoi(argv[1]), true);
 			debug("Pesquisa o ra na b-tree");
-			findByRa();
+			findByRa(argv[2]);
 			break;
 
 		default:

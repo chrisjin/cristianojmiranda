@@ -109,10 +109,11 @@ Aluno newAluno(char *value) {
 	inicio = atoi(getProperty("aluno.field.start.sexo"));
 	fim = atoi(getProperty("aluno.field.end.sexo"));
 	data = strSubString(value, inicio, fim);
-	aln->sexo = data[0];
+	aln->sexo = toupper(data[0]);
 
 	debug("Validando dominio para sexo");
-	if (aln->sexo != SEXO_MASCULINO && aln->sexo != SEXO_FEMININO) {
+	if (toupper(aln->sexo) != SEXO_MASCULINO && toupper(aln->sexo)
+			!= SEXO_FEMININO) {
 
 		debug("Sexo nao confere. Registro invalido");
 		return NULL;
@@ -1935,7 +1936,7 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 				debugi("Index: ", node.index);
 
 				debug("Caso nao exista o arquivo cria a arvore");
-				criarArvore(node, &rrnRoot);
+				tree = criarArvore(node, &rrnRoot);
 
 			} else {
 
@@ -1949,7 +1950,7 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 		while (fgets(line, READ_BUFFER_SIZE, alunosFile) != NULL) {
 
 			debug("Verifica se a linha do arquivo principal esta vazia");
-			if (isStrEmpty(line)) {
+			if (isStrEmpty(line) || strlen(line) < recordSize) {
 
 				debugi("Linha vazia. Posicao: ", memoryFullCount);
 
@@ -1963,7 +1964,7 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 				debugi("Inserindo RA: ", key.ra);
 				debugi("Index: ", key.index);
 
-				tree = insere_arvoreB(&tree, key, &rrnRoot);
+				tree = insere_arvoreB(&tree, key, line, &rrnRoot);
 
 				debug("Incrementa a quantidade de memoria utilizada.");
 				memoryFullCount += recordSize;
@@ -1977,7 +1978,6 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 		debug("Fecha o arquivo de dados");
 		fclose(alunosFile);
 
-		printArvore(tree);
 		debug("Fecha a b-tree");
 		fecharArvore();
 
@@ -1988,4 +1988,65 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 	debug("Arquivo inexistente retona erro no processamento");
 	return false;
 
+}
+
+/**
+ * Exibe as informacoes de um aluno na tela apartir do RA, fazendo busca na b-tree.
+ *
+ * @param inFile Arquivo com os dados do aluno.
+ * @param ra ra do aluno qual sera exibido.
+ */
+void findAlunoBTREEByRA(char *inFile, int ra) {
+
+	debug("Abre a arvore");
+	abrirArvore(false);
+
+	debug("Obtem a raiz");
+	long rrnRoot = obtemPosicaoRaiz();
+
+	arvoreB raiz;
+	lerPagina(rrnRoot, &raiz);
+
+	long index = NIL;
+	if (busca(&raiz, ra, &index)) {
+
+		debugl("Index do aluno procurado", index);
+
+		if (index < 0) {
+
+			debug("Registro nao encontrado, index invalido");
+			printf(getMessage("aluno.label.registroInexistente"), END_OF_LINE);
+
+		} else {
+
+			debug("Abre o arquivo de dados");
+			FILE *dados = Fopen(inFile, READ_FLAG);
+
+			debug("Posicionando o cursor no index do aluno sobre o arquivo de dados");
+			fseek(dados, index, SEEK_SET);
+
+			char line[READ_BUFFER_SIZE];
+			if (fgets(line, READ_BUFFER_SIZE, dados) != NULL) {
+
+				Aluno aluno = newAluno(line);
+				showAluno(aluno);
+
+			} else {
+				debug("Erro ao ler o arquivo");
+			}
+
+			debug("Fechando o arquivo de dados");
+			fclose(dados);
+
+		}
+
+	} else {
+
+		debug("Registro nao encontrado");
+		printf(getMessage("aluno.label.registroInexistente"), END_OF_LINE);
+
+	}
+
+	debug("Fechar a arvore");
+	fecharArvore();
 }
