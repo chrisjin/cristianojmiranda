@@ -24,8 +24,28 @@
 #include "aluno.h"
 #include "io.h"
 #include "lab04.h"
+#include "btreealuno.h"
+#include "fcntl.h"
 
 int main(int argc, char * argv[]) {
+
+	/*BTPAGE p;
+	pageinit(&p);
+	p.keycount = 999;
+	p.key[0].ra = 83382;
+	p.key[0].index = 131186;
+
+	int df = creat("/media/CAE02706E026F879/debug/test.txt", 0755);
+	write(df, p, PAGESIZE);
+	close(df);
+
+	df = open("/media/CAE02706E026F879/debug/test.txt", O_RDWR);
+
+	p.keycount = 123;
+	read(df, &p, PAGESIZE);
+	close(df);
+
+	return 1; */
 
 	// Configuração do mecanismo de debug
 	initializeLog();
@@ -89,6 +109,32 @@ void showMenu() {
 }
 
 /**
+ * Executa a pesquisa de um RA na b-tree.
+ */
+void findByRa() {
+
+	debug("Obtem o ra a ser pesquisado");
+	int ra = -1;
+	while (ra <= 0) {
+		printf(getMessage("aluno.label.digite_ra_aluno"), "\t", END_OF_LINE);
+		char *strRa = getLine();
+
+		debug("Verifica se o ra informado eh numerico");
+		if (!isNumeric(strRa)) {
+
+			printf(getMessage("aluno.label.valorInvalido"), END_OF_LINE);
+
+		} else {
+
+			ra = atoi(strRa);
+
+		}
+
+	}
+
+}
+
+/**
  * Start application.
  */
 void initialize(char *argv[]) {
@@ -117,12 +163,16 @@ void initialize(char *argv[]) {
 			loadBTreeIndex(argv[2], argv[3], argv[4], atoi(argv[1]), true);
 			break;
 		case 2:
-
+			debug("Cria a b-tree");
+			loadBTreeIndex(argv[2], argv[3], argv[4], atoi(argv[1]), true);
+			//printBTreeAluno(argv[5]);
 			break;
 		case 3:
-
+			debug("Cria a b-tree");
+			loadBTreeIndex(argv[2], argv[3], argv[4], atoi(argv[1]), true);
+			debug("Pesquisa o ra na b-tree");
+			findByRa();
 			break;
-		case 4:
 
 		default:
 			if (opcao != 4) {
