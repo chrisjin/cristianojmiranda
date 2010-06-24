@@ -13,10 +13,9 @@
 
  *******************************************************************************/
 
-#define T 10
-#define MAX_CHAVES (2 * T - 1) //Quantidade máxima de chaves
-#define	MAX_FILHOS  (2 * T) //Quantidade máxima de filhos
-#define	MIN_OCUP  (T - 1) //Ocupação mínima em cada nó
+#define MAX_CHAVES 10 //Quantidade máxima de chaves
+#define	MAX_FILHOS  11 //Quantidade máxima de filhos
+#define	MIN_OCUP  5 //Ocupação mínima em cada nó
 #define ARVORE_SIZE sizeof(arvoreB)
 #define SIZE_OF_INDEX_ROOT sizeof(long)
 #define NIL -1
@@ -40,17 +39,20 @@ typedef struct {
  * Insere uma nova informacao na arvore.
  * @param raiz  Raiz da arvore
  * @param info Informacao a ser inserida na arvore.
+ * @param line Linha do arquivo de dados, para tratar duplicados
  * @param rrnRoot Apontador para retornar o rrn da raiz.
  * @return estrutura da raiz da arvore.
  */
-arvoreB insere_arvoreB(arvoreB *raiz, TAlunoNode info, long *rrnRoot);
+arvoreB insere_arvoreB(arvoreB *raiz, TAlunoNode info, char *line,
+		long *rrnRoot);
 
 /**
  * Imprime uma pagina da arvore.
  *
  * @param node NO da arvore.
+ * @param descFile arquivo para imprimir a estrutura da arvore.
  */
-void printPageT(arvoreB node);
+void printPageT(arvoreB node, FILE *descFile);
 
 /**
  * Cria uma estrutura da arvore.
@@ -98,3 +100,8 @@ long obtemPosicaoRaiz();
  * Obtem o nome do arquivo de dados.
  */
 char *getBTreeIndexFileName();
+
+/**
+ * Obtem o nome do arquivo de registros duplicados.
+ */
+char *getBTreeDuplicateFileName();

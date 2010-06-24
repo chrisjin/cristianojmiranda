@@ -13,29 +13,63 @@ char btreeDuplicateFileName[1024];
 int btOrder;
 FILE *btFile = NULL;
 
-printArvore(arvoreB raiz) {
+#define MAX_CHAVES_BT btOrder
+#define	MAX_FILHOS_BT  (btOrder + 1) //Quantidade máxima de filhos
+#define	MIN_OCUP_BT  (btOrder / 2) //Ocupação mínima em cada nó
+/**
+ * Imprime a estrutura da arvore.
+ */
+void printArvore(char *fileName) {
 
 	debug("Imprimido a arvore");
 
-	printf("{\n");
+	debug("Abrindo o arquivo de descricao da arvore");
+	FILE *descFile = Fopen(fileName, WRITE_FLAG);
 
-	printPageT(raiz);
+	debug("Abre a arvore");
+	abrirArvore(false);
 
-	printf("\n}");
+	debug("Obtem a raiz");
+	long rrnRoot = obtemPosicaoRaiz();
+
+	arvoreB raiz;
+	lerPagina(rrnRoot, &raiz);
+
+	fprintf(descFile, "{\n");
+
+	printPageT(raiz, descFile);
+
+	fprintf(descFile, "}\n");
+
+	debug("Fecha a arvore de dados");
+	fecharArvore();
+
+	debug("Fechando o arquivo");
+	fclose(descFile);
 
 }
 
-void printPageT(arvoreB node) {
+void printPageT(arvoreB node, FILE *descFile) {
 
-	printf("(");
+	fprintf(descFile, "(");
 
 	int i = 0;
 	int isChave = 0;
 	int chaveIndex = 0, filhosIndex = 0;
-	for (i = 0; i < (MAX_CHAVES + MAX_FILHOS); i++) {
+	for (i = 0; i < (MAX_CHAVES_BT + MAX_FILHOS_BT); i++) {
 		if (isChave) {
-			printf("[%i,%i],", node.aluno[chaveIndex].ra,
-					node.aluno[chaveIndex].index);
+
+			if (i == 0) {
+
+				fprintf(descFile, "[%i, %i]", node.aluno[chaveIndex].ra,
+						node.aluno[chaveIndex].index);
+
+			} else {
+
+				fprintf(descFile, ",[%i, %i],", node.aluno[chaveIndex].ra,
+						node.aluno[chaveIndex].index);
+
+			}
 			chaveIndex++;
 		} else {
 			if (node.indexFilhos[filhosIndex] >= 0) {
@@ -43,7 +77,7 @@ void printPageT(arvoreB node) {
 				arvoreB child;
 				lerPagina(node.indexFilhos[filhosIndex], &child);
 
-				printPageT(child);
+				printPageT(child, descFile);
 
 			}
 			filhosIndex++;
@@ -51,7 +85,7 @@ void printPageT(arvoreB node) {
 		isChave = !isChave;
 	}
 
-	printf(")\n");
+	fprintf(descFile, ")\n");
 
 }
 
@@ -79,20 +113,20 @@ void insere_chave(arvoreB *raiz, TAlunoNode info, long filhodir) {
 	raiz->indexFilhos[pos + 1] = filhodir;
 	raiz->num_chaves++;
 
-	if (raiz->rrn >= 0 && raiz->num_chaves <= MAX_CHAVES) {
+	if (raiz->rrn >= 0 && raiz->num_chaves <= MAX_CHAVES_BT) {
 		escreverPagina(raiz->rrn, raiz);
 	}
 }
 
 //Realiza a busca do nó para inserir a chave e faz as subdivisões quando necessárias
-arvoreB *insere(arvoreB *raiz, TAlunoNode info, int *h,
+arvoreB *insere(arvoreB *raiz, TAlunoNode info, int *h, char *line,
 		TAlunoNode *info_retorno) {
 	int i, j, pos;
 	TAlunoNode info_mediano; //auxiliar para armazenar a chave que irá subir para o pai
 	arvoreB *temp = NULL, *filho_dir = NULL; //ponteiro para o filho à direita da chave
 
-	if (raiz == NULL || raiz->num_chaves > MAX_CHAVES || raiz->num_chaves < 0
-			|| raiz->rrn < 0) {
+	if (raiz == NULL || raiz->num_chaves > MAX_CHAVES_BT || raiz->num_chaves
+			< 0 || raiz->rrn < 0) {
 		//O nó anterior é o ideal para inserir a nova chave (chegou em um nó folha)
 		*h = 1;
 		*info_retorno = info;
@@ -100,7 +134,18 @@ arvoreB *insere(arvoreB *raiz, TAlunoNode info, int *h,
 	} else {
 		pos = busca_binaria(raiz, info);
 		if (raiz->num_chaves > pos && raiz->aluno[pos].ra == info.ra) {
-			printf("Chave já contida na Árvore");
+
+			if (!isStrEmpty(line)) {
+				debugi("Chave duplicada", info.ra);
+
+				debug("Inserindo no arquivo de registros duplicados");
+				FILE *duplicateFile = Fopen(getBTreeDuplicateFileName(), "a+");
+				fprintf(duplicateFile, "%s", line);
+
+				debug("Fechando o arquivo de registros duplicados");
+				fclose(duplicateFile);
+			}
+
 			*h = 0;
 		} else {
 			//desce na árvore até encontrar o nó folha para inserir a chave.
@@ -114,11 +159,11 @@ arvoreB *insere(arvoreB *raiz, TAlunoNode info, int *h,
 			} else {
 				arvoreB filho;
 				lerPagina(rrnFilho, &filho);
-				filho_dir = insere(&filho, info, h, info_retorno);
+				filho_dir = insere(&filho, info, h, line, info_retorno);
 			}
 			if (*h) //Se true deve inserir a info_retorno no nó.
 			{
-				if (raiz->num_chaves < MAX_CHAVES) //Tem espaço na página
+				if (raiz->num_chaves < MAX_CHAVES_BT) //Tem espaço na página
 				{
 					if (filho_dir == NULL) {
 						insere_chave(raiz, *info_retorno, NIL);
@@ -133,12 +178,12 @@ arvoreB *insere(arvoreB *raiz, TAlunoNode info, int *h,
 					inicializaPagina(temp);
 
 					//elemento mediano que vai subir para o pai
-					info_mediano = raiz->aluno[MIN_OCUP];
+					info_mediano = raiz->aluno[MIN_OCUP_BT];
 
 					//insere metade do nó raiz no temp (efetua subdivisão)
-					//temp->filhos[0] = raiz->filhos[MIN_OCUP + 1];
-					temp->indexFilhos[0] = raiz->indexFilhos[MIN_OCUP + 1];
-					for (i = MIN_OCUP + 1; i < MAX_CHAVES; i++) {
+					//temp->filhos[0] = raiz->filhos[MIN_OCUP_BT + 1];
+					temp->indexFilhos[0] = raiz->indexFilhos[MIN_OCUP_BT + 1];
+					for (i = MIN_OCUP_BT + 1; i < MAX_CHAVES_BT; i++) {
 						//insere_chave(temp, raiz->aluno[i], raiz->filhos[i + 1]);
 						insere_chave(temp, raiz->aluno[i], raiz->indexFilhos[i
 								+ 1]);
@@ -149,25 +194,25 @@ arvoreB *insere(arvoreB *raiz, TAlunoNode info, int *h,
 					escreverPagina(rrnFilhoDir, temp);
 
 					//atualiza nó raiz.
-					for (i = MIN_OCUP; i < MAX_CHAVES; i++) {
+					for (i = MIN_OCUP_BT; i < MAX_CHAVES_BT; i++) {
 						raiz->aluno[i].ra = NIL;
 						raiz->aluno[i].index = NIL;
 						//raiz->filhos[i + 1] = NULL;
 						raiz->indexFilhos[i + 1] = NIL;
 					}
-					raiz->num_chaves = MIN_OCUP;
+					raiz->num_chaves = MIN_OCUP_BT;
 					escreverPagina(raiz->rrn, raiz);
 
 					long rrn = NIL;
 					if (filho_dir != NULL && filho_dir->num_chaves
-							<= MAX_CHAVES) {
+							<= MAX_CHAVES_BT) {
 						filho_dir->rrn = obtemNewIndexPagina();
 						escreverPagina(filho_dir->rrn, filho_dir);
 						rrn = filho_dir->rrn;
 					}
 
 					//Verifica em qual nó será inserida a nova chave
-					if (pos <= MIN_OCUP) {
+					if (pos <= MIN_OCUP_BT) {
 						insere_chave(raiz, *info_retorno, rrn);
 					} else {
 						insere_chave(temp, *info_retorno, rrn);
@@ -185,13 +230,14 @@ arvoreB *insere(arvoreB *raiz, TAlunoNode info, int *h,
 	}
 }
 
-arvoreB insere_arvoreB(arvoreB *raiz, TAlunoNode info, long *rrnRoot) {
+arvoreB insere_arvoreB(arvoreB *raiz, TAlunoNode info, char *line,
+		long *rrnRoot) {
 	int h;
 	int i;
 	arvoreB *filho_dir, *nova_raiz;
 	TAlunoNode info_retorno;
 
-	filho_dir = insere(raiz, info, &h, &info_retorno);
+	filho_dir = insere(raiz, info, &h, line, &info_retorno);
 	escreverPagina(raiz->rrn, raiz);
 
 	if (h) { //Aumetará a altura da árvore
@@ -208,7 +254,7 @@ arvoreB insere_arvoreB(arvoreB *raiz, TAlunoNode info, long *rrnRoot) {
 		nova_raiz->indexFilhos[0] = *rrnRoot;
 		nova_raiz->indexFilhos[1] = filho_dir->rrn;
 
-		//for (i = 2; i <= MAX_CHAVES; i++)
+		//for (i = 2; i <= MAX_CHAVES_BT; i++)
 		//	nova_raiz->filhos[i] = NULL;
 
 		long rrn = obtemNewIndexPagina();
@@ -243,19 +289,27 @@ int busca_binaria(arvoreB *no, int info) {
 	return (i); //Não encontrou. Retorna a posição do ponteiro para o filho.
 }
 
-int busca(arvoreB *raiz, int info) {
+int busca(arvoreB *raiz, int info, long *index) {
 	arvoreB *no;
 	int pos; //posição retornada pelo busca binária.
 
+	*index = NIL;
+	long lastRRN = -1;
+
 	no = raiz;
-	while (no != NULL) {
+	while (no != NULL && no->num_chaves <= MAX_CHAVES_BT && no->rrn != lastRRN) {
 		pos = busca_binaria(no, info);
 		if (pos < no->num_chaves && no->aluno[pos].ra == info) {
+
+			*index = no->aluno[pos].index;
 			return 1;
+
 		} else {
-			//no = no->filhos[pos];
+
+			lastRRN = no->rrn;
 			long rrn = no->indexFilhos[pos];
 			lerPagina(rrn, no);
+
 		}
 	}
 	return 0;
@@ -318,10 +372,7 @@ void fecharArvore() {
  */
 arvoreB criarArvore(TAlunoNode node, long *rrnRoot) {
 
-	// debug("Abre o arquivo para a arvore");
-	abrirArvore(1);
-
-	// debug("Aloca a arvore");
+	debug("Aloca a arvore");
 	arvoreB tree;
 
 	// debug("Inicializa a raiz da arvore");
@@ -344,13 +395,13 @@ arvoreB criarArvore(TAlunoNode node, long *rrnRoot) {
 
 long obtemNewIndexPagina() {
 
-	//debug("Obtendo uma nova pagina");
+	debug("Obtendo uma nova pagina");
 
 	fseek(btFile, 0, SEEK_END);
 	long addr = ftell(btFile);
 	addr = addr - SIZE_OF_INDEX_ROOT;
 
-	// debugl("Addr", addr);
+	debugl("Addr", addr);
 
 	if (addr < 0) {
 		addr = 0;
@@ -358,8 +409,7 @@ long obtemNewIndexPagina() {
 
 	long rrn = ((long) addr / ARVORE_SIZE);
 
-	//debugi("RRN da pagina", rrn);
-
+	debugi("RRN da pagina", rrn);
 
 	return rrn;
 }
@@ -408,7 +458,7 @@ void inicializaPagina(arvoreB *page) {
 		page->aluno[i].ra = NIL;
 	}
 
-	for (i = 0; i < MAX_FILHOS; i++) {
+	for (i = 0; i < MAX_FILHOS_BT; i++) {
 		page->indexFilhos[i] = NIL;
 	}
 }

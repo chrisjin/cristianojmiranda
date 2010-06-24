@@ -317,3 +317,11 @@ char *sortRunFiles(char *f1, char *f2, char *f3, char *f4, char *f5,
  */
 int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 		int treeOrder, boolean newIndex);
+
+/**
+ * Exibe as informacoes de um aluno na tela apartir do RA, fazendo busca na b-tree.
+ *
+ * @param inFile Arquivo com os dados do aluno.
+ * @param ra ra do aluno qual sera exibido.
+ */
+void findAlunoBTREEByRA(char *inFile, int ra);
