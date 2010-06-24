@@ -13,13 +13,13 @@
 
  *******************************************************************************/
 
-#define  MAXKEYS  10
-#define  MINKEYS  MAXKEYS/2
-#define  NIL      (-1)
-
-extern short root; /* rrn of root page */
-extern int btfd; /* file descriptor of btree file */
-extern int infd; /* file descriptor of input file */
+#define T 10
+#define MAX_CHAVES (2 * T - 1) //Quantidade máxima de chaves
+#define	MAX_FILHOS  (2 * T) //Quantidade máxima de filhos
+#define	MIN_OCUP  (T - 1) //Ocupação mínima em cada nó
+#define ARVORE_SIZE sizeof(arvoreB)
+#define SIZE_OF_INDEX_ROOT sizeof(long)
+#define NIL -1
 
 /* Estrutura responsavel por armazenar os nodes da arvore (ra e index). */
 typedef struct {
@@ -30,48 +30,71 @@ typedef struct {
 } TAlunoNode;
 
 typedef struct {
-	short keycount; /* number of keys in page	*/
-	TAlunoNode key[MAXKEYS];
-	short child[MAXKEYS + 1]; /* ptrs to rrns of descendants  */
-} BTPAGE;
-
-#define PAGESIZE  sizeof(BTPAGE)
-
-void btclose();
-int btopen();
-void btread(short rrn, BTPAGE *page_ptr);
-void btwrite(short rrn, BTPAGE *page_ptr);
-short create_root(TAlunoNode key, short left, short right);
-short create_tree(TAlunoNode key);
-short getpage();
-short getroot();
+	long rrn;
+	int num_chaves; //Quantidades de chaves contida no nó
+	TAlunoNode aluno[MAX_CHAVES];
+	long indexFilhos[MAX_FILHOS]; // Posicao no arquivo para os registros de filhos
+} arvoreB;
 
 /**
- * Insere um aluno na B-TREE.
- *
- * @param rrn - Id da pagina onde o registro sera inserido.
- * @param key - Chave a ser inserida
- * @param recordString - Registro na forma de String para tratar duplicidade.
- * @param promo_r_child - Id do registro a ser promovido.
- * @param promo_key - Chave a ser promovida acima.
- * @return True caso haja promoção.
+ * Insere uma nova informacao na arvore.
+ * @param raiz  Raiz da arvore
+ * @param info Informacao a ser inserida na arvore.
+ * @param rrnRoot Apontador para retornar o rrn da raiz.
+ * @return estrutura da raiz da arvore.
  */
-int insertAlunoBTree(short rrn, TAlunoNode key, char *recordString,
-		short *promo_r_child, TAlunoNode *promo_key);
+arvoreB insere_arvoreB(arvoreB *raiz, TAlunoNode info, long *rrnRoot);
 
-void ins_in_page(TAlunoNode key, short r_child, BTPAGE *p_page);
-void pageinit(BTPAGE *p_page);
-void putroot(short root);
-int search_node(int key, BTPAGE *p_page, short *pos);
-void split(TAlunoNode key, short r_child, BTPAGE *p_oldpage,
-		TAlunoNode *promo_key, short *promo_r_child, BTPAGE *p_newpage);
+/**
+ * Imprime uma pagina da arvore.
+ *
+ * @param node NO da arvore.
+ */
+void printPageT(arvoreB node);
 
-void setBtreeIndexFileName(char *fileName);
+/**
+ * Cria uma estrutura da arvore.
+ *
+ * @param node Informacao inicial da arvore.
+ * @param rrnRoot Apontador para o rrn da raiz da arvore.
+ * @return estrututura para a raiz da arvore.
+ *
+ */
+arvoreB criarArvore(TAlunoNode node, long *rrnRoot);
 
+/**
+ * Obtem um rrn para uma nova pagina.
+ *
+ * @return rrn.
+ */
+long obtemNewIndexPagina();
+
+/**
+ * Le uma pagina no arquivo da arvore apartir de um rrn.
+ *
+ * @param rrn do index da pagina.
+ * @param page Apontador para salvar as informacoes da pagina.
+ */
+void lerPagina(long rrn, arvoreB *page);
+
+/**
+ * Fecha a arvore de dados.
+ */
+void fecharArvore();
+
+/**
+ * Abre a arvore de dados.
+ *
+ * @param new Indicador para recriar a arvore. Caso true deleta o arquivo de dados e cria um vazio.
+ */
+int abrirArvore(int new);
+
+/**
+ * Obtem o rrn referente a raiz da arvore no arquivo de dados.
+ */
+long obtemPosicaoRaiz();
+
+/**
+ * Obtem o nome do arquivo de dados.
+ */
 char *getBTreeIndexFileName();
-
-char *getBTreeDuplicateFileName();
-
-void setBTreeDuplicateFileName(char *fileName);
-
-void setOrderTree(int order);

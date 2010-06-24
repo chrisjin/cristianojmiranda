@@ -1885,15 +1885,8 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 	if (fileExists(inFile)) {
 
 		debug("Variaveis utilizadas para carregar a b-tree");
-		boolean promoted; /* boolean: tells if a promotion from below */
-		short root, /* rrn of root page                        */
-		promo_rrn; /* rrn promoted from below                  */
-		TAlunoNode promo_key, /* key promoted from below       */
-		key; /* next key to insert in tree                	   */
-
-		debug("Zera o apontador para a chave a ser promovida");
-		promo_key.ra = -1;
-		promo_key.index = -1;
+		arvoreB tree;
+		long rrnRoot;
 
 		debug("Verificando se o index deve ser recriado.");
 		if (newIndex && fileExists(indexFile)) {
@@ -1921,28 +1914,28 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 		FILE *alunosFile = Fopen(inFile, READ_FLAG);
 
 		debug("Tenta abrir o arquivo de index da b-tree");
-		if (btopen()) {
+		if (abrirArvore(newIndex)) {
 
-			root = getroot();
+			rrnRoot = obtemPosicaoRaiz();
 
 		} else {
 
 			debug("Lendo a primeira linha para montar a raiz da arvore");
 			if (fgets(line, READ_BUFFER_SIZE, alunosFile) != NULL) {
 
+				debug("Incrementa a quantidade de memoria utilizada.");
+				memoryFullCount += recordSize;
+
 				debug("Aloca node para arvore");
 				TAlunoNode node;
 				node.ra = atoi(getKeyLine(line, KEY_RA));
-				node.index = memoryFullCount;
+				node.index = 0;
 
 				debugi("Inserindo RA: ", node.ra);
 				debugi("Index: ", node.index);
 
 				debug("Caso nao exista o arquivo cria a arvore");
-				root = create_tree(node);
-
-				debug("Incrementa a quantidade de memoria utilizada.");
-				memoryFullCount += recordSize;
+				criarArvore(node, &rrnRoot);
 
 			} else {
 
@@ -1951,10 +1944,6 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 				return false;
 			}
 		}
-
-		// TODO: remove me
-		BTPAGE pg;
-		btread(0, &pg);
 
 		debug("Le o arquivo de dados");
 		while (fgets(line, READ_BUFFER_SIZE, alunosFile) != NULL) {
@@ -1974,11 +1963,7 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 				debugi("Inserindo RA: ", key.ra);
 				debugi("Index: ", key.index);
 
-				promoted = insert(root, key, &promo_rrn,
-						&promo_key);
-				if (promoted) {
-					root = create_root(promo_key, root, promo_rrn);
-				}
+				tree = insere_arvoreB(&tree, key, &rrnRoot);
 
 				debug("Incrementa a quantidade de memoria utilizada.");
 				memoryFullCount += recordSize;
@@ -1992,8 +1977,9 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 		debug("Fecha o arquivo de dados");
 		fclose(alunosFile);
 
+		printArvore(tree);
 		debug("Fecha a b-tree");
-		btclose();
+		fecharArvore();
 
 		return true;
 
@@ -2001,9 +1987,5 @@ int loadBTreeIndex(char *inFile, char *indexFile, char *duplicateFile,
 
 	debug("Arquivo inexistente retona erro no processamento");
 	return false;
-
-}
-
-void findAlunoByRaBTree(int ra) {
 
 }

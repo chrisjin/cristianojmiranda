@@ -1,492 +1,428 @@
-/*******************************************************************************
-
- Implementação do componente aluno para gerenciar dados de alunos da Unicamp.
-
- <lab02.c>
-
-
- Grupo 4: Cristiano J. Miranda  RA: 083382
- Gustavo F. Tiengo     RA: 071091
- Magda A. Silva        RA: 082070
- 12/04/2010
-
-
- *******************************************************************************/
-/* insert.c...
- Contains insert() function to insert a key into a btree.
- Calls itself recursively until bottom of tree is reached.
- Then inserts key in node.
- If node is out of room,
- - calls split() to split node
- - promotes middle key and rrn of new node
- */
-#include "btreealuno.h"
+#include <stdio.h>
 #include "stdio.h"
-#include "fileio.h"
+#include "stdio.h"
 #include "unistd.h"
-#include "bundle.h"
-#include "utils.h"
 #include "log.h"
+#include "utils.h"
+#include "btreealuno.h"
 
-// Ordem da b-tree
-int btOrder = MAXKEYS;
+#include <fcntl.h>
 
-// Nome do arquivo de index
 char btreeIndexFileName[1024];
-
-// Nome para o arquivo com as chaves duplicadas
 char btreeDuplicateFileName[1024];
+int btOrder;
+FILE *btFile = NULL;
 
-/* insert() ...
- Arguments:
- rrn:            rrn of page to make insertion in
- *promo_r_child: child promoted up from here to next level
- key:            key to be inserted here or lower
- *promo_key:     key promoted up from here to next level
- */
+printArvore(arvoreB raiz) {
+
+	debug("Imprimido a arvore");
+
+	printf("{\n");
+
+	printPageT(raiz);
+
+	printf("\n}");
+
+}
+
+void printPageT(arvoreB node) {
+
+	printf("(");
+
+	int i = 0;
+	int isChave = 0;
+	int chaveIndex = 0, filhosIndex = 0;
+	for (i = 0; i < (MAX_CHAVES + MAX_FILHOS); i++) {
+		if (isChave) {
+			printf("[%i,%i],", node.aluno[chaveIndex].ra,
+					node.aluno[chaveIndex].index);
+			chaveIndex++;
+		} else {
+			if (node.indexFilhos[filhosIndex] >= 0) {
+
+				arvoreB child;
+				lerPagina(node.indexFilhos[filhosIndex], &child);
+
+				printPageT(child);
+
+			}
+			filhosIndex++;
+		}
+		isChave = !isChave;
+	}
+
+	printf(")\n");
+
+}
+
+//Insere uma chave e o ponteiro para o filho da direita em um nó
+//void insere_chave(arvoreB *raiz, TAlunoNode info, arvoreB *filhodir) {
+void insere_chave(arvoreB *raiz, TAlunoNode info, long filhodir) {
+	int k, pos;
+
+	debugl("filhodir:", filhodir);
+
+	//busca para obter a posição ideal para inserir a nova chave
+	pos = busca_binaria(raiz, info);
+	k = raiz->num_chaves;
+
+	//realiza o remanejamento para manter as chaves ordenadas
+	while (k > pos && info.ra < raiz->aluno[k - 1].ra) {
+		raiz->aluno[k] = raiz->aluno[k - 1];
+		//raiz->filhos[k + 1] = raiz->filhos[k];
+		raiz->indexFilhos[k + 1] = raiz->indexFilhos[k];
+		k--;
+	}
+	//insere a chave na posição ideal
+	raiz->aluno[pos] = info;
+	//raiz->filhos[pos + 1] = filhodir;
+	raiz->indexFilhos[pos + 1] = filhodir;
+	raiz->num_chaves++;
+
+	if (raiz->rrn >= 0 && raiz->num_chaves <= MAX_CHAVES) {
+		escreverPagina(raiz->rrn, raiz);
+	}
+}
+
+//Realiza a busca do nó para inserir a chave e faz as subdivisões quando necessárias
+arvoreB *insere(arvoreB *raiz, TAlunoNode info, int *h,
+		TAlunoNode *info_retorno) {
+	int i, j, pos;
+	TAlunoNode info_mediano; //auxiliar para armazenar a chave que irá subir para o pai
+	arvoreB *temp = NULL, *filho_dir = NULL; //ponteiro para o filho à direita da chave
+
+	if (raiz == NULL || raiz->num_chaves > MAX_CHAVES || raiz->num_chaves < 0
+			|| raiz->rrn < 0) {
+		//O nó anterior é o ideal para inserir a nova chave (chegou em um nó folha)
+		*h = 1;
+		*info_retorno = info;
+		return (NULL);
+	} else {
+		pos = busca_binaria(raiz, info);
+		if (raiz->num_chaves > pos && raiz->aluno[pos].ra == info.ra) {
+			printf("Chave já contida na Árvore");
+			*h = 0;
+		} else {
+			//desce na árvore até encontrar o nó folha para inserir a chave.
+			long rrnFilho = raiz->indexFilhos[pos];
+			if (rrnFilho == NIL) {
+
+				*h = 1;
+				*info_retorno = info;
+				filho_dir = NULL;
+
+			} else {
+				arvoreB filho;
+				lerPagina(rrnFilho, &filho);
+				filho_dir = insere(&filho, info, h, info_retorno);
+			}
+			if (*h) //Se true deve inserir a info_retorno no nó.
+			{
+				if (raiz->num_chaves < MAX_CHAVES) //Tem espaço na página
+				{
+					if (filho_dir == NULL) {
+						insere_chave(raiz, *info_retorno, NIL);
+					} else {
+						insere_chave(raiz, *info_retorno, filho_dir->rrn);
+					}
+
+					*h = 0;
+				} else { //Overflow. Precisa subdividir
+
+					temp = (arvoreB *) malloc(sizeof(arvoreB));
+					inicializaPagina(temp);
+
+					//elemento mediano que vai subir para o pai
+					info_mediano = raiz->aluno[MIN_OCUP];
+
+					//insere metade do nó raiz no temp (efetua subdivisão)
+					//temp->filhos[0] = raiz->filhos[MIN_OCUP + 1];
+					temp->indexFilhos[0] = raiz->indexFilhos[MIN_OCUP + 1];
+					for (i = MIN_OCUP + 1; i < MAX_CHAVES; i++) {
+						//insere_chave(temp, raiz->aluno[i], raiz->filhos[i + 1]);
+						insere_chave(temp, raiz->aluno[i], raiz->indexFilhos[i
+								+ 1]);
+					}
+
+					long rrnFilhoDir = obtemNewIndexPagina();
+					temp->rrn = rrnFilhoDir;
+					escreverPagina(rrnFilhoDir, temp);
+
+					//atualiza nó raiz.
+					for (i = MIN_OCUP; i < MAX_CHAVES; i++) {
+						raiz->aluno[i].ra = NIL;
+						raiz->aluno[i].index = NIL;
+						//raiz->filhos[i + 1] = NULL;
+						raiz->indexFilhos[i + 1] = NIL;
+					}
+					raiz->num_chaves = MIN_OCUP;
+					escreverPagina(raiz->rrn, raiz);
+
+					long rrn = NIL;
+					if (filho_dir != NULL && filho_dir->num_chaves
+							<= MAX_CHAVES) {
+						filho_dir->rrn = obtemNewIndexPagina();
+						escreverPagina(filho_dir->rrn, filho_dir);
+						rrn = filho_dir->rrn;
+					}
+
+					//Verifica em qual nó será inserida a nova chave
+					if (pos <= MIN_OCUP) {
+						insere_chave(raiz, *info_retorno, rrn);
+					} else {
+						insere_chave(temp, *info_retorno, rrn);
+					}
+
+					//retorna o mediano para inserí-lo no nó pai e o temp como filho direito do mediano.
+					*info_retorno = info_mediano;
+
+					escreverPagina(rrnFilhoDir, temp);
+
+					return (temp);
+				}
+			}
+		}
+	}
+}
+
+arvoreB insere_arvoreB(arvoreB *raiz, TAlunoNode info, long *rrnRoot) {
+	int h;
+	int i;
+	arvoreB *filho_dir, *nova_raiz;
+	TAlunoNode info_retorno;
+
+	filho_dir = insere(raiz, info, &h, &info_retorno);
+	escreverPagina(raiz->rrn, raiz);
+
+	if (h) { //Aumetará a altura da árvore
+
+		nova_raiz = (arvoreB *) malloc(sizeof(arvoreB));
+
+		inicializaPagina(nova_raiz);
+
+		nova_raiz->num_chaves = 1;
+		nova_raiz->aluno[0] = info_retorno;
+		//nova_raiz->filhos[0] = raiz;
+		//nova_raiz->filhos[1] = filho_dir;
+
+		nova_raiz->indexFilhos[0] = *rrnRoot;
+		nova_raiz->indexFilhos[1] = filho_dir->rrn;
+
+		//for (i = 2; i <= MAX_CHAVES; i++)
+		//	nova_raiz->filhos[i] = NULL;
+
+		long rrn = obtemNewIndexPagina();
+		nova_raiz->rrn = rrn;
+		escreverPagina(rrn, nova_raiz);
+		salvaPosicaoRaiz(rrn);
+		*rrnRoot = rrn;
+
+		return (*nova_raiz);
+	} else {
+
+		return (*raiz);
+
+	}
+}
+
+int busca_binaria(arvoreB *no, int info) {
+	int meio, i, f;
+
+	i = 0;
+	f = no->num_chaves - 1;
+
+	while (i <= f) {
+		meio = (i + f) / 2;
+		if (no->aluno[meio].ra == info)
+			return (meio); //Encontrou. Retorna a posíção em que a chave está.
+		else if (no->aluno[meio].ra > info)
+			f = meio - 1;
+		else
+			i = meio + 1;
+	}
+	return (i); //Não encontrou. Retorna a posição do ponteiro para o filho.
+}
+
+int busca(arvoreB *raiz, int info) {
+	arvoreB *no;
+	int pos; //posição retornada pelo busca binária.
+
+	no = raiz;
+	while (no != NULL) {
+		pos = busca_binaria(no, info);
+		if (pos < no->num_chaves && no->aluno[pos].ra == info) {
+			return 1;
+		} else {
+			//no = no->filhos[pos];
+			long rrn = no->indexFilhos[pos];
+			lerPagina(rrn, no);
+		}
+	}
+	return 0;
+}
 
 /**
- * Insere um aluno na B-TREE.
- *
- * @param rrn - Id da pagina onde o registro sera inserido.
- * @param key - Chave a ser inserida
- * @param recordString - Registro na forma de String para tratar duplicidade.
- * @param promo_r_child - Id do registro a ser promovido.
- * @param promo_key - Chave a ser promovida acima.
- * @return True caso haja promoção.
+ * Obtem a posicao da raiz no arquivo.
  */
-boolean insertAlunoBTree(short rrn, TAlunoNode key, char *recordString,
-		short *promo_r_child, TAlunoNode *promo_key) {
+long obtemPosicaoRaiz() {
 
-	debugi("RRN", rrn);
-	debugc("Key", key.ra);
-	if (promo_key != NULL) {
-		debugi("Promo key", promo_key->ra);
-	}
-	debugi("Promo child", *promo_r_child);
+	long root = NIL;
 
-	debug("Pagina corrente");
-	BTPAGE page;
+	fseek(btFile, 0, SEEK_SET);
 
-	debug("Pagina nova caso ocorra split");
-	BTPAGE newpage;
-
-	debug("Valores booleanos de controle");
-	int found, promoted;
-
-	debug("RRN do node promovido");
-	short pos, p_b_rrn;
-
-	debug("Chave do node promovido");
-	TAlunoNode p_b_key;
-
-	debug("Verifica se RRN eh null para fazer promocao");
-	if (rrn == NIL) {
-		debug("Promovendo");
-
-		debug("Setando promo_key");
-		*promo_key = key;
-		*promo_r_child = NIL;
-
-		debug("Retornando registro promovido");
-		return true;
-	}
-
-	btread(rrn, &page);
-	found = search_node(key.ra, &page, &pos);
-	if (found) {
-
-		debugi("Chave duplicada", key.ra);
-
-		debug("Inserindo no arquivo de registros duplicados");
-		FILE *duplicateFile = Fopen(getBTreeDuplicateFileName(), "a+");
-		fprintf(duplicateFile, "%s", recordString);
-
-		debug("Fechando o arquivo de registros duplicados");
-		fclose(duplicateFile);
-
-		return false;
-	}
-
-	promoted = insertAlunoBTree(page.child[pos], key, recordString, &p_b_rrn,
-			&p_b_key);
-
-	if (!promoted) {
-
-		debug("Node nao promovido");
-		return false;
-	}
-
-	if (page.keycount < btOrder) {
-		ins_in_page(p_b_key, p_b_rrn, &page); /* OK to insert key and  */
-		btwrite(rrn, &page); /* pointer in this page. */
-		return false; /* no promotion */
-	} else {
-		split(p_b_key, p_b_rrn, &page, promo_key, promo_r_child, &newpage);
-		btwrite(rrn, &page);
-		btwrite(*promo_r_child, &newpage);
-		return true; /* promotion */
-	}
-}
-
-/* btio.c...
- Contains btree functions that directly involve file i/o:
-
- btopen() -- open file "btree.dat" to hold the btree.
- btclose() -- close "btree.dat"
- getroot() -- get rrn of root node from first two bytes of btree.dat
- putroot() -- put rrn of root node in first two bytes of btree.dat
- create_tree() -- create "btree.dat" and root node
- getpage() -- get next available block in "btree.dat" for a new page
- btread() -- read page number rrn from "btree.dat"
- btwrite() -- write page number rrn to "btree.dat"
- */
-
-int btfd; /* global file descriptor for "btree.dat"  */
-
-boolean btopen() {
-
-	btfd = open(getBTreeIndexFileName(), O_RDWR);
-	return (btfd > 0);
-}
-
-btclose() {
-
-	debug("Fechando b-tree");
-
-	close(btfd);
-
-	debug("b-tree fechado.");
-}
-
-short getroot() {
-	short root;
-	long lseek();
-
-	lseek(btfd, 0L, 0);
-	if (read(btfd, &root, 2) == 0) {
+	if (fread(&root, SIZE_OF_INDEX_ROOT, 1, btFile) != 1) {
 		error("Error: Unable to get root.\007\n");
 	}
 	return (root);
 }
 
-putroot(short root) {
-	lseek(btfd, 0L, 0);
-	write(btfd, &root, 2);
+/**
+ * Salva a posicao da raiz.
+ */
+void salvaPosicaoRaiz(int root) {
+	fseek(btFile, 0, SEEK_SET);
+	fwrite(&root, SIZE_OF_INDEX_ROOT, 1, btFile);
+	fflush(btFile);
 }
 
-short create_tree(TAlunoNode key) {
+int abrirArvore(int new) {
 
-	debug("Criando B-TREE");
+	if (new) {
+		btFile = Fopen(getBTreeIndexFileName(), WRITE_FLAG);
+		fclose(btFile);
+		btFile = Fopen(getBTreeIndexFileName(), "r+b");
 
-	btfd = creat(getBTreeIndexFileName(), PMODE);
+		return false;
 
-	debug("Fechando o arquivo de index");
-	close(btfd);
+	} else {
 
-	debug("Abrindo a B-TREE");
-	btopen();
+		if (fileExists(getBTreeIndexFileName())) {
+			btFile = Fopen(getBTreeIndexFileName(), "r+b");
+			return true;
+		}
 
-	return (create_root(key, NIL, NIL));
+		btFile = Fopen(getBTreeIndexFileName(), "r+b");
+		return false;
+	}
+
+	return true;
 }
 
-short getpage() {
+void fecharArvore() {
+	fflush(btFile);
+	fclose(btFile);
+}
 
-	debug("Obtendo uma nova pagina");
+/**
+ * Cria uma arvore binaria.
+ */
+arvoreB criarArvore(TAlunoNode node, long *rrnRoot) {
 
-	long lseek(), addr;
-	addr = lseek(btfd, 0L, 2) - 2L;
-	short rrn = ((short) addr / PAGESIZE);
+	// debug("Abre o arquivo para a arvore");
+	abrirArvore(1);
 
-	debugi("RRN da pagina", rrn);
+	// debug("Aloca a arvore");
+	arvoreB tree;
+
+	// debug("Inicializa a raiz da arvore");
+	inicializaPagina(&tree);
+
+	// debug("Seta a raiz da arvore");
+	tree.aluno[0] = node;
+	tree.num_chaves++;
+
+	long rrn = obtemNewIndexPagina();
+	tree.rrn = rrn;
+	escreverPagina(rrn, &tree);
+	salvaPosicaoRaiz(rrn);
+
+	*rrnRoot = rrn;
+
+	return tree;
+
+}
+
+long obtemNewIndexPagina() {
+
+	//debug("Obtendo uma nova pagina");
+
+	fseek(btFile, 0, SEEK_END);
+	long addr = ftell(btFile);
+	addr = addr - SIZE_OF_INDEX_ROOT;
+
+	// debugl("Addr", addr);
+
+	if (addr < 0) {
+		addr = 0;
+	}
+
+	long rrn = ((long) addr / ARVORE_SIZE);
+
+	//debugi("RRN da pagina", rrn);
+
 
 	return rrn;
 }
 
-btread(short rrn, BTPAGE *page_ptr) {
+void escreverPagina(long rrn, arvoreB *page) {
 
-	debug("Lendo pagina da B-TREE");
-	debugi("RRN", rrn);
-	long lseek(), addr;
+	debugl("rrn:", rrn);
 
-	addr = (long) rrn * (long) PAGESIZE + 2L;
-	lseek(btfd, addr, 0);
-	ssize_t rst = (read(btfd, page_ptr, PAGESIZE));
+	long addr = (long) (rrn * (long) ARVORE_SIZE) + SIZE_OF_INDEX_ROOT;
+	fseek(btFile, addr, SEEK_SET);
 
-	logPage(page_ptr);
-
-	return rst;
-}
-
-btwrite(short rrn, BTPAGE *page_ptr) {
-	long lseek(), addr;
-	addr = (long) rrn * (long) PAGESIZE + 2L;
-	lseek(btfd, addr, 0);
-	return (write(btfd, page_ptr, PAGESIZE));
-}
-
-void logPage(BTPAGE *page) {
-
-	if (page != NULL) {
-
-		debugi("Quantidade de chaves", page->keycount);
-
-	} else {
-
-		debug("Page NULL");
-
+	if (fwrite(page, ARVORE_SIZE, 1, btFile) != 1) {
+		error("Erro ao gravar o registro no arquivo de dados");
 	}
-
+	fflush(btFile);
 }
 
-/* btutil.c...
- Contains utility functions for btree program:
+void lerPagina(long rrn, arvoreB *page) {
 
- create_root() -- get and initialize root node and insert one key
- pageinit() -- put NOKEY in all "key" slots and NIL in "child" slots
- search_node() -- return YES if key in node, else NO. In either case,
- put key's correct position in pos.
- ins_in_page() -- insert key and right child in page
- split() -- split node by creating new node and moving half of keys to
- new node. Promote middle key and rrn of new node.
- */
+	debugl("rrn: ", rrn);
 
-short create_root(TAlunoNode key, short left, short right) {
-
-	debug("Criando a raiz da B-TREE");
-
-	BTPAGE page;
-	short rrn;
-
-	rrn = getpage();
-	pageinit(&page);
-	page.key[0] = key;
-	page.child[0] = left;
-	page.child[1] = right;
-	page.keycount = 1;
-	btwrite(rrn, &page);
-	putroot(rrn);
-
-	debugi("Retornando RRN: ", rrn);
-	return (rrn);
-}
-
-pageinit(BTPAGE *p_page) /* p_page: pointer to a page  */
-{
-	int j;
-
-	for (j = 0; j < btOrder; j++) {
-		p_page->key[j].index = NIL;
-		p_page->key[j].ra = NIL;
-		p_page->child[j] = NIL;
-	}
-	p_page->child[btOrder] = NIL;
-}
-
-/* pos: position where key is or should be inserted  */
-boolean search_node(int key, BTPAGE *p_page, short *pos) {
-
-	debugi("Key: ", key);
-
-	debug("Posicionando o cursor onde a chave possa estar");
-	int i;
-	for (i = 0; i < p_page->keycount && key > p_page->key[i].ra; i++)
-		;
-
-	debugi("Position: ", i);
-	*pos = i;
-
-	if (*pos < p_page->keycount && key == p_page->key[*pos].ra) {
-		debug("Node encontrado na pagina");
-		return true;
-	} else {
-		debug("Node nao encontrado");
-		return false;
-	}
-}
-
-/**
- * Pesquisa o index de um aluno na B-TREE pelo RA.
- *
- * @param key - Ra a ser pesquisado.
- * @return index da posição do RA no arquivo de dados. Retorna -1 caso não exista.
- */
-int findIndexByKey(int key) {
-
-	debug("Tenta abrir o arquivo de index da b-tree");
-	if (btopen()) {
-
-		debug("Obtem a raiz da arvore");
-		short root = getroot();
-
-		debug("Le a pagina da arvore");
-		BTPAGE page;
-		btread(root, &page);
-		short pos;
-
-		if (search_node(key, &page, &pos)) {
-
-		}
-	}
-
-	debug("Chave nao encontrada");
-	return -1;
-
-}
-
-/**
- * Imprime a arvore de alunos.
- *
- * @param fileOutput arquivo de saida da arvore.
- *
- */
-void printBTreeAluno(char *fileOutput) {
-
-	debug("Tenta abrir o arquivo de index da b-tree");
-	if (btopen()) {
-
-		debug("Obtem a raiz da arvore");
-		short root = getroot();
-
-		debug("Le a pagina da arvore");
-		BTPAGE page;
-		btread(root, &page);
-
-		debug("Abre o arquivo de outputo para escrita");
-		FILE *treeFile = Fopen(fileOutput, WRITE_FLAG);
-
-		fprintf(treeFile, "{\n");
-
-		debug("Imprime a arvore");
-		printPage(page, treeFile);
-
-		fprintf(treeFile, "}\n");
-
-		debug("Fecha o arquivo de output");
-		fclose(treeFile);
-	}
-
-}
-
-/**
- * Imprime uma pagina da B-TREE.
- */
-void printPage(BTPAGE page, FILE *arq) {
-
-	debug("Verifica se eh uma pagina valida");
-	if (page.keycount >= MAXKEYS) {
-		debug("Pagina in valida");
+	if (rrn < 0) {
+		page = NULL;
 		return;
 	}
 
-	boolean isKey = false;
-	fprintf(arq, "\n((size=%i),", page.keycount);
+	debug("Lendo pagina da B-TREE");
+	long addr = (long) (rrn * (long) ARVORE_SIZE) + SIZE_OF_INDEX_ROOT;
+	fseek(btFile, addr, SEEK_SET);
 
-	int keyIndex = 0;
-	int pageIndex = 0;
-
-	debug("Intercala chave e paginas");
-	int i = 0;
-	for (i = 0; i <= (page.keycount * 2) + 1; i++) {
-
-		if (isKey) {
-
-			if (page.key[keyIndex].ra >= 0) {
-
-				if (keyIndex == 0) {
-					fprintf(arq, "[ra=%i, Index=%i]", page.key[keyIndex].ra,
-							page.key[keyIndex].index);
-				} else {
-
-					fprintf(arq, ", [ra=%i, Index=%i]", page.key[keyIndex].ra,
-							page.key[keyIndex].index);
-
-				}
-			}
-
-			keyIndex++;
-		} else {
-
-			BTPAGE tmpPage;
-			if (page.child[pageIndex] >= 0) {
-				btread(page.child[pageIndex], &tmpPage);
-				printPage(tmpPage, arq);
-
-			}
-
-			pageIndex++;
-		}
-
-		isKey = !isKey;
+	if (fread(page, ARVORE_SIZE, 1, btFile) != 1) {
+		error("Erro ao ler registro.");
 	}
-
-	fprintf(arq, ")");
 
 }
 
-ins_in_page(TAlunoNode key, short r_child, BTPAGE *p_page) {
+void inicializaPagina(arvoreB *page) {
+
 	int i;
 
-	for (i = p_page->keycount; key.ra < p_page->key[i - 1].ra && i > 0; i--) {
-		p_page->key[i] = p_page->key[i - 1];
-		p_page->child[i + 1] = p_page->child[i];
+	page->num_chaves = 0;
+	page->rrn = NIL;
+
+	for (i = 0; i < MAX_CHAVES; i++) {
+		page->aluno[i].index = NIL;
+		page->aluno[i].ra = NIL;
 	}
-	p_page->keycount++;
-	p_page->key[i] = key;
-	p_page->child[i + 1] = r_child;
+
+	for (i = 0; i < MAX_FILHOS; i++) {
+		page->indexFilhos[i] = NIL;
+	}
 }
 
-/* split ()
- Arguments:
- key:           key to be inserted
- promo_key:     key to be promoted up from here
- r_child:       child rrn to be inserted
- promo_r_child: rrn to be promoted up from here
- p_oldpage:     pointer to old page structure
- p_newpage:     pointer to new page structure
+/**
+ * Seta o nome do arquivo de dados.
  */
-split(TAlunoNode key, short r_child, BTPAGE *p_oldpage, TAlunoNode *promo_key,
-		short *promo_r_child, BTPAGE *p_newpage) {
-	int i;
-	short mid; /* tells where split is to occur            */
-	TAlunoNode workkeys[btOrder + 1]; /* temporarily holds keys, before split     */
-	short workch[btOrder + 2]; /* temporarily holds children, before split */
-
-	for (i = 0; i < btOrder; i++) { /* move keys and children from  */
-		workkeys[i] = p_oldpage->key[i]; /* old page into work arrays    */
-		workch[i] = p_oldpage->child[i];
-	}
-	workch[i] = p_oldpage->child[i];
-	for (i = btOrder; key.ra < workkeys[i - 1].ra && i > 0; i--) { /* insert new key */
-		workkeys[i] = workkeys[i - 1];
-		workch[i + 1] = workch[i];
-	}
-	workkeys[i] = key;
-	workch[i + 1] = r_child;
-
-	*promo_r_child = getpage(); /* create new page for split,   */
-	pageinit(p_newpage); /* and promote rrn of new page  */
-
-	for (i = 0; i < (btOrder / 2); i++) { /* move first half of keys and  */
-		p_oldpage->key[i] = workkeys[i]; /* children to old page, second */
-		p_oldpage->child[i] = workch[i]; /*  half to new page            */
-		p_newpage->key[i] = workkeys[i + 1 + (btOrder / 2)];
-		p_newpage->child[i] = workch[i + 1 + (btOrder / 2)];
-		p_oldpage->key[i + (btOrder / 2)].ra = NIL; /* mark second half of old  */
-		p_oldpage->key[i + (btOrder / 2)].index = NIL; /* mark second half of old  */
-		p_oldpage->child[i + 1 + (btOrder / 2)] = NIL; /* page as empty            */
-	}
-	p_oldpage->child[(btOrder / 2)] = workch[(btOrder / 2)];
-	p_newpage->child[(btOrder / 2)] = workch[i + 1 + (btOrder / 2)];
-	p_newpage->keycount = btOrder - (btOrder / 2);
-	p_oldpage->keycount = (btOrder / 2);
-	*promo_key = workkeys[(btOrder / 2)]; /* promote middle key */
-}
-
 void setBtreeIndexFileName(char *fileName) {
 	strcpy(btreeIndexFileName, fileName);
 }
 
+/**
+ * Obtem o nome do arquivo de dados.
+ */
 char *getBTreeIndexFileName() {
 
 	debug("Verifica se foi fornecido um nome para o arquivo de index");
@@ -504,10 +440,16 @@ char *getBTreeIndexFileName() {
 
 }
 
+/**
+ * Seta o nome do arquivo de registros duplicados.
+ */
 void setBTreeDuplicateFileName(char *fileName) {
 	strcpy(btreeDuplicateFileName, fileName);
 }
 
+/**
+ * Obtem o nome do arquivo de registros duplicados.
+ */
 char *getBTreeDuplicateFileName() {
 
 	debug("Verifica se foi fornecido um nome para o arquivo de index");
@@ -525,6 +467,9 @@ char *getBTreeDuplicateFileName() {
 
 }
 
+/**
+ * Seta a ordem da arvore.
+ */
 void setOrderTree(int order) {
 	btOrder = order;
 }
