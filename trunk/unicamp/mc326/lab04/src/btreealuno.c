@@ -51,7 +51,7 @@ void printArvore(char *fileName) {
 
 void printPageT(arvoreB node, FILE *descFile) {
 
-	fprintf(descFile, "(");
+	fprintf(descFile, "\n\t(");
 
 	int i = 0;
 	int isChave = 0;
@@ -59,18 +59,11 @@ void printPageT(arvoreB node, FILE *descFile) {
 	for (i = 0; i < (MAX_CHAVES_BT + MAX_FILHOS_BT); i++) {
 		if (isChave) {
 
-			if (i == 0) {
+			fprintf(descFile, "[RA=%i, INDEX=%i], ", node.aluno[chaveIndex].ra,
+					node.aluno[chaveIndex].index);
 
-				fprintf(descFile, "[%i, %i]", node.aluno[chaveIndex].ra,
-						node.aluno[chaveIndex].index);
-
-			} else {
-
-				fprintf(descFile, ",[%i, %i],", node.aluno[chaveIndex].ra,
-						node.aluno[chaveIndex].index);
-
-			}
 			chaveIndex++;
+
 		} else {
 			if (node.indexFilhos[filhosIndex] >= 0) {
 
@@ -78,6 +71,7 @@ void printPageT(arvoreB node, FILE *descFile) {
 				lerPagina(node.indexFilhos[filhosIndex], &child);
 
 				printPageT(child, descFile);
+				fprintf(descFile, ", ");
 
 			}
 			filhosIndex++;
