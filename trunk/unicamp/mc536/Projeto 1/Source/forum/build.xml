@@ -1,0 +1,19 @@
+<project name="Forum" default="clean" basedir=".">
+
+  <property name="app.name"      value="forum"/>
+  <property name="app.merge"    value="${basedir}/merge"/>
+  <property name="app.src"    value="${basedir}/src"/>
+
+  <target name="clean"description="Limpa o ambiente de desenvolvimento">
+    <delete dir="${app.src}"/>
+	<delete dir="${basedir}/target"/>
+	<delete dir="${basedir}/log.roo"/>
+  </target>
+  
+  <target name="prepara-ambiente-des"description="Prepara o ambiente de desenvolvimento">
+	
+	<echo>PREPARANDO AMBIENTE DE DESENVOLVIMENTO</echo>
+  
+  </target>
+
+</project>
