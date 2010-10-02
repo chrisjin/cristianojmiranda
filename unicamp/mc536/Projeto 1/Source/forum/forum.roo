@@ -34,7 +34,7 @@ enum constant --name Normal
 #
 ###################################
 entity --class ~.domain.Pais --testAutomatically
-field string --fieldName nmPais --notNull --sizeMax 30 --class ~.domain.Pais
+field string --fieldName nmPais --notNull --sizeMax 50 --class ~.domain.Pais
 field string --fieldName dsPais --notNull --class ~.domain.Pais
 
 ###################################
@@ -47,7 +47,7 @@ field string --fieldName nmLingua --notNull --sizeMax 30 --class ~.domain.Lingua
 field string --fieldName dsLingua --notNull --sizeMax 100 --class ~.domain.Lingua
 field string --fieldName dsDetalhadaLingua --notNull --class ~.domain.Lingua
 field string --fieldName nmRegiao --notNull --class ~.domain.Lingua
-field reference --fieldName pais --notNull --type ~.domain.Pais --class ~.domain.Lingua
+field reference --fieldName idPais --notNull --type ~.domain.Pais --class ~.domain.Lingua
 
 ###################################
 #
@@ -55,14 +55,17 @@ field reference --fieldName pais --notNull --type ~.domain.Pais --class ~.domain
 #
 ###################################
 entity --class ~.domain.Usuario --testAutomatically
+field string --fieldName nmUsuario --sizeMax 255 --class ~.domain.Usuario
 field string --fieldName dsLogin --notNull --sizeMin 5 --sizeMax 10 --class ~.domain.Usuario
 field string --fieldName dsSenha --notNull --sizeMax 10 --class ~.domain.Usuario
-#field enum --fieldName type --type ~.reference.UsuarioType --notNull --class ~.domain.Usuario
+field enum --fieldName tpUsuario --type ~.reference.UsuarioType --notNull --class ~.domain.Usuario
 field boolean --fieldName flAtivo --notNull --primitive --class ~.domain.Usuario
-field reference --fieldName lingua --notNull --class ~.domain.Usuario --type ~.domain.Lingua
-field string --fieldName email --notNull --class ~.domain.Usuario --sizeMax 100
-field enum --fieldName type --type ~.reference.UsuarioType --notNull --class ~.domain.Usuario
-# COLOCAR INSTITUCIONAL
+field reference --fieldName linguaId --notNull --class ~.domain.Usuario --type ~.domain.Lingua
+field string --fieldName email --notNull --class ~.domain.Usuario --sizeMax 255
+field boolean --fieldName flInstitucional --notNull --primitive --class ~.domain.Usuario
+field string --fieldName nmInstituicao --sizeMax 255 --class ~.domain.Usuario
+
+
 
 ###################################
 #
@@ -71,7 +74,7 @@ field enum --fieldName type --type ~.reference.UsuarioType --notNull --class ~.d
 ###################################
 entity --class ~.domain.TipoDocumento --testAutomatically
 field string --fieldName nmTipoDocumento --notNull --sizeMax 100 --class ~.domain.TipoDocumento
-field string --fieldName dsTipoDocumento --notNull --sizeMax 100 --class ~.domain.TipoDocumento
+field string --fieldName dsTipoDocumento --notNull --sizeMax 255 --class ~.domain.TipoDocumento
 field string --fieldName dsDetalhadoTipoDocumento --notNull --class ~.domain.TipoDocumento
 
 ###################################
@@ -100,14 +103,11 @@ field string --fieldName dsDetalhadoTipoDocumento --notNull --class ~.domain.Tip
 
 
 ###################################
-## CRIAR AUTORES
-###################################
-
-###################################
 # DOCUMENTO
 ###################################
 entity --class ~.domain.Documento --testAutomatically
-field string --fieldName nmDocumento --notNull --sizeMax 100 --class ~.domain.Documento
+field string --fieldName nmDocumento --notNull --sizeMax 255 --class ~.domain.Documento
+field string --fieldName nmArquivo --notNull --sizeMax 255 --class ~.domain.Documento
 field reference --fieldName tipoDocumento --notNull --class ~.domain.Documento --type ~.domain.TipoDocumento
 field string --fieldName documento --notNull --class ~.domain.Documento
 field date --fieldName dtCriacao --notNull --class ~.domain.Documento --type java.util.Date
@@ -116,15 +116,9 @@ field string --fieldName nmAutor --notNull --class ~.domain.Documento
 field string --fieldName dsEmailAutor --sizeMax 100 --class ~.domain.Documento
 field string --fieldName dsDocumento --notNull --sizeMax 2000 --class ~.domain.Documento
 field string --fieldName dsPalavrasChaves --notNull --sizeMax 200 --class ~.domain.Documento
-field reference --fieldName linguaUtilizador --notNull --class ~.domain.Documento --type ~.domain.Lingua
-field reference --fieldName linguaTransito --notNull --class ~.domain.Documento --type ~.domain.Lingua
-field reference --fieldName linguaOficial --notNull --class ~.domain.Documento --type ~.domain.Lingua
-field reference --fieldName usuario --class ~.domain.Documento --type ~.domain.Usuario
-# COLOCAR REFERENCIA PARA O AUTOR
-
-###################################
-## CRIAR REDE DE TRABALHO !!!!!!!!!!!
-###################################
+field reference --fieldName idLinguaDocumento --notNull --class ~.domain.Documento --type ~.domain.Lingua
+field reference --fieldName idUsuarioResponsavel --class ~.domain.Documento --type ~.domain.Usuario --notNull
+field reference --fieldName idUsuarioAutor --class ~.domain.Documento --type ~.domain.Usuario
 
 ###################################
 # TRADUCAO DOCUMENTO
@@ -138,43 +132,6 @@ field string --fieldName arquivo --class ~.domain.TraducaoDocumento
 field reference --fieldName usuario --class ~.domain.TraducaoDocumento --type ~.domain.Usuario
 field string --fieldName nmAutor --class ~.domain.TraducaoDocumento
 field string --fieldName dsEmainAutor --class ~.domain.TraducaoDocumento
-
-###################################
-# TOPICO DO FORUM
-###################################
-entity --class ~.domain.Topico --testAutomatically
-field string nmTopico --notNull --sizeMin 10 --sizeMax 200 --class ~.domain.Topico
-field string dsTopico --notNull --class ~.domain.Topico
-field date dtInicio --notNull --class ~.domain.Topico --type java.util.Date
-field reference --fieldName usuario --class ~.domain.Topico --type ~.domain.Usuario
-field boolean --fieldName flAtivo --notNull --primitive --class ~.domain.Topico
-
-###################################
-# POST DO TOPICO
-###################################
-entity --class ~.domain.TopicoPost --testAutomatically
-field string --fieldName dsPost --notNull --sizeMin 10 --sizeMax 1000 --class ~.domain.TopicoPost
-field date --fieldName dtPost --notNull --class ~.domain.TopicoPost --type java.util.Date
-field reference --fieldName usuario --class ~.domain.TopicoPost --type ~.domain.Usuario
-field string --fieldName arquivo --class ~.domain.TopicoPost
-field reference --fieldName documento --class ~.domain.TopicoPost --type ~.domain.Documento
-field reference --fieldName topico --class ~.domain.TopicoPost --type ~.domain.Topico
-
-###################################
-# GLOSSARIO
-###################################
-entity --class ~.domain.Glossario --testAutomatically
-field string --fieldName nmPalavra --notNull --sizeMax 200 --class ~.domain.Glossario
-field string --fieldName dsPalavra --notNull --sizeMax 200 --class ~.domain.Glossario
-
-###################################
-# GLOSSARIO TRADUCAO
-###################################
-entity --class ~.domain.GlossarioTraducao --testAutomatically
-field reference --fieldName glossario --notNull  --class ~.domain.GlossarioTraducao --type ~.domain.Glossario
-field string --fieldName dsTraducao --notNull --class ~.domain.GlossarioTraducao
-field reference --fieldName lingua --notNull  --class ~.domain.GlossarioTraducao --type ~.domain.Lingua
-
 
 ###################################
 # Criando os controllers
