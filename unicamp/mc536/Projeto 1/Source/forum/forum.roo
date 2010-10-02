@@ -3,7 +3,7 @@
 # DECLARACAO DO PROJETO
 #
 ##############################
-project --topLevelPackage br.com.unicamp.mc536.2s2010a.forum
+project --topLevelPackage br.unicamp.mc536.t2010s2a.forum
 
 #############################################
 #
@@ -12,7 +12,13 @@ project --topLevelPackage br.com.unicamp.mc536.2s2010a.forum
 #############################################
 persistence setup --provider HIBERNATE --database MYSQL
 
-###################################
+###########################################
+#                                         
+# 	Entidades do sistema                  
+#                                         
+###########################################
+
+####################################
 #
 # Constante para Tipo de Usuario
 #
@@ -21,12 +27,6 @@ enum type --class ~.reference.UsuarioType
 enum constant --name Administrador
 enum constant --name Moderador
 enum constant --name Normal
-
-###########################################
-#                                         #
-# 	Entidades do sistema                  #
-#                                         #
-###########################################
 
 ###################################
 #
@@ -57,10 +57,11 @@ field reference --fieldName pais --notNull --type ~.domain.Pais --class ~.domain
 entity --class ~.domain.Usuario --testAutomatically
 field string --fieldName dsLogin --notNull --sizeMin 5 --sizeMax 10 --class ~.domain.Usuario
 field string --fieldName dsSenha --notNull --sizeMax 10 --class ~.domain.Usuario
-field enum --fieldName type --type ~.reference.UsuarioType --notNull --class ~.domain.Usuario
+#field enum --fieldName type --type ~.reference.UsuarioType --notNull --class ~.domain.Usuario
 field boolean --fieldName flAtivo --notNull --primitive --class ~.domain.Usuario
 field reference --fieldName lingua --notNull --class ~.domain.Usuario --type ~.domain.Lingua
 field string --fieldName email --notNull --class ~.domain.Usuario --sizeMax 100
+field enum --fieldName type --type ~.reference.UsuarioType --notNull --class ~.domain.Usuario
 # COLOCAR INSTITUCIONAL
 
 ###################################
@@ -190,8 +191,6 @@ web mvc install language --code es
 # Montando suite de testes
 ###################################
 selenium test --controller ~.web.PaisController
-selenium test --controller ~.web.UsuarioController
-selenium test --controller ~.web.LinguaController
 
 ###################################
 # Configurando seguranca
@@ -207,9 +206,8 @@ logging setup --level DEBUG
 # Configurando o banco de dados
 ###################################
 database properties set --key database.username --value root
-database properties set --key database.password --value ******
+database properties set --key database.password --value **********
 database properties set --key database.url --value jdbc:mysql://localhost:3306/forum
 
 perform eclipse
 perform package
-perform install

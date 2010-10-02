@@ -1,18 +1,34 @@
-<project name="Forum" default="clean" basedir=".">
+<project name="Forum" default="prepara-ambiente-des" basedir=".">
 
-  <property name="app.name"      value="forum"/>
-  <property name="app.merge"    value="${basedir}/merge"/>
-  <property name="app.src"    value="${basedir}/src"/>
+  <property name="app.name" value="forum"/>
+  <property name="app.merge" value="${basedir}/merge"/>
+  <property name="app.src" value="${basedir}/src"/>
 
-  <target name="clean"description="Limpa o ambiente de desenvolvimento">
-    <delete dir="${app.src}"/>
-	<delete dir="${basedir}/target"/>
-	<delete dir="${basedir}/log.roo"/>
+  <target name="clean" description="Limpa o ambiente de desenvolvimento">
+  
+	<echo>DELETANDO ARQUIVOS GERADOS</echo>
+  
+    <delete dir="${app.src}" failonerror="false"/>
+	<delete dir="${basedir}/target"  failonerror="false"/>
+	<delete dir="${basedir}/.settings"  failonerror="false"/>
+	<delete file="${basedir}/log.roo"  failonerror="false"/>
+	<delete file="${basedir}/pom.xml"  failonerror="false"/>
+	<delete file="${basedir}/.classpath"  failonerror="false"/>
+	<delete file="${basedir}/.project"  failonerror="false"/>
   </target>
   
-  <target name="prepara-ambiente-des"description="Prepara o ambiente de desenvolvimento">
+  <target name="prepara-ambiente-des" description="Prepara o ambiente de desenvolvimento" depends="clean">
 	
 	<echo>PREPARANDO AMBIENTE DE DESENVOLVIMENTO</echo>
+	
+	<exec executable="cmd">
+		<arg value="/c"/>
+		<arg value="roo script --file forum.roo"/>
+	</exec>
+	
+	<copy todir="${app.src}" overwrite="true">
+		<fileset dir="${app.merge}"/>
+	</copy>
   
   </target>
 
