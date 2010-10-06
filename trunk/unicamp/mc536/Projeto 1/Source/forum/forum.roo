@@ -28,6 +28,17 @@ enum constant --name Administrador
 enum constant --name Moderador
 enum constant --name Normal
 
+####################################
+#
+# Constante para Tipo de Referencia de documento
+#
+###################################
+enum type --class ~.reference.ReferenciaDocumento
+enum constant --name Resposta
+enum constant --name Complemento
+enum constant --name Correcao
+
+
 ###################################
 #
 # PAIS
@@ -39,15 +50,16 @@ field string --fieldName dsPais --notNull --class ~.domain.Pais
 
 ###################################
 #
-# LINGUAS
+# Idioma
 #
 ###################################
-entity --class ~.domain.Lingua --testAutomatically
-field string --fieldName nmLingua --notNull --sizeMax 30 --class ~.domain.Lingua
-field string --fieldName dsLingua --notNull --sizeMax 100 --class ~.domain.Lingua
-field string --fieldName dsDetalhadaLingua --notNull --class ~.domain.Lingua
-field string --fieldName nmRegiao --notNull --class ~.domain.Lingua
-field reference --fieldName idPais --notNull --type ~.domain.Pais --class ~.domain.Lingua
+entity --class ~.domain.Idioma --testAutomatically
+field string --fieldName nmIdioma --notNull --sizeMax 50 --class ~.domain.Idioma
+field string --fieldName sgIdioma --notNull --sizeMin 2 --sizeMax 4 --class ~.domain.Idioma
+field string --fieldName dsIdioma --notNull --sizeMax 255 --class ~.domain.Idioma
+field string --fieldName dsDetalhadaIdioma --notNull --class ~.domain.Idioma
+field string --fieldName nmRegiao --notNull --sizeMax 255 --class ~.domain.Idioma
+field reference --fieldName idPais --notNull --type ~.domain.Pais --class ~.domain.Idioma
 
 ###################################
 #
@@ -55,16 +67,37 @@ field reference --fieldName idPais --notNull --type ~.domain.Pais --class ~.doma
 #
 ###################################
 entity --class ~.domain.Usuario --testAutomatically
-field string --fieldName nmUsuario --sizeMax 255 --class ~.domain.Usuario
+field string --fieldName nmUsuario --sizeMax 255 --class ~.domain.Usuario --notNull
 field string --fieldName dsLogin --notNull --sizeMin 5 --sizeMax 10 --class ~.domain.Usuario
 field string --fieldName dsSenha --notNull --sizeMax 10 --class ~.domain.Usuario
-field enum --fieldName tpUsuario --type ~.reference.UsuarioType --notNull --class ~.domain.Usuario
+field enum --fieldName tpUsuario --type ~.reference.UsuarioType --notNull --class ~.domain.Usuario --notNull
 field boolean --fieldName flAtivo --notNull --primitive --class ~.domain.Usuario
-field reference --fieldName linguaId --notNull --class ~.domain.Usuario --type ~.domain.Lingua
+field reference --fieldName idIdioma --notNull --class ~.domain.Usuario --type ~.domain.Idioma
 field string --fieldName email --notNull --class ~.domain.Usuario --sizeMax 255
 field boolean --fieldName flInstitucional --notNull --primitive --class ~.domain.Usuario
 field string --fieldName nmInstituicao --sizeMax 255 --class ~.domain.Usuario
+field date --fieldName dtInclusao --notNull --class ~.domain.Usuario --type java.util.Date
 
+###################################
+#
+# Rede de trabalho
+#
+###################################
+entity --class ~.domain.Usuario --testAutomatically
+field string --fieldName nmRedetrabalho --sizeMax 255 --notNull --class ~.domain.RedeTrabalho
+field string --fieldName dsRedetrabalho --sizeMax 255 --notNull --class ~.domain.RedeTrabalho
+field string --fieldName dsDetalhadoRedetrabalho --class ~.domain.RedeTrabalho
+field reference idUsuario --notNull --class ~.domain.RedeTrabalho --type ~.domain.Usuario
+field date --fieldName dtInclusao --notNull --class ~.domain.RedeTrabalho --type java.util.Date
+
+###################################
+#
+# Rede de trabalho Usuario
+#
+###################################
+entity --class ~.domain.RedeTrabalhoUsuario --testAutomatically
+field reference idRedeTrabalho --notNull --class ~.domain.RedeTrabalhoUsuario --type ~.domain.RedeTrabalho
+field reference --fieldName idUsuario --notNull --class ~.domain.RedeTrabalho --type ~.domain.Usuario
 
 
 ###################################
@@ -73,34 +106,20 @@ field string --fieldName nmInstituicao --sizeMax 255 --class ~.domain.Usuario
 #
 ###################################
 entity --class ~.domain.TipoDocumento --testAutomatically
-field string --fieldName nmTipoDocumento --notNull --sizeMax 100 --class ~.domain.TipoDocumento
+field string --fieldName nmTipoDocumento --notNull --sizeMax 50 --class ~.domain.TipoDocumento
 field string --fieldName dsTipoDocumento --notNull --sizeMax 255 --class ~.domain.TipoDocumento
 field string --fieldName dsDetalhadoTipoDocumento --notNull --class ~.domain.TipoDocumento
-
-###################################
-#
-# CRIAR ENTIDADE USUARIO DOCUMENTO INTERESSE
-#
-###################################
-
-###################################
-#
-# CRIAR COMENTARIO DOCUMENTO
-#
-###################################
-
-###################################
-#
-# CRIAR A RELAÇÃO DOCUMENTO PALAVRA CHAVE
-#
-###################################
 
 ###################################
 #
 # CRIAR PROGRAMAS (PROGRAMAS EM PROL DO MULTIINGUISMO)
 #
 ###################################
-
+entity --class ~.domain.Programa --testAutomatically
+field string --fieldName nmPrograma --notNull --sizeMax 255 --class ~.domain.Programa
+field string --fieldName dsPrograma --notNull --sizeMax 255 --class ~.domain.Programa
+field string --fieldName dsDetalhadaPrograma --class ~.domain.Programa
+field reference --fieldName idUsuario --notNull --class ~.domain.Programa --type ~.domain.Usuario
 
 ###################################
 # DOCUMENTO
@@ -116,22 +135,37 @@ field string --fieldName nmAutor --notNull --class ~.domain.Documento
 field string --fieldName dsEmailAutor --sizeMax 100 --class ~.domain.Documento
 field string --fieldName dsDocumento --notNull --sizeMax 2000 --class ~.domain.Documento
 field string --fieldName dsPalavrasChaves --notNull --sizeMax 200 --class ~.domain.Documento
-field reference --fieldName idLinguaDocumento --notNull --class ~.domain.Documento --type ~.domain.Lingua
+field reference --fieldName idIdiomaDocumento --notNull --class ~.domain.Documento --type ~.domain.Idioma
 field reference --fieldName idUsuarioResponsavel --class ~.domain.Documento --type ~.domain.Usuario --notNull
 field reference --fieldName idUsuarioAutor --class ~.domain.Documento --type ~.domain.Usuario
 
 ###################################
-# TRADUCAO DOCUMENTO
+#
+# CRIAR ENTIDADE USUARIO DOCUMENTO INTERESSE
+#
 ###################################
-entity --class ~.domain.TraducaoDocumento --testAutomatically
-field reference --fieldName documento --notNull --class ~.domain.TraducaoDocumento --type ~.domain.Documento
-field reference --fieldName lingua --notNull --class ~.domain.TraducaoDocumento --type ~.domain.Lingua
-field date --fieldName dtInclusao --notNull --class ~.domain.TraducaoDocumento --type java.util.Date
-field string --fieldName dsTraducao --notNull --class ~.domain.TraducaoDocumento
-field string --fieldName arquivo --class ~.domain.TraducaoDocumento
-field reference --fieldName usuario --class ~.domain.TraducaoDocumento --type ~.domain.Usuario
-field string --fieldName nmAutor --class ~.domain.TraducaoDocumento
-field string --fieldName dsEmainAutor --class ~.domain.TraducaoDocumento
+entity --class ~.domain.UsuarioDocumento --testAutomatically
+field reference --fieldName idUsuario --class ~.domain.UsuarioDocumento --type ~.domain.Usuario
+field reference --fieldName idDocumento --class ~.domain.UsuarioDocumento --type ~.domain.Documento
+field date --fieldName dtInclusao --notNull --class ~.domain.UsuarioDocumento --type java.util.Date
+
+
+###################################
+#
+# CRIAR COMENTARIO DOCUMENTO
+#
+###################################
+entity --class ~.domain.ComentarioDocumento --testAutomatically
+field reference --fieldName idUsuario --class ~.domain.ComentarioDocumento --type ~.domain.Usuario
+field reference --fieldName idDocumento --class ~.domain.ComentarioDocumento --type ~.domain.Documento
+field date --fieldName dtInclusao --notNull --class ~.domain.ComentarioDocumento --type java.util.Date
+field reference --fieldName idComentario --class ~.domain.ComentarioDocumento --type ~.domain.ComentarioDocumento
+
+###################################
+#
+# CRIAR A RELAÇÃO DOCUMENTO PALAVRA CHAVE
+#
+###################################
 
 ###################################
 # Criando os controllers
