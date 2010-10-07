@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:menu="urn:jsptagdir:/WEB-INF/tags/menu" id="menu" version="2.0">
+	<jsp:output omit-xml-declaration="yes"/>
+
+<menu:menu id="_menu" z="nZaf43BjUg1iM0v70HJVEsXDopc=">
+        <menu:category id="c_usuarioidioma" z="61bAIy/acrLD2IkRAh9l9/iS6RY=">
+            <menu:item id="i_usuarioidioma_new" messageCode="global_menu_new" url="/usuarioidiomas?form" z="Zm1x4etyKeycdMVZvWZeX1U/2vM="/>
+        <menu:item id="i_usuarioidioma_list" messageCode="global_menu_list" url="/usuarioidiomas?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="kvIog6/TAVmy/5TZvm3bGUdPiMQ="/>
+        </menu:category>
+    <menu:category id="c_programa" z="e65MaTikDr7V6229P/JgeC+FEeg=">
+            <menu:item id="i_programa_new" messageCode="global_menu_new" url="/programas?form" z="zRzqCaKZjP97jve6g8I6RYrdMG8="/>
+        <menu:item id="i_programa_list" messageCode="global_menu_list" url="/programas?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="KvG65pod8lZU8bVDkOzrzBTOiNI="/>
+        </menu:category>
+    <menu:category id="c_pais" z="m54q1eFKeKDwYcDvxEntiIDT43U=">
+            <menu:item id="i_pais_new" messageCode="global_menu_new" url="/paises?form" z="bxvSTbzPY9x835FOZxoi93U9Jq8="/>
+        <menu:item id="i_pais_list" messageCode="global_menu_list" url="/paises?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="52WvDzJTr++JNVsAehohPD0MHtw="/>
+        </menu:category>
+    <menu:category id="c_palavradocumento" z="Azwt8sKtV/mXpCOl1Mt8nc4N2QU=">
+            <menu:item id="i_palavradocumento_new" messageCode="global_menu_new" url="/palavradocumentoes?form" z="Mrws62HkPecA0WLHCkUvaIwlDAA="/>
+        <menu:item id="i_palavradocumento_list" messageCode="global_menu_list" url="/palavradocumentoes?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="mg+QOt6wzKej2Ydznb3cav9kHRA="/>
+        </menu:category>
+    <menu:category id="c_documentoreferenciapais" z="gIx3r7Catvl3U60dckvhLdEe1/o=">
+            <menu:item id="i_documentoreferenciapais_new" messageCode="global_menu_new" url="/documentoreferenciapaises?form" z="kUe5kCyV27W9oFjgLJQaMhrA1eg="/>
+        <menu:item id="i_documentoreferenciapais_list" messageCode="global_menu_list" url="/documentoreferenciapaises?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="bSIc1d0ensxlNfCMyDT0wPmzFZs="/>
+        </menu:category>
+    <menu:category id="c_idioma" z="zmDQkPZ3g+VAA1WQa5gPDOaEGRQ=">
+            <menu:item id="i_idioma_new" messageCode="global_menu_new" url="/idiomas?form" z="tUUGdRmzF4QWA5yJ8cH71WbUue0="/>
+        <menu:item id="i_idioma_list" messageCode="global_menu_list" url="/idiomas?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="q9hU8nuv5Ke19rQ5gI9Sy9FAXQw="/>
+        </menu:category>
+    <menu:category id="c_usuariodocumento" z="IRCUfx9Ck/DfqavOeopQvS9EcRE=">
+            <menu:item id="i_usuariodocumento_new" messageCode="global_menu_new" url="/usuariodocumentoes?form" z="65R+OOb6JL27zgYVsOcfeqDcjJo="/>
+        <menu:item id="i_usuariodocumento_list" messageCode="global_menu_list" url="/usuariodocumentoes?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="NdU7+gEADIrw/Q7Nb1g+F8RVRYE="/>
+        </menu:category>
+    <menu:category id="c_tipodocumento" z="B/kNPkv8emZ0WxUq/7ZQZp9WYGc=">
+            <menu:item id="i_tipodocumento_new" messageCode="global_menu_new" url="/tipodocumentoes?form" z="qoV+9Fi91uK10C0sSwIa45Y+g1o="/>
+        <menu:item id="i_tipodocumento_list" messageCode="global_menu_list" url="/tipodocumentoes?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="qY/KqjrQXysejiUVltfKfu0wTFI="/>
+        </menu:category>
+    <menu:category id="c_programausuario" z="XW0gVcxFZiZN8t4OczhqFJyLugU=">
+            <menu:item id="i_programausuario_new" messageCode="global_menu_new" url="/programausuarios?form" z="i29JPuPhlmunuZeOJobaRclRubs="/>
+        <menu:item id="i_programausuario_list" messageCode="global_menu_list" url="/programausuarios?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="iSfRX6UjnL+b6cy6q4c+aqYK2zo="/>
+        </menu:category>
+    <menu:category id="c_documentovinculo" z="6P+9Qb+bQ/UvxQrMTeAeUX3thLI=">
+            <menu:item id="i_documentovinculo_new" messageCode="global_menu_new" url="/documentovinculoes?form" z="kcTrSUiS1XR3lZr9HhdlAW8wqtg="/>
+        <menu:item id="i_documentovinculo_list" messageCode="global_menu_list" url="/documentovinculoes?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="XTKSnu/GyHstZFbDCqRLdLhL9NE="/>
+        </menu:category>
+    <menu:category id="c_comentariodocumento" z="NxaErRsnRyNxagwAXiKhmM+dA1E=">
+            <menu:item id="i_comentariodocumento_new" messageCode="global_menu_new" url="/comentariodocumentoes?form" z="wQedF0zq5ODnAWnOkC91jyPRdA4="/>
+        <menu:item id="i_comentariodocumento_list" messageCode="global_menu_list" url="/comentariodocumentoes?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="02XVmbFFM7mKTPH/FoVXtMftFmA="/>
+        </menu:category>
+    <menu:category id="c_redetrabalhousuario" z="v538qPcadXWJHLKnUvcamjCm1ag=">
+            <menu:item id="i_redetrabalhousuario_new" messageCode="global_menu_new" url="/redetrabalhousuarios?form" z="x+cpCvOJ7lnKhY6PAdjaPXxuUNg="/>
+        <menu:item id="i_redetrabalhousuario_list" messageCode="global_menu_list" url="/redetrabalhousuarios?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="Whz/6ZEMedb4HQbrJLuyni6sGy4="/>
+        </menu:category>
+    <menu:category id="c_usuario" z="g6oG0656PcsmmvUYeBtpgiQROck=">
+            <menu:item id="i_usuario_new" messageCode="global_menu_new" url="/usuarios?form" z="RG1gCsiZQjg1HLDzXbHKht6yDkw="/>
+        <menu:item id="i_usuario_list" messageCode="global_menu_list" url="/usuarios?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="ThcY5YsbDVOJcY47uy/G5qvNt+M="/>
+        </menu:category>
+    <menu:category id="c_redetrabalho" z="8GrCVPf2nzwAL5TQhLREWmT54/E=">
+            <menu:item id="i_redetrabalho_new" messageCode="global_menu_new" url="/redetrabalhoes?form" z="5Z1IHmpQ6LCgPvo4KdMlIitR0lI="/>
+        <menu:item id="i_redetrabalho_list" messageCode="global_menu_list" url="/redetrabalhoes?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="9XzgbrPIq8pD1sWI0O1gfpyc2WY="/>
+        </menu:category>
+    <menu:category id="c_documento" z="WzVzh/QzBO6in/6YD8UtZh/ZC6Y=">
+            <menu:item id="i_documento_new" messageCode="global_menu_new" url="/documentoes?form" z="8eYDt0wXoyFKNSCci17dgWWheG8="/>
+        <menu:item id="i_documento_list" messageCode="global_menu_list" url="/documentoes?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="zToHqBst+6nBF57DcvpDi8yWm1I="/>
+        </menu:category>
+    <menu:category id="c_descricaodocumento" z="/V4JwLkP2i2e8FWKMRiX8Fr5y4w=">
+            <menu:item id="i_descricaodocumento_new" messageCode="global_menu_new" url="/descricaodocumentoes?form" z="AcVB2+ZchgGbOVLBey2g81GOQTc="/>
+        <menu:item id="i_descricaodocumento_list" messageCode="global_menu_list" url="/descricaodocumentoes?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="f01b31Jd11JNhIfFIRdWqa4EHHc="/>
+        </menu:category>
+    <menu:category id="c_seleniumtests" z="PPLMd2yNB6/LSbjIWogAacRPU+Q=">
+            <menu:item id="si_seleniumtests_test" messageCode="selenium_menu_test_suite" url="/resources/selenium/test-suite.xhtml" z="wwunW/IPDcunN97u41MvMJZQ2to="/>
+        </menu:category>
+    </menu:menu>
+</div>

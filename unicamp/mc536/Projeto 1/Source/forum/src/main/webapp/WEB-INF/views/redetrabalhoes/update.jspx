@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalho" modelAttribute="redeTrabalho" path="/redetrabalhoes" z="BUpPhOVoJONPfONzbeOWb8bdNYE=">
+        <field:textarea field="nmRedetrabalho" id="c_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalho_nmRedetrabalho" required="true" z="qLkL4i8oesODflm8r/2X4oEsh8o="/>
+        <field:textarea field="dsRedetrabalho" id="c_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalho_dsRedetrabalho" required="true" z="NbzHxJ1LqhTnahxDoMoaOcaV1UA="/>
+        <field:input field="dsDetalhadoRedetrabalho" id="c_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalho_dsDetalhadoRedetrabalho" z="sYIKxtvDm0NZtDDzbjZXXBYqdxA="/>
+        <field:select field="idUsuario" id="c_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalho_idUsuario" itemValue="id" items="${usuarios}" path="/usuarios" required="true" z="Szssko74WuoJQQW2Pr8T03iKgEA="/>
+        <field:datetime dateTimePattern="${redeTrabalho_dtinclusao_date_format}" field="dtInclusao" id="c_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalho_dtInclusao" required="true" z="OJcSZ0fRAW7nEHV2QuXKTtwBzjk="/>
+    </form:update>
+</div>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalho" items="${redetrabalhoes}" z="bSEJRmXFnCsN+q8yb8RB2faq5HA=">
+        <table:table data="${redetrabalhoes}" id="l_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalho" path="/redetrabalhoes" z="/knUPZMujnPIwCl6hx+DDXd3Ci4=">
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalho_nmRedetrabalho" property="nmRedetrabalho" z="CJEVo6wwPD0FpEA6tlr8deXhttE="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalho_dsRedetrabalho" property="dsRedetrabalho" z="ply/Ny8G6o4HUdB+KuWVg9wl/+U="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalho_dsDetalhadoRedetrabalho" property="dsDetalhadoRedetrabalho" z="x2HFm2a8yzN9qFVh0Oe+v5UUz2c="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalho_idUsuario" property="idUsuario" z="QWKi0Fh+iLKDww+fGo9KRtzPQI8="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalho_dtInclusao" property="dtInclusao" z="Axh5H4txbfYbI64PcjtzWjDaMSk="/>
+        </table:table>
+    </page:list>
+</div>

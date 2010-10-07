@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_mc536_t2010s2a_forum_domain_DocumentoVinculo" items="${documentovinculoes}" z="QE/tVaw8PGYlzfoPSeZgxNKAZec=">
+        <table:table data="${documentovinculoes}" id="l_br_unicamp_mc536_t2010s2a_forum_domain_DocumentoVinculo" path="/documentovinculoes" z="yZ/iuuYqbdr8MHw2HfVXJ/u2IRo=">
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_DocumentoVinculo_idDocumento" property="idDocumento" z="u0vI+FcCVr4+ycu3inNh/uUHKVU="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_DocumentoVinculo_idUsuario" property="idUsuario" z="sqgrCEO6jQ1QdcsnHW9AxcxdnlE="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_DocumentoVinculo_dtInclusao" property="dtInclusao" z="W9qvZb+LRWWdeKzAV/+lASDO1Uo="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_DocumentoVinculo_tpReferenciaDocumento" property="tpReferenciaDocumento" z="K7ZrhptpABCMFYHiWQfpajaYUIU="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_DocumentoVinculo_dsVinculo" property="dsVinculo" z="mY9xMwtCopWVoj5wZq3RrjqEmK4="/>
+        </table:table>
+    </page:list>
+</div>

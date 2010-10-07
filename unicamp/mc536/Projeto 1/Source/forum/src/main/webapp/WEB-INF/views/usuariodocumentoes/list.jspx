@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_mc536_t2010s2a_forum_domain_UsuarioDocumento" items="${usuariodocumentoes}" z="DblOUllZSY7jC9oQNpin81CcY0g=">
+        <table:table data="${usuariodocumentoes}" id="l_br_unicamp_mc536_t2010s2a_forum_domain_UsuarioDocumento" path="/usuariodocumentoes" z="64KP8n1UMCh+hb5+F0NqfaZVmlQ=">
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_UsuarioDocumento_idUsuario" property="idUsuario" z="Trz9HDC508gBRnZMtcTkvQiFLYo="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_UsuarioDocumento_idDocumento" property="idDocumento" z="1kPcn8G2+/qLrC6jJEMgBCVAzCM="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_UsuarioDocumento_dtInclusao" property="dtInclusao" z="UwMJDayNFEQ3tbyRLViV386uzYY="/>
+        </table:table>
+    </page:list>
+</div>

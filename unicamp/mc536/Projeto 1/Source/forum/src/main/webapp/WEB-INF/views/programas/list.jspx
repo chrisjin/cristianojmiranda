@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_mc536_t2010s2a_forum_domain_Programa" items="${programas}" z="6E51UYqnfN8YW2fZyyrp0KpkZkw=">
+        <table:table data="${programas}" id="l_br_unicamp_mc536_t2010s2a_forum_domain_Programa" path="/programas" z="vkjEtbO7y+41boMz7qWQQXOmUdQ=">
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Programa_nmPrograma" property="nmPrograma" z="eAXaqiJWBbgHt3+XdyNOQGfaSxY="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Programa_dsPrograma" property="dsPrograma" z="cJmICNZiZLNs++jrBpEsQ6VKk3M="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Programa_dsDetalhadaPrograma" property="dsDetalhadaPrograma" z="Bkor+EkHk0KHizMcLJmI8+/sDww="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Programa_idUsuario" property="idUsuario" z="hgKF+xaZxbCwk5r2vn7jXc8pOu0="/>
+        </table:table>
+    </page:list>
+</div>
