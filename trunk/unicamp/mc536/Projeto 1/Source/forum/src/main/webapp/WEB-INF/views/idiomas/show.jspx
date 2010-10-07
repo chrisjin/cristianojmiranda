@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_br_unicamp_mc536_t2010s2a_forum_domain_Idioma" object="${idioma}" path="/idiomas" z="ldNwBUbxYJE8Zyzh8ajxNorUC0I=">
+        <field:display field="nmIdioma" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Idioma_nmIdioma" object="${idioma}" z="Nxc0ulBuClMGId84uA8jsLgsg1k="/>
+        <field:display field="sgIdioma" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Idioma_sgIdioma" object="${idioma}" z="PMmAfpa5dno4UcdbIWCe/W0ZBF4="/>
+        <field:display field="dsIdioma" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Idioma_dsIdioma" object="${idioma}" z="wV6k06DtluC37Oj+gTORCbEepXI="/>
+        <field:display field="dsDetalhadaIdioma" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Idioma_dsDetalhadaIdioma" object="${idioma}" z="Bmlv0eKAOl7QfFyxvTJIHtZ1ELQ="/>
+        <field:display field="nmRegiao" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Idioma_nmRegiao" object="${idioma}" z="8FGojbvS+8fUWWybAk4Hg4CG23o="/>
+        <field:display field="idPais" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Idioma_idPais" object="${idioma}" z="PP4rIlylTYuVSvp7vaT5id5cZ1o="/>
+    </page:show>
+</div>

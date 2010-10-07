@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_br_unicamp_mc536_t2010s2a_forum_domain_DescricaoDocumento" object="${descricaodocumento}" path="/descricaodocumentoes" z="8p//ntDSNIWUq+yCkLhuNGGCJ3g=">
+        <field:display field="idDocumento" id="s_br_unicamp_mc536_t2010s2a_forum_domain_DescricaoDocumento_idDocumento" object="${descricaodocumento}" z="awdcL787csXNan+W5r+Q1t1kPvE="/>
+        <field:display field="dsDocumento" id="s_br_unicamp_mc536_t2010s2a_forum_domain_DescricaoDocumento_dsDocumento" object="${descricaodocumento}" z="IYz3/ZrDMsNORqYrzTKJh486SqA="/>
+        <field:display field="idIdiomaDocumento" id="s_br_unicamp_mc536_t2010s2a_forum_domain_DescricaoDocumento_idIdiomaDocumento" object="${descricaodocumento}" z="l4PUiL0WF/djQlzkZbYjfpZ5uvs="/>
+    </page:show>
+</div>

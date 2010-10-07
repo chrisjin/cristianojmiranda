@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_mc536_t2010s2a_forum_domain_Usuario" items="${usuarios}" z="kH8OCA74u/3DUCpIH+o8jcTIPT0=">
+        <table:table data="${usuarios}" id="l_br_unicamp_mc536_t2010s2a_forum_domain_Usuario" path="/usuarios" z="n85djJaVZc+YYrjQn54p2XPlpJY=">
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_nmUsuario" property="nmUsuario" z="H1DZ2l8bYNMaa2gNcop+LWHfpq0="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_dsLogin" property="dsLogin" z="zeJQJ02JqNTcNHTRZPL1tolqtcU="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_dsSenha" property="dsSenha" z="9f/fUHCo2bq3U2VBvUQFp3S8rWQ="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_tpUsuario" property="tpUsuario" z="cUx3BUZrLWDikP+RDXxuxhltNjo="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_flAtivo" property="flAtivo" z="2iwrpMFEg0tK09Cl18SiGfMiPz8="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_idIdiomaNativo" property="idIdiomaNativo" z="+eXOOXGoiwKXChXl01uIbj6a8K8="/>
+        </table:table>
+    </page:list>
+</div>

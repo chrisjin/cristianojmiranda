@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:create id="fc_br_unicamp_mc536_t2010s2a_forum_domain_Usuario" modelAttribute="usuario" path="/usuarios" render="${empty dependencies}" z="dJTRQlD5EpGCZ9dwNeIwsrBGZjk=">
+        <field:textarea field="nmUsuario" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_nmUsuario" required="true" z="d5efVMVyHtA10OMDli+m443VrT0="/>
+        <field:input field="dsLogin" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_dsLogin" max="10" min="5" required="true" z="24SladIzdnnB84kNj90z1ARtFbw="/>
+        <field:input field="dsSenha" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_dsSenha" max="10" required="true" z="hc5IHY9MOS7DzEIY2mhcXoTXKIY="/>
+        <field:select field="tpUsuario" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_tpUsuario" items="${usuariotypes}" path="usuariotypes" required="true" z="gkxZxMZBd47Qjso03IClCQSx7vA="/>
+        <field:checkbox field="flAtivo" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_flAtivo" z="SPj25JMvz473rkOyNitonHqRG8g="/>
+        <field:select field="idIdiomaNativo" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_idIdiomaNativo" itemValue="id" items="${idiomas}" path="/idiomas" required="true" z="H/JJPLnmayTEh/t3lPA6cEZZgbw="/>
+        <field:textarea field="email" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_email" required="true" validationMessageCode="field_invalid_email" z="+NN6/ldvr65L4RjPWQS3sUCy4DE="/>
+        <field:checkbox field="flInstitucional" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_flInstitucional" z="437Ktzjmd+yxNQez7fulwDEm2lI="/>
+        <field:textarea field="nmInstituicao" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_nmInstituicao" z="MkSduk9Em3HWozXLjVqnJFYmTFc="/>
+        <field:input field="dsInstituicao" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_dsInstituicao" z="fvCC5qHIN2SBRM3bTSIjrQoCtLI="/>
+        <field:datetime dateTimePattern="${usuario_dtinclusao_date_format}" field="dtInclusao" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_dtInclusao" required="true" z="FBj0U0BoxqibwxzjJ1BdUP/t/ak="/>
+    </form:create>
+    <form:dependency dependencies="${dependencies}" id="d_br_unicamp_mc536_t2010s2a_forum_domain_Usuario" render="${not empty dependencies}" z="MQzsxgaK7d3Pdjdj08XKPBbueEc="/>
+</div>

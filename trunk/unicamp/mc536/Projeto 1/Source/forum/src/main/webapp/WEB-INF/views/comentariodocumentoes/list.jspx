@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_mc536_t2010s2a_forum_domain_ComentarioDocumento" items="${comentariodocumentoes}" z="lSBoS2G2Pz3bltHrBi1AzJMeP18=">
+        <table:table data="${comentariodocumentoes}" id="l_br_unicamp_mc536_t2010s2a_forum_domain_ComentarioDocumento" path="/comentariodocumentoes" z="6oeXET+fi2Kcm5eX5LPO6KSJFpw=">
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_ComentarioDocumento_idUsuario" property="idUsuario" z="2F57hBe4AAVh8TYSg7b2DNwC5fo="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_ComentarioDocumento_idDocumento" property="idDocumento" z="06dkw4NF3hdE7n37iddiDiDVnLI="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_ComentarioDocumento_dsComentario" property="dsComentario" z="E4s+cgbHv2duquK+m6EfqXjRxBk="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_ComentarioDocumento_dtInclusao" property="dtInclusao" z="jIMDb/c44uTqr6jC0Gbz61PhqIk="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_ComentarioDocumento_idComentario" property="idComentario" z="ihkYUbqXMNgERBbX/OUhTOzy7Os="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_ComentarioDocumento_tpReferenciaDocumento" property="tpReferenciaDocumento" z="jNzVvSLUmNev9KsvafYWkFYJySw="/>
+        </table:table>
+    </page:list>
+</div>

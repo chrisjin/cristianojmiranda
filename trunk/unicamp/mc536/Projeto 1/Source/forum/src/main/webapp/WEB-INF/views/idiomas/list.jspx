@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_mc536_t2010s2a_forum_domain_Idioma" items="${idiomas}" z="ES2m5tZ3yQBSHyvgLw7wDCEQnZA=">
+        <table:table data="${idiomas}" id="l_br_unicamp_mc536_t2010s2a_forum_domain_Idioma" path="/idiomas" z="hLYYhN27nD5gFRUKtJwi3X0ToGg=">
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Idioma_nmIdioma" property="nmIdioma" z="dy6kO4zpiAOJcABaDF/PFVmxPVE="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Idioma_sgIdioma" property="sgIdioma" z="NM/76cE5kDj4rfTnC0HCia7Lpb4="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Idioma_dsIdioma" property="dsIdioma" z="FJAtS3qdZihmjTQy0UINE4BGnpk="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Idioma_dsDetalhadaIdioma" property="dsDetalhadaIdioma" z="1/L9kzmMItVijiaBwlugzoa3OD8="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Idioma_nmRegiao" property="nmRegiao" z="5+xTgTuldlRWyfbHoYA6/rsNQwo="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Idioma_idPais" property="idPais" z="HRsrQMc5uV2Jk36FBPOhdVfLb7o="/>
+        </table:table>
+    </page:list>
+</div>

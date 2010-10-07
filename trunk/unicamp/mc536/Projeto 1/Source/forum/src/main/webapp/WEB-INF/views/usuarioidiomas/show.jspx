@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_br_unicamp_mc536_t2010s2a_forum_domain_UsuarioIdioma" object="${usuarioidioma}" path="/usuarioidiomas" z="oJifRosGxbSfdx6xRCz9ccRGNSs=">
+        <field:display field="idUsuario" id="s_br_unicamp_mc536_t2010s2a_forum_domain_UsuarioIdioma_idUsuario" object="${usuarioidioma}" z="3s3DzYOB8/97rIFA88e4aiE+t/w="/>
+        <field:display field="idIdioma" id="s_br_unicamp_mc536_t2010s2a_forum_domain_UsuarioIdioma_idIdioma" object="${usuarioidioma}" z="8XOJgDor4wYl7MVNaNR+p0jKpYU="/>
+    </page:show>
+</div>

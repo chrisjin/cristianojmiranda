@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalhoUsuario" object="${redetrabalhousuario}" path="/redetrabalhousuarios" z="MM7C9mmTxvlWdFPlpPwqXlf0yHA=">
+        <field:display field="idRedeTrabalho" id="s_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalhoUsuario_idRedeTrabalho" object="${redetrabalhousuario}" z="NQqkQKcpY5zJ3sGngxZEvWsG7yM="/>
+        <field:display field="idUsuario" id="s_br_unicamp_mc536_t2010s2a_forum_domain_RedeTrabalhoUsuario_idUsuario" object="${redetrabalhousuario}" z="lhTR10ZEzJwruYseUnIKVKPXvEM="/>
+    </page:show>
+</div>
