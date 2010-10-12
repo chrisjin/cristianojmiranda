@@ -1,0 +1,16 @@
+<!DOCTYPE dwr PUBLIC
+    "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN"
+    "http://getahead.org/dwr/dwr20.dtd">
+
+<dwr>
+	<allow>
+
+ 		<convert converter="bean" match="br.unicamp.mc536.t2010s2a.forum.domain.Usuario"/>
+		<create creator="new" javascript="Usuario">
+			<param name="class"
+				value="br.unicamp.mc536.t2010s2a.forum.web.dwr.UsuarioDWR" />
+		</create>
+
+	</allow>
+
+</dwr>
