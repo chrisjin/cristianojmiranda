@@ -7,4 +7,15 @@
   <a href="${home}" name="${fn:escapeXml(home_label)}" title="${fn:escapeXml(home_label)}">
     <img src="${banner}" />
   </a>
+  
+  <br/>
+  
+  <c:if test="${SESSION_USER != null}">
+  
+	  <div style="text-align: right;">
+	  	[User: ${SESSION_USER.nmUsuario}]
+	  </div>
+	  
+  </c:if>
+  
 </div> 

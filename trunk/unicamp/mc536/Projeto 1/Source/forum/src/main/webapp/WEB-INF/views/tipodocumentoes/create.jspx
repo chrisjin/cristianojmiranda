@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
-    <jsp:output omit-xml-declaration="yes"/>
-    <form:create id="fc_br_unicamp_mc536_t2010s2a_forum_domain_TipoDocumento" modelAttribute="tipoDocumento" path="/tipodocumentoes" render="${empty dependencies}" z="wOO3/tdn1BoRAvoiJ4uA9t51aWs=">
-        <field:textarea field="nmTipoDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_TipoDocumento_nmTipoDocumento" required="true" z="87HkpORIxx6w/QEfNSdLIrXErEo="/>
-        <field:textarea field="dsTipoDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_TipoDocumento_dsTipoDocumento" required="true" z="wYuFOMGRhxZbJVFAb4jpsvRvGF0="/>
-        <field:input field="dsDetalhadoTipoDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_TipoDocumento_dsDetalhadoTipoDocumento" z="GTCjy7FTjI2j9/yeRtPm7aDNg3w="/>
+    <jsp:output omit-xml-declaration="yes"/>    
+    <form:create id="fc_br_unicamp_mc536_t2010s2a_forum_domain_TipoDocumento" modelAttribute="tipoDocumento" path="/tipodocumentoes" render="${empty dependencies}" z="">
+        <field:input field="nmTipoDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_TipoDocumento_nmTipoDocumento" required="true" z=""/>
+        <field:textarea field="dsTipoDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_TipoDocumento_dsTipoDocumento" required="true" z=""/>
+        <field:textarea field="dsDetalhadoTipoDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_TipoDocumento_dsDetalhadoTipoDocumento" z=""/>
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_br_unicamp_mc536_t2010s2a_forum_domain_TipoDocumento" render="${not empty dependencies}" z="4ISjIJK/gp207nyhokfryXTNi9s="/>
 </div>
