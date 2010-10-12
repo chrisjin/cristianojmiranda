@@ -9,14 +9,26 @@
 
 	  	 $(document).ready(function() {
 
-	  		Usuario.listarUsuarios(function(list) {
-		  			alert(list[0].nmUsuario);
-		  			}
-  			);
+	  		Usuario.listarUsuariosInject(function(list) {
+		  		
+		  				$.blockUI({ message: $('#buscaUsuario') });
+		  				$('#buscaUsuario').css('display', 'block');
+		  				$('#buscaUsuario').html(list);
+		  				
+		  			});
+
+	  		     
+	  		//$.unblockUI
 	  		
 		});
 			
   	 </script>
+  	 
+  	 <div id="buscaUsuario" style="height: 300px; width: 400px; background: white; display: none;">
+  	 
+  	 	loading...
+  	 
+  	 </div>
     
     <form:create id="fc_br_unicamp_mc536_t2010s2a_forum_domain_Documento" modelAttribute="documento" path="/documentoes" render="${empty dependencies}" z="QPcrI/Z+ryISlA6OpguyYD/2OA0=">
         <field:input field="nmDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmDocumento" required="true" z="9F2G9lVSI1yjfgy44+F7n7XmyxY="/>
