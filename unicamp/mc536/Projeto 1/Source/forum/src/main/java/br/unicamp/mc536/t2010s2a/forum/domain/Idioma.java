@@ -16,25 +16,25 @@ import javax.persistence.JoinColumn;
 @RooEntity
 public class Idioma {
 
-    @NotNull
-    @Size(max = 50)
-    private String nmIdioma;
+	@NotNull
+	@Size(max = 50)
+	private String nmIdioma;
 
-    @NotNull
-    @Size(min = 2, max = 4)
-    private String sgIdioma;
+	@NotNull
+	@Size(min = 2, max = 4)
+	private String sgIdioma;
 
-    @NotNull
-    @Size(max = 255)
-    private String dsIdioma;
+	@NotNull
+	@Size(max = 255)
+	private String dsIdioma;
 
-    private String dsDetalhadaIdioma;
+	private String dsDetalhadaIdioma;
 
-    @Size(max = 255)
-    private String nmRegiao;
+	@Size(max = 255)
+	private String nmRegiao;
 
-    @NotNull
-    @ManyToOne(targetEntity = Pais.class)
-    @JoinColumn
-    private Pais idPais;
+	@NotNull
+	@ManyToOne(targetEntity = Pais.class)
+	@JoinColumn
+	private Pais idPais;
 }
