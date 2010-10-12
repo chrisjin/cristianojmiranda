@@ -33,4 +33,5 @@
       <a href="${url_theme2}" title="${theme_alt}">${theme_alt}</a>
     </span>
   </c:if>
+  
 </jsp:root>
