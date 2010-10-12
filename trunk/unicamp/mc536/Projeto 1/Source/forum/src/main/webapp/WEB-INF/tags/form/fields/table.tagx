@@ -40,7 +40,7 @@
         <tr>
           <c:forTokens items="${columnLabels}" delims="," var="columnHeading">
             <th>
-              <c:out value="${columnHeading}" />
+            	${columnHeading}
             </th>
           </c:forTokens>
           <th></th>
