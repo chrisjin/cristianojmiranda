@@ -8,25 +8,35 @@
       <spring:message code="button_home"/>
     </a>
   </span>
-  <c:if test="${pageContext['request'].userPrincipal != null}">
+  <c:if test="${SESSION_USER == null}">
     <c:out value=" | "/>
     <span>
-      <spring:url value="/resources/j_spring_security_logout" var="logout"/>
-      <a href="${logout}">
-        <spring:message code="security_logout"/>
+      <spring:url value="/login?form" var="login"/>
+      <a href="${login}">
+        <spring:message code="msg.login"/>
       </a>
     </span>
+  </c:if>
+  
+  <c:if test="${SESSION_USER != null}">
+	  	<c:out value=" | "/>
+	    <span>
+	      <spring:url value="/login?form" var="logout"/>
+	      <a href="${logout}">
+	        <spring:message code="msg.logout"/>
+	      </a>
+	    </span>
   </c:if>
 
   <span id="language">
     <c:out value=" | "/>
     <spring:message code="global_language"/>
     <c:out value=": "/>
-  <util:language label="Portuguese" locale="pt"/>
+  	<util:language label="Portuguese" locale="pt"/>
 	<util:language label="English" locale="en"/>
     <util:language label="Deutsch" locale="de"/>
     <util:language label="Espanol" locale="es"/>
-    </span>
+   </span>
   <util:theme/>
 
   <spring:url value="/resources/images/springsource-logo.png" var="logo"/>
