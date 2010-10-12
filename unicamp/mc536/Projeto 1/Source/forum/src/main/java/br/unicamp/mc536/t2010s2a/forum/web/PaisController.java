@@ -9,4 +9,6 @@ import org.springframework.stereotype.Controller;
 @RequestMapping("/paises")
 @Controller
 public class PaisController {
+	
+	
 }
