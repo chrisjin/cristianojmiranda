@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 import br.com.cjm.mega.business.impl.FrequenciaServiceImpl;
 import br.com.cjm.mega.business.impl.ResultadosHtmlParseServiceImpl;
 import br.com.cjm.mega.datatype.FrequenciaDuplasTO;
+import br.com.cjm.mega.datatype.FrequenciaQuadraTO;
 import br.com.cjm.mega.datatype.FrequenciaTrincaTO;
 
 /**
@@ -46,6 +47,17 @@ public class ResultadosHtmlParseServiceTest extends TestCase {
 		Map<Integer, FrequenciaTrincaTO> frequencias = service
 				.criarFrequenciaTrincas(false);
 		service.processarFrequenciaTrincas(null, frequencias);
+	}
+
+	/**
+	 * Teste para carregar a base de frequencias de trincas
+	 */
+	public void testCarregarFrequenciasQuadras() {
+
+		FrequenciaServiceImpl service = new FrequenciaServiceImpl();
+		Map<Integer, FrequenciaQuadraTO> frequencias = service
+				.criarFrequenciaQuadra(false);
+		service.processarFrequenciaQuadras(null, frequencias);
 	}
 
 	/**
