@@ -13,6 +13,7 @@ import br.com.cjm.mega.datatype.ConcursoTO;
 import br.com.cjm.mega.datatype.DezenaTO;
 import br.com.cjm.mega.datatype.FrequenciaDezenasTO;
 import br.com.cjm.mega.datatype.FrequenciaDuplasTO;
+import br.com.cjm.mega.datatype.FrequenciaQuadraTO;
 import br.com.cjm.mega.datatype.FrequenciaTrincaTO;
 import br.com.cjm.mega.persistence.HibernateUtil;
 
@@ -208,6 +209,77 @@ public class FrequenciaServiceImpl {
 	}
 
 	/**
+	 * Cria a lista de frequencias de quadras
+	 * 
+	 */
+	public Map<Integer, FrequenciaQuadraTO> criarFrequenciaQuadra(
+			boolean dbIntegration) {
+
+		// Map de resultados
+		Map<Integer, FrequenciaQuadraTO> resultMap = new HashMap<Integer, FrequenciaQuadraTO>();
+
+		Session session = null;
+		if (dbIntegration) {
+			// Obtem a sessão hibernate
+			session = HibernateUtil.getSessionFactory().openSession();
+		}
+
+		try {
+
+			if (dbIntegration) {
+				session.beginTransaction();
+
+				// Apaga todas as frequencias
+				session.createQuery("delete FrequenciaQuadraTO")
+						.executeUpdate();
+			}
+
+			for (int i = 1; i <= 60; i++) {
+
+				for (int j = (i + 1); j <= 60; j++) {
+
+					for (int k = (j + 1); k <= 60; k++) {
+
+						for (int l = (k + 1); l <= 60; l++) {
+
+							// Monta a frequencia
+							FrequenciaQuadraTO freq = new FrequenciaQuadraTO();
+							freq.setDezena1(i);
+							freq.setDezena2(j);
+							freq.setDezena3(k);
+							freq.setDezena4(l);
+
+							// Adiciona a frequencia na map de saida
+							resultMap.put(generateQuadraKey(i, j, k, l), freq);
+
+							if (dbIntegration) {
+								session.save(freq);
+								session.flush();
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+
+			if (dbIntegration) {
+				session.getTransaction().commit();
+			}
+
+			return resultMap;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+
+	}
+
+	/**
 	 * Processa as duplas.
 	 * 
 	 * @param concuros
@@ -282,8 +354,8 @@ public class FrequenciaServiceImpl {
 					if (!conflictList.contains(fd)
 							&& !fd.getQtdSorteada().equals(0L)) {
 
-						fd.setAtrasoUltimo(fd.getAtrasoAtual());
-						fd.setAtrasoAtual(fd.getAtrasoAtual() + 1L);
+						fd.setAtrasoUltimo(fd.getAtrasoAtual() + 1L);
+						fd.setAtrasoAtual(fd.getAtrasoAtual());
 
 						if (fd.getAtrasoMaior().longValue() < fd
 								.getAtrasoUltimo().longValue()) {
@@ -357,47 +429,48 @@ public class FrequenciaServiceImpl {
 
 					for (DezenaTO dezena2 : concurso.getDezenas()) {
 
-						for (DezenaTO dezena3 : concurso.getDezenas()) {
+						if (dezena1.getVrDezena().intValue() < dezena2
+								.getVrDezena().intValue()) {
 
-							// Carante que as dezenas não são iguais
-							if (!dezena1.getVrDezena().equals(
-									dezena2.getVrDezena())
-									&& !dezena1.getVrDezena().equals(
-											dezena3.getVrDezena())
-									&& !dezena2.getVrDezena().equals(
-											dezena3.getVrDezena())) {
+							for (DezenaTO dezena3 : concurso.getDezenas()) {
 
-								// Ordena as dezenas
-								List<Integer> dezenas = new ArrayList<Integer>();
-								dezenas.add(dezena1.getVrDezena());
-								dezenas.add(dezena2.getVrDezena());
-								dezenas.add(dezena3.getVrDezena());
+								// Carante que as dezenas não são iguais
+								if (dezena2.getVrDezena().intValue() < dezena3
+										.getVrDezena().intValue()) {
 
-								// Ordena a lista
-								Collections.sort(dezenas);
+									// Ordena as dezenas
+									List<Integer> dezenas = new ArrayList<Integer>();
+									dezenas.add(dezena1.getVrDezena());
+									dezenas.add(dezena2.getVrDezena());
+									dezenas.add(dezena3.getVrDezena());
 
-								// Obtem a frequencia na hash
-								FrequenciaTrincaTO freqDupla = frequencias
-										.get(generateTrincaKey(dezenas.get(0),
-												dezenas.get(1), dezenas.get(2)));
+									// Ordena a lista
+									Collections.sort(dezenas);
 
-								conflictList.add(freqDupla);
+									// Obtem a frequencia na hash
+									FrequenciaTrincaTO freqDupla = frequencias
+											.get(generateTrincaKey(dezenas
+													.get(0), dezenas.get(1),
+													dezenas.get(2)));
 
-								freqDupla.setAtrasoUltimo(freqDupla
-										.getAtrasoAtual() + 1L);
-								freqDupla.setAtrasoAtual(0L);
+									conflictList.add(freqDupla);
 
-								if (freqDupla.getAtrasoMaior().longValue() < freqDupla
-										.getAtrasoUltimo().longValue()) {
-									freqDupla.setAtrasoMaior(freqDupla
-											.getAtrasoUltimo());
+									freqDupla.setAtrasoUltimo(freqDupla
+											.getAtrasoAtual() + 1L);
+									freqDupla.setAtrasoAtual(0L);
+
+									if (freqDupla.getAtrasoMaior().longValue() < freqDupla
+											.getAtrasoUltimo().longValue()) {
+										freqDupla.setAtrasoMaior(freqDupla
+												.getAtrasoUltimo());
+									}
+
+									freqDupla.setQtdSorteada(freqDupla
+											.getQtdSorteada() + 1L);
+
 								}
 
-								freqDupla.setQtdSorteada(freqDupla
-										.getQtdSorteada() + 1L);
-
 							}
-
 						}
 					}
 
@@ -409,8 +482,8 @@ public class FrequenciaServiceImpl {
 					if (!conflictList.contains(fd)
 							&& !fd.getQtdSorteada().equals(0L)) {
 
-						fd.setAtrasoUltimo(fd.getAtrasoAtual());
-						fd.setAtrasoAtual(fd.getAtrasoAtual() + 1L);
+						fd.setAtrasoUltimo(fd.getAtrasoAtual() + 1L);
+						fd.setAtrasoAtual(fd.getAtrasoAtual());
 
 						if (fd.getAtrasoMaior().longValue() < fd
 								.getAtrasoUltimo().longValue()) {
@@ -447,6 +520,203 @@ public class FrequenciaServiceImpl {
 
 			// Executa commite parcial
 			if ((counter % 3000) == 0) {
+
+				System.out.println("Comitando transação...");
+				session.getTransaction().commit();
+				session.beginTransaction();
+			}
+
+			counter++;
+
+		}
+
+		session.getTransaction().commit();
+
+		// Retorna a lista de erros
+		return concursosErro;
+
+	}
+
+	/**
+	 * Processa a lista de concursos recriando as trincas.
+	 * 
+	 * @param concuros
+	 * @param frequencias
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<ConcursoTO> processarFrequenciaQuadras(
+			List<ConcursoTO> concuros,
+			Map<Integer, FrequenciaQuadraTO> frequencias) {
+
+		// Lista com os concursos que obtiveram erro de processamento
+		List<ConcursoTO> concursosErro = new ArrayList<ConcursoTO>();
+
+		// Obtem a sessão hibernate
+		Session session = HibernateUtil.getSessionFactory().openSession();
+
+		// Obtem os concursos
+		if (concuros == null || concuros.isEmpty()) {
+			concuros = session.createQuery("from ConcursoTO order by id")
+					.list();
+		}
+
+		int counter = 1;
+		for (ConcursoTO concurso : concuros) {
+
+			System.out.println("PROCESSANDO CONCURSO " + counter + " DE "
+					+ concuros.size());
+			counter++;
+
+			try {
+
+				// Localiza as dezenas da dupla no concurso
+				List<FrequenciaQuadraTO> conflictList = new ArrayList<FrequenciaQuadraTO>();
+				for (DezenaTO dezena1 : concurso.getDezenas()) {
+
+					for (DezenaTO dezena2 : concurso.getDezenas()) {
+
+						if (dezena1.getVrDezena().intValue() < dezena2
+								.getVrDezena().intValue()) {
+
+							for (DezenaTO dezena3 : concurso.getDezenas()) {
+
+								if (dezena2.getVrDezena().intValue() < dezena3
+										.getVrDezena().intValue()) {
+
+									for (DezenaTO dezena4 : concurso
+											.getDezenas()) {
+
+										if (dezena3.getVrDezena().intValue() < dezena4
+												.getVrDezena().intValue()) {
+
+											// Carante que as dezenas não são
+											// iguais
+											if (!dezena1.getVrDezena().equals(
+													dezena2.getVrDezena())
+													&& !dezena1
+															.getVrDezena()
+															.equals(
+																	dezena3
+																			.getVrDezena())
+													&& !dezena1
+															.getVrDezena()
+															.equals(
+																	dezena4
+																			.getVrDezena())
+													&& !dezena2
+															.getVrDezena()
+															.equals(
+																	dezena3
+																			.getVrDezena())
+													&& !dezena2
+															.getVrDezena()
+															.equals(
+																	dezena4
+																			.getVrDezena())
+													&& !dezena3
+															.getVrDezena()
+															.equals(
+																	dezena4
+																			.getVrDezena())) {
+
+												// Ordena as dezenas
+												List<Integer> dezenas = new ArrayList<Integer>();
+												dezenas.add(dezena1
+														.getVrDezena());
+												dezenas.add(dezena2
+														.getVrDezena());
+												dezenas.add(dezena3
+														.getVrDezena());
+												dezenas.add(dezena4
+														.getVrDezena());
+
+												// Ordena a lista
+												Collections.sort(dezenas);
+
+												// Obtem a frequencia na hash
+												FrequenciaQuadraTO freqDupla = frequencias
+														.get(generateQuadraKey(
+																dezenas.get(0),
+																dezenas.get(1),
+																dezenas.get(2),
+																dezenas.get(3)));
+
+												conflictList.add(freqDupla);
+
+												freqDupla
+														.setAtrasoUltimo(freqDupla
+																.getAtrasoAtual() + 1L);
+												freqDupla.setAtrasoAtual(0L);
+
+												if (freqDupla.getAtrasoMaior()
+														.longValue() < freqDupla
+														.getAtrasoUltimo()
+														.longValue()) {
+													freqDupla
+															.setAtrasoMaior(freqDupla
+																	.getAtrasoUltimo());
+												}
+
+												freqDupla
+														.setQtdSorteada(freqDupla
+																.getQtdSorteada() + 1L);
+
+											}
+										}
+
+									}
+								}
+							}
+						}
+					}
+
+				}
+
+				// Atualiza atraso
+				for (FrequenciaQuadraTO fd : frequencias.values()) {
+
+					if (!conflictList.contains(fd)
+							&& !fd.getQtdSorteada().equals(0L)) {
+
+						fd.setAtrasoUltimo(fd.getAtrasoAtual() + 1L);
+						fd.setAtrasoAtual(fd.getAtrasoAtual());
+
+						if (fd.getAtrasoMaior().longValue() < fd
+								.getAtrasoUltimo().longValue()) {
+							fd.setAtrasoMaior(fd.getAtrasoUltimo());
+						}
+
+					}
+
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				concursosErro.add(concurso);
+			}
+
+		}
+
+		// Atualiza frequencias na base
+		session.beginTransaction();
+
+		// Apaga todas as frequencias
+		session.createQuery("delete FrequenciaQuadraTO").executeUpdate();
+
+		// Atualiza atraso
+		counter = 1;
+		List<FrequenciaQuadraTO> ft = new ArrayList<FrequenciaQuadraTO>(
+				frequencias.values());
+		for (FrequenciaQuadraTO freqDupla : ft) {
+
+			System.out.println("PROCESSANDO FREQUENCIA " + counter + " DE "
+					+ ft.size());
+
+			session.save(freqDupla);
+
+			// Executa commite parcial
+			if ((counter % 10000) == 0) {
 
 				System.out.println("Comitando transação...");
 				session.getTransaction().commit();
