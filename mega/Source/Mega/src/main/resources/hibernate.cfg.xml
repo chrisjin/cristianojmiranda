@@ -13,5 +13,8 @@
 		<mapping class="br.com.cjm.mega.datatype.DezenaTO" />
 		<mapping class="br.com.cjm.mega.datatype.FrequenciaDezenasTO" />
 		<mapping class="br.com.cjm.mega.datatype.FrequenciaDuplasTO" />
+		<mapping class="br.com.cjm.mega.datatype.FrequenciaTrincaTO" />
+		<mapping class="br.com.cjm.mega.datatype.FrequenciaQuadraTO" />
+		<mapping class="br.com.cjm.mega.datatype.FrequenciaQuinaTO" />
 	</session-factory>
 </hibernate-configuration>
