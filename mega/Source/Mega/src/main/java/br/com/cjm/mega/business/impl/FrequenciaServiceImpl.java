@@ -212,6 +212,7 @@ public class FrequenciaServiceImpl {
 	 * 
 	 * @param concuros
 	 */
+	@SuppressWarnings("unchecked")
 	public void processarFrequenciaDuplas(List<ConcursoTO> concuros,
 			Map<Integer, FrequenciaDuplasTO> frequencias) {
 
@@ -225,7 +226,6 @@ public class FrequenciaServiceImpl {
 		}
 
 		int counter = 1;
-		boolean openTransaction = true;
 		for (ConcursoTO concurso : concuros) {
 
 			System.out.println("\n\n\n\n\n\n\n\nPROCESSANDO CONCURSO "
@@ -325,6 +325,7 @@ public class FrequenciaServiceImpl {
 	 * @param frequencias
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<ConcursoTO> processarFrequenciaTrincas(
 			List<ConcursoTO> concuros,
 			Map<Integer, FrequenciaTrincaTO> frequencias) {
@@ -342,11 +343,10 @@ public class FrequenciaServiceImpl {
 		}
 
 		int counter = 1;
-		boolean openTransaction = true;
 		for (ConcursoTO concurso : concuros) {
 
-			System.out.println("\n\n\n\n\n\n\n\nPROCESSANDO CONCURSO "
-					+ counter + " DE " + concuros.size() + "\n\n");
+			System.out.println("PROCESSANDO CONCURSO " + counter + " DE "
+					+ concuros.size());
 			counter++;
 
 			try {
@@ -435,10 +435,25 @@ public class FrequenciaServiceImpl {
 		session.createQuery("delete FrequenciaTrincaTO").executeUpdate();
 
 		// Atualiza atraso
-		for (FrequenciaTrincaTO freqDupla : frequencias.values()) {
+		counter = 1;
+		List<FrequenciaTrincaTO> ft = new ArrayList<FrequenciaTrincaTO>(
+				frequencias.values());
+		for (FrequenciaTrincaTO freqDupla : ft) {
+
+			System.out.println("PROCESSANDO FREQUENCIA " + counter + " DE "
+					+ ft.size());
 
 			session.save(freqDupla);
-			session.flush();
+
+			// Executa commite parcial
+			if ((counter % 3000) == 0) {
+
+				System.out.println("Comitando transação...");
+				session.getTransaction().commit();
+				session.beginTransaction();
+			}
+
+			counter++;
 
 		}
 
@@ -452,6 +467,7 @@ public class FrequenciaServiceImpl {
 	/**
 	 * Processa as frequencias
 	 */
+	@SuppressWarnings("unchecked")
 	public void processarFrequencias() {
 
 		// Obtem a sessão hibernate
