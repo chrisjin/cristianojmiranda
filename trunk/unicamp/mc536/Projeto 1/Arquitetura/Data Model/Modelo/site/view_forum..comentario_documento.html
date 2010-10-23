@@ -1,0 +1,111 @@
+<html>
+<head>
+<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>
+<style type='text/css'>
+body { margin:0; padding:5; background-color:#ffffff; }
+tr { vertical-align:top; }
+td { padding:1; }
+.TABCOL { border-collapse:collapse; border-width:1px; border-style:solid; border-color:gray; width:100%; background-color:#FFFFCD; }
+.TABCOL td { border-width:1px; border-style:solid; border-color:gray; }
+.VIECOL { border-collapse:collapse; border-width:1px; border-style:solid; border-color:gray; width:100%; background-color:#F0F0FF; }
+.VIECOL td { border-width:1px; border-style:solid; border-color:gray; }
+.INDCOL { border-collapse:collapse; border-width:1px; border-style:solid; border-color:gray; width:100%; background-color:#FFD0FF; }
+.INDCOL td { border-width:1px; border-style:solid; border-color:gray; }
+.tableHeader { background-color:#d0d0d0; font-weight:bold; }
+</style>
+</head>
+<body>
+<table style='width:100%; background-color:#e0e0e0; padding:1;' border=0><tr><td>
+<a href='overview.html' target='main'>Visualizar Tudo</a>
+ &nbsp; <a href='names-0.html' target='main'>Índice</a>
+</tr></td></table>
+<h1>comentario_documento</h1>Tabela<br>
+Banco de Dados: forum <hr size=1>
+<table class='TABCOL'>
+<tr class='tableHeader'>
+<td>Nome</td><td>Tipo de Dados</td><td>Comentário</td></tr>
+<tr>
+<td>id</td>
+<td>id : bigint (20) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>ds_comentario</td>
+<td>ds_comentario : varchar (255) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>dt_inclusao</td>
+<td>dt_inclusao : datetime : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>tp_referencia_documento</td>
+<td>tp_referencia_documento : int (11) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>version</td>
+<td>version : int (11) : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>id_comentario</td>
+<td>id_comentario : bigint (20) <span style='color:#ab00ab'>*</span> : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>id_documento</td>
+<td>id_documento : bigint (20) <span style='color:#ab00ab'>*</span> : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>id_usuario</td>
+<td>id_usuario : bigint (20) <span style='color:#ab00ab'>*</span> : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+</table><h2>Relações</h2>
+<a href='relationship_forum..fkComentarioResposta.html' target='main'>fkComentarioResposta</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..comentario_documento.html' target='main'>forum..comentario_documento</a>
+ ( id_comentario )<br>
+<br>
+<a href='relationship_forum..fkDocumentoComentario.html' target='main'>fkDocumentoComentario</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..comentario_documento.html' target='main'>forum..comentario_documento</a>
+ ( id_documento )<br>
+<br>
+<a href='relationship_forum..fkUsuarioComentarioDocumento.html' target='main'>fkUsuarioComentarioDocumento</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..comentario_documento.html' target='main'>forum..comentario_documento</a>
+ ( id_usuario )<br>
+<br>
+<h2>Índices</h2>
+<a href='index_forum..comentario_documento.FK4B988FD64580C13D.html' target='main'>forum..comentario_documento.FK4B988FD64580C13D</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id_documento<br>
+<br>
+<a href='index_forum..comentario_documento.FK4B988FD6F63EF371.html' target='main'>forum..comentario_documento.FK4B988FD6F63EF371</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id_usuario<br>
+<br>
+<a href='index_forum..comentario_documento.FK4B988FD6F6F17011.html' target='main'>forum..comentario_documento.FK4B988FD6F6F17011</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id_comentario<br>
+<br>
+<h2>Restrições</h2>
+<a href='constraint_forum..comentario_documento.PRIMARY.html' target='main'>PRIMARY</a>
+ Restrição da chave primária<br>
+&nbsp; &nbsp; &nbsp; &nbsp; ( id )<br>
+<h2>Referência de</h2>
+<a href='view_forum..documento.html' target='main'>forum..documento</a>
+<br>
+<a href='view_forum..usuario.html' target='main'>forum..usuario</a>
+<br>
+<br>
+<hr size=1>
+Com tecnologia Aqua Data Studio by <a href='http://www.aquafold.com' target='_blank'>AquaFold, Inc</a> (EVALUATION VERSION).</body>
+</html>

@@ -1,0 +1,192 @@
+<html>
+<head>
+<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>
+<style type='text/css'>
+body { margin:0; padding:5; background-color:#ffffff; }
+tr { vertical-align:top; }
+td { padding:1; }
+.TABCOL { border-collapse:collapse; border-width:1px; border-style:solid; border-color:gray; width:100%; background-color:#FFFFCD; }
+.TABCOL td { border-width:1px; border-style:solid; border-color:gray; }
+.VIECOL { border-collapse:collapse; border-width:1px; border-style:solid; border-color:gray; width:100%; background-color:#F0F0FF; }
+.VIECOL td { border-width:1px; border-style:solid; border-color:gray; }
+.INDCOL { border-collapse:collapse; border-width:1px; border-style:solid; border-color:gray; width:100%; background-color:#FFD0FF; }
+.INDCOL td { border-width:1px; border-style:solid; border-color:gray; }
+.tableHeader { background-color:#d0d0d0; font-weight:bold; }
+</style>
+</head>
+<body>
+<table style='width:100%; background-color:#e0e0e0; padding:1;' border=0><tr><td>
+<a href='overview.html' target='main'>Visualizar Tudo</a>
+ &nbsp; <a href='names-0.html' target='main'>Índice</a>
+</tr></td></table>
+<h1>usuario</h1>Tabela<br>
+Banco de Dados: forum <hr size=1>
+<table class='TABCOL'>
+<tr class='tableHeader'>
+<td>Nome</td><td>Tipo de Dados</td><td>Comentário</td></tr>
+<tr>
+<td>id</td>
+<td>id : bigint (20) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>ds_instituicao</td>
+<td>ds_instituicao : varchar (255) : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>ds_login</td>
+<td>ds_login : varchar (10) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>ds_senha</td>
+<td>ds_senha : varchar (10) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>dt_inclusao</td>
+<td>dt_inclusao : datetime : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>email</td>
+<td>email : varchar (255) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>fl_ativo</td>
+<td>fl_ativo : tinyint (1) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>fl_institucional</td>
+<td>fl_institucional : tinyint (1) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>nm_instituicao</td>
+<td>nm_instituicao : varchar (255) : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>nm_usuario</td>
+<td>nm_usuario : varchar (255) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>tp_usuario</td>
+<td>tp_usuario : int (11) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>version</td>
+<td>version : int (11) : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>id_idioma_nativo</td>
+<td>id_idioma_nativo : bigint (20) <span style='color:#ab00ab'>*</span> : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+</table><h2>Relações</h2>
+<a href='relationship_forum..fkUsuarioCadastroPrograma.html' target='main'>fkUsuarioCadastroPrograma</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..programa.html' target='main'>forum..programa</a>
+ ( id_usuario )<br>
+<br>
+<a href='relationship_forum..fkUsuarioIdiomas.html' target='main'>fkUsuarioIdiomas</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..usuario_idioma.html' target='main'>forum..usuario_idioma</a>
+ ( id_usuario )<br>
+<br>
+<a href='relationship_forum..fkUsuarioDocumentos.html' target='main'>fkUsuarioDocumentos</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..usuario_documento.html' target='main'>forum..usuario_documento</a>
+ ( id_usuario )<br>
+<br>
+<a href='relationship_forum..fkUsuarioVinculoDocumento.html' target='main'>fkUsuarioVinculoDocumento</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..documento_vinculo.html' target='main'>forum..documento_vinculo</a>
+ ( id_usuario )<br>
+<br>
+<a href='relationship_forum..fkUsuarioComentarioDocumento.html' target='main'>fkUsuarioComentarioDocumento</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..comentario_documento.html' target='main'>forum..comentario_documento</a>
+ ( id_usuario )<br>
+<br>
+<a href='relationship_forum..fkUsuarioResponsavel.html' target='main'>fkUsuarioResponsavel</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..documento.html' target='main'>forum..documento</a>
+ ( id_usuario_responsavel )<br>
+<br>
+<a href='relationship_forum..fkUsuarioPrograma.html' target='main'>fkUsuarioPrograma</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..programa_usuario.html' target='main'>forum..programa_usuario</a>
+ ( id_usuario )<br>
+<br>
+<a href='relationship_forum..fkUsuarioRedeTrabalho.html' target='main'>fkUsuarioRedeTrabalho</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..rede_trabalho_usuario.html' target='main'>forum..rede_trabalho_usuario</a>
+ ( id_usuario )<br>
+<br>
+<a href='relationship_forum..fkUsuarioCadastroRedeTrabalho.html' target='main'>fkUsuarioCadastroRedeTrabalho</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..rede_trabalho.html' target='main'>forum..rede_trabalho</a>
+ ( id_usuario )<br>
+<br>
+<a href='relationship_forum..fkUsuarioAutorDocumento.html' target='main'>fkUsuarioAutorDocumento</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..documento.html' target='main'>forum..documento</a>
+ ( id_usuario_autor )<br>
+<br>
+<a href='relationship_forum..fkIdiomaNativoUsuario.html' target='main'>fkIdiomaNativoUsuario</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..usuario.html' target='main'>forum..usuario</a>
+ ( id_idioma_nativo )<br>
+<br>
+<h2>Índices</h2>
+<a href='index_forum..usuario.FKF814F32EF7696823.html' target='main'>forum..usuario.FKF814F32EF7696823</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id_idioma_nativo<br>
+<br>
+<h2>Restrições</h2>
+<a href='constraint_forum..usuario.PRIMARY.html' target='main'>PRIMARY</a>
+ Restrição da chave primária<br>
+&nbsp; &nbsp; &nbsp; &nbsp; ( id )<br>
+<h2>Referência de</h2>
+<a href='view_forum..comentario_documento.html' target='main'>forum..comentario_documento</a>
+<br>
+<a href='view_forum..documento.html' target='main'>forum..documento</a>
+<br>
+<a href='view_forum..documento_vinculo.html' target='main'>forum..documento_vinculo</a>
+<br>
+<a href='view_forum..idioma.html' target='main'>forum..idioma</a>
+<br>
+<a href='view_forum..programa.html' target='main'>forum..programa</a>
+<br>
+<a href='view_forum..programa_usuario.html' target='main'>forum..programa_usuario</a>
+<br>
+<a href='view_forum..rede_trabalho.html' target='main'>forum..rede_trabalho</a>
+<br>
+<a href='view_forum..rede_trabalho_usuario.html' target='main'>forum..rede_trabalho_usuario</a>
+<br>
+<a href='view_forum..usuario_documento.html' target='main'>forum..usuario_documento</a>
+<br>
+<a href='view_forum..usuario_idioma.html' target='main'>forum..usuario_idioma</a>
+<br>
+<br>
+<hr size=1>
+Com tecnologia Aqua Data Studio by <a href='http://www.aquafold.com' target='_blank'>AquaFold, Inc</a> (EVALUATION VERSION).</body>
+</html>

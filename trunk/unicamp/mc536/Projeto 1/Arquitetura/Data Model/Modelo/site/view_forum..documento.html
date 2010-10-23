@@ -1,0 +1,262 @@
+<html>
+<head>
+<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'>
+<style type='text/css'>
+body { margin:0; padding:5; background-color:#ffffff; }
+tr { vertical-align:top; }
+td { padding:1; }
+.TABCOL { border-collapse:collapse; border-width:1px; border-style:solid; border-color:gray; width:100%; background-color:#FFFFCD; }
+.TABCOL td { border-width:1px; border-style:solid; border-color:gray; }
+.VIECOL { border-collapse:collapse; border-width:1px; border-style:solid; border-color:gray; width:100%; background-color:#F0F0FF; }
+.VIECOL td { border-width:1px; border-style:solid; border-color:gray; }
+.INDCOL { border-collapse:collapse; border-width:1px; border-style:solid; border-color:gray; width:100%; background-color:#FFD0FF; }
+.INDCOL td { border-width:1px; border-style:solid; border-color:gray; }
+.tableHeader { background-color:#d0d0d0; font-weight:bold; }
+</style>
+</head>
+<body>
+<table style='width:100%; background-color:#e0e0e0; padding:1;' border=0><tr><td>
+<a href='overview.html' target='main'>Visualizar Tudo</a>
+ &nbsp; <a href='names-0.html' target='main'>Índice</a>
+</tr></td></table>
+<h1>documento</h1>Tabela<br>
+Banco de Dados: forum <hr size=1>
+<table class='TABCOL'>
+<tr class='tableHeader'>
+<td>Nome</td><td>Tipo de Dados</td><td>Comentário</td></tr>
+<tr>
+<td>id</td>
+<td>id : bigint (20) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>documento</td>
+<td>documento : blob : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>ds_documento</td>
+<td>ds_documento : text : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>ds_email_autor</td>
+<td>ds_email_autor : varchar (100) : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>ds_info_maquina</td>
+<td>ds_info_maquina : varchar (255) : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>dt_criacao</td>
+<td>dt_criacao : datetime : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>dt_inclusao</td>
+<td>dt_inclusao : datetime : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>nm_arquivo</td>
+<td>nm_arquivo : varchar (255) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>nm_autor</td>
+<td>nm_autor : varchar (255) : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>nm_documento</td>
+<td>nm_documento : varchar (255) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>qtd_visualizacao</td>
+<td>qtd_visualizacao : bigint (20) : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>version</td>
+<td>version : int (11) : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>id_idioma_documento</td>
+<td>id_idioma_documento : bigint (20) <span style='color:#ab00ab'>*</span> : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>id_pais</td>
+<td>id_pais : bigint (20) <span style='color:#ab00ab'>*</span> : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>id_programa</td>
+<td>id_programa : bigint (20) <span style='color:#ab00ab'>*</span> : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>id_rede_trabalho</td>
+<td>id_rede_trabalho : bigint (20) <span style='color:#ab00ab'>*</span> : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>id_usuario_autor</td>
+<td>id_usuario_autor : bigint (20) <span style='color:#ab00ab'>*</span> : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>id_usuario_responsavel</td>
+<td>id_usuario_responsavel : bigint (20) <span style='color:#ab00ab'>*</span> : <span style='color:#008000'>NULL</span></td>
+<td></td>
+</tr>
+<tr>
+<td>tipo_documento</td>
+<td>tipo_documento : bigint (20) <span style='color:#ab00ab'>*</span> : <span style='color:#008000'>Não NULL</span></td>
+<td></td>
+</tr>
+</table><h2>Relações</h2>
+<a href='relationship_forum..fkDocumentoReferenciaPais.html' target='main'>fkDocumentoReferenciaPais</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..documento_referencia_pais.html' target='main'>forum..documento_referencia_pais</a>
+ ( id_documento )<br>
+<br>
+<a href='relationship_forum..fkDocumentoDescricao.html' target='main'>fkDocumentoDescricao</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..descricao_documento.html' target='main'>forum..descricao_documento</a>
+ ( id_documento )<br>
+<br>
+<a href='relationship_forum..fkDocumentoVinculo.html' target='main'>fkDocumentoVinculo</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..documento_vinculo.html' target='main'>forum..documento_vinculo</a>
+ ( id_documento )<br>
+<br>
+<a href='relationship_forum..fkDocumentoPalavra.html' target='main'>fkDocumentoPalavra</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..palavra_documento.html' target='main'>forum..palavra_documento</a>
+ ( id_documento )<br>
+<br>
+<a href='relationship_forum..fkDocumentoComentario.html' target='main'>fkDocumentoComentario</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..comentario_documento.html' target='main'>forum..comentario_documento</a>
+ ( id_documento )<br>
+<br>
+<a href='relationship_forum..fkDocumentoUsuarios.html' target='main'>fkDocumentoUsuarios</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..usuario_documento.html' target='main'>forum..usuario_documento</a>
+ ( id_documento )<br>
+<br>
+<a href='relationship_forum..fkIdiomaDocumento.html' target='main'>fkIdiomaDocumento</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..documento.html' target='main'>forum..documento</a>
+ ( id_idioma_documento )<br>
+<br>
+<a href='relationship_forum..fkPaisDocumento.html' target='main'>fkPaisDocumento</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..documento.html' target='main'>forum..documento</a>
+ ( id_pais )<br>
+<br>
+<a href='relationship_forum..fkProgramaDocumento.html' target='main'>fkProgramaDocumento</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..documento.html' target='main'>forum..documento</a>
+ ( id_programa )<br>
+<br>
+<a href='relationship_forum..fkRedeTrabalhoDocumento.html' target='main'>fkRedeTrabalhoDocumento</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..documento.html' target='main'>forum..documento</a>
+ ( id_rede_trabalho )<br>
+<br>
+<a href='relationship_forum..fkUsuarioAutorDocumento.html' target='main'>fkUsuarioAutorDocumento</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..documento.html' target='main'>forum..documento</a>
+ ( id_usuario_autor )<br>
+<br>
+<a href='relationship_forum..fkUsuarioResponsavel.html' target='main'>fkUsuarioResponsavel</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..documento.html' target='main'>forum..documento</a>
+ ( id_usuario_responsavel )<br>
+<br>
+<a href='relationship_forum..fkTipoDocumentoDocumento.html' target='main'>fkTipoDocumentoDocumento</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &rarr; <a href='view_forum..documento.html' target='main'>forum..documento</a>
+ ( tipo_documento )<br>
+<br>
+<h2>Índices</h2>
+<a href='index_forum..documento.FK383D52B44535FA45.html' target='main'>forum..documento.FK383D52B44535FA45</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id_programa<br>
+<br>
+<a href='index_forum..documento.FK383D52B4EDD17EC2.html' target='main'>forum..documento.FK383D52B4EDD17EC2</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; tipo_documento<br>
+<br>
+<a href='index_forum..documento.FK383D52B4603D80F2.html' target='main'>forum..documento.FK383D52B4603D80F2</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id_usuario_responsavel<br>
+<br>
+<a href='index_forum..documento.FK383D52B410F27F95.html' target='main'>forum..documento.FK383D52B410F27F95</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id_usuario_autor<br>
+<br>
+<a href='index_forum..documento.FK383D52B425A527EA.html' target='main'>forum..documento.FK383D52B425A527EA</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id_idioma_documento<br>
+<br>
+<a href='index_forum..documento.FK383D52B4C21BD8C1.html' target='main'>forum..documento.FK383D52B4C21BD8C1</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id_pais<br>
+<br>
+<a href='index_forum..documento.FK383D52B42ACACB64.html' target='main'>forum..documento.FK383D52B42ACACB64</a>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; id_rede_trabalho<br>
+<br>
+<h2>Restrições</h2>
+<a href='constraint_forum..documento.PRIMARY.html' target='main'>PRIMARY</a>
+ Restrição da chave primária<br>
+&nbsp; &nbsp; &nbsp; &nbsp; ( id )<br>
+<h2>Referência de</h2>
+<a href='view_forum..comentario_documento.html' target='main'>forum..comentario_documento</a>
+<br>
+<a href='view_forum..descricao_documento.html' target='main'>forum..descricao_documento</a>
+<br>
+<a href='view_forum..documento_referencia_pais.html' target='main'>forum..documento_referencia_pais</a>
+<br>
+<a href='view_forum..documento_vinculo.html' target='main'>forum..documento_vinculo</a>
+<br>
+<a href='view_forum..idioma.html' target='main'>forum..idioma</a>
+<br>
+<a href='view_forum..pais.html' target='main'>forum..pais</a>
+<br>
+<a href='view_forum..palavra_documento.html' target='main'>forum..palavra_documento</a>
+<br>
+<a href='view_forum..programa.html' target='main'>forum..programa</a>
+<br>
+<a href='view_forum..rede_trabalho.html' target='main'>forum..rede_trabalho</a>
+<br>
+<a href='view_forum..tipo_documento.html' target='main'>forum..tipo_documento</a>
+<br>
+<a href='view_forum..usuario.html' target='main'>forum..usuario</a>
+<br>
+<a href='view_forum..usuario_documento.html' target='main'>forum..usuario_documento</a>
+<br>
+<br>
+<hr size=1>
+Com tecnologia Aqua Data Studio by <a href='http://www.aquafold.com' target='_blank'>AquaFold, Inc</a> (EVALUATION VERSION).</body>
+</html>
