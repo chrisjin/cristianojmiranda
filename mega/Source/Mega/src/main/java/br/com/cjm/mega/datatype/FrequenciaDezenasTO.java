@@ -33,16 +33,16 @@ public class FrequenciaDezenasTO implements Serializable {
 	private Integer dezena;
 
 	@Column(name = "qtdSorteada")
-	private Long qtdSorteada;
+	private Long qtdSorteada = 0L;
 
 	@Column(name = "atrasoAtual")
-	private Long atrasoAtual;
+	private Long atrasoAtual = 0L;
 
 	@Column(name = "atrasoUltimo")
-	private Long atrasoUltimo;
+	private Long atrasoUltimo = 0L;
 
 	@Column(name = "atrasoMaior")
-	private Long atrasoMaior;
+	private Long atrasoMaior = 0L;
 
 	/**
 	 * @return the id

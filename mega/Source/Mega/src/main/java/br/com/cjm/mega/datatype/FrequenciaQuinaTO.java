@@ -1,6 +1,7 @@
 package br.com.cjm.mega.datatype;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,6 +56,27 @@ public class FrequenciaQuinaTO implements Serializable {
 
 	@Column(name = "atrasoMaior")
 	private Long atrasoMaior = 0L;
+
+	public FrequenciaQuinaTO() {
+
+	}
+
+	/**
+	 * Cria uma frequencia a partir da lista de quinas.
+	 * 
+	 * @param quina
+	 */
+	public FrequenciaQuinaTO(List<Integer> quina) {
+
+		if (quina != null && quina.size() >= 5) {
+			this.dezena1 = quina.get(0);
+			this.dezena2 = quina.get(1);
+			this.dezena3 = quina.get(2);
+			this.dezena4 = quina.get(3);
+			this.dezena5 = quina.get(4);
+		}
+
+	}
 
 	/**
 	 * @return the id
@@ -206,4 +228,35 @@ public class FrequenciaQuinaTO implements Serializable {
 		this.dezena5 = dezena5;
 	}
 
+	public String getInsertSQL() {
+
+		StringBuffer bf = new StringBuffer();
+
+		bf
+				.append("INSERT INTO tbfrequenciaquinas(id, dezena1, dezena2, dezena3, dezena4, dezena5, qtdSorteada, atrasoAtual, atrasoUltimo, atrasoMaior) ");
+		bf.append(" VALUES ( ");
+		bf.append(this.id);
+		bf.append(", ");
+		bf.append(this.dezena1);
+		bf.append(", ");
+		bf.append(this.dezena2);
+		bf.append(", ");
+		bf.append(this.dezena3);
+		bf.append(", ");
+		bf.append(this.dezena4);
+		bf.append(", ");
+		bf.append(this.dezena5);
+		bf.append(", ");
+		bf.append(this.qtdSorteada);
+		bf.append(", ");
+		bf.append(this.atrasoAtual);
+		bf.append(", ");
+		bf.append(this.atrasoUltimo);
+		bf.append(", ");
+		bf.append(this.atrasoMaior);
+		bf.append(")");
+
+		return bf.toString();
+
+	}
 }
