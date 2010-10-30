@@ -17,6 +17,13 @@ import br.com.cjm.mega.datatype.FrequenciaQuinaTO;
 import br.com.cjm.mega.datatype.FrequenciaTrincaTO;
 import br.com.cjm.mega.persistence.HibernateUtil;
 
+/**
+ * Serviço para processar as frequencias da sena (dezenas, dupla, trinca, quadra
+ * e quina).
+ * 
+ * @author Cristiano
+ * 
+ */
 public class FrequenciaServiceImpl {
 
 	/**

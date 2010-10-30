@@ -70,4 +70,13 @@ public class MegaUtil {
 		return out;
 	}
 
+	public static boolean isNullOrBlack(String value) {
+
+		if (value == null || value.trim().length() == 0)
+			return true;
+
+		return false;
+
+	}
+
 }
