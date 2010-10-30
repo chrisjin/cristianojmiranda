@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
+import org.apache.log4j.Logger;
 import org.jdom.JDOMException;
 
-import junit.framework.TestCase;
 import br.com.cjm.mega.business.impl.FrequenciaServiceImpl;
 import br.com.cjm.mega.business.impl.ResultadosHtmlParseServiceImpl;
 import br.com.cjm.mega.business.impl.SorteioServiceImpl;
@@ -22,6 +24,8 @@ import br.com.cjm.mega.datatype.FrequenciaTrincaTO;
  * 
  */
 public class ResultadosHtmlParseServiceTest extends TestCase {
+
+	public Logger log = Logger.getLogger(ResultadosHtmlParseServiceTest.class);
 
 	/**
 	 * Teste para carregar a base de frequencias por dezenas
@@ -90,7 +94,13 @@ public class ResultadosHtmlParseServiceTest extends TestCase {
 	public void testProcessarSorteio() throws MalformedURLException,
 			JDOMException, IOException {
 
-		SorteioServiceImpl.getInstance().procesarUltimoSorteio();
+		SorteioServiceImpl.getInstance().procesarSorteioOnline(1L);
+
+	}
+
+	public void testLog() {
+
+		log.debug("Teste");
 
 	}
 
