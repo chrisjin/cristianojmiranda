@@ -2,6 +2,7 @@ package br.com.cjm.mega.datatype;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -263,6 +264,65 @@ public class ConcursoTO implements Serializable {
 	 */
 	public void setVrAcumuladoNatal(Float vrAcumuladoNatal) {
 		this.vrAcumuladoNatal = vrAcumuladoNatal;
+	}
+
+	/**
+	 * Obtem uma lista ordenada com as dezenas do concurso
+	 * 
+	 * @return
+	 */
+	public List<Integer> obtemDezenasOrdenada() {
+
+		List<Integer> dezenas = new ArrayList<Integer>();
+
+		if (this.dezenas != null) {
+
+			for (DezenaTO d : this.dezenas) {
+
+				dezenas.add(d.getVrDezena());
+			}
+
+			Collections.sort(dezenas);
+		}
+
+		return dezenas;
+
+	}
+
+	/**
+	 * Obtem uma relação com as possiveis quinas para o concurso
+	 * 
+	 * @return
+	 */
+	public List<List<Integer>> obtemPossiveisQuinas() {
+
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+
+		List<Integer> dezenas = obtemDezenasOrdenada();
+
+		if (!dezenas.isEmpty()) {
+
+			for (int i = 0; i < dezenas.size(); i++) {
+
+				List<Integer> q = new ArrayList<Integer>(5);
+				for (int j = 0; j < dezenas.size(); j++) {
+
+					if (j != i) {
+
+						q.add(dezenas.get(j));
+
+					}
+
+				}
+
+				result.add(q);
+
+			}
+
+		}
+
+		return result;
+
 	}
 
 }

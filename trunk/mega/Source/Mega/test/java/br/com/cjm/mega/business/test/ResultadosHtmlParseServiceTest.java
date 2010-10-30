@@ -1,10 +1,16 @@
 package br.com.cjm.mega.business.test;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Map;
+
+import org.jdom.JDOMException;
 
 import junit.framework.TestCase;
 import br.com.cjm.mega.business.impl.FrequenciaServiceImpl;
 import br.com.cjm.mega.business.impl.ResultadosHtmlParseServiceImpl;
+import br.com.cjm.mega.business.impl.SorteioServiceImpl;
+import br.com.cjm.mega.datatype.FrequenciaDezenasTO;
 import br.com.cjm.mega.datatype.FrequenciaDuplasTO;
 import br.com.cjm.mega.datatype.FrequenciaQuadraTO;
 import br.com.cjm.mega.datatype.FrequenciaTrincaTO;
@@ -22,8 +28,10 @@ public class ResultadosHtmlParseServiceTest extends TestCase {
 	 */
 	public void testCarregarFrequencias() {
 
-		FrequenciaServiceImpl service = new FrequenciaServiceImpl();
-		service.processarFrequencias();
+		Map<Integer, FrequenciaDezenasTO> frequencias = FrequenciaServiceImpl
+				.getInstance().criarFrequencia(false);
+		FrequenciaServiceImpl.getInstance().processarFrequencia(null,
+				frequencias);
 
 	}
 
@@ -32,10 +40,10 @@ public class ResultadosHtmlParseServiceTest extends TestCase {
 	 */
 	public void testCarregarFrequenciasDuplas() {
 
-		FrequenciaServiceImpl service = new FrequenciaServiceImpl();
-		Map<Integer, FrequenciaDuplasTO> frequencias = service
-				.criarFrequenciaDuplas(false);
-		service.processarFrequenciaDuplas(null, frequencias);
+		Map<Integer, FrequenciaDuplasTO> frequencias = FrequenciaServiceImpl
+				.getInstance().criarFrequenciaDuplas(false);
+		FrequenciaServiceImpl.getInstance().processarFrequenciaDuplas(null,
+				frequencias);
 	}
 
 	/**
@@ -43,10 +51,10 @@ public class ResultadosHtmlParseServiceTest extends TestCase {
 	 */
 	public void testCarregarFrequenciasTrincas() {
 
-		FrequenciaServiceImpl service = new FrequenciaServiceImpl();
-		Map<Integer, FrequenciaTrincaTO> frequencias = service
-				.criarFrequenciaTrincas(false);
-		service.processarFrequenciaTrincas(null, frequencias);
+		Map<Integer, FrequenciaTrincaTO> frequencias = FrequenciaServiceImpl
+				.getInstance().criarFrequenciaTrincas(false);
+		FrequenciaServiceImpl.getInstance().processarFrequenciaTrincas(null,
+				frequencias);
 	}
 
 	/**
@@ -54,10 +62,19 @@ public class ResultadosHtmlParseServiceTest extends TestCase {
 	 */
 	public void testCarregarFrequenciasQuadras() {
 
-		FrequenciaServiceImpl service = new FrequenciaServiceImpl();
-		Map<Integer, FrequenciaQuadraTO> frequencias = service
-				.criarFrequenciaQuadra(false);
-		service.processarFrequenciaQuadras(null, frequencias);
+		Map<Integer, FrequenciaQuadraTO> frequencias = FrequenciaServiceImpl
+				.getInstance().criarFrequenciaQuadra(false);
+		FrequenciaServiceImpl.getInstance().processarFrequenciaQuadras(null,
+				frequencias);
+	}
+
+	/**
+	 * Teste para carregar a base de frequencias de quinas
+	 */
+	public void testCarregarFrequenciasQuinas() {
+
+		// FrequenciaServiceImpl.getInstance().criarFrequenciaQuina();
+		FrequenciaServiceImpl.getInstance().processarFrequenciaQuina(null);
 	}
 
 	/**
@@ -67,6 +84,13 @@ public class ResultadosHtmlParseServiceTest extends TestCase {
 
 		ResultadosHtmlParseServiceImpl service = new ResultadosHtmlParseServiceImpl();
 		service.importarResultadosHtml("classpath:D_MEGA2.HTM");
+
+	}
+
+	public void testProcessarSorteio() throws MalformedURLException,
+			JDOMException, IOException {
+
+		SorteioServiceImpl.getInstance().procesarUltimoSorteio();
 
 	}
 
