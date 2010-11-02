@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.1.30  E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm Tue Nov 02 12:50:56 2010
+AVRASM ver. 2.1.30  E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm Tue Nov 02 15:14:06 2010
 
 
 EQU  SIGNATURE_000 0000001e
@@ -699,20 +699,23 @@ DEF  lcdinput     r19
 DEF  secCount     r21
 DEF  r            r16
 CSEG msg_hhmmss   00000000
-CSEG msg_1        00000006
-CSEG start        00000009
+CSEG start        00000006
 CSEG RESET        00000011
-CSEG count1s      0000002c
-CSEG lcdinit      00000060
-CSEG writemsg     00000059
-CSEG loop         00000027
-CSEG done         00000029
-CSEG n0           0000003c
-CSEG acende       00000039
-CSEG apaga        0000003b
-CSEG lcd_busy     00000040
-CSEG looplcd      00000045
-CSEG lcd_cmd      0000004d
-CSEG lcd_write    00000053
-CSEG writedone    0000005f
-CSEG end          0000006d
+CSEG count1s      00000036
+CSEG lcdinit      00000078
+CSEG writemsg     0000006c
+CSEG cronoIni     00000025
+CSEG loop         00000034
+CSEG exitCount1   00000047
+CSEG atualizarLcd 0000004b
+CSEG onLed        00000044
+CSEG offLed       00000046
+CSEG lcd_cmd      00000060
+CSEG lcd_busy     00000053
+CSEG looplcd      00000058
+CSEG lcd_write    00000066
+CSEG writemsgmp   0000006f
+CSEG writemsgsram 00000071
+CSEG writemsgbd   00000072
+CSEG writedone    00000077
+CSEG end          00000085
