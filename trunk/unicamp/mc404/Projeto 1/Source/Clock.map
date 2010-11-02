@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.1.30  E:\Unicamp\mc404\Projeto 1\Source\Clock.asm Tue Nov 02 11:01:25 2010
+AVRASM ver. 2.1.30  E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm Tue Nov 02 12:50:56 2010
 
 
 EQU  SIGNATURE_000 0000001e
@@ -690,13 +690,29 @@ EQU  ACIaddr      00000017
 EQU  TWIaddr      00000018
 EQU  SPMRaddr     00000019
 EQU  INT_VECTORS_SIZE 0000001a
-DEF  secsct       r21
+EQU  LCDDATA      00000005
+EQU  LCDCTL       00000008
+EQU  ENABLE       00000000
+EQU  RS           00000001
+EQU  RW           00000002
+DEF  lcdinput     r19
+DEF  secCount     r21
 DEF  r            r16
-CSEG start        00000000
+CSEG msg_hhmmss   00000000
+CSEG msg_1        00000006
+CSEG start        00000009
 CSEG RESET        00000011
-CSEG count1s      00000024
-CSEG loop         0000001f
-CSEG done         00000021
-CSEG n0           00000034
-CSEG acende       00000031
-CSEG apaga        00000033
+CSEG count1s      0000002c
+CSEG lcdinit      00000060
+CSEG writemsg     00000059
+CSEG loop         00000027
+CSEG done         00000029
+CSEG n0           0000003c
+CSEG acende       00000039
+CSEG apaga        0000003b
+CSEG lcd_busy     00000040
+CSEG looplcd      00000045
+CSEG lcd_cmd      0000004d
+CSEG lcd_write    00000053
+CSEG writedone    0000005f
+CSEG end          0000006d
