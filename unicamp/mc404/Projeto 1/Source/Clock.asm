@@ -30,6 +30,7 @@
 ; Mensagens
 ; -----------------------------------------------------------------------------
 msg_hhmmss:  	.db      "HH:MM:SS",0
+msg_n1:  	.db      "RA: 083382 MC404",0
 
 start:
 				rjmp	RESET					; Funcao de Reset
@@ -74,19 +75,19 @@ cronoIni:										; Monta o display do cronometro na SRAM
 				ldi r23, 0x30					; Seta '0' em r23
 				ldi r24, 0x3A					; Seta ':' em r24
 
-				ldi r23, 0x32					; TODO: remover
+				;ldi r23, 0x32					; TODO: remover
 				st X+, r23						; Monta display em memoria
-				ldi r23, 0x33					; TODO: remover
+				;ldi r23, 0x33					; TODO: remover
 				st X+, r23						; HORA
 
 				st X+, r24						; MINUTO
-				ldi r23, 0x35					; TODO: remover
+				;ldi r23, 0x35					; TODO: remover
 				st X+, r23
-				ldi r23, 0x39					; TODO: remover
+				;ldi r23, 0x39					; TODO: remover
 				st X+, r23
 
 				st X+, r24
-				ldi r23, 0x35					; TODO: remover
+				;ldi r23, 0x35					; TODO: remover
 				st X+, r23						; SEGUNDOS
 				st X+, r23
 
@@ -154,6 +155,8 @@ atualizarLcd:	ldi   lcdinput,1				; Apaga o LCD
         		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
 
     			rcall writemsg					; Exibe a mensagem 
+
+				rcall chk24h
 				ret	
 
 
@@ -265,7 +268,6 @@ cronAddUnHora:	ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
 				cpi r24, 0x3A					; Verifica overflow para completar hora
 				breq cronAddDzHora
 
-
 				st X+, r24						; Incrementa o minuto na memoria
 
 				ldi r24, 0x3A
@@ -291,9 +293,6 @@ cronAddDzHora:	ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
 				ld r24, X
 				inc r24
 
-				cpi r24, 0x33					; Verifica overflow para completar dia (24h)
-				breq cronoIniLink				; Reinicia o display
-
 				st X+, r24						; Incrementa o minuto na memoria
 
 				ldi r24, 0x30					; Refaz a parte dos minutos e segundos
@@ -311,6 +310,31 @@ cronAddDzHora:	ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
 
 				ret
 
+
+; Verifica a ocorrencia de 24h
+; -----------------------------------------------------------------------------
+chk24h:			ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
+				
+				ld r24, X+
+				ld r23, X
+
+				cpi r24, 0x32
+				breq chk24hA
+				ret
+
+chk24hA:		cpi r23, 0x34
+				breq chk24hB
+				ret
+
+chk24hB:		rcall cronoIniLink
+				ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
+				ldi   lcdinput,1				; Apaga o LCD
+				rcall lcd_cmd		
+				rcall lcd_busy
+				rcall writemsg					; Exibe a mensagem 
+				ret
 
 
 ; -----------------------------------------------------------------------------
