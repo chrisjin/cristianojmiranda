@@ -85,7 +85,7 @@ cronoIni:										; Monta o display do cronometro na SRAM
 				st X+, r23
 				st X+, r23
 
-				ldi r23, 0
+				ldi r23, 0						; Seta final da leitura
 				st X+, r23
 				ret
 
@@ -103,7 +103,8 @@ count1s:
 			    in r,SREG						; get SREG
 				push r							; and save it in stack			
 			    adiw Y,1
-				cpi  Yh,0x02					; assume 0x200 interrupts make 1 second
+				;cpi  Yh,0x02					; assume 0x200 interrupts make 1 second ; TODO: decomentar
+				cpi  Yh,0x1					; assume 0x200 interrupts make 1 second
 				brne exitCount1
 
 												; -------------------------------
@@ -136,21 +137,32 @@ exitCount1:
 
 ; Atualiz LCD com o cronometro
 ; -----------------------------------------------------------------------------
-atualizarLcd:	ldi   lcdinput,1	; Apaga o LCD
+atualizarLcd:	ldi   lcdinput,1				; Apaga o LCD
 				rcall lcd_cmd		
 				rcall lcd_busy
 
-				ldi r25, 0x1
+				ldi r25, 0x1					; Habilita a leitura LCD para SRAM
 
-				ldi Xh, high(SRAM_START)    ; Seta Xh como o inicio da SRAM
-        		ldi Xl, low(SRAM_START)     ; Seta Xl como o inicio da SRAM
+				rcall cron						; Atualiza os digitos do cronometro
+
+				ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
 
     			rcall writemsg					; Exibe a mensagem 
 				ret	
 
 
+; -----------------------------------------------------------------------------
+cron:			ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
+				
+				ldi r24, 0x7					; Obtem o byte do segundo
+				add Xl, r24
+				ld r24, X
+				inc r24
+				st X, r24
 
-
+				ret
 
 
 ; -----------------------------------------------------------------------------
@@ -206,11 +218,14 @@ writemsg:		cpi r25, 0x0
 				breq writemsgmp
 				rjmp writemsgsram
 
+; -----------------------------------------------------------------------------
 writemsgmp:		lpm lcdinput,Z+      			; load r0 with the character to display, increment the string counter
 				rjmp writemsgbd
 
+; -----------------------------------------------------------------------------
 writemsgsram:	ld lcdinput, X+
 
+; -----------------------------------------------------------------------------
 writemsgbd: 	cpi lcdinput, 0
 				breq writedone
     			rcall lcd_write
