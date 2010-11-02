@@ -29,7 +29,7 @@
 
 ; Mensagens
 ; -----------------------------------------------------------------------------
-msg_hhmmss:  	.db      "  HH:MM:SS",0
+msg_hhmmss:  	.db      "HH:MM:SS",0
 
 start:
 				rjmp	RESET					; Funcao de Reset
@@ -74,15 +74,20 @@ cronoIni:										; Monta o display do cronometro na SRAM
 				ldi r23, 0x30					; Seta '0' em r23
 				ldi r24, 0x3A					; Seta ':' em r24
 
+				ldi r23, 0x32					; TODO: remover
 				st X+, r23						; Monta display em memoria
+				ldi r23, 0x33					; TODO: remover
+				st X+, r23						; HORA
+
+				st X+, r24						; MINUTO
+				ldi r23, 0x35					; TODO: remover
+				st X+, r23
+				ldi r23, 0x39					; TODO: remover
 				st X+, r23
 
 				st X+, r24
-				st X+, r23
-				st X+, r23
-
-				st X+, r24
-				st X+, r23
+				ldi r23, 0x35					; TODO: remover
+				st X+, r23						; SEGUNDOS
 				st X+, r23
 
 				ldi r23, 0						; Seta final da leitura
@@ -104,7 +109,7 @@ count1s:
 				push r							; and save it in stack			
 			    adiw Y,1
 				;cpi  Yh,0x02					; assume 0x200 interrupts make 1 second ; TODO: decomentar
-				cpi  Yh,0x1					; assume 0x200 interrupts make 1 second
+				cpi  Yh,0x1						; assume 0x200 interrupts make 1 second
 				brne exitCount1
 
 												; -------------------------------
@@ -152,6 +157,8 @@ atualizarLcd:	ldi   lcdinput,1				; Apaga o LCD
 				ret	
 
 
+
+; Atualiza o segundo
 ; -----------------------------------------------------------------------------
 cron:			ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
         		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
@@ -160,9 +167,150 @@ cron:			ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
 				add Xl, r24
 				ld r24, X
 				inc r24
+
+				cpi r24, 0x3A					; Verifica overflow unidade segundos
+				breq cronAddSec
+
 				st X, r24
+				ret
+
+; Adiciona uma dezena de segundo
+; -----------------------------------------------------------------------------
+cronAddSec:		ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
+				
+				ldi r24, 0x6					; Obtem o byte do segundo
+				add Xl, r24
+				ld r24, X
+				inc r24							; Adiciona um a dezena
+
+				cpi r24, 0x36					; Verifica overflow das dezenas segundos
+				breq cronAddUnMin				; Adiciona minuto
+
+				
+				st X+, r24
+
+				ldi r24, 0x30					; Atualiza unidade segundo
+				st X, r24
+				ret
+
+
+; Link para funcao que inicializa o cronometro
+; -----------------------------------------------------------------------------
+cronoIniLink:	
+				rjmp cronoIni
+				ret
+
+
+; Atualiza a unidade do minuto
+; -----------------------------------------------------------------------------
+cronAddUnMin:	ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
+				
+				ldi r24, 0x4					; Obtem o byte do minuto
+				add Xl, r24
+				ld r24, X
+				inc r24
+
+				cpi r24, 0x3A					; Verifica overflow unidade dos minutos
+				breq cronAddDzMin
+
+
+				st X+, r24						; Incrementa o minuto na memoria
+
+				ldi r24, 0x3A					; Refaz a parte dos segundos
+				st X+, r24
+				ldi r24, 0x30
+				st X+, r24
+				st X+, r24
 
 				ret
+
+; Atualiza a dezena do minuto
+; -----------------------------------------------------------------------------
+cronAddDzMin:	ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
+				
+				ldi r24, 0x3					; Obtem o byte do minuto
+				add Xl, r24
+				ld r24, X
+				inc r24
+
+				cpi r24, 0x36					; Verifica overflow para completar hora
+				breq cronAddUnHora
+
+
+				st X+, r24						; Incrementa o minuto na memoria
+
+				ldi r24, 0x30					; Refaz a parte dos segundos
+				st X+, r24
+				ldi r24, 0x3A
+				st X+, r24
+				ldi r24, 0x30
+				st X+, r24
+				st X+, r24
+
+				ret
+
+; Atualiza a unidade hora
+; -----------------------------------------------------------------------------
+cronAddUnHora:	ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
+				
+				ldi r24, 0x1					; Obtem o byte do minuto
+				add Xl, r24
+				ld r24, X
+				inc r24
+
+				cpi r24, 0x3A					; Verifica overflow para completar hora
+				breq cronAddDzHora
+
+
+				st X+, r24						; Incrementa o minuto na memoria
+
+				ldi r24, 0x3A
+				st X+, r24
+				ldi r24, 0x30					; Refaz a parte dos minutos e segundos
+				st X+, r24
+				st X+, r24
+				ldi r24, 0x3A
+				st X+, r24
+				ldi r24, 0x30
+				st X+, r24
+				st X+, r24
+
+				ret
+
+; Atualiza a dezena hora
+; -----------------------------------------------------------------------------
+cronAddDzHora:	ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
+				
+				ldi r24, 0x0					; Obtem o byte do minuto
+				add Xl, r24
+				ld r24, X
+				inc r24
+
+				cpi r24, 0x33					; Verifica overflow para completar dia (24h)
+				breq cronoIniLink				; Reinicia o display
+
+				st X+, r24						; Incrementa o minuto na memoria
+
+				ldi r24, 0x30					; Refaz a parte dos minutos e segundos
+				st X+, r24
+				ldi r24, 0x3A					
+				st X+, r24
+				ldi r24, 0x30					
+				st X+, r24
+				st X+, r24
+				ldi r24, 0x3A
+				st X+, r24
+				ldi r24, 0x30
+				st X+, r24
+				st X+, r24
+
+				ret
+
 
 
 ; -----------------------------------------------------------------------------
