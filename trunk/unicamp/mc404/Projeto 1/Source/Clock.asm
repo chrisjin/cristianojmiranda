@@ -11,6 +11,9 @@
 .include "m88def.inc"
 .list
 
+; Registradores utilzados: r16, r19, r21, r22, r23, r24, r25
+; -----------------------------------------------------------------------------
+
 ; Constantes e variaveis
 ; -----------------------------------------------------------------------------
 .equ 			LCDDATA		=	PORTB
@@ -26,11 +29,7 @@
 
 ; Mensagens
 ; -----------------------------------------------------------------------------
-msg_hhmmss:    .db      "  HH:MM:SS",0
-msg_1:    		.db      "one!",0
-
-
-
+msg_hhmmss:  	.db      "  HH:MM:SS",0
 
 start:
 				rjmp	RESET					; Funcao de Reset
@@ -47,8 +46,8 @@ RESET:
 				ldi	r,high(RAMEND)
 				out SPH,r
 				clr secCount					; clear software seconds counter 
-				clr xl							; will use X as an interrupt counter
-				clr xh
+				clr Yl							; will use X as an interrupt counter
+				clr Yh
 				ldi r,1							; era out TIMSK0,r no Atmega88 este registrador está fora do espaço de E/S!
 				sts TIMSK0,r					; enable timer0 overflow interrupt (p.102 datasheet)
 				ldi r,1							; set prescalong: 1= no prescaling 5=  CK/1024 pre-scaling (p 102-103 datasheet)
@@ -57,13 +56,38 @@ RESET:
 
 				rcall lcdinit					; inicializa o LCD
 
-				ldi zl,low(msg_hhmmss*2)   		; Seta a mensagem inicial no LDCD
-    			ldi zh,high(msg_hhmmss*2)
+				clr r25							; Marca como leitura Progam Memory
+				ldi Zl,low(msg_hhmmss*2)   		; Seta a mensagem inicial no LDCD
+    			ldi Zh,high(msg_hhmmss*2)
     			rcall writemsg					; Exibe a mensagem 
-
+				
+				rcall cronoIni					; Inicializ o cronometro na SRAM
 
 				sei								; Habilita interrupção global
 
+; Inicializa o Cronometro
+; -----------------------------------------------------------------------------
+cronoIni:										; Monta o display do cronometro na SRAM
+				ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
+
+				ldi r23, 0x30					; Seta '0' em r23
+				ldi r24, 0x3A					; Seta ':' em r24
+
+				st X+, r23						; Monta display em memoria
+				st X+, r23
+
+				st X+, r24
+				st X+, r23
+				st X+, r23
+
+				st X+, r24
+				st X+, r23
+				st X+, r23
+
+				ldi r23, 0
+				st X+, r23
+				ret
 
 ; -----------------------------------------------------------------------------
 loop:			sleep							; Entra em loop aguardando uma interrupção
@@ -71,43 +95,62 @@ loop:			sleep							; Entra em loop aguardando uma interrupção
 
 
 
-; -----------------------------------------------------------------------------
-done: 											
-    			clr r17
-    			out TCCR0B,r17					; stop timer0 counter: no more interrupts 
-				rjmp PC
-
-
-
-
+; Funcao para ontabilizar 1s no microcontrolador
 ; -----------------------------------------------------------------------------
 												; Funcao de interrupcao acada 1s
 count1s:	
 			    push r							; save into stack
 			    in r,SREG						; get SREG
 				push r							; and save it in stack			
-			    adiw x,1
-				cpi  xh,0x02					; assume 0x200 interrupts make 1 second
-				brne n0
-				clr xl							; got 1 sec, clear 16 bit counter in X
-				clr xh
-				inc secCount					; and increment secon counter
+			    adiw Y,1
+				cpi  Yh,0x02					; assume 0x200 interrupts make 1 second
+				brne exitCount1
+
+												; -------------------------------
+				clr Yl							; got 1 sec, clear 16 bit counter in X
+				clr Yh
+				inc secCount					; Incrementa contador de segund
+
+				rcall atualizarLcd				; Atualiza o cronometro
+
 				bst secCount, 0
-				brtc acende
-				brts apaga
-				rjmp n0
+				brtc onLed
+				brts offLed
+				rjmp exitCount1
 
-acende: 		sbi PORTD,0						; liga led conectado no pino 2
-				rjmp n0							; retorna com interrupções habilitadas
+; -----------------------------------------------------------------------------
+onLed: 			sbi PORTD,0						; liga led conectado no pino 2
+				rjmp exitCount1					; retorna com interrupções habilitadas
 
 
-apaga:			cbi PORTD,0						; liga led conectado no pino 2
-				
-n0:
+; -----------------------------------------------------------------------------
+offLed:			cbi PORTD,0						; liga led conectado no pino 2
+		
+; -----------------------------------------------------------------------------
+exitCount1:
 				pop r							; get SREG from stack
 				out SREG, r						; restore it
 				pop r							; now restore r
-			    reti	
+			    reti
+				
+
+; Atualiz LCD com o cronometro
+; -----------------------------------------------------------------------------
+atualizarLcd:	ldi   lcdinput,1	; Apaga o LCD
+				rcall lcd_cmd		
+				rcall lcd_busy
+
+				ldi r25, 0x1
+
+				ldi Xh, high(SRAM_START)    ; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START)     ; Seta Xl como o inicio da SRAM
+
+    			rcall writemsg					; Exibe a mensagem 
+				ret	
+
+
+
+
 
 
 ; -----------------------------------------------------------------------------
@@ -159,9 +202,16 @@ lcd_write:
 				ret
 
 ; -----------------------------------------------------------------------------
-writemsg:
-    			lpm lcdinput,z+      			; load r0 with the character to display, increment the string counter
-    			cpi lcdinput, 0
+writemsg:		cpi r25, 0x0
+				breq writemsgmp
+				rjmp writemsgsram
+
+writemsgmp:		lpm lcdinput,Z+      			; load r0 with the character to display, increment the string counter
+				rjmp writemsgbd
+
+writemsgsram:	ld lcdinput, X+
+
+writemsgbd: 	cpi lcdinput, 0
 				breq writedone
     			rcall lcd_write
     			rcall lcd_busy
@@ -169,11 +219,11 @@ writemsg:
 
 ; -----------------------------------------------------------------------------
 writedone:
- 	ret
+ 				ret
 
 ; -----------------------------------------------------------------------------
 lcdinit: 										;initialize LCD
-				ldi r22,0xff
+				ldi r22,0xFF
 				out ddrb,r22 					;portb is the LCD data port, 8 bit mode set for output
 				out ddrc,r22					;portc is the LCD control pins set for output
 				ldi lcdinput,56  				; init the LCD. 8 bit mode, 2*16
@@ -190,4 +240,5 @@ lcdinit: 										;initialize LCD
 
 
 
-end:											; Final do programa
+end:			
+				rjmp loop						; Final do programa
