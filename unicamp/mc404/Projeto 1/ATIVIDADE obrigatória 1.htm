@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0074)http://www.ic.unicamp.br/~ducatte/mc404/2010/labs/lab1_obrigatorio_v2.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>ATIVIDADE obrigatória 1</title></head><body>
+<h3>Atividade 1 (obrigatória): <br>
+</h3>
+
+<h3><br>
+</h3>
+
+<h3>Implementando um " cronômetro/relógio de parede" através de
+interrupções</h3>
+
+<br>
+
+<i>Atualizado em 01/10/2010</i><br>
+
+<ol>
+
+  
+  <li>Deseja-se interromper a CPU de um ATmega88 de 1 Mhz (default de
+uma CPU
+sem relógio externo e sem programação de fusível) uma vez por segundo
+utilizando
+interrupções do Timer/Counter 0 a fim de atualizar um "cronômetro"
+conforme
+especificação a seguir. Verifique através do datasheet (p. 103) que
+mesmo com o
+valor máximo do pre-scaler (1024) isto não é possível.
+Para resolver este problema, escreva uma rotina de interrupção
+    <i style="font-weight: bold;">count1sec</i> acionada pelo <span style="font-weight: bold;">Timer/Counter 0</span> e que através de um
+contador global invoca uma subrotina <i style="font-weight: bold;">clock</i> para atualizar o
+cronômetro uma vez por segundo. Para testar o seu programa, a subrotina
+    <i style="font-weight: bold;">clock</i> deve simplesmente incrementar um contador binário de
+segundos e retornar.
+Teste o seu programa com o simulador disparando o seu programa via F5 e
+interrompendo-o
+    <span style="font-weight: bold;">n</span> segundos depois (<span style="font-weight: bold;">n =~ 20</span> pois o simulador é pelo menos 20 vezes mais
+lento que um sistema real).
+Este teste é importante, mas você não precisa submeter a sua solução
+pois ele
+será utilizado no item a seguir.</li>
+<li>Escreva&nbsp; um programa que simula um cronômetro/relógio de
+parede, disparado e congelado
+por uma entrada digital em um pino da Porta B simulando um <b>botão do
+tipo toggle</b>, ou seja,
+ao ser acionada a entrada digital o cronômetro será disparado se
+estiver inativo,
+caso contrário a contagem de tempo deverá ser interrompida. Ao ser
+disparado pela
+entrada digital o "cronômetro" deve inicializar o timer0 para
+interromper a CPU a cada tick do relógio em vez de a cada segundo
+conforme colocado no item anterior. <b>Razão:</b> Você vai usar o
+simulador no teste e o tempo da simulação não tem correlação com
+o tempo real das interrupções. Escreva uma rotina de interrupção que
+essencialmente
+implementa o "cronômetro/relógio de parede" abaixo especificado. Você
+deve
+vizualizar a atualização do "cronômetro" usando o recurso de "Auto
+Step"
+do simulador. <br>
+    <b>Sugestão:</b> a fim de testar o seu programa na situação de
+contorno dada
+pela passagem de 23h59m59s para 00h00m00s inicialize o
+cronômetro com o valor 23h
+59min 00 segs (em hexadecimal teriamos 3233 3539 3030). Você deverá ver
+o relógio passar
+para 23h 59min 59s, depois para 24h 00min 00 seg e imediatamente para
+00h 00min 00 segs. <br>
+</li>
+  <li>Usando as rotinas descritas acima e o HAPSIM para disparar
+as
+diversas funções do cronômetro
+através de
+"botões" ligado á entrada digital e exibir o valor do tempo no
+simulador
+de display LCD escreva um programa que implementa um cronômetro que
+possua no mínimo as seguintes funções: a) inicializa o cronômetro com
+um valor HHMMSS (em ASCII) a ser armazenado na memória de programa com
+a diretiva .DB; b) inicia a execução com a contagem pausada no valor
+inicializado e retoma contagem crescente quando o botão toggle for
+acionado; c) Lap: quando&nbsp; ativado o Lap a contagem de tempo é
+congelada no LCD porém o&nbsp; cronômetro
+continua a contagem voltando a mostra-la quando o Lap é
+desativado.&nbsp; Ajuste a temporização do seu cronômetro para que,
+embora executando no simulador, possua o menor erro possível. </li>
+
+</ol>
+
+<h4>Especificação do cronômetro/relógio de parede</h4>
+
+Escreva uma subrotina <i>clock</i> que toma como entrada um apontador
+no par X
+para uma área de memória com 6 bytes onde é mantido um <b>contador de
+tempo em ASCII no formato
+hhmmss</b> ( horas minutos segundos), onde os bytes do contador
+conterão os
+seguintes valores máximos (em ASCII): 23hs, 59 mins, 59 segs.
+O contador pode ser inicializado com os valores ASCII 00, 00, 00 (em
+hexadecimal: 3030, 3030, 3030) ou outro valor inicial. Cada chamada à subrotina deve somar 1
+segundo ao contador e os seus dígitos devem ser atualizados de forma
+apropriada.
+Depure a sua subrotina com o recurso de "Auto Step" do simulador. <br>
+
+<b>Sugestão:</b> utilize o recurso
+de <b>endereçamento com predecrementação de X</b> para varrer e
+atualizar os dígitos do contador
+da "direita para a esquerda", ou seja, a partir do dígito menos
+significativo de segundos;
+se escrita com cuidado sua subrotina conterá apenas<b> 15
+instruções</b>. Ela será utilizada neste laboratório para atualizar um
+"cronômetro/relógio de parede" acionado a cada segundo por uma rotina
+de interrupção.
+<br>
+
+A subrotina <i>clock</i> deverá também zerar o contador quando o mesmo
+atingir
+o valor 24:00:00 hs. <b>Sugestão:</b> para este fim escreva outra
+subrotina simples,
+<i>chk24h</i> e chame-a imediatamente antes de retornar da subrotina <i>clock</i>.
+Alternativamente você pode colocar o código de <i>chk24h</i>
+diretamente no final da subrotina <i>clock</i>.<br>
+<br>
+Opcional: o valor inicial do relógio pode ser carregado por meio de
+leitura de uma porta, em vez de ser lido da memória de programa. O
+usuário pode definir dígito a dígito na porta de entrada correspondente.<br>
+
+</body></html>
