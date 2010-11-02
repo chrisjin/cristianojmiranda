@@ -36,9 +36,10 @@ start:
 				rjmp	RESET					; Funcao de Reset
 
 .org	0x10
-
+				in r23, pinb
+				bst r23, 0
+				brts loopInicial
     			rjmp count1s					; Salta para a rotina de contagem de segundo ao ocorrer uma interrupção Timer/Counter0
-				;brts count1s
 				rjmp loopInicial
 
 
@@ -71,7 +72,7 @@ RESET:
 
 
 loopInicial:
-				in r23, portb
+				in r23, pinb
 				bst r23, 0
 				brts enableCrono
 				rjmp disableCrono
