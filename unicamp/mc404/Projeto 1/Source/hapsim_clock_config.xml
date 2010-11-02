@@ -94,7 +94,7 @@
          </Position>
          <Config index="0">
             <Color>Red</Color>
-            <Name>run</Name>
+            <Name>Beat</Name>
             <PortPin>
                <Port>PORTD</Port>
                <Bit>0</Bit>
