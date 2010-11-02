@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.1.30  E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm Tue Nov 02 16:50:57 2010
+AVRASM ver. 2.1.30  E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm Tue Nov 02 18:20:58 2010
 
 
 EQU  SIGNATURE_000 0000001e
@@ -699,30 +699,37 @@ DEF  lcdinput     r19
 DEF  secCount     r21
 DEF  r            r16
 CSEG msg_hhmmss   00000000
-CSEG start        00000005
-CSEG RESET        00000011
-CSEG count1s      0000003b
-CSEG lcdinit      000000e0
-CSEG writemsg     000000d4
-CSEG cronoIni     00000025
-CSEG loop         00000039
-CSEG exitCount1   0000004c
-CSEG atualizarLcd 00000050
-CSEG onLed        00000049
-CSEG offLed       0000004b
-CSEG lcd_cmd      000000c8
-CSEG lcd_busy     000000bb
-CSEG cron         00000059
-CSEG cronAddSec   00000063
-CSEG cronAddUnMin 00000071
-CSEG cronoIniLink 0000006f
-CSEG cronAddDzMin 00000080
-CSEG cronAddUnHora 00000091
-CSEG cronAddDzHora 000000a5
-CSEG looplcd      000000c0
-CSEG lcd_write    000000ce
-CSEG writemsgmp   000000d7
-CSEG writemsgsram 000000d9
-CSEG writemsgbd   000000da
-CSEG writedone    000000df
-CSEG end          000000ed
+CSEG msg_n1       00000005
+CSEG start        0000000e
+CSEG RESET        00000012
+CSEG count1s      0000003f
+CSEG loopInicial  00000026
+CSEG lcdinit      000000f5
+CSEG writemsg     000000e9
+CSEG cronoIni     0000002e
+CSEG enableCrono  0000002a
+CSEG disableCrono 0000002c
+CSEG loop         0000003d
+CSEG exitCount1   00000050
+CSEG atualizarLcd 00000054
+CSEG onLed        0000004d
+CSEG offLed       0000004f
+CSEG lcd_cmd      000000dd
+CSEG lcd_busy     000000d0
+CSEG cron         0000005e
+CSEG chk24h       000000be
+CSEG cronAddSec   00000068
+CSEG cronAddUnMin 00000076
+CSEG cronoIniLink 00000074
+CSEG cronAddDzMin 00000085
+CSEG cronAddUnHora 00000096
+CSEG cronAddDzHora 000000aa
+CSEG chk24hA      000000c5
+CSEG chk24hB      000000c8
+CSEG looplcd      000000d5
+CSEG lcd_write    000000e3
+CSEG writemsgmp   000000ec
+CSEG writemsgsram 000000ee
+CSEG writemsgbd   000000ef
+CSEG writedone    000000f4
+CSEG end          00000102

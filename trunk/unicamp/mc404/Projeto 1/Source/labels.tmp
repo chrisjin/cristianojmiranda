@@ -20,32 +20,39 @@
  </OUTPUT_FILES>
  <LABELS>
   <msg_hhmmss><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>32</LINE></msg_hhmmss>
-  <start><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>34</LINE></start>
-  <RESET><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>43</LINE></RESET>
-  <count1s><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>106</LINE></count1s>
-  <lcdinit><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>388</LINE></lcdinit>
-  <writemsg><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>365</LINE></writemsg>
-  <cronoIni><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>70</LINE></cronoIni>
-  <loop><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>98</LINE></loop>
-  <exitCount1><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>136</LINE></exitCount1>
-  <atualizarLcd><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>145</LINE></atualizarLcd>
-  <onLed><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>128</LINE></onLed>
-  <offLed><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>133</LINE></offLed>
-  <lcd_cmd><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>343</LINE></lcd_cmd>
-  <lcd_busy><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>321</LINE></lcd_busy>
-  <cron><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>163</LINE></cron>
-  <cronAddSec><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>179</LINE></cronAddSec>
-  <cronAddUnMin><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>207</LINE></cronAddUnMin>
-  <cronoIniLink><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>200</LINE></cronoIniLink>
-  <cronAddDzMin><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>231</LINE></cronAddDzMin>
-  <cronAddUnHora><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>257</LINE></cronAddUnHora>
-  <cronAddDzHora><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>286</LINE></cronAddDzHora>
-  <looplcd><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>330</LINE></looplcd>
-  <lcd_write><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>354</LINE></lcd_write>
-  <writemsgmp><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>370</LINE></writemsgmp>
-  <writemsgsram><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>374</LINE></writemsgsram>
-  <writemsgbd><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>377</LINE></writemsgbd>
-  <writedone><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>384</LINE></writedone>
-  <end><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>406</LINE></end>
+  <msg_n1><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>33</LINE></msg_n1>
+  <start><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>35</LINE></start>
+  <RESET><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>46</LINE></RESET>
+  <count1s><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>124</LINE></count1s>
+  <loopInicial><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>73</LINE></loopInicial>
+  <lcdinit><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>429</LINE></lcdinit>
+  <writemsg><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>406</LINE></writemsg>
+  <cronoIni><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>87</LINE></cronoIni>
+  <enableCrono><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>79</LINE></enableCrono>
+  <disableCrono><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>82</LINE></disableCrono>
+  <loop><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>115</LINE></loop>
+  <exitCount1><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>154</LINE></exitCount1>
+  <atualizarLcd><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>163</LINE></atualizarLcd>
+  <onLed><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>146</LINE></onLed>
+  <offLed><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>151</LINE></offLed>
+  <lcd_cmd><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>384</LINE></lcd_cmd>
+  <lcd_busy><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>362</LINE></lcd_busy>
+  <cron><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>183</LINE></cron>
+  <chk24h><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>333</LINE></chk24h>
+  <cronAddSec><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>199</LINE></cronAddSec>
+  <cronAddUnMin><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>227</LINE></cronAddUnMin>
+  <cronoIniLink><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>220</LINE></cronoIniLink>
+  <cronAddDzMin><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>251</LINE></cronAddDzMin>
+  <cronAddUnHora><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>277</LINE></cronAddUnHora>
+  <cronAddDzHora><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>305</LINE></cronAddDzHora>
+  <chk24hA><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>343</LINE></chk24hA>
+  <chk24hB><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>347</LINE></chk24hB>
+  <looplcd><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>371</LINE></looplcd>
+  <lcd_write><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>395</LINE></lcd_write>
+  <writemsgmp><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>411</LINE></writemsgmp>
+  <writemsgsram><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>415</LINE></writemsgsram>
+  <writemsgbd><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>418</LINE></writemsgbd>
+  <writedone><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>425</LINE></writedone>
+  <end><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>447</LINE></end>
  </LABELS>
 </ASSEMBLER_INFO>

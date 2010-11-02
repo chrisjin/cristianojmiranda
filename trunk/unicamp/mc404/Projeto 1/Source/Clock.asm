@@ -11,7 +11,7 @@
 .include "m88def.inc"
 .list
 
-; Registradores utilzados: r16, r19, r21, r22, r23, r24, r25
+; Registradores utilzados: r16, r19, r21, r22, r23, r24, r25, r26
 ; -----------------------------------------------------------------------------
 
 ; Constantes e variaveis
@@ -38,6 +38,8 @@ start:
 .org	0x10
 
     			rjmp count1s					; Salta para a rotina de contagem de segundo ao ocorrer uma interrupção Timer/Counter0
+				;brts count1s
+				rjmp loopInicial
 
 
 ; -----------------------------------------------------------------------------
@@ -63,8 +65,22 @@ RESET:
     			rcall writemsg					; Exibe a mensagem 
 				
 				rcall cronoIni					; Inicializ o cronometro na SRAM
+				rjmp loopInicial
 
-				sei								; Habilita interrupção global
+				;sei								; Habilita interrupção global
+
+
+loopInicial:
+				in r23, portb
+				bst r23, 0
+				brts enableCrono
+				rjmp disableCrono
+
+enableCrono:	sei
+				rjmp loop
+
+disableCrono:	cli
+				rjmp loopInicial
 
 ; Inicializa o Cronometro
 ; -----------------------------------------------------------------------------
@@ -96,8 +112,9 @@ cronoIni:										; Monta o display do cronometro na SRAM
 				ret
 
 ; -----------------------------------------------------------------------------
-loop:			sleep							; Entra em loop aguardando uma interrupção
-				rjmp loop						
+loop:			
+				sleep							; Entra em loop aguardando uma interrupção
+				rjmp loop
 
 
 
