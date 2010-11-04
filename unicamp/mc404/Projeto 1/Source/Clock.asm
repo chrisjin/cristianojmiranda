@@ -7,11 +7,13 @@
 ;                                               Cristiano J. Miranda Ra: 083382
 ; -----------------------------------------------------------------------------
 
+
+
 .nolist
 .include "m88def.inc"
 .list
 
-; Registradores utilzados: r16, r19, r21, r22, r23, r24, r25, r26
+; Registradores utilzados: r16, r17, r19, r21, r22, r23, r24, r25, r26,
 ; -----------------------------------------------------------------------------
 
 ; Constantes e variaveis
@@ -25,22 +27,20 @@
 
 .def    		secCount  	= 	r21				; Contador global de seguncos
 .def			r			= 	r16
+.def 			btnStart	= 	r17
 
 
-; Mensagens
-; -----------------------------------------------------------------------------
-msg_hhmmss:  	.db      "HH:MM:SS",0
-msg_n1:  	.db      "RA: 083382 MC404",0
+start:	rjmp	RESET							; Funcao de Reset
 
-start:
-				rjmp	RESET					; Funcao de Reset
+
+.org 	0x003
+				;clr btnStart					; Limpa contador para btnStart
+				rjmp startPressed 						; Trata interrupcao para o pino 0 da porta B (Start/Stop)
+
 
 .org	0x10
-				in r23, pinb
-				bst r23, 0
-				brts loopInicial
     			rjmp count1s					; Salta para a rotina de contagem de segundo ao ocorrer uma interrupção Timer/Counter0
-				rjmp loopInicial
+				rjmp loop
 
 
 ; -----------------------------------------------------------------------------
@@ -52,11 +52,19 @@ RESET:
 				clr secCount					; clear software seconds counter 
 				clr Yl							; will use X as an interrupt counter
 				clr Yh
-				ldi r,1							; era out TIMSK0,r no Atmega88 este registrador está fora do espaço de E/S!
+				clr btnStart					; Limpa contador para btnStart
+
+				ldi r, 1
+				sts PCICR, r  					; set bit 0 of B port to activate PCINT0 interruption
+				sts PCMSK0, r  					; activate PCINT0 interruption
+
+				;ldi r,1						; era out TIMSK0,r no Atmega88 este registrador está fora do espaço de E/S!
 				sts TIMSK0,r					; enable timer0 overflow interrupt (p.102 datasheet)
-				ldi r,1							; set prescalong: 1= no prescaling 5=  CK/1024 pre-scaling (p 102-103 datasheet)
+				;ldi r,1							; set prescalong: 1= no prescaling 5=  CK/1024 pre-scaling (p 102-103 datasheet)
 				out TCCR0B,r					; also starts timer0 counting
-				out SMCR,r						; SMCR=1 selects idle mode sleep and enables sleep (p 37-38 datasheet)
+				
+
+				rcall cronoIni					; Inicializ o cronometro na SRAM
 
 				rcall lcdinit					; inicializa o LCD
 
@@ -64,24 +72,11 @@ RESET:
 				ldi Zl,low(msg_hhmmss*2)   		; Seta a mensagem inicial no LDCD
     			ldi Zh,high(msg_hhmmss*2)
     			rcall writemsg					; Exibe a mensagem 
+				rcall clenPortB
 				
-				rcall cronoIni					; Inicializ o cronometro na SRAM
-				rjmp loopInicial
-
-				;sei								; Habilita interrupção global
-
-
-loopInicial:
-				in r23, pinb
-				bst r23, 0
-				brts enableCrono
-				rjmp disableCrono
-
-enableCrono:	sei
+				sei								; Habilita interrupção global
 				rjmp loop
 
-disableCrono:	cli
-				rjmp loopInicial
 
 ; Inicializa o Cronometro
 ; -----------------------------------------------------------------------------
@@ -112,23 +107,40 @@ cronoIni:										; Monta o display do cronometro na SRAM
 				st X+, r23
 				ret
 
+; Loop principal da aplicação
 ; -----------------------------------------------------------------------------
-loop:			
+loop:			ldi r, low(RAMEND)				; Remove lixo da pilha para evitar overflow
+				out	SPL,r		
+				;clr btnStart					; Limpa contador para btnStart
+				sei								; Habilita interrupção
 				sleep							; Entra em loop aguardando uma interrupção
 				rjmp loop
 
+
+; Trata o acionamento dos botoes da aplicacao
+; -----------------------------------------------------------------------------
+startPressed: 	inc btnStart
+				cpi btnStart, 0x2
+				breq startPressed1
+				ret
+startPressed1:	clr btnStart
+				brts startPressed2
+				set
+				ret
+startPressed2:	clt
+				ret
 
 
 ; Funcao para ontabilizar 1s no microcontrolador
 ; -----------------------------------------------------------------------------
 												; Funcao de interrupcao acada 1s
-count1s:	
+count1s:		brtc loop
 			    push r							; save into stack
 			    in r,SREG						; get SREG
 				push r							; and save it in stack			
 			    adiw Y,1
-				;cpi  Yh,0x02					; assume 0x200 interrupts make 1 second ; TODO: decomentar
-				cpi  Yh,0x1						; assume 0x200 interrupts make 1 second
+				cpi  Yh,0x02					; assume 0x200 interrupts make 1 second ; TODO: decomentar
+				;cpi  Yh,0x1						; assume 0x100 interrupts make 1 second
 				brne exitCount1
 
 												; -------------------------------
@@ -173,6 +185,7 @@ atualizarLcd:	ldi   lcdinput,1				; Apaga o LCD
         		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
 
     			rcall writemsg					; Exibe a mensagem 
+				rcall clenPortB
 
 				rcall chk24h
 				ret	
@@ -352,12 +365,19 @@ chk24hB:		rcall cronoIniLink
 				rcall lcd_cmd		
 				rcall lcd_busy
 				rcall writemsg					; Exibe a mensagem 
+				rcall clenPortB
 				ret
 
 
 ; -----------------------------------------------------------------------------
 ; ### LCD FUNCTIONS ###
 ; -----------------------------------------------------------------------------
+
+; -----------------------------------------------------------------------------
+clenPortB:		clr r22
+				out ddrb, r22
+				out pinb, r22
+				ret
 
 ; -----------------------------------------------------------------------------
 lcd_busy:										; test the busy state
@@ -447,3 +467,8 @@ lcdinit: 										;initialize LCD
 
 end:			
 				rjmp loop						; Final do programa
+
+; Mensagens
+; -----------------------------------------------------------------------------
+msg_hhmmss:  	.db      "HH:MM:SS",0
+msg_n1:  	.db      "RA: 083382 MC404",0
