@@ -6,7 +6,7 @@
          <top>2</top>
          <bottom>403</bottom>
          <left>4</left>
-         <right>419</right>
+         <right>315</right>
       </Position>
       <StayOnTop>0</StayOnTop>
       <Target>ATmega88</Target>
@@ -68,7 +68,7 @@
             <Invert>0</Invert>
          </Config>
          <Config index="2">
-            <Name>F2</Name>
+            <Name>Reset</Name>
             <PortPin>
                <Port>PORTB</Port>
                <Bit>2</Bit>
