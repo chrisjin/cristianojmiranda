@@ -27,20 +27,18 @@
 
 .def    		secCount  	= 	r21				; Contador global de seguncos
 .def			r			= 	r16
-.def 			btnStart	= 	r17
+.def 			btnLap		= 	r17
 
 
 start:	rjmp	RESET							; Funcao de Reset
 
 
 .org 	0x003
-				;clr btnStart					; Limpa contador para btnStart
-				rjmp startPressed 						; Trata interrupcao para o pino 0 da porta B (Start/Stop)
+				rjmp btnPressed 				; Trata interrupcao para o pino 0 da porta B (Start/Stop)
 
 
 .org	0x10
-    			rjmp count1s					; Salta para a rotina de contagem de segundo ao ocorrer uma interrupção Timer/Counter0
-				rjmp loop
+    			rjmp clock						; Salta para a rotina de contagem de segundo ao ocorrer uma interrupção Timer/Counter0
 
 
 ; -----------------------------------------------------------------------------
@@ -52,19 +50,21 @@ RESET:
 				clr secCount					; clear software seconds counter 
 				clr Yl							; will use X as an interrupt counter
 				clr Yh
-				clr btnStart					; Limpa contador para btnStart
+				clr btnLap						; Limpa lap
 
 				ldi r, 1
 				sts PCICR, r  					; set bit 0 of B port to activate PCINT0 interruption
+				ldi r, 1
 				sts PCMSK0, r  					; activate PCINT0 interruption
 
 				;ldi r,1						; era out TIMSK0,r no Atmega88 este registrador está fora do espaço de E/S!
 				sts TIMSK0,r					; enable timer0 overflow interrupt (p.102 datasheet)
 				;ldi r,1							; set prescalong: 1= no prescaling 5=  CK/1024 pre-scaling (p 102-103 datasheet)
 				out TCCR0B,r					; also starts timer0 counting
+				out SMCR,r						; SMCR=1 selects idle mode sleep and enables sleep (p 37-38 datasheet)
 				
 
-				rcall cronoIni					; Inicializ o cronometro na SRAM
+				rcall cronoIniFake				; Inicializ o cronometro na SRAM
 
 				rcall lcdinit					; inicializa o LCD
 
@@ -80,6 +80,35 @@ RESET:
 
 ; Inicializa o Cronometro
 ; -----------------------------------------------------------------------------
+cronoIniFake:										; Monta o display do cronometro na SRAM
+				ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
+
+				ldi r23, 0x30					; Seta '0' em r23
+				ldi r24, 0x3A					; Seta ':' em r24
+
+				ldi r23, 0x32					; TODO: remover
+				st X+, r23						; Monta display em memoria
+				ldi r23, 0x33					; TODO: remover
+				st X+, r23						; HORA
+
+				st X+, r24						; MINUTO
+				ldi r23, 0x35					; TODO: remover
+				st X+, r23
+				ldi r23, 0x39					; TODO: remover
+				st X+, r23
+
+				st X+, r24
+				ldi r23, 0x35					; TODO: remover
+				st X+, r23						; SEGUNDOS
+				st X+, r23
+
+				ldi r23, 0						; Seta final da leitura
+				st X+, r23
+				ret
+
+; Inicializa o Cronometro
+; -----------------------------------------------------------------------------
 cronoIni:										; Monta o display do cronometro na SRAM
 				ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
         		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
@@ -87,19 +116,14 @@ cronoIni:										; Monta o display do cronometro na SRAM
 				ldi r23, 0x30					; Seta '0' em r23
 				ldi r24, 0x3A					; Seta ':' em r24
 
-				;ldi r23, 0x32					; TODO: remover
 				st X+, r23						; Monta display em memoria
-				;ldi r23, 0x33					; TODO: remover
 				st X+, r23						; HORA
 
 				st X+, r24						; MINUTO
-				;ldi r23, 0x35					; TODO: remover
 				st X+, r23
-				;ldi r23, 0x39					; TODO: remover
 				st X+, r23
 
 				st X+, r24
-				;ldi r23, 0x35					; TODO: remover
 				st X+, r23						; SEGUNDOS
 				st X+, r23
 
@@ -111,7 +135,8 @@ cronoIni:										; Monta o display do cronometro na SRAM
 ; -----------------------------------------------------------------------------
 loop:			ldi r, low(RAMEND)				; Remove lixo da pilha para evitar overflow
 				out	SPL,r		
-				;clr btnStart					; Limpa contador para btnStart
+				clr r22
+				out pinb, r22
 				sei								; Habilita interrupção
 				sleep							; Entra em loop aguardando uma interrupção
 				rjmp loop
@@ -119,32 +144,42 @@ loop:			ldi r, low(RAMEND)				; Remove lixo da pilha para evitar overflow
 
 ; Trata o acionamento dos botoes da aplicacao
 ; -----------------------------------------------------------------------------
-startPressed: 	inc btnStart
-				cpi btnStart, 0x2
-				breq startPressed1
+btnPressed: 	in r22, pinb
+				cpi r22, 0x9
+				breq startPressed
+				cpi r22, 0x10
+				breq lapPressed
 				ret
-startPressed1:	clr btnStart
-				brts startPressed2
+
+startPressed:	clr r22
+				out portb, r22
+				brts startPressed1
 				set
 				ret
-startPressed2:	clt
+
+startPressed1:	clr r22
+				out pinb, r22
+				clt
 				ret
+
+lapPressed:		ret
 
 
 ; Funcao para ontabilizar 1s no microcontrolador
 ; -----------------------------------------------------------------------------
 												; Funcao de interrupcao acada 1s
-count1s:		brtc loop
+clock:			brtc loop
 			    push r							; save into stack
 			    in r,SREG						; get SREG
 				push r							; and save it in stack			
 			    adiw Y,1
-				cpi  Yh,0x02					; assume 0x200 interrupts make 1 second ; TODO: decomentar
-				;cpi  Yh,0x1						; assume 0x100 interrupts make 1 second
+				;cpi  Yh,0x02					; assume 0x200 interrupts make 1 second ; TODO: decomentar
+				cpi  Yh,0x1						; assume 0x100 interrupts make 1 second
 				brne exitCount1
+				rjmp count1s
 
 												; -------------------------------
-				clr Yl							; got 1 sec, clear 16 bit counter in X
+count1s:		clr Yl							; got 1 sec, clear 16 bit counter in X
 				clr Yh
 				inc secCount					; Incrementa contador de segund
 
@@ -173,7 +208,9 @@ exitCount1:
 
 ; Atualiz LCD com o cronometro
 ; -----------------------------------------------------------------------------
-atualizarLcd:	ldi   lcdinput,1				; Apaga o LCD
+atualizarLcd:	cpi btnLap, 0x1
+				breq atualizarLcd1
+				ldi   lcdinput,1				; Apaga o LCD
 				rcall lcd_cmd		
 				rcall lcd_busy
 
@@ -188,7 +225,7 @@ atualizarLcd:	ldi   lcdinput,1				; Apaga o LCD
 				rcall clenPortB
 
 				rcall chk24h
-				ret	
+atualizarLcd1:	ret	
 
 
 
