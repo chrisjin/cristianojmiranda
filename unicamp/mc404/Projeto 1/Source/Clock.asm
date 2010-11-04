@@ -30,17 +30,25 @@
 .def 			btnLap		= 	r17
 
 
+; Inicializa a aplicacao
+; -----------------------------------------------------------------------------
 start:	rjmp	RESET							; Funcao de Reset
 
 
+; Tratamento de interrupcao para os botoes de Start-Stop
+; -----------------------------------------------------------------------------
 .org 	0x003
-				rjmp btnPressed 				; Trata interrupcao para o pino 0 da porta B (Start/Stop)
+				rjmp btnPressed 				; Trata interrupcao para o botao Start/Stop
+				rjmp btnPressed 				; Trata interrupcao para o botao Lap
 
 
+; Tratamento de interrupcao para o timer
+; -----------------------------------------------------------------------------
 .org	0x10
     			rjmp clock						; Salta para a rotina de contagem de segundo ao ocorrer uma interrupção Timer/Counter0
 
 
+; Inicia a aplicacao
 ; -----------------------------------------------------------------------------
 RESET:
 			    ldi r, low(RAMEND)
@@ -53,13 +61,14 @@ RESET:
 				clr btnLap						; Limpa lap
 
 				ldi r, 1
-				sts PCICR, r  					; set bit 0 of B port to activate PCINT0 interruption
-				ldi r, 1
-				sts PCMSK0, r  					; activate PCINT0 interruption
+				sts PCICR, r  					; set B port to activate PCINT0 and PCINT1 interruption
+				;ldi r, 3
+				ldi r, 7
+				sts PCMSK0, r  					; activate PCINT0 and PCINT1 interruption
 
-				;ldi r,1						; era out TIMSK0,r no Atmega88 este registrador está fora do espaço de E/S!
+				ldi r,1							; era out TIMSK0,r no Atmega88 este registrador está fora do espaço de E/S!
 				sts TIMSK0,r					; enable timer0 overflow interrupt (p.102 datasheet)
-				;ldi r,1							; set prescalong: 1= no prescaling 5=  CK/1024 pre-scaling (p 102-103 datasheet)
+				ldi r,1							; set prescalong: 1= no prescaling 5=  CK/1024 pre-scaling (p 102-103 datasheet)
 				out TCCR0B,r					; also starts timer0 counting
 				out SMCR,r						; SMCR=1 selects idle mode sleep and enables sleep (p 37-38 datasheet)
 				
@@ -107,6 +116,8 @@ cronoIniFake:										; Monta o display do cronometro na SRAM
 				st X+, r23
 				ret
 
+resetLink:		rjmp RESET
+
 ; Inicializa o Cronometro
 ; -----------------------------------------------------------------------------
 cronoIni:										; Monta o display do cronometro na SRAM
@@ -147,22 +158,38 @@ loop:			ldi r, low(RAMEND)				; Remove lixo da pilha para evitar overflow
 btnPressed: 	in r22, pinb
 				cpi r22, 0x9
 				breq startPressed
-				cpi r22, 0x10
+				cpi r22, 0xA
 				breq lapPressed
+				cpi r22, 0xc
+				breq resetLink
 				ret
 
-startPressed:	clr r22
+; Acionamento do botao Start
+; -----------------------------------------------------------------------------
+startPressed:	clr r22                         
 				out portb, r22
 				brts startPressed1
 				set
 				ret
 
+; Acionamento do botao Stop
+; -----------------------------------------------------------------------------
 startPressed1:	clr r22
 				out pinb, r22
 				clt
 				ret
 
-lapPressed:		ret
+; Acionamento do botao LAP
+; -----------------------------------------------------------------------------
+lapPressed:		cpi btnLap, 0x0
+				breq lapPressedOff
+				clr btnLap
+				ret
+
+; Lap Off
+; -----------------------------------------------------------------------------
+lapPressedOff:	inc btnLap
+				ret
 
 
 ; Funcao para ontabilizar 1s no microcontrolador
@@ -173,12 +200,13 @@ clock:			brtc loop
 			    in r,SREG						; get SREG
 				push r							; and save it in stack			
 			    adiw Y,1
-				;cpi  Yh,0x02					; assume 0x200 interrupts make 1 second ; TODO: decomentar
-				cpi  Yh,0x1						; assume 0x100 interrupts make 1 second
+				cpi  Yh,0x03					; assume 0x200 interrupts make 1 second 
 				brne exitCount1
 				rjmp count1s
 
-												; -------------------------------
+
+; Rotina que executa a cada 1 segundo (aproximandamente)
+; -----------------------------------------------------------------------------
 count1s:		clr Yl							; got 1 sec, clear 16 bit counter in X
 				clr Yh
 				inc secCount					; Incrementa contador de segund
@@ -190,14 +218,17 @@ count1s:		clr Yl							; got 1 sec, clear 16 bit counter in X
 				brts offLed
 				rjmp exitCount1
 
+; Acende o led do beat
 ; -----------------------------------------------------------------------------
 onLed: 			sbi PORTD,0						; liga led conectado no pino 2
 				rjmp exitCount1					; retorna com interrupções habilitadas
 
 
+; Apaga o led do beat
 ; -----------------------------------------------------------------------------
 offLed:			cbi PORTD,0						; liga led conectado no pino 2
 		
+; Sai da rotina de interrupcao
 ; -----------------------------------------------------------------------------
 exitCount1:
 				pop r							; get SREG from stack
@@ -208,23 +239,27 @@ exitCount1:
 
 ; Atualiz LCD com o cronometro
 ; -----------------------------------------------------------------------------
-atualizarLcd:	cpi btnLap, 0x1
-				breq atualizarLcd1
-				ldi   lcdinput,1				; Apaga o LCD
-				rcall lcd_cmd		
-				rcall lcd_busy
-
-				ldi r25, 0x1					; Habilita a leitura LCD para SRAM
+atualizarLcd:	ldi r25, 0x1					; Habilita a leitura LCD para SRAM
 
 				rcall cron						; Atualiza os digitos do cronometro
 
 				ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
         		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
 
+				cpi btnLap, 0x1					; Desabilita a atualizacao do lcd ao acionar lap
+				breq atualizarLcd1
+
+				ldi   lcdinput,1				; Apaga o LCD
+				rcall lcd_cmd		
+				rcall lcd_busy
+
     			rcall writemsg					; Exibe a mensagem 
 				rcall clenPortB
 
 				rcall chk24h
+
+; Sai da rotina de atualizacao do LCD sem exibir nada, no caso do lap estiver ativado
+; -----------------------------------------------------------------------------
 atualizarLcd1:	ret	
 
 
