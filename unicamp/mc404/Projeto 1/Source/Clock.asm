@@ -82,6 +82,7 @@ RESET:
     			ldi Zh,high(msg_hhmmss*2)
     			rcall writemsg					; Exibe a mensagem 
 				rcall clenPortB
+				clt
 				
 				sei								; Habilita interrupção global
 				rjmp loop
