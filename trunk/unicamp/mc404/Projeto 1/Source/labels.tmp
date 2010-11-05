@@ -1,65 +1,65 @@
 <ASSEMBLER_INFO>
- <VERSION>2.1.42</VERSION>
+ <VERSION>2.1.30</VERSION>
  <DEVICE>ATmega88</DEVICE>
- <WORKING_DIR>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source</WORKING_DIR>
+ <WORKING_DIR>E:\Unicamp\mc404\svn\Projeto 1\Source</WORKING_DIR>
  <INCLUDE_PATH>
   <DIR>C:\Arquivos de programas\Atmel\AVR Tools\AvrAssembler2\Appnotes</DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</SOURCE_FILE>
+ <SOURCE_FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</SOURCE_FILE>
  <INCLUDED_FILES>
   <FILE>C:\Arquivos de programas\Atmel\AVR Tools\AvrAssembler2\Appnotes\m88def.inc</FILE>
  </INCLUDED_FILES>
  <OBJECT_FILES>
-  <FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.obj</FILE>
+  <FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.obj</FILE>
  </OBJECT_FILES>
  <HEX_FILES>
-  <FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.hex</FILE>
+  <FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.hex</FILE>
  </HEX_FILES>
  <OUTPUT_FILES>
-  <FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.map</FILE>
+  <FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.map</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <start><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>35</LINE></start>
-  <RESET><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>53</LINE></RESET>
-  <btnPressed><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>158</LINE></btnPressed>
-  <clock><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>198</LINE></clock>
-  <cronoIniFake><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>92</LINE></cronoIniFake>
-  <lcdinit><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>522</LINE></lcdinit>
-  <msg_hhmmss><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>545</LINE></msg_hhmmss>
-  <writemsg><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>499</LINE></writemsg>
-  <clenPortB><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>449</LINE></clenPortB>
-  <loop><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>147</LINE></loop>
-  <resetLink><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>119</LINE></resetLink>
-  <cronoIni><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>123</LINE></cronoIni>
-  <startPressed><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>169</LINE></startPressed>
-  <lapPressed><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>184</LINE></lapPressed>
-  <startPressed1><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>177</LINE></startPressed1>
-  <lapPressedOff><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>191</LINE></lapPressedOff>
-  <exitCount1><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>233</LINE></exitCount1>
-  <count1s><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>210</LINE></count1s>
-  <atualizarLcd><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>242</LINE></atualizarLcd>
-  <onLed><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>223</LINE></onLed>
-  <offLed><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>229</LINE></offLed>
-  <cron><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>269</LINE></cron>
-  <atualizarLcd1><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>263</LINE></atualizarLcd1>
-  <lcd_cmd><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>477</LINE></lcd_cmd>
-  <lcd_busy><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>455</LINE></lcd_busy>
-  <chk24h><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>419</LINE></chk24h>
-  <cronAddSec><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>285</LINE></cronAddSec>
-  <cronAddUnMin><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>313</LINE></cronAddUnMin>
-  <cronoIniLink><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>306</LINE></cronoIniLink>
-  <cronAddDzMin><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>337</LINE></cronAddDzMin>
-  <cronAddUnHora><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>363</LINE></cronAddUnHora>
-  <cronAddDzHora><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>391</LINE></cronAddDzHora>
-  <chk24hA><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>429</LINE></chk24hA>
-  <chk24hB><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>433</LINE></chk24hB>
-  <looplcd><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>464</LINE></looplcd>
-  <lcd_write><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>488</LINE></lcd_write>
-  <writemsgmp><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>504</LINE></writemsgmp>
-  <writemsgsram><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>508</LINE></writemsgsram>
-  <writemsgbd><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>511</LINE></writemsgbd>
-  <writedone><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>518</LINE></writedone>
-  <end><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>540</LINE></end>
-  <msg_n1><FILE>C:\Documents and Settings\ra083382\Meus documentos\Downloads\Projeto 1\Projeto 1\Source\Clock.asm</FILE><LINE>546</LINE></msg_n1>
+  <start><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>35</LINE></start>
+  <RESET><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>53</LINE></RESET>
+  <btnPressed><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>159</LINE></btnPressed>
+  <clock><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>199</LINE></clock>
+  <cronoIniFake><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>93</LINE></cronoIniFake>
+  <lcdinit><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>523</LINE></lcdinit>
+  <msg_hhmmss><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>546</LINE></msg_hhmmss>
+  <writemsg><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>500</LINE></writemsg>
+  <clenPortB><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>450</LINE></clenPortB>
+  <loop><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>148</LINE></loop>
+  <resetLink><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>120</LINE></resetLink>
+  <cronoIni><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>124</LINE></cronoIni>
+  <startPressed><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>170</LINE></startPressed>
+  <lapPressed><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>185</LINE></lapPressed>
+  <startPressed1><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>178</LINE></startPressed1>
+  <lapPressedOff><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>192</LINE></lapPressedOff>
+  <exitCount1><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>234</LINE></exitCount1>
+  <count1s><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>211</LINE></count1s>
+  <atualizarLcd><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>243</LINE></atualizarLcd>
+  <onLed><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>224</LINE></onLed>
+  <offLed><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>230</LINE></offLed>
+  <cron><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>270</LINE></cron>
+  <atualizarLcd1><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>264</LINE></atualizarLcd1>
+  <lcd_cmd><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>478</LINE></lcd_cmd>
+  <lcd_busy><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>456</LINE></lcd_busy>
+  <chk24h><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>420</LINE></chk24h>
+  <cronAddSec><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>286</LINE></cronAddSec>
+  <cronAddUnMin><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>314</LINE></cronAddUnMin>
+  <cronoIniLink><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>307</LINE></cronoIniLink>
+  <cronAddDzMin><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>338</LINE></cronAddDzMin>
+  <cronAddUnHora><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>364</LINE></cronAddUnHora>
+  <cronAddDzHora><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>392</LINE></cronAddDzHora>
+  <chk24hA><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>430</LINE></chk24hA>
+  <chk24hB><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>434</LINE></chk24hB>
+  <looplcd><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>465</LINE></looplcd>
+  <lcd_write><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>489</LINE></lcd_write>
+  <writemsgmp><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>505</LINE></writemsgmp>
+  <writemsgsram><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>509</LINE></writemsgsram>
+  <writemsgbd><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>512</LINE></writemsgbd>
+  <writedone><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>519</LINE></writedone>
+  <end><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>541</LINE></end>
+  <msg_n1><FILE>E:\Unicamp\mc404\svn\Projeto 1\Source\Clock.asm</FILE><LINE>547</LINE></msg_n1>
  </LABELS>
 </ASSEMBLER_INFO>
