@@ -8,18 +8,27 @@ import javax.servlet.ServletException;
 import org.directwebremoting.WebContextFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import br.unicamp.mc536.t2010s2a.forum.domain.Usuario;
 
-public class UsuarioDWR {
+public class UsuarioDWR extends SpringBeanAutowiringSupport {
 
 	@Autowired
 	private ReloadableResourceBundleMessageSource bundle;
 
+	/**
+	 * @return the bundle
+	 */
 	public ReloadableResourceBundleMessageSource getBundle() {
 		return bundle;
 	}
 
+	/**
+	 * @param bundle
+	 *            the bundle to set
+	 */
 	public void setBundle(ReloadableResourceBundleMessageSource bundle) {
 		this.bundle = bundle;
 	}
@@ -55,13 +64,19 @@ public class UsuarioDWR {
 			WebContextFactory.get().getHttpServletRequest().setAttribute(
 					"usuarios", usuarios);
 
-			/*
-			 * WebContextFactory .get() .getHttpServletRequest() .setAttribute(
-			 * "labelNome", this.bundle .getMessage(
-			 * "label_br_unicamp_mc536_t2010s2a_forum_domain_usuario_nmusuario",
-			 * null, RequestContextUtils .getLocale(WebContextFactory .get()
-			 * .getHttpServletRequest())));
-			 */
+			WebContextFactory
+					.get()
+					.getHttpServletRequest()
+					.setAttribute(
+							"labelNome",
+							this.bundle
+									.getMessage(
+											"label_br_unicamp_mc536_t2010s2a_forum_domain_usuario_nmusuario",
+											null,
+											RequestContextUtils
+													.getLocale(WebContextFactory
+															.get()
+															.getHttpServletRequest())));
 
 			WebContextFactory.get().getHttpServletRequest().setAttribute(
 					"labelNome", "Nome");
@@ -75,5 +90,4 @@ public class UsuarioDWR {
 		return result;
 
 	}
-
 }

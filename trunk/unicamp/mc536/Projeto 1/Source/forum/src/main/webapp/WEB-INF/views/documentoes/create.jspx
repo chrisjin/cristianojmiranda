@@ -7,19 +7,27 @@
   	 
   	 <script type='text/javascript'>
 
+  	 	function openBuscaUsuario() {
+
+  	 		Usuario.listarUsuariosInject(function(list) {
+		  		
+  				$('#buscaUsuario').html(list);
+  				$.blockUI({ message: $('#buscaUsuario') });
+  				$('#buscaUsuario').css('display', 'block');
+  				
+  			});
+  	  	 	
+  	 	}
+
+  	 	function closeBuscaUsuario() {
+
+  	 	 	setTimeout($.unblockUI, 500);
+  	  	 	
+  	 	}
+
 	  	 $(document).ready(function() {
 
-	  		Usuario.listarUsuariosInject(function(list) {
-		  		
-		  				$.blockUI({ message: $('#buscaUsuario') });
-		  				$('#buscaUsuario').css('display', 'block');
-		  				$('#buscaUsuario').html(list);
-		  				
-		  			});
 
-	  		     
-	  		//$.unblockUI
-	  		
 		});
 			
   	 </script>
@@ -37,6 +45,7 @@
         <field:select field="tipoDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_tipoDocumento" itemValue="id" items="${tipodocumentoes}" path="/tipodocumentoes" required="true" z="nEHdJie/IC6w8uwh3kgV5nXaq6s="/>
         <field:input field="documento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_documento" required="true" z="Yn9ECn3OJvpualZC11hOMFUauAA="/>
         <field:datetime dateTimePattern="${documento_dtcriacao_date_format}" field="dtCriacao" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dtCriacao" required="true" z="SVuKt0HUz8aKu2SJ7OHJ+Ut7Ctw="/>
+        <input type="button" value="Consultar Autor" onclick="openBuscaUsuario()" style="float: right;"/>
         <field:input field="nmAutor" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmAutor" z="NEm4QjLFMWvSMybBKSYHHBbxLb0="/>
         <field:textarea field="dsEmailAutor" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsEmailAutor" z="ATvWr4dswvjA12ikYOAsUVslR2A="/>
         <field:select field="idIdiomaDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idIdiomaDocumento" itemValue="id" items="${idiomas}" path="/idiomas" required="true" z="COMh9JOIZboqLXBDwtJLnNtOWV8="/>
