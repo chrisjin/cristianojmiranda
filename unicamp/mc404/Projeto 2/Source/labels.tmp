@@ -1,0 +1,44 @@
+<ASSEMBLER_INFO>
+ <VERSION>2.1.42</VERSION>
+ <DEVICE>ATmega88</DEVICE>
+ <WORKING_DIR>H:\MC404\svn\Projeto 2\Source</WORKING_DIR>
+ <INCLUDE_PATH>
+  <DIR>C:\Arquivos de programas\Atmel\AVR Tools\AvrAssembler2\Appnotes</DIR>
+ </INCLUDE_PATH>
+ <SOURCE_FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</SOURCE_FILE>
+ <INCLUDED_FILES>
+  <FILE>C:\Arquivos de programas\Atmel\AVR Tools\AvrAssembler2\Appnotes\m88def.inc</FILE>
+ </INCLUDED_FILES>
+ <OBJECT_FILES>
+  <FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.obj</FILE>
+ </OBJECT_FILES>
+ <HEX_FILES>
+  <FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.hex</FILE>
+ </HEX_FILES>
+ <OUTPUT_FILES>
+  <FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.map</FILE>
+ </OUTPUT_FILES>
+ <LABELS>
+  <start><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>32</LINE></start>
+  <RESET><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>47</LINE></RESET>
+  <btnPressed><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>102</LINE></btnPressed>
+  <KeyScan><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>85</LINE></KeyScan>
+  <loop><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>90</LINE></loop>
+  <startPressed><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>109</LINE></startPressed>
+  <startPressed1><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>117</LINE></startPressed1>
+  <clenPortB><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>127</LINE></clenPortB>
+  <lcd_busy><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>133</LINE></lcd_busy>
+  <looplcd><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>142</LINE></looplcd>
+  <lcd_cmd><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>155</LINE></lcd_cmd>
+  <lcd_write><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>166</LINE></lcd_write>
+  <writemsg><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>177</LINE></writemsg>
+  <writemsgmp><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>182</LINE></writemsgmp>
+  <writemsgsram><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>186</LINE></writemsgsram>
+  <writemsgbd><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>189</LINE></writemsgbd>
+  <writedone><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>196</LINE></writedone>
+  <lcdinit><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>200</LINE></lcdinit>
+  <end><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>218</LINE></end>
+  <msg_hhmmss><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>223</LINE></msg_hhmmss>
+  <msg_n1><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>224</LINE></msg_n1>
+ </LABELS>
+</ASSEMBLER_INFO>
