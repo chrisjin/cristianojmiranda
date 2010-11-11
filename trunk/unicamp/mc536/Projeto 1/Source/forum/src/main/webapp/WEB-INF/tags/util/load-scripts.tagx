@@ -24,5 +24,15 @@
   <script src="${spring_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
   <script src="${spring_dojo_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
   <script language="JavaScript" type="text/javascript">dojo.require("dojo.parser");</script>
+  
+  <spring:url value="/js/jquery-1.4.2.min.js" var="jsJquery"/>
+  <spring:url value="/js/jquery.blockUI.js" var="jsJqueryBlockUI"/>
+  <spring:url value="/dwr/engine.js" var="jsDwrEngine"/>
+  <spring:url value="/dwr/util.js" var="jsDwrUtil"/>
+  <script src="${jsJquery}" type="text/javascript"><!-- jQuery --></script>
+  <script src="${jsJqueryBlockUI}" type="text/javascript"><!-- jQuery BlockUI --></script>
+  <script src="${jsDwrEngine}" type="text/javascript"><!-- Dwr --></script>
+  <script src="${jsDwrUtil}" type="text/javascript"><!-- Dwr --></script>
+  
 
 </jsp:root>
