@@ -1,44 +1,53 @@
 <ASSEMBLER_INFO>
- <VERSION>2.1.42</VERSION>
+ <VERSION>2.1.30</VERSION>
  <DEVICE>ATmega88</DEVICE>
- <WORKING_DIR>H:\MC404\svn\Projeto 2\Source</WORKING_DIR>
+ <WORKING_DIR>E:\Unicamp\mc404\svn\Projeto 2\Source</WORKING_DIR>
  <INCLUDE_PATH>
   <DIR>C:\Arquivos de programas\Atmel\AVR Tools\AvrAssembler2\Appnotes</DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</SOURCE_FILE>
+ <SOURCE_FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</SOURCE_FILE>
  <INCLUDED_FILES>
   <FILE>C:\Arquivos de programas\Atmel\AVR Tools\AvrAssembler2\Appnotes\m88def.inc</FILE>
  </INCLUDED_FILES>
  <OBJECT_FILES>
-  <FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.obj</FILE>
+  <FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.obj</FILE>
  </OBJECT_FILES>
  <HEX_FILES>
-  <FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.hex</FILE>
+  <FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.hex</FILE>
  </HEX_FILES>
  <OUTPUT_FILES>
-  <FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.map</FILE>
+  <FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.map</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <start><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>32</LINE></start>
-  <RESET><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>47</LINE></RESET>
-  <btnPressed><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>102</LINE></btnPressed>
-  <KeyScan><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>85</LINE></KeyScan>
-  <loop><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>90</LINE></loop>
-  <startPressed><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>109</LINE></startPressed>
-  <startPressed1><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>117</LINE></startPressed1>
-  <clenPortB><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>127</LINE></clenPortB>
-  <lcd_busy><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>133</LINE></lcd_busy>
-  <looplcd><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>142</LINE></looplcd>
-  <lcd_cmd><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>155</LINE></lcd_cmd>
-  <lcd_write><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>166</LINE></lcd_write>
-  <writemsg><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>177</LINE></writemsg>
-  <writemsgmp><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>182</LINE></writemsgmp>
-  <writemsgsram><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>186</LINE></writemsgsram>
-  <writemsgbd><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>189</LINE></writemsgbd>
-  <writedone><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>196</LINE></writedone>
-  <lcdinit><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>200</LINE></lcdinit>
-  <end><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>218</LINE></end>
-  <msg_hhmmss><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>223</LINE></msg_hhmmss>
-  <msg_n1><FILE>H:\MC404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>224</LINE></msg_n1>
+  <start><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>37</LINE></start>
+  <RESET><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>43</LINE></RESET>
+  <lcdinit><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>255</LINE></lcdinit>
+  <lb_clear><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>280</LINE></lb_clear>
+  <writemsg><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>232</LINE></writemsg>
+  <clenPortB><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>182</LINE></clenPortB>
+  <key1><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>92</LINE></key1>
+  <key2><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>96</LINE></key2>
+  <key3><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>100</LINE></key3>
+  <key0><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>128</LINE></key0>
+  <loop><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>75</LINE></loop>
+  <keyPress><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>87</LINE></keyPress>
+  <indexInLcd><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>138</LINE></indexInLcd>
+  <key4><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>104</LINE></key4>
+  <key5><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>108</LINE></key5>
+  <key6><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>112</LINE></key6>
+  <key7><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>116</LINE></key7>
+  <key8><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>120</LINE></key8>
+  <key9><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>124</LINE></key9>
+  <lcdInOverflow><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>153</LINE></lcdInOverflow>
+  <indexInLcd1><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>161</LINE></indexInLcd1>
+  <lcd_cmd><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>210</LINE></lcd_cmd>
+  <lcd_busy><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>188</LINE></lcd_busy>
+  <looplcd><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>197</LINE></looplcd>
+  <lcd_write><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>221</LINE></lcd_write>
+  <writemsgmp><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>237</LINE></writemsgmp>
+  <writemsgsram><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>241</LINE></writemsgsram>
+  <writemsgbd><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>244</LINE></writemsgbd>
+  <writedone><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>251</LINE></writedone>
+  <end><FILE>E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm</FILE><LINE>275</LINE></end>
  </LABELS>
 </ASSEMBLER_INFO>

@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.1.42  H:\MC404\svn\Projeto 2\Source\Calculadora.asm Thu Nov 11 19:53:20 2010
+AVRASM ver. 2.1.30  E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm Fri Nov 12 00:44:45 2010
 
 
 EQU  SIGNATURE_000 0000001e
@@ -132,8 +132,8 @@ EQU  UBRR8        00000000
 EQU  UBRR9        00000001
 EQU  UBRR10       00000002
 EQU  UBRR11       00000003
-EQU  _UBRR0       00000000
-EQU  _UBRR1       00000001
+EQU  UBRR0        00000000
+EQU  UBRR1        00000001
 EQU  UBRR2        00000002
 EQU  UBRR3        00000003
 EQU  UBRR4        00000004
@@ -438,14 +438,14 @@ EQU  TCNT0_4      00000004
 EQU  TCNT0_5      00000005
 EQU  TCNT0_6      00000006
 EQU  TCNT0_7      00000007
-EQU  OCR0A_0      00000000
-EQU  OCR0A_1      00000001
-EQU  OCR0A_2      00000002
-EQU  OCR0A_3      00000003
-EQU  OCR0A_4      00000004
-EQU  OCR0A_5      00000005
-EQU  OCR0A_6      00000006
-EQU  OCR0A_7      00000007
+EQU  OCROA_0      00000000
+EQU  OCROA_1      00000001
+EQU  OCROA_2      00000002
+EQU  OCROA_3      00000003
+EQU  OCROA_4      00000004
+EQU  OCROA_5      00000005
+EQU  OCROA_6      00000006
+EQU  OCROA_7      00000007
 EQU  OCR0B_0      00000000
 EQU  OCR0B_1      00000001
 EQU  OCR0B_2      00000002
@@ -697,24 +697,36 @@ EQU  RS           00000001
 EQU  RW           00000002
 DEF  lcdinput     r19
 DEF  r            r16
+DEF  rr           r18
+DEF  dgCount      r17
+DEF  lcdIoFlag    r25
 CSEG start        00000000
-CSEG RESET        00000009
-CSEG btnPressed   00000020
-CSEG KeyScan      00000018
-CSEG loop         00000019
-CSEG startPressed 00000024
-CSEG startPressed1 00000029
-CSEG clenPortB    0000002d
-CSEG lcd_busy     00000031
-CSEG looplcd      00000036
-CSEG lcd_cmd      0000003e
-CSEG lcd_write    00000044
-CSEG writemsg     0000004a
-CSEG writemsgmp   0000004d
-CSEG writemsgsram 0000004f
-CSEG writemsgbd   00000050
-CSEG writedone    00000055
-CSEG lcdinit      00000056
-CSEG end          00000063
-CSEG msg_hhmmss   00000064
-CSEG msg_n1       00000069
+CSEG RESET        00000001
+CSEG lcdinit      00000081
+CSEG lb_clear     0000008f
+CSEG writemsg     00000075
+CSEG clenPortB    00000058
+CSEG key1         00000021
+CSEG key2         00000024
+CSEG key3         00000027
+CSEG key0         0000003c
+CSEG loop         00000016
+CSEG keyPress     0000001d
+CSEG indexInLcd   0000003f
+CSEG key4         0000002a
+CSEG key5         0000002d
+CSEG key6         00000030
+CSEG key7         00000033
+CSEG key8         00000036
+CSEG key9         00000039
+CSEG lcdInOverflow 0000004a
+CSEG indexInLcd1  00000050
+CSEG lcd_cmd      00000069
+CSEG lcd_busy     0000005c
+CSEG looplcd      00000061
+CSEG lcd_write    0000006f
+CSEG writemsgmp   00000078
+CSEG writemsgsram 0000007a
+CSEG writemsgbd   0000007b
+CSEG writedone    00000080
+CSEG end          0000008e
