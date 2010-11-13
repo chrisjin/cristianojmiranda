@@ -30,6 +30,11 @@
 .def			lcdIoFlag	= 	r25				; Flag para verificar de onde será lido os dados para 
 												; atualizar o lcd, caso 0: Program Memory apontado por Z,
 												; caso contrario: SRAM
+.def 			rBin1H 		= r24
+.def 			rBin1L 		= r23
+.def 			rmp			= r16
+.def			rBin2H		= r20
+.def			rBin2L		= r21
 
 
 ; Inicializa a aplicacao
@@ -66,6 +71,7 @@ RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM
 				rcall key3
 				rcall key0
 				rcall key1
+				rcall keyAdd
 
 				rjmp loop
 
@@ -87,6 +93,10 @@ loop:			ldi r, low(RAMEND)				; Remove lixo da pilha para evitar overflow
 keyPress: 		in r, pinb
 				cpi r, 0x1
 				breq key1
+				ret
+
+key0:			ldi r, 0x30						; Seta o valor 0 a ser exibido no lcd
+				rcall indexInLcd
 				ret
 
 key1:			ldi r, 0x31						; Seta o valor 1 a ser exibido no lcd
@@ -125,8 +135,18 @@ key9:			ldi r, 0x39						; Seta o valor 9 a ser exibido no lcd
 				rcall indexInLcd
 				ret
 
-key0:			ldi r, 0x30						; Seta o valor 0 a ser exibido no lcd
-				rcall indexInLcd
+; Acionamento do multiplicador add
+; -----------------------------------------------------------------------------
+keyAdd:			clr lcdIoFlag					; Marca como leitura Progam Memory
+				ldi dgCount, 0x1				; Limpa a contagem
+				ldi   lcdinput,	1				; Apaga o LCD
+				rcall lcd_cmd
+				ldi Zl,low(lb_add*2)   			; Seta o status inicial no LCD
+    			ldi Zh,high(lb_add*2)
+    			rcall writemsg					; Exibe a mensagem 
+				rcall clenPortB
+												; Prepara para primeira escrita
+				inc lcdIoFlag					; Habilita escrita no lcd a partir da SRAM
 				ret
 
 
@@ -270,11 +290,101 @@ lcdinit: 										; initialize LCD
 
 
 
+; -----------------------------------------------------------------------------
+; ### BCD FUNCTIONS ###
+; -----------------------------------------------------------------------------
+; Bcd5ToBin2
+; ==========
+; converts a 5-bit-BCD to a 16-bit-binary
+; In: Z points to the most signifant digit of the BCD
+; Out: T-flag shows general result:
+;   T=0: Binary in rBin1H:L is valid, Z points to the
+;     first digit of the BCD converted
+;   T=1: Error during conversion. Either the BCD was too
+;     big (must be 0..65535, Z points to BCD where the
+;     overflow occurred) or an illegal BCD was detected
+;     (Z points to the first non-BCD digit).
+; Used registers: rBin1H:L (result), R0 (restored after
+;   use), rBin2H:L (restored after use), rmp
+; Called subroutines: Bin1Mul10
+;
+Bcd5ToBin2:
+	push R0 ; Save register
+	clr rBin1H ; Empty result
+	clr rBin1L
+	ldi rmp,5 ; Set counter to 5
+	mov R0,rmp
+	clt ; Clear error flag
+Bcd5ToBin2a:
+	ld rmp,Z+ ; Read BCD digit
+	cpi rmp,10 ; is it valid?
+	brcc Bcd5ToBin2c ; invalid BCD
+	rcall Bin1Mul10 ; Multiply result by 10
+	brts Bcd5ToBin2c ; Overflow occurred
+	add rBin1L,rmp ; add digit
+	brcc Bcd5ToBin2b ; No overflow to MSB
+	inc rBin1H ; Overflow to MSB
+	breq Bcd5ToBin2c ; Overflow of MSB
+Bcd5ToBin2b:
+	dec R0 ; another digit?
+	brne Bcd5ToBin2a ; Yes
+	pop R0 ; Restore register
+	sbiw ZL,5 ; Set to first BCD digit
+	ret ; Return
+Bcd5ToBin2c:
+	sbiw ZL,1 ; back one digit
+	pop R0 ; Restore register
+	set ; Set T-flag, error
+	ret ; and return
+;
+
+; Bin1Mul10
+; =========
+; multiplies a 16-bit-binary by 10
+; Sub used by: AscToBin2, Asc5ToBin2, Bcd5ToBin2
+; In: 16-bit-binary in rBin1H:L
+; Out: T-flag shows general result:
+;   T=0: Valid result, 16-bit-binary in rBin1H:L ok
+;   T=1: Overflow occurred, number too big
+;
+Bin1Mul10:
+	push rBin2H ; Save the register of 16-bit-binary 2
+	push rBin2L
+	mov rBin2H,rBin1H ; Copy the number
+	mov rBin2L,rBin1L
+	add rBin1L,rBin1L ; Multiply by 2
+	adc rBin1H,rBin1H
+	brcs Bin1Mul10b ; overflow, get out of here
+Bin1Mul10a:
+	add rBin1L,rbin1L ; again multiply by 2 (4*number reached)
+	adc rBin1H,rBin1H
+	brcs Bin1Mul10b ; overflow, get out of here
+	add rBin1L,rBin2L ; add the copied number (5*number reached)
+	adc rBin1H,rBin2H
+	brcs Bin1Mul10b ;overflow, get out of here
+	add rBin1L,rBin1L ; again multiply by 2 (10*number reached)
+	adc rBin1H,rBin1H
+	brcc Bin1Mul10c ; no overflow occurred, don't set T-flag
+Bin1Mul10b:
+	set ; an overflow occurred during multplication
+Bin1Mul10c:
+	pop rBin2L ; Restore the registers of 16-bit-binary 2
+	pop rBin2H
+	ret
+
+
 ; Final de execucao da aplicacao
 ; -----------------------------------------------------------------------------
 end:			
 				rjmp loop						; Final do programa
 
-; Mensagens
+; Mensagens e labels
 ; -----------------------------------------------------------------------------
-lb_clear:  	.db      "0", 0
+lb_clear:  		.db      "0", 0
+lb_add:			.db		 "+", 0
+lb_sub:			.db		 "-", 0
+lb_mult:		.db		 "*", 0
+lb_div:			.db		 "/", 0
+err_div_zero:	.db  	"E = div por 0", 0
+err_precision: 	.db		"E = precisão", 0
+err_operator:	.db		"E = operando?", 0
