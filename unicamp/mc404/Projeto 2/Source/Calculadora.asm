@@ -36,11 +36,15 @@
 .def			rBin2H		= r20
 .def			rBin2L		= r21
 
+.equ			OPSR1		= 0x128				; Operando 1
+.equ			OPSR2		= 0x12C				; Operando 2
+.equ			OPSR		= 0x130				; Tipo de Operacao [1 = Soma, 2 = Multiplicacao, 3 = Divisao]
+
 
 ; Inicializa a aplicacao
 ; -----------------------------------------------------------------------------
 start:			
-				rjmp	RESET							; Funcao de Reset
+				rjmp	RESET					; Funcao de Reset
 
 
 ; Inicia a aplicacao
@@ -64,7 +68,29 @@ RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM
 				ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
         		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
 
+				clr r							; Limpa a operacao a ser executada
+				rcall setOperacao												
+
 				; Test
+
+				clr rBin1H
+				ldi rBin1L, 0b00001010
+				rcall Bin2ToDigit
+				; ----------------
+				;ldi r, 0b10000001 ; 81
+				;ori r, 0x30
+				;ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		;ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
+
+				;st X+, r
+				;clr r
+				;st X, r
+
+    			;rcall writemsg					; Exibe a mensagem 
+				;rcall clenPortB
+
+				; ----------------
+
 				rcall key1
 				rcall key2
 				rcall key3
@@ -72,6 +98,12 @@ RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM
 				rcall key0
 				rcall key1
 				rcall keyAdd
+				rcall key1
+				rcall keyEnter					; Era esperado o resultado 302 no lcd
+
+				ldi Zh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Zl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
+				rcall Bcd5ToBin2
 
 				rjmp loop
 
@@ -86,6 +118,23 @@ loop:			ldi r, low(RAMEND)				; Remove lixo da pilha para evitar overflow
 				sei								; Habilita interrupção
 				sleep							; Entra em loop aguardando uma interrupção
 				rjmp loop
+
+
+
+; Seta o tipo de operacao a ser executada na SRAM, apontada por OPSR, cujo valor esta em r
+; -----------------------------------------------------------------------------
+setOperacao:
+				ldi Zh, high(OPSR)
+				ldi Zl, low(OPSR)
+				st Z, r
+				ret
+
+; Obtem o tipo de operacao a ser executada na SRAM, apontada por OPSR, cujo valor sera armazenado em r
+; -----------------------------------------------------------------------------
+getOperacao:	ldi Zh, high(OPSR)
+				ldi Zl, low(OPSR)
+				ld r, Z
+				ret
 
 
 ; Trata o acionamento dos botoes da aplicacao
@@ -137,11 +186,16 @@ key9:			ldi r, 0x39						; Seta o valor 9 a ser exibido no lcd
 
 ; Acionamento do multiplicador add
 ; -----------------------------------------------------------------------------
+keyClear:	
+				rjmp start						; Volta para o inicio da aplicação
+
+; Acionamento do multiplicador add
+; -----------------------------------------------------------------------------
 keyAdd:			clr lcdIoFlag					; Marca como leitura Progam Memory
-				ldi dgCount, 0x1				; Limpa a contagem
+				clr dgCount						; Limpa a contagem
 				ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd
-				ldi Zl,low(lb_add*2)   			; Seta o status inicial no LCD
+				ldi Zl,low(lb_add*2)   			; Exibe o operador de soma no lcd
     			ldi Zh,high(lb_add*2)
     			rcall writemsg					; Exibe a mensagem 
 				rcall clenPortB
@@ -149,8 +203,16 @@ keyAdd:			clr lcdIoFlag					; Marca como leitura Progam Memory
 				inc lcdIoFlag					; Habilita escrita no lcd a partir da SRAM
 				ret
 
+; Aciona a opcao enter no keypad
+; -----------------------------------------------------------------------------
+keyEnter:
+				ret
+				
 
 
+; Converte os digitos da calculadora para binario
+; -----------------------------------------------------------------------------
+convertToBin:	
 
 
 ; Posiciona SRAM para escrever lcd input
@@ -373,10 +435,107 @@ Bin1Mul10c:
 	ret
 
 
+; Bin2ToBcd5
+; ==========
+; converts a 16-bit-binary to a 5-digit-BCD
+; In: 16-bit-binary in rBin1H:L, Z points to first digit
+;   where the result goes to
+; Out: 5-digit-BCD, Z points to first BCD-digit
+; Used registers: rBin1H:L (unchanged), rBin2H:L (changed),
+;   rmp
+; Called subroutines: Bin2ToDigit
+;
+Bin2ToBcd5:
+	push rBin1H ; Save number
+	push rBin1L
+	ldi rmp,HIGH(10000) ; Start with tenthousands
+	mov rBin2H,rmp
+	ldi rmp,LOW(10000)
+	mov rBin2L,rmp
+	rcall Bin2ToDigit ; Calculate digit
+	ldi rmp,HIGH(1000) ; Next with thousands
+	mov rBin2H,rmp
+	ldi rmp,LOW(1000)
+	mov rBin2L,rmp
+	rcall Bin2ToDigit ; Calculate digit
+	ldi rmp,HIGH(100) ; Next with hundreds
+	mov rBin2H,rmp
+	ldi rmp,LOW(100)
+	mov rBin2L,rmp
+	rcall Bin2ToDigit ; Calculate digit
+	ldi rmp,HIGH(10) ; Next with tens
+	mov rBin2H,rmp
+	ldi rmp,LOW(10)
+	mov rBin2L,rmp
+	rcall Bin2ToDigit ; Calculate digit
+	st z,rBin1L ; Remainder are ones
+	sbiw ZL,4 ; Put pointer to first BCD
+	pop rBin1L ; Restore original binary
+	pop rBin1H
+	ret ; and return
+;
+; Bin2ToDigit
+; ===========
+; converts one decimal digit by continued subraction of a
+;   binary coded decimal
+; Used by: Bin2ToBcd5, Bin2ToAsc5, Bin2ToAsc
+; In: 16-bit-binary in rBin1H:L, binary coded decimal in
+;   rBin2H:L, Z points to current BCD digit
+; Out: Result in Z, Z incremented
+; Used registers: rBin1H:L (holds remainder of the binary),
+;   rBin2H:L (unchanged), rmp
+; Called subroutines: -
+;
+Bin2ToDigit:
+	clr rmp ; digit count is zero
+Bin2ToDigita:
+	cp rBin1H,rBin2H ; Number bigger than decimal?
+	brcs Bin2ToDigitc ; MSB smaller than decimal
+	brne Bin2ToDigitb ; MSB bigger than decimal
+	cp rBin1L,rBin2L ; LSB bigger or equal decimal
+	brcs Bin2ToDigitc ; LSB smaller than decimal
+Bin2ToDigitb:
+	sub rBin1L,rBin2L ; Subtract LSB decimal
+	sbc rBin1H,rBin2H ; Subtract MSB decimal
+	inc rmp ; Increment digit count
+	rjmp Bin2ToDigita ; Next loop
+Bin2ToDigitc:
+	st z+,rmp ; Save digit and increment
+	ret ; done
+;
+; **************************************************
+;
+; Package III: From binary to Hex-ASCII
+;
+
+
 ; Final de execucao da aplicacao
 ; -----------------------------------------------------------------------------
 end:			
 				rjmp loop						; Final do programa
+
+
+; -----------------------------------------------------------------------------
+; ### BCD FUNCTIONS ###
+; -----------------------------------------------------------------------------
+
+
+; Macro para somar 2 numeros imediatos de 16bits, guarda o resultado no primeiro parametro
+; -----------------------------------------------------------------------------
+.macro addi16
+		subi @0, low(-@2)
+        sbci @1, high(-@2)
+.endmacro
+
+
+; Macro para somar 2 numeros de 16bits, guarda o resultado no primeiro parametro
+; -----------------------------------------------------------------------------
+.macro add16
+        add @0, @2
+		adc @1, @3
+.endmacro
+
+
 
 ; Mensagens e labels
 ; -----------------------------------------------------------------------------
@@ -386,5 +545,5 @@ lb_sub:			.db		 "-", 0
 lb_mult:		.db		 "*", 0
 lb_div:			.db		 "/", 0
 err_div_zero:	.db  	"E = div por 0", 0
-err_precision: 	.db		"E = precisão", 0
+err_precision: 	.db		"E = precisao", 0
 err_operator:	.db		"E = operando?", 0
