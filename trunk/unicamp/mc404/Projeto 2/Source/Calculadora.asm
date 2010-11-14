@@ -23,22 +23,50 @@
 .equ 			ENABLE		=	0
 .equ 			RS			= 	1
 .equ 			RW			= 	2
-.def    		lcdinput    =   r19
-.def 			r			= 	r16				; Registrador de uso geral
-.def 			rr			= 	r18				; Registrador de uso geral 2
-.def			dgCount		= 	r17				; Contador de digitos no lcd
+.def    		lcdinput    =   r20
+.def 			r			= 	r21				; Registrador de uso geral
+.def 			rr			= 	r22				; Registrador de uso geral 2
+.def			dgCount		= 	r24				; Contador de digitos no lcd
 .def			lcdIoFlag	= 	r25				; Flag para verificar de onde será lido os dados para 
 												; atualizar o lcd, caso 0: Program Memory apontado por Z,
 												; caso contrario: SRAM
-.def 			rBin1H 		= r24
-.def 			rBin1L 		= r23
-.def 			rmp			= r16
-.def			rBin2H		= r20
-.def			rBin2L		= r21
 
-.equ			OPSR1		= 0x128				; Operando 1
-.equ			OPSR2		= 0x12C				; Operando 2
-.equ			OPSR		= 0x130				; Tipo de Operacao [1 = Soma, 2 = Multiplicacao, 3 = Divisao]
+.equ			OPSR1		= 0x12A				; Operando 1
+.equ			OPSR2		= 0x13A				; Operando 2
+.equ			OPSR		= 0x14A				; Tipo de Operacao [1 = Soma, 2 = Multiplicacao, 3 = Divisao]
+
+
+												; Contantes de multiplicacao
+.def 			Res1 = R2
+.def 			Res2 = R3
+.def 			Res3 = R4
+.def 			Res4 = R5
+.def 			m1L = R16
+.def 			m1M = R17
+.def 			m2L = R18
+.def 			m2M = R19
+.def 			tmp = R20
+
+
+; -----------------------------------------------------------------------------
+; ### MACRO SECTION ###
+; -----------------------------------------------------------------------------
+
+
+; Macro para somar 2 numeros imediatos de 16bits, guarda o resultado no primeiro parametro
+; -----------------------------------------------------------------------------
+.macro addi16
+		subi @0, low(-@2)
+        sbci @1, high(-@2)
+.endmacro
+
+
+; Macro para somar 2 numeros de 16bits, guarda o resultado no primeiro parametro
+; -----------------------------------------------------------------------------
+.macro add16
+        add @0, @2
+		adc @1, @3
+.endmacro
 
 
 ; Inicializa a aplicacao
@@ -69,28 +97,21 @@ RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM
         		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
 
 				clr r							; Limpa a operacao a ser executada
-				rcall setOperacao												
+				rcall setOperacao									
+				
+												; Limpa operadores 1 e 2 na SRAM
+				ldi	Zh, high(OPSR1)			
+				ldi	Zl, low(OPSR1)
+				st Z+, r
+				st Z, r
+
+				ldi	Zh, high(OPSR2)			
+				ldi	Zl, low(OPSR2)
+				st Z+, r
+				st Z, r
+				
 
 				; Test
-
-				clr rBin1H
-				ldi rBin1L, 0b00001010
-				rcall Bin2ToDigit
-				; ----------------
-				;ldi r, 0b10000001 ; 81
-				;ori r, 0x30
-				;ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
-        		;ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
-
-				;st X+, r
-				;clr r
-				;st X, r
-
-    			;rcall writemsg					; Exibe a mensagem 
-				;rcall clenPortB
-
-				; ----------------
-
 				rcall key1
 				rcall key2
 				rcall key3
@@ -100,10 +121,6 @@ RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM
 				rcall keyAdd
 				rcall key1
 				rcall keyEnter					; Era esperado o resultado 302 no lcd
-
-				ldi Zh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
-        		ldi Zl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
-				rcall Bcd5ToBin2
 
 				rjmp loop
 
@@ -146,42 +163,83 @@ keyPress: 		in r, pinb
 
 key0:			ldi r, 0x30						; Seta o valor 0 a ser exibido no lcd
 				rcall indexInLcd
+				clr r8
+				ldi r, 0x0
+				mov r9, r
+				rcall convertToBin
 				ret
 
 key1:			ldi r, 0x31						; Seta o valor 1 a ser exibido no lcd
 				rcall indexInLcd
+				clr r8
+				ldi r, 0x1
+				mov r9, r
+				rcall convertToBin
 				ret
 
 key2:			ldi r, 0x32						; Seta o valor 2 a ser exibido no lcd
 				rcall indexInLcd
+				clr r8
+				ldi r, 0x2
+				mov r9, r
+				rcall convertToBin
 				ret
 
 key3:			ldi r, 0x33						; Seta o valor 3 a ser exibido no lcd
 				rcall indexInLcd
+				clr r8
+				ldi r, 0x3
+				mov r9, r
+				rcall convertToBin
 				ret
 
 key4:			ldi r, 0x34						; Seta o valor 4 a ser exibido no lcd
 				rcall indexInLcd
+				rcall convertToBin
+				clr r8
+				ldi r, 0x4
+				mov r9, r
+				rcall convertToBin
 				ret
 
 key5:			ldi r, 0x35						; Seta o valor 5 a ser exibido no lcd
 				rcall indexInLcd
+				clr r8
+				ldi r, 0x5
+				mov r9, r
+				rcall convertToBin
 				ret
 
 key6:			ldi r, 0x36						; Seta o valor 6 a ser exibido no lcd
 				rcall indexInLcd
+				clr r8
+				ldi r, 0x6
+				mov r9, r
+				rcall convertToBin
 				ret
 
 key7:			ldi r, 0x37						; Seta o valor 7 a ser exibido no lcd
 				rcall indexInLcd
+				clr r8
+				ldi r, 0x7
+				mov r9, r
+				rcall convertToBin
 				ret
 
 key8:			ldi r, 0x38						; Seta o valor 8 a ser exibido no lcd
 				rcall indexInLcd
+				clr r8
+				ldi r, 0x8
+				mov r9, r
+				rcall convertToBin
 				ret
 
 key9:			ldi r, 0x39						; Seta o valor 9 a ser exibido no lcd
 				rcall indexInLcd
+				clr r8
+				ldi r, 0x9
+				mov r9, r
+				rcall convertToBin
 				ret
 
 ; Acionamento do multiplicador add
@@ -210,9 +268,62 @@ keyEnter:
 				
 
 
-; Converte os digitos da calculadora para binario
+; Converte os digitos da calculadora para binario, para fazer as operacoes matematicas
 ; -----------------------------------------------------------------------------
-convertToBin:	
+convertToBin:	rcall getOperacao				; Obtem o operador
+				cpi r, 0x0						; Verifica se algum operador foi setado
+				brne convertToBinA
+
+				ldi	Zh, high(OPSR1)			
+				ldi	Zl, low(OPSR1)
+				ld r, Z+
+				ld rr, Z
+
+				cpi dgCount, 0x2				; Caso seja o primeiro operando
+				brlo convertToBin1				
+				breq convertToBin2
+
+				mov m1M, r
+				mov m1L, rr
+				ldi m2M, 0x0
+				ldi m2L, 0xA					; Multiplica o valor em memoria por 100
+				rcall multiply
+				mov r, res2
+				mov rr, res1
+				add16 r, rr, r8, r9
+				ldi	Zh, high(OPSR1)			
+				ldi	Zl, low(OPSR1)
+				st Z+, r
+				st Z, rr
+				
+				ret
+
+convertToBin1:	add16 r, rr, r8, r9
+				ldi	Zh, high(OPSR1)			
+				ldi	Zl, low(OPSR1)
+				st Z+, r
+				st Z, rr
+				
+				ret
+
+
+convertToBin2:	mov m1M, r
+				mov m1L, rr
+				ldi m2M, 0x0
+				ldi m2L, 0xA					; Multiplica o valor em memoria por 10
+				rcall multiply
+				mov r, res2
+				mov rr, res1
+				add16 r, rr, r8, r9
+				ldi	Zh, high(OPSR1)			
+				ldi	Zl, low(OPSR1)
+				st Z+, r
+				st Z, rr
+
+
+convertToBinA:									; Caso seja o segundo operando
+
+				ret
 
 
 ; Posiciona SRAM para escrever lcd input
@@ -248,12 +359,34 @@ indexInLcd1:	ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
     			rcall writemsg					; Exibe a mensagem 
 				rcall clenPortB
 				ret
+
+
+; -----------------------------------------------------------------------------
+; ### Operations FUNCTIONS ###
+; -----------------------------------------------------------------------------
+;
+; Multiply
+;
+multiply:		clr R20 						; clear for carry operations
+				mul m1M,m2M 					; Multiply MSBs
+				mov Res3,R0 					; copy to MSW Result
+				mov Res4,R1
+				mul m1L,m2L 					; Multiply LSBs
+				mov Res1,R0 					; copy to LSW Result
+				mov Res2,R1
+				mul m1M,m2L 					; Multiply 1M with 2L
+				add Res2,R0 					; Add to Result
+				adc Res3,R1
+				adc Res4,tmp 					; add carry
+				mul m1L,m2M 					; Multiply 1L with 2M
+				add Res2,R0 					; Add to Result
+				adc Res3,R1
+				adc Res4,tmp
+				ret
+;
+; Multiplication done
+;
 				
-				
-
-
-
-
 
 ; -----------------------------------------------------------------------------
 ; ### LCD FUNCTIONS ###
@@ -351,189 +484,11 @@ lcdinit: 										; initialize LCD
 ; -----------------------------------------------------------------------------
 
 
-
-; -----------------------------------------------------------------------------
-; ### BCD FUNCTIONS ###
-; -----------------------------------------------------------------------------
-; Bcd5ToBin2
-; ==========
-; converts a 5-bit-BCD to a 16-bit-binary
-; In: Z points to the most signifant digit of the BCD
-; Out: T-flag shows general result:
-;   T=0: Binary in rBin1H:L is valid, Z points to the
-;     first digit of the BCD converted
-;   T=1: Error during conversion. Either the BCD was too
-;     big (must be 0..65535, Z points to BCD where the
-;     overflow occurred) or an illegal BCD was detected
-;     (Z points to the first non-BCD digit).
-; Used registers: rBin1H:L (result), R0 (restored after
-;   use), rBin2H:L (restored after use), rmp
-; Called subroutines: Bin1Mul10
-;
-Bcd5ToBin2:
-	push R0 ; Save register
-	clr rBin1H ; Empty result
-	clr rBin1L
-	ldi rmp,5 ; Set counter to 5
-	mov R0,rmp
-	clt ; Clear error flag
-Bcd5ToBin2a:
-	ld rmp,Z+ ; Read BCD digit
-	cpi rmp,10 ; is it valid?
-	brcc Bcd5ToBin2c ; invalid BCD
-	rcall Bin1Mul10 ; Multiply result by 10
-	brts Bcd5ToBin2c ; Overflow occurred
-	add rBin1L,rmp ; add digit
-	brcc Bcd5ToBin2b ; No overflow to MSB
-	inc rBin1H ; Overflow to MSB
-	breq Bcd5ToBin2c ; Overflow of MSB
-Bcd5ToBin2b:
-	dec R0 ; another digit?
-	brne Bcd5ToBin2a ; Yes
-	pop R0 ; Restore register
-	sbiw ZL,5 ; Set to first BCD digit
-	ret ; Return
-Bcd5ToBin2c:
-	sbiw ZL,1 ; back one digit
-	pop R0 ; Restore register
-	set ; Set T-flag, error
-	ret ; and return
-;
-
-; Bin1Mul10
-; =========
-; multiplies a 16-bit-binary by 10
-; Sub used by: AscToBin2, Asc5ToBin2, Bcd5ToBin2
-; In: 16-bit-binary in rBin1H:L
-; Out: T-flag shows general result:
-;   T=0: Valid result, 16-bit-binary in rBin1H:L ok
-;   T=1: Overflow occurred, number too big
-;
-Bin1Mul10:
-	push rBin2H ; Save the register of 16-bit-binary 2
-	push rBin2L
-	mov rBin2H,rBin1H ; Copy the number
-	mov rBin2L,rBin1L
-	add rBin1L,rBin1L ; Multiply by 2
-	adc rBin1H,rBin1H
-	brcs Bin1Mul10b ; overflow, get out of here
-Bin1Mul10a:
-	add rBin1L,rbin1L ; again multiply by 2 (4*number reached)
-	adc rBin1H,rBin1H
-	brcs Bin1Mul10b ; overflow, get out of here
-	add rBin1L,rBin2L ; add the copied number (5*number reached)
-	adc rBin1H,rBin2H
-	brcs Bin1Mul10b ;overflow, get out of here
-	add rBin1L,rBin1L ; again multiply by 2 (10*number reached)
-	adc rBin1H,rBin1H
-	brcc Bin1Mul10c ; no overflow occurred, don't set T-flag
-Bin1Mul10b:
-	set ; an overflow occurred during multplication
-Bin1Mul10c:
-	pop rBin2L ; Restore the registers of 16-bit-binary 2
-	pop rBin2H
-	ret
-
-
-; Bin2ToBcd5
-; ==========
-; converts a 16-bit-binary to a 5-digit-BCD
-; In: 16-bit-binary in rBin1H:L, Z points to first digit
-;   where the result goes to
-; Out: 5-digit-BCD, Z points to first BCD-digit
-; Used registers: rBin1H:L (unchanged), rBin2H:L (changed),
-;   rmp
-; Called subroutines: Bin2ToDigit
-;
-Bin2ToBcd5:
-	push rBin1H ; Save number
-	push rBin1L
-	ldi rmp,HIGH(10000) ; Start with tenthousands
-	mov rBin2H,rmp
-	ldi rmp,LOW(10000)
-	mov rBin2L,rmp
-	rcall Bin2ToDigit ; Calculate digit
-	ldi rmp,HIGH(1000) ; Next with thousands
-	mov rBin2H,rmp
-	ldi rmp,LOW(1000)
-	mov rBin2L,rmp
-	rcall Bin2ToDigit ; Calculate digit
-	ldi rmp,HIGH(100) ; Next with hundreds
-	mov rBin2H,rmp
-	ldi rmp,LOW(100)
-	mov rBin2L,rmp
-	rcall Bin2ToDigit ; Calculate digit
-	ldi rmp,HIGH(10) ; Next with tens
-	mov rBin2H,rmp
-	ldi rmp,LOW(10)
-	mov rBin2L,rmp
-	rcall Bin2ToDigit ; Calculate digit
-	st z,rBin1L ; Remainder are ones
-	sbiw ZL,4 ; Put pointer to first BCD
-	pop rBin1L ; Restore original binary
-	pop rBin1H
-	ret ; and return
-;
-; Bin2ToDigit
-; ===========
-; converts one decimal digit by continued subraction of a
-;   binary coded decimal
-; Used by: Bin2ToBcd5, Bin2ToAsc5, Bin2ToAsc
-; In: 16-bit-binary in rBin1H:L, binary coded decimal in
-;   rBin2H:L, Z points to current BCD digit
-; Out: Result in Z, Z incremented
-; Used registers: rBin1H:L (holds remainder of the binary),
-;   rBin2H:L (unchanged), rmp
-; Called subroutines: -
-;
-Bin2ToDigit:
-	clr rmp ; digit count is zero
-Bin2ToDigita:
-	cp rBin1H,rBin2H ; Number bigger than decimal?
-	brcs Bin2ToDigitc ; MSB smaller than decimal
-	brne Bin2ToDigitb ; MSB bigger than decimal
-	cp rBin1L,rBin2L ; LSB bigger or equal decimal
-	brcs Bin2ToDigitc ; LSB smaller than decimal
-Bin2ToDigitb:
-	sub rBin1L,rBin2L ; Subtract LSB decimal
-	sbc rBin1H,rBin2H ; Subtract MSB decimal
-	inc rmp ; Increment digit count
-	rjmp Bin2ToDigita ; Next loop
-Bin2ToDigitc:
-	st z+,rmp ; Save digit and increment
-	ret ; done
-;
-; **************************************************
-;
-; Package III: From binary to Hex-ASCII
-;
-
-
 ; Final de execucao da aplicacao
 ; -----------------------------------------------------------------------------
 end:			
 				rjmp loop						; Final do programa
 
-
-; -----------------------------------------------------------------------------
-; ### BCD FUNCTIONS ###
-; -----------------------------------------------------------------------------
-
-
-; Macro para somar 2 numeros imediatos de 16bits, guarda o resultado no primeiro parametro
-; -----------------------------------------------------------------------------
-.macro addi16
-		subi @0, low(-@2)
-        sbci @1, high(-@2)
-.endmacro
-
-
-; Macro para somar 2 numeros de 16bits, guarda o resultado no primeiro parametro
-; -----------------------------------------------------------------------------
-.macro add16
-        add @0, @2
-		adc @1, @3
-.endmacro
 
 
 
