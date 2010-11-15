@@ -118,8 +118,11 @@ RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM
 				rcall key3
 				rcall key0
 				rcall key1
-				rcall keyAdd
-				rcall key1
+				rcall keyAdd					; Entrada 301 no operando 1, aciona o operador soma
+				rcall key2
+				rcall key2
+				rcall key2
+				rcall key1						; Entrada 1 no operando 2
 				rcall keyEnter					; Era esperado o resultado 302 no lcd
 
 				rjmp loop
@@ -161,7 +164,7 @@ keyPress: 		in r, pinb
 				breq key1
 				ret
 
-key0:			ldi r, 0x30						; Seta o valor 0 a ser exibido no lcd
+key0:			ldi rr, 0x30						; Seta o valor 0 a ser exibido no lcd
 				rcall indexInLcd
 				clr r8
 				ldi r, 0x0
@@ -169,7 +172,7 @@ key0:			ldi r, 0x30						; Seta o valor 0 a ser exibido no lcd
 				rcall convertToBin
 				ret
 
-key1:			ldi r, 0x31						; Seta o valor 1 a ser exibido no lcd
+key1:			ldi rr, 0x31						; Seta o valor 1 a ser exibido no lcd
 				rcall indexInLcd
 				clr r8
 				ldi r, 0x1
@@ -177,7 +180,7 @@ key1:			ldi r, 0x31						; Seta o valor 1 a ser exibido no lcd
 				rcall convertToBin
 				ret
 
-key2:			ldi r, 0x32						; Seta o valor 2 a ser exibido no lcd
+key2:			ldi rr, 0x32						; Seta o valor 2 a ser exibido no lcd
 				rcall indexInLcd
 				clr r8
 				ldi r, 0x2
@@ -185,7 +188,7 @@ key2:			ldi r, 0x32						; Seta o valor 2 a ser exibido no lcd
 				rcall convertToBin
 				ret
 
-key3:			ldi r, 0x33						; Seta o valor 3 a ser exibido no lcd
+key3:			ldi rr, 0x33						; Seta o valor 3 a ser exibido no lcd
 				rcall indexInLcd
 				clr r8
 				ldi r, 0x3
@@ -193,7 +196,7 @@ key3:			ldi r, 0x33						; Seta o valor 3 a ser exibido no lcd
 				rcall convertToBin
 				ret
 
-key4:			ldi r, 0x34						; Seta o valor 4 a ser exibido no lcd
+key4:			ldi rr, 0x34						; Seta o valor 4 a ser exibido no lcd
 				rcall indexInLcd
 				rcall convertToBin
 				clr r8
@@ -202,7 +205,7 @@ key4:			ldi r, 0x34						; Seta o valor 4 a ser exibido no lcd
 				rcall convertToBin
 				ret
 
-key5:			ldi r, 0x35						; Seta o valor 5 a ser exibido no lcd
+key5:			ldi rr, 0x35						; Seta o valor 5 a ser exibido no lcd
 				rcall indexInLcd
 				clr r8
 				ldi r, 0x5
@@ -210,7 +213,7 @@ key5:			ldi r, 0x35						; Seta o valor 5 a ser exibido no lcd
 				rcall convertToBin
 				ret
 
-key6:			ldi r, 0x36						; Seta o valor 6 a ser exibido no lcd
+key6:			ldi rr, 0x36						; Seta o valor 6 a ser exibido no lcd
 				rcall indexInLcd
 				clr r8
 				ldi r, 0x6
@@ -218,7 +221,7 @@ key6:			ldi r, 0x36						; Seta o valor 6 a ser exibido no lcd
 				rcall convertToBin
 				ret
 
-key7:			ldi r, 0x37						; Seta o valor 7 a ser exibido no lcd
+key7:			ldi rr, 0x37						; Seta o valor 7 a ser exibido no lcd
 				rcall indexInLcd
 				clr r8
 				ldi r, 0x7
@@ -226,7 +229,7 @@ key7:			ldi r, 0x37						; Seta o valor 7 a ser exibido no lcd
 				rcall convertToBin
 				ret
 
-key8:			ldi r, 0x38						; Seta o valor 8 a ser exibido no lcd
+key8:			ldi rr, 0x38						; Seta o valor 8 a ser exibido no lcd
 				rcall indexInLcd
 				clr r8
 				ldi r, 0x8
@@ -234,7 +237,7 @@ key8:			ldi r, 0x38						; Seta o valor 8 a ser exibido no lcd
 				rcall convertToBin
 				ret
 
-key9:			ldi r, 0x39						; Seta o valor 9 a ser exibido no lcd
+key9:			ldi rr, 0x39						; Seta o valor 9 a ser exibido no lcd
 				rcall indexInLcd
 				clr r8
 				ldi r, 0x9
@@ -253,18 +256,49 @@ keyAdd:			clr lcdIoFlag					; Marca como leitura Progam Memory
 				clr dgCount						; Limpa a contagem
 				ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd
-				ldi Zl,low(lb_add*2)   			; Exibe o operador de soma no lcd
-    			ldi Zh,high(lb_add*2)
+				ldi Zl,low(lb_add * 2)   		; Exibe o operador de soma no lcd
+    			ldi Zh,high(lb_add * 2)
     			rcall writemsg					; Exibe a mensagem 
 				rcall clenPortB
+
+				ldi r, 0x1						; Seta a operacao como soma
+				rcall setOperacao
 												; Prepara para primeira escrita
 				inc lcdIoFlag					; Habilita escrita no lcd a partir da SRAM
 				ret
 
 ; Aciona a opcao enter no keypad
 ; -----------------------------------------------------------------------------
-keyEnter:
+keyEnter:		rcall getOperacao				; Obtem operacao
+				cpi r, 0x0						; Caso nao haja operacao
+				breq erroOperador
+
+												; Obtem os operadores da SRAM
+				ldi	Zh, high(OPSR1)			
+				ldi	Zl, low(OPSR1)
+				ld r25, Z+
+				ld r26, Z
+
+				ldi	Zh, high(OPSR2)			
+				ldi	Zl, low(OPSR2)
+				ld r27, Z+
+				ld r28, Z
+
+				add16 r25, r26, r27, r28
+
+				cpi r, 0x1						; Caso seja operador de soma
 				ret
+				
+; Exibe mensagem de falta de operador
+; -----------------------------------------------------------------------------
+erroOperador:		clr lcdIoFlag					; Marca como leitura Progam Memory
+				ldi Zl,low(err_operator*2)   	; Seta mensagem de falta de operador
+    			ldi Zh,high(err_operator*2)
+    			rcall writemsg					; Exibe a mensagem 
+				rcall clenPortB
+												; Prepara para primeira escrita
+				inc lcdIoFlag
+				rjmp loop		
 				
 
 
@@ -279,22 +313,9 @@ convertToBin:	rcall getOperacao				; Obtem o operador
 				ld r, Z+
 				ld rr, Z
 
-				cpi dgCount, 0x2				; Caso seja o primeiro operando
-				brlo convertToBin1				
-				breq convertToBin2
-
-				mov m1M, r
-				mov m1L, rr
-				ldi m2M, 0x0
-				ldi m2L, 0xA					; Multiplica o valor em memoria por 100
-				rcall multiply
-				mov r, res2
-				mov rr, res1
-				add16 r, rr, r8, r9
-				ldi	Zh, high(OPSR1)			
-				ldi	Zl, low(OPSR1)
-				st Z+, r
-				st Z, rr
+				cpi dgCount, 0x1				; Caso seja o primeiro operando
+				breq convertToBin1
+				rjmp convertToBin2
 				
 				ret
 
@@ -319,9 +340,43 @@ convertToBin2:	mov m1M, r
 				ldi	Zl, low(OPSR1)
 				st Z+, r
 				st Z, rr
+				ret
 
 
 convertToBinA:									; Caso seja o segundo operando
+				ldi	Zh, high(OPSR2)			
+				ldi	Zl, low(OPSR2)
+				ld r, Z+
+				ld rr, Z
+
+				cpi dgCount, 0x1				; Caso seja o primeiro operando
+				breq convertToBinA1
+				rjmp convertToBinA2
+				
+				ret
+
+convertToBinA1:	add16 r, rr, r8, r9
+				ldi	Zh, high(OPSR2)			
+				ldi	Zl, low(OPSR2)
+				st Z+, r
+				st Z, rr
+				
+				ret
+
+
+convertToBinA2:	mov m1M, r
+				mov m1L, rr
+				ldi m2M, 0x0
+				ldi m2L, 0xA					; Multiplica o valor em memoria por 10
+				rcall multiply
+				mov r, res2
+				mov rr, res1
+				add16 r, rr, r8, r9
+				ldi	Zh, high(OPSR2)			
+				ldi	Zl, low(OPSR2)
+				st Z+, r
+				st Z, rr
+				ret
 
 				ret
 
@@ -337,9 +392,9 @@ indexInLcd:		inc dgCount						; Incrementa o contador de digitos
 				add Xl, dgCount
 				subi Xl, 0x1
 
-				st X+, r
-				clr r
-				st X, r
+				st X+, rr
+				clr rr
+				st X, rr
 
 				rjmp indexInLcd1
 
@@ -349,7 +404,24 @@ lcdInOverflow:	ldi dgCount, 0x1				; Limpa a contagem
 				clr rr							; Finaliza a escrita do lcd
 				st X+, r
 				st X+, rr
+				rcall getOperacao				; Obtem operacao
+				cpi r, 0x0
+				breq lcdInOverflowA
+				rjmp lcdInOverflowB
+				ret
 
+lcdInOverflowA:	ldi	Zh, high(OPSR1)			
+				ldi	Zl, low(OPSR1)
+				clr r
+				st Z+, r
+				st Z, rr
+				rjmp indexInLcd1
+
+lcdInOverflowB:	ldi	Zh, high(OPSR2)			
+				ldi	Zl, low(OPSR2)
+				clr r
+				st Z+, r
+				st Z, rr
 												; Posiciona o cursor em X no inicio da SRAM
 indexInLcd1:	ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
         		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
@@ -383,9 +455,6 @@ multiply:		clr R20 						; clear for carry operations
 				adc Res3,R1
 				adc Res4,tmp
 				ret
-;
-; Multiplication done
-;
 				
 
 ; -----------------------------------------------------------------------------
