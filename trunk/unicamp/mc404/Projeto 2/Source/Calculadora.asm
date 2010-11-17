@@ -36,20 +36,26 @@
 .equ			OPSR2		= 0x13A				; Operando 2
 .equ			OPSR		= 0x14A				; Tipo de Operacao [1 = Soma, 2 = Multiplicacao, 3 = Divisao, 4 = Subtracao]
 
+												; Constantes para os operadores matematicos da calculadora
+.equ 			OPADICAO	= 0x1				; Operador de soma
+.equ 			OPMULTIPLIC	= 0x2				; Operador de multiplicacao
+.equ 			OPDIVISAO	= 0x3				; Operador de divisao
+.equ 			OPSUBTRACAO	= 0x4				; Operador de subtracao
 
-												; Contantes de multiplicacao
-.def 			Res1 = R2
-.def 			Res2 = R3
-.def 			Res3 = R4
-.def 			Res4 = R5
-.def 			m1L = R16
+
+												; Contantes de multiplicacao (16bits por 16 bits)
+.def 			Res1 = R2						; Primeiros 8bits do resultado da multiplicacao
+.def 			Res2 = R3						; Segundos 8bits do resultado da multiplicacao
+.def 			Res3 = R4						; Terceiros 8bits do resultado da multiplicacao
+.def 			Res4 = R5						; 8bits finais do resultado da multiplicacao
+.def 			m1L = R16						; Operador 1 da multiplicacao
 .def 			m1M = R17
-.def 			m2L = R18
+.def 			m2L = R18						; Operador 2 da multiplicacao
 .def 			m2M = R19
-.def 			tmp = R20
+.def 			tmp = R20						; Registrador temporario da operacao
 
 
-												; Contantes de conversao
+												; Contantes de conversao de binario para Ascii
 .def			rmp 		= r20
 .def			rBin1H		= r16
 .def			rBin1L		= r17
@@ -60,15 +66,6 @@
 ; -----------------------------------------------------------------------------
 ; ### MACRO SECTION ###
 ; -----------------------------------------------------------------------------
-
-
-; Macro para somar 2 numeros imediatos de 16bits, guarda o resultado no primeiro parametro
-; -----------------------------------------------------------------------------
-.macro addi16
-		subi @0, low(-@2)
-        sbci @1, high(-@2)
-.endmacro
-
 
 ; Macro para somar 2 numeros de 16bits, guarda o resultado no primeiro parametro
 ; -----------------------------------------------------------------------------
@@ -93,7 +90,7 @@ RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM
 
 				ldi dgCount, 0					; Zera o contador de digitos
 				clr r
-				rcall setErroFlag					; Limpa o flag de erro
+				rcall setErroFlag				; Limpa o flag de erro
 
 				rcall lcdinit					; inicializa o LCD
 
@@ -126,7 +123,7 @@ RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM
 				st Z, r
 				
 
-				; Test
+				; Test ----------------------------------------------------------------------------
 				rcall key1
 				rcall key2
 				rcall key3
@@ -158,6 +155,7 @@ loop:			ldi r, low(RAMEND)				; Remove lixo da pilha para evitar overflow
 
 
 ; Seta o tipo de operacao a ser executada na SRAM, apontada por OPSR, cujo valor esta em r
+; Os valores devem ser setados em antes de executar essa rotina
 ; -----------------------------------------------------------------------------
 setOperacao:
 				ldi Zh, high(OPSR)
@@ -166,13 +164,17 @@ setOperacao:
 				ret
 
 ; Obtem o tipo de operacao a ser executada na SRAM, apontada por OPSR, cujo valor sera armazenado em r
+; O valor da SRAM eh armazenado em r
 ; -----------------------------------------------------------------------------
 getOperacao:	ldi Zh, high(OPSR)
 				ldi Zl, low(OPSR)
 				ld r, Z
 				ret
 
-; Seta o tipo de operacao a ser executada na SRAM, apontada por OPSR, cujo valor esta em r
+; Seta o local de onde sera obtido os valores para escrever no LCD: 
+;  - caso 0: Program Memory apontado por Z,
+;  - caso contrario: SRAM
+; Os valores devem ser setados em antes de executar essa rotina
 ; -----------------------------------------------------------------------------
 setLcdIoFlag:
 				ldi Yh, high(lcdIoFlag)
@@ -180,14 +182,18 @@ setLcdIoFlag:
 				st Y, r
 				ret
 
-; Obtem o tipo de operacao a ser executada na SRAM, apontada por OPSR, cujo valor sera armazenado em r
+; Obtem o local de onde sera obtido os valores para escrever no LCD: 
+;  - caso 0: Program Memory apontado por Z,
+;  - caso contrario: SRAM
+; O valor da SRAM eh armazenado em r
 ; -----------------------------------------------------------------------------
 getLcdIoFlag:	ldi Yh, high(lcdIoFlag)
 				ldi Yl, low(lcdIoFlag)
 				ld r, Y
 				ret
 
-; Seta o tipo de operacao a ser executada na SRAM, apontada por OPSR, cujo valor esta em r
+; Seta a ocorrencia de erro na operacao
+; Os valores devem ser setados em antes de executar essa rotina
 ; -----------------------------------------------------------------------------
 setErroFlag:
 				ldi Yh, high(ERROFLAG)
@@ -195,7 +201,8 @@ setErroFlag:
 				st Y, r
 				ret
 
-; Obtem o tipo de operacao a ser executada na SRAM, apontada por OPSR, cujo valor sera armazenado em r
+; Obtem a flag de ocorrencia de erro na operacao
+; O valor da SRAM eh armazenado em r
 ; -----------------------------------------------------------------------------
 getErroFlag:	ldi Yh, high(ERROFLAG)
 				ldi Yl, low(ERROFLAG)
@@ -211,11 +218,10 @@ verificaErro:	rcall getErroFlag
 
 ; Trata o acionamento dos botoes da aplicacao
 ; -----------------------------------------------------------------------------
-keyPress: 		in r, pinb
-				cpi r, 0x1
-				breq key1
-				ret
 
+
+; Btn Zero
+; -----------------------------------------------------------------------------
 key0:			rcall verificaErro
 				ldi rr, 0x30						; Seta o valor 0 a ser exibido no lcd
 				rcall indexInLcd
@@ -225,6 +231,8 @@ key0:			rcall verificaErro
 				rcall convertToBin
 				ret
 
+; Btn Um
+; -----------------------------------------------------------------------------
 key1:			rcall verificaErro
 				ldi rr, 0x31						; Seta o valor 1 a ser exibido no lcd
 				rcall indexInLcd
@@ -234,6 +242,8 @@ key1:			rcall verificaErro
 				rcall convertToBin
 				ret
 
+; Btn Dois
+; -----------------------------------------------------------------------------
 key2:			rcall verificaErro
 				ldi rr, 0x32						; Seta o valor 2 a ser exibido no lcd
 				rcall indexInLcd
@@ -243,6 +253,8 @@ key2:			rcall verificaErro
 				rcall convertToBin
 				ret
 
+; Btn Tres
+; -----------------------------------------------------------------------------
 key3:			rcall verificaErro
 				ldi rr, 0x33						; Seta o valor 3 a ser exibido no lcd
 				rcall indexInLcd
@@ -252,6 +264,8 @@ key3:			rcall verificaErro
 				rcall convertToBin
 				ret
 
+; Btn Quatro
+; -----------------------------------------------------------------------------
 key4:			rcall verificaErro
 				ldi rr, 0x34						; Seta o valor 4 a ser exibido no lcd
 				rcall indexInLcd
@@ -262,6 +276,8 @@ key4:			rcall verificaErro
 				rcall convertToBin
 				ret
 
+; Btn Cinco
+; -----------------------------------------------------------------------------
 key5:			rcall verificaErro
 				ldi rr, 0x35						; Seta o valor 5 a ser exibido no lcd
 				rcall indexInLcd
@@ -271,6 +287,8 @@ key5:			rcall verificaErro
 				rcall convertToBin
 				ret
 
+; Btn Seis
+; -----------------------------------------------------------------------------
 key6:			rcall verificaErro
 				ldi rr, 0x36						; Seta o valor 6 a ser exibido no lcd
 				rcall indexInLcd
@@ -280,6 +298,8 @@ key6:			rcall verificaErro
 				rcall convertToBin
 				ret
 
+; Btn Sete
+; -----------------------------------------------------------------------------
 key7:			rcall verificaErro
 				ldi rr, 0x37						; Seta o valor 7 a ser exibido no lcd
 				rcall indexInLcd
@@ -289,6 +309,8 @@ key7:			rcall verificaErro
 				rcall convertToBin
 				ret
 
+; Btn Oito
+; -----------------------------------------------------------------------------
 key8:			rcall verificaErro
 				ldi rr, 0x38						; Seta o valor 8 a ser exibido no lcd
 				rcall indexInLcd
@@ -298,6 +320,8 @@ key8:			rcall verificaErro
 				rcall convertToBin
 				ret
 
+; Btn Nove
+; -----------------------------------------------------------------------------
 key9:			rcall verificaErro
 				ldi rr, 0x39						; Seta o valor 9 a ser exibido no lcd
 				rcall indexInLcd
@@ -307,15 +331,15 @@ key9:			rcall verificaErro
 				rcall convertToBin
 				ret
 
-; Acionamento do multiplicador add
+; Btn Clear
 ; -----------------------------------------------------------------------------
 keyClear:	
-				rjmp start						; Volta para o inicio da aplicação
+				rjmp start						; Volta para o inicio da aplicação (RESET)
 
-; Acionamento do multiplicador add
+; Btn Add
 ; -----------------------------------------------------------------------------
 keyAdd:			
-				clr dgCount						; Limpa a contagem
+				clr dgCount						; Limpa a contagem de digitos do lcd
 				ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd
 
@@ -323,10 +347,10 @@ keyAdd:
 				rcall setLcdIoFlag				; Marca como leitura Progam Memory
 				ldi Zl,low(lb_add*2)   			; Exibe o operador de soma no lcd
     			ldi Zh,high(lb_add*2)				
-    			rcall writemsg					; Exibe a mensagem 
-				rcall clenPortB
+    			rcall writemsg					; Escreve no lcd
+				rcall clenPortB					
 
-				ldi r, 0x1						; Seta a operacao como soma
+				ldi r, OPADICAO					; Seta a operacao como soma
 				rcall setOperacao
 				
 				ldi r, 0x1						; Prepara para primeira escrita
@@ -337,7 +361,7 @@ keyAdd:
 ; -----------------------------------------------------------------------------
 keyEnter:		rcall getOperacao				; Obtem operacao
 				cpi r, 0x0						; Caso nao haja operacao
-				breq erroOperador
+				breq erroOperador				; Notifica falta de operador
 
 												; Obtem os operadores da SRAM
 				ldi	Zh, high(OPSR1)			
@@ -350,16 +374,17 @@ keyEnter:		rcall getOperacao				; Obtem operacao
 				ld r27, Z+						; Operador2 em r27 e r28
 				ld r28, Z
 
-				cpi r, 0x1						; Caso seja operador de soma
+												; Verifica qual operador foi acionado
+				cpi r, OPADICAO					; Caso seja operador de soma
 				breq opSoma
 
-				cpi r, 0x2						; Caso seja operador de multiplicacao
+				cpi r, OPMULTIPLIC				; Caso seja operador de multiplicacao
 				breq opMult
 
-				cpi r, 0x3						; Caso seja operador de divisao
+				cpi r, OPDIVISAO				; Caso seja operador de divisao
 				breq opDiv
 
-				cpi r, 0x4						; Caso seja operador de subtracao
+				cpi r, OPSUBTRACAO				; Caso seja operador de subtracao
 				breq opSub
 
 				ret
@@ -368,24 +393,25 @@ keyEnter:		rcall getOperacao				; Obtem operacao
 ; Soma
 ; -----------------------------------------------------------------------------
 opSoma:			add16 r25, r26, r27, r28		; Executa a soma
-				rcall showLcdResult
+				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				ret
 
 ; Multiplicacao
 ; -----------------------------------------------------------------------------
 opMult:											; Executa a multiplicacao
+				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				ret
 
 ; Divisao
 ; -----------------------------------------------------------------------------
 opDiv:											; Executa divisao
-
+				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				ret
 
 ; Subtracao
 ; -----------------------------------------------------------------------------
 opSub:											; Executa a subtracao
-
+				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				ret
 
 
@@ -393,20 +419,27 @@ opSub:											; Executa a subtracao
 ; -----------------------------------------------------------------------------
 showLcdResult:	ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd		
-				mov rBin1H, r25
-				mov rBin1L, r26
-				ldi Zh, high(SRAM_START)    	; Seta Zh como o inicio da SRAM
-        		ldi Zl, low(SRAM_START) 
-				rcall Bin2ToAsc
 
-				clr r							; Delimita o display numerico
+				mov rBin1H, r25					; Move o resultado para o registrador de conversao ascii
+				mov rBin1L, r26
+
+				ldi Zh, high(SRAM_START)    	; Seta Zh como o inicio da SRAM para iniciar escrita do resultado em ascii
+        		ldi Zl, low(SRAM_START) 
+
+				rcall Bin2ToAsc					; Converte o resultado em ascii
+
+				clr r							; Delimita o display numerico no sexto digito
 				ldi Zh, high(0x105)				
 				ldi Zl, low(0x105)
+				;ldi Zh, high(0x106)				
+				;ldi Zl, low(0x106)
 				st Z, r
 
-				ldi r, 0x1
+												; Exibe o resultado convertido
+				ldi r, 0x1						; Habilita a leitura do LCD a partir da SRAM
 				rcall setLcdIoFlag
-				ldi Xh, high(SRAM_START)    	; Seta Zh como o inicio da SRAM
+
+				ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
         		ldi Xl, low(SRAM_START) 
     			rcall writemsg					; Exibe a mensagem 
 				rcall clenPortB
@@ -566,7 +599,9 @@ indexInLcd1:	ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
 ; -----------------------------------------------------------------------------
 
 
-; Multiply
+; Rotina de multiplicacao de 16bits por 16bits
+; Os operadores dessa rotina devem ser setados em operador1: m1M e m1L, 
+; operador2: m2M e m2L. O resultado eh armazendo em Res4,Res3,Res2 e Res1.
 ; -----------------------------------------------------------------------------
 multiply:		clr R20 						; clear for carry operations
 				mul m1M,m2M 					; Multiply MSBs
@@ -590,7 +625,7 @@ multiply:		clr R20 						; clear for carry operations
 ; ### LCD FUNCTIONS ###
 ; -----------------------------------------------------------------------------
 
-; Limpa a porta B, pois a mesma pode ser utilizada para funcoes lcd
+; Limpa a porta B, pois a mesma pode ser utilizada para funcoes lcd e keyboard
 ; -----------------------------------------------------------------------------
 clenPortB:		clr r
 				out ddrb, r
@@ -647,10 +682,12 @@ writemsg:		rcall getLcdIoFlag
 				breq writemsgmp
 				rjmp writemsgsram
 
+; Le os valores de Memory program para exibir no LCD
 ; -----------------------------------------------------------------------------
-writemsgmp:		lpm lcdinput,Z+      			; load r0 with the character to display, increment the string counter
+writemsgmp:		lpm lcdinput,Z+      			; load lcdinput with the character to display, increment the string counter
 				rjmp writemsgbd
 
+; Le os valores da SRAM para exibir no LCD
 ; -----------------------------------------------------------------------------
 writemsgsram:	ld lcdinput, X+
 
@@ -680,15 +717,10 @@ lcdinit: 										; initialize LCD
     			rcall lcd_cmd        			; execute command
     			rcall lcd_busy
 				ret
+
 ; -----------------------------------------------------------------------------
-
-
-; Final de execucao da aplicacao
+; ### FUNCOES DE CONVERSOES BINARIO, ASCII, BCD ###
 ; -----------------------------------------------------------------------------
-end:			
-				rjmp loop						; Final do programa
-
-
 
 ; Bin2ToAsc
 ; =========
@@ -704,19 +736,22 @@ end:
 ;   rBin2L (result, length of number), rmp
 ; Called subroutines: Bin2ToBcd5, Bin2ToAsc5
 ;
+; -----------------------------------------------------------------------------
 Bin2ToAsc:
-	rcall Bin2ToAsc5 ; Convert binary to ASCII
-	ldi rmp,6 ; Counter is 6
-	mov rBin2L,rmp
-Bin2ToAsca:
-	dec rBin2L ; decrement counter
-	ld rmp,z+ ; read char and inc pointer
-	cpi rmp,' ' ; was a blank?
-	breq Bin2ToAsca ; Yes, was a blank
-	sbiw ZL,1 ; one char backwards
-	ret ; done
+				rcall Bin2ToAsc6 				; Convert binary to ASCII
+				ldi rmp,6 						; Counter is 6
+				mov rBin2L,rmp
 
-; Bin2ToAsc5
+; -----------------------------------------------------------------------------
+Bin2ToAsca:
+				dec rBin2L 						; decrement counter
+				ld rmp,z+ 						; read char and inc pointer
+				cpi rmp,' ' 					; was a blank?
+				breq Bin2ToAsca 				; Yes, was a blank
+				sbiw ZL,1 						; one char backwards
+				ret ; done
+
+; Bin2ToAsc6
 ; ==========
 ; converts a 16-bit-binary to a 5 digit ASCII-coded decimal
 ; In: 16-bit-binary in rBin1H:L, Z points to the highest
@@ -727,32 +762,40 @@ Bin2ToAsca:
 ;   rBin2H:L (content is changed), rmp
 ; Called subroutines: Bin2ToBcd5
 ;
-Bin2ToAsc5:
-	rcall Bin2ToBcd5 ; convert binary to BCD
-	ldi rmp,4 ; Counter is 4 leading digits
-	mov rBin2L,rmp
-Bin2ToAsc5a:
-	ld rmp,z ; read a BCD digit
-	tst rmp ; check if leading zero
-	brne Bin2ToAsc5b ; No, found digit >0
-	ldi rmp,' ' ; overwrite with blank
-	st z+,rmp ; store and set to next position
-	dec rBin2L ; decrement counter
-	brne Bin2ToAsc5a ; further leading blanks
-	ld rmp,z ; Read the last BCD
-Bin2ToAsc5b:
-	inc rBin2L ; one more char
-Bin2ToAsc5c:
-	subi rmp,-'0' ; Add ASCII-0
-	st z+,rmp ; store and inc pointer
-	ld rmp,z ; read next char
-	dec rBin2L ; more chars?
-	brne Bin2ToAsc5c ; yes, go on
-	sbiw ZL,5 ; Pointer to beginning of the BCD
-	ret ; done
+; -----------------------------------------------------------------------------
+Bin2ToAsc6:
+				rcall Bin2ToBcd6 				; convert binary to BCD
+				ldi rmp, 4						; Counter is 4 leading digits
+				;ldi rmp, 5 						; Counter is 5 leading digits
+				mov rBin2L,rmp
+
+; -----------------------------------------------------------------------------
+Bin2ToAsc6a:
+				ld rmp,z 						; read a BCD digit
+				tst rmp 						; check if leading zero
+				brne Bin2ToAsc6b 				; No, found digit >0
+				ldi rmp,' ' 					; overwrite with blank
+				st z+,rmp 						; store and set to next position
+				dec rBin2L 						; decrement counter
+				brne Bin2ToAsc6a 				; further leading blanks
+				ld rmp,z 						; Read the last BCD
+
+; -----------------------------------------------------------------------------
+Bin2ToAsc6b:
+				inc rBin2L ; one more char
+
+; -----------------------------------------------------------------------------
+Bin2ToAsc6c:
+				subi rmp,-'0' 					; Add ASCII-0
+				st z+,rmp 						; store and inc pointer
+				ld rmp,z 						; read next char
+				dec rBin2L 						; more chars?
+				brne Bin2ToAsc6c 				; yes, go on
+				sbiw ZL,5 						; Pointer to beginning of the BCD
+				ret 							; done
 ;
 
-; Bin2ToBcd5
+; Bin2ToBcd6
 ; ==========
 ; converts a 16-bit-binary to a 5-digit-BCD
 ; In: 16-bit-binary in rBin1H:L, Z points to first digit
@@ -762,34 +805,35 @@ Bin2ToAsc5c:
 ;   rmp
 ; Called subroutines: Bin2ToDigit
 ;
-Bin2ToBcd5:
-	push rBin1H ; Save number
-	push rBin1L
-	ldi rmp,HIGH(10000) ; Start with tenthousands
-	mov rBin2H,rmp
-	ldi rmp,LOW(10000)
-	mov rBin2L,rmp
-	rcall Bin2ToDigit ; Calculate digit
-	ldi rmp,HIGH(1000) ; Next with thousands
-	mov rBin2H,rmp
-	ldi rmp,LOW(1000)
-	mov rBin2L,rmp
-	rcall Bin2ToDigit ; Calculate digit
-	ldi rmp,HIGH(100) ; Next with hundreds
-	mov rBin2H,rmp
-	ldi rmp,LOW(100)
-	mov rBin2L,rmp
-	rcall Bin2ToDigit ; Calculate digit
-	ldi rmp,HIGH(10) ; Next with tens
-	mov rBin2H,rmp
-	ldi rmp,LOW(10)
-	mov rBin2L,rmp
-	rcall Bin2ToDigit ; Calculate digit
-	st z,rBin1L ; Remainder are ones
-	sbiw ZL,4 ; Put pointer to first BCD
-	pop rBin1L ; Restore original binary
-	pop rBin1H
-	ret ; and return
+; -----------------------------------------------------------------------------
+Bin2ToBcd6:
+				push rBin1H 					; Save number
+				push rBin1L
+				ldi rmp,HIGH(10000) 			; Start with tenthousands
+				mov rBin2H,rmp
+				ldi rmp,LOW(10000)
+				mov rBin2L,rmp
+				rcall Bin2ToDigit 				; Calculate digit
+				ldi rmp,HIGH(1000) 				; Next with thousands
+				mov rBin2H,rmp
+				ldi rmp,LOW(1000)
+				mov rBin2L,rmp
+				rcall Bin2ToDigit 				; Calculate digit
+				ldi rmp,HIGH(100) 				; Next with hundreds
+				mov rBin2H,rmp
+				ldi rmp,LOW(100)
+				mov rBin2L,rmp
+				rcall Bin2ToDigit 				; Calculate digit
+				ldi rmp,HIGH(10) 				; Next with tens
+				mov rBin2H,rmp
+				ldi rmp,LOW(10)
+				mov rBin2L,rmp
+				rcall Bin2ToDigit 				; Calculate digit
+				st z,rBin1L 					; Remainder are ones
+				sbiw ZL,4 						; Put pointer to first BCD
+				pop rBin1L 						; Restore original binary
+				pop rBin1H
+				ret 							; and return
 ;
 ; Bin2ToDigit
 ; ===========
@@ -803,36 +847,46 @@ Bin2ToBcd5:
 ;   rBin2H:L (unchanged), rmp
 ; Called subroutines: -
 ;
+; -----------------------------------------------------------------------------
 Bin2ToDigit:
-	clr rmp ; digit count is zero
+				clr rmp 						; digit count is zero
+
+; -----------------------------------------------------------------------------
 Bin2ToDigita:
-	cp rBin1H,rBin2H ; Number bigger than decimal?
-	brcs Bin2ToDigitc ; MSB smaller than decimal
-	brne Bin2ToDigitb ; MSB bigger than decimal
-	cp rBin1L,rBin2L ; LSB bigger or equal decimal
-	brcs Bin2ToDigitc ; LSB smaller than decimal
+				cp rBin1H,rBin2H 				; Number bigger than decimal?
+				brcs Bin2ToDigitc 				; MSB smaller than decimal
+				brne Bin2ToDigitb 				; MSB bigger than decimal
+				cp rBin1L,rBin2L 				; LSB bigger or equal decimal
+				brcs Bin2ToDigitc 				; LSB smaller than decimal
+; -----------------------------------------------------------------------------
 Bin2ToDigitb:
-	sub rBin1L,rBin2L ; Subtract LSB decimal
-	sbc rBin1H,rBin2H ; Subtract MSB decimal
-	inc rmp ; Increment digit count
-	rjmp Bin2ToDigita ; Next loop
+				sub rBin1L,rBin2L 				; Subtract LSB decimal
+				sbc rBin1H,rBin2H 				; Subtract MSB decimal
+				inc rmp 						; Increment digit count
+				rjmp Bin2ToDigita 				; Next loop
+; -----------------------------------------------------------------------------
 Bin2ToDigitc:
-	st z+,rmp ; Save digit and increment
-	ret ; done
+				st z+,rmp 						; Save digit and increment
+				ret 							; done
 ;
 ; **************************************************
 ;
 ; Package III: From binary to Hex-ASCII
 ;
 
+; Final de execucao da aplicacao
+; -----------------------------------------------------------------------------
+end:			
+				rjmp loop						; Final do programa
+
 
 ; Mensagens e labels
 ; -----------------------------------------------------------------------------
-lb_clear:  		.db      "0", 0
-lb_add:			.db		 "+", 0
-lb_sub:			.db		 "-", 0
-lb_mult:		.db		 "*", 0
-lb_div:			.db		 "/", 0
-err_div_zero:	.db  	"E = div por 0", 0
-err_precision: 	.db		"E = precisao", 0
-err_operator:	.db		"E = operando?", 0
+lb_clear:  		.db      "0", 0					; Label inicial da calculadora, com operador clean
+lb_add:			.db		 "+", 0					; Label de adicao
+lb_sub:			.db		 "-", 0					; Label de subtracao
+lb_mult:		.db		 "*", 0					; Label de multiplicacao
+lb_div:			.db		 "/", 0					; Label de divisao
+err_div_zero:	.db  	"E = div por 0", 0		; Erro ao dividir por zero
+err_precision: 	.db		"E = precisao", 0		; Erro de precissao
+err_operator:	.db		"E = operando?", 0		; Erro de falta de operador
