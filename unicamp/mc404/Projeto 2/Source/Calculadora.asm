@@ -357,6 +357,70 @@ keyAdd:
 				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
 				ret
 
+; Btn Sub
+; -----------------------------------------------------------------------------
+keySub:			
+				clr dgCount						; Limpa a contagem de digitos do lcd
+				ldi   lcdinput,	1				; Apaga o LCD
+				rcall lcd_cmd
+
+				clr r
+				rcall setLcdIoFlag				; Marca como leitura Progam Memory
+				ldi Zl,low(lb_sub*2)   			; Exibe o operador de SUBTRACAO no lcd
+    			ldi Zh,high(lb_sub*2)				
+    			rcall writemsg					; Escreve no lcd
+				rcall clenPortB					
+
+				ldi r, OPSUBTRACAO				; Seta a operacao como SUBTRACAO
+				rcall setOperacao
+				
+				ldi r, 0x1						; Prepara para primeira escrita
+				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
+				ret
+
+; Btn Multiplicacao
+; -----------------------------------------------------------------------------
+keyMult:			
+				clr dgCount						; Limpa a contagem de digitos do lcd
+				ldi   lcdinput,	1				; Apaga o LCD
+				rcall lcd_cmd
+
+				clr r
+				rcall setLcdIoFlag				; Marca como leitura Progam Memory
+				ldi Zl,low(lb_mult*2)  			; Exibe o operador de multiplicacao no lcd
+    			ldi Zh,high(lb_mult*2)		
+    			rcall writemsg					; Escreve no lcd
+				rcall clenPortB					
+
+				ldi r, OPMULTIPLIC				; Seta a operacao como MULTIPLICACAO
+				rcall setOperacao
+				
+				ldi r, 0x1						; Prepara para primeira escrita
+				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
+				ret
+
+; Btn Divisao
+; -----------------------------------------------------------------------------
+keyDiv:			
+				clr dgCount						; Limpa a contagem de digitos do lcd
+				ldi   lcdinput,	1				; Apaga o LCD
+				rcall lcd_cmd
+
+				clr r
+				rcall setLcdIoFlag				; Marca como leitura Progam Memory
+				ldi Zl,low(lb_div*2)  			; Exibe o operador de divisao no lcd
+    			ldi Zh,high(lb_div*2)		
+    			rcall writemsg					; Escreve no lcd
+				rcall clenPortB					
+
+				ldi r, OPDIVISAO				; Seta a operacao como DIVISAO
+				rcall setOperacao
+				
+				ldi r, 0x1						; Prepara para primeira escrita
+				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
+				ret
+
+
 ; Aciona a opcao enter no keypad
 ; -----------------------------------------------------------------------------
 keyEnter:		rcall getOperacao				; Obtem operacao
@@ -429,10 +493,10 @@ showLcdResult:	ldi   lcdinput,	1				; Apaga o LCD
 				rcall Bin2ToAsc					; Converte o resultado em ascii
 
 				clr r							; Delimita o display numerico no sexto digito
-				ldi Zh, high(0x105)				
-				ldi Zl, low(0x105)
-				;ldi Zh, high(0x106)				
-				;ldi Zl, low(0x106)
+				;ldi Zh, high(0x105)				
+				;ldi Zl, low(0x105)
+				ldi Zh, high(0x106)				
+				ldi Zl, low(0x106)
 				st Z, r
 
 												; Exibe o resultado convertido
@@ -731,7 +795,7 @@ lcdinit: 										; initialize LCD
 ;   the ASCII decimal (requires 5 digits buffer space, even
 ;   if the number is smaller!)
 ; Out: Z points to the first significant digit of the ASCII
-;   decimal, rBin2L has the number of characters (1..5)
+;   decimal, rBin2L has the number of characters (1..6)
 ; Used registers: rBin1H:L (unchanged), rBin2H (changed),
 ;   rBin2L (result, length of number), rmp
 ; Called subroutines: Bin2ToBcd5, Bin2ToAsc5
@@ -739,14 +803,14 @@ lcdinit: 										; initialize LCD
 ; -----------------------------------------------------------------------------
 Bin2ToAsc:
 				rcall Bin2ToAsc6 				; Convert binary to ASCII
-				ldi rmp,6 						; Counter is 6
+				ldi rmp, 5 						; Counter is 6
 				mov rBin2L,rmp
 
 ; -----------------------------------------------------------------------------
 Bin2ToAsca:
 				dec rBin2L 						; decrement counter
 				ld rmp,z+ 						; read char and inc pointer
-				cpi rmp,' ' 					; was a blank?
+				cpi rmp,'.' 					; was a blank?
 				breq Bin2ToAsca 				; Yes, was a blank
 				sbiw ZL,1 						; one char backwards
 				ret ; done
@@ -766,7 +830,6 @@ Bin2ToAsca:
 Bin2ToAsc6:
 				rcall Bin2ToBcd6 				; convert binary to BCD
 				ldi rmp, 4						; Counter is 4 leading digits
-				;ldi rmp, 5 						; Counter is 5 leading digits
 				mov rBin2L,rmp
 
 ; -----------------------------------------------------------------------------
@@ -774,7 +837,7 @@ Bin2ToAsc6a:
 				ld rmp,z 						; read a BCD digit
 				tst rmp 						; check if leading zero
 				brne Bin2ToAsc6b 				; No, found digit >0
-				ldi rmp,' ' 					; overwrite with blank
+				ldi rmp,'.' 					; overwrite with blank
 				st z+,rmp 						; store and set to next position
 				dec rBin2L 						; decrement counter
 				brne Bin2ToAsc6a 				; further leading blanks
@@ -786,12 +849,13 @@ Bin2ToAsc6b:
 
 ; -----------------------------------------------------------------------------
 Bin2ToAsc6c:
-				subi rmp,-'0' 					; Add ASCII-0
+				subi rmp, -'0' 					; Add ASCII-0
 				st z+,rmp 						; store and inc pointer
 				ld rmp,z 						; read next char
 				dec rBin2L 						; more chars?
 				brne Bin2ToAsc6c 				; yes, go on
 				sbiw ZL,5 						; Pointer to beginning of the BCD
+				;sbiw ZL, 6 						; Pointer to beginning of the BCD
 				ret 							; done
 ;
 
@@ -809,30 +873,43 @@ Bin2ToAsc6c:
 Bin2ToBcd6:
 				push rBin1H 					; Save number
 				push rBin1L
+				
+				ldi rmp,HIGH(100000) 			; Start with tenthousands
+				mov rBin2H,rmp
+				ldi rmp,LOW(100000)
+				mov rBin2L,rmp
+				rcall Bin2ToDigit
+
 				ldi rmp,HIGH(10000) 			; Start with tenthousands
 				mov rBin2H,rmp
 				ldi rmp,LOW(10000)
 				mov rBin2L,rmp
 				rcall Bin2ToDigit 				; Calculate digit
+
 				ldi rmp,HIGH(1000) 				; Next with thousands
 				mov rBin2H,rmp
 				ldi rmp,LOW(1000)
 				mov rBin2L,rmp
 				rcall Bin2ToDigit 				; Calculate digit
+
 				ldi rmp,HIGH(100) 				; Next with hundreds
 				mov rBin2H,rmp
 				ldi rmp,LOW(100)
 				mov rBin2L,rmp
 				rcall Bin2ToDigit 				; Calculate digit
+
 				ldi rmp,HIGH(10) 				; Next with tens
 				mov rBin2H,rmp
 				ldi rmp,LOW(10)
 				mov rBin2L,rmp
 				rcall Bin2ToDigit 				; Calculate digit
+
 				st z,rBin1L 					; Remainder are ones
-				sbiw ZL,4 						; Put pointer to first BCD
+				;sbiw ZL,4 						; Put pointer to first BCD
+				sbiw ZL, 5 						; Put pointer to first BCD
 				pop rBin1L 						; Restore original binary
 				pop rBin1H
+
 				ret 							; and return
 ;
 ; Bin2ToDigit
