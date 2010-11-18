@@ -6,7 +6,7 @@
 ;
 ;												Grupo:
 ;                                               Cristiano J. Miranda Ra: 083382
-;												Teodoro				 Ra: 
+;						Teodoro	O. Wey	     Ra: 072448
 ; -----------------------------------------------------------------------------
 .nolist
 .include "m88def.inc"
