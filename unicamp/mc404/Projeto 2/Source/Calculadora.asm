@@ -187,15 +187,17 @@ RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM
 				;rcall keyEnter				; Entrada 610 no operador 2, esperado resultado 32330
 
 				ldi aux, 0x0F
-				out DDRB, aux					; Diracao dos dados
+				out DDRB, aux
 
-				ldi coluna, 0xFE				; coluna eh uma mascara
+				clr aux
+				out DDRD, aux
+
+				ldi coluna, 0xFE
 
 				ldi aux, 0xFF
-				out PINB, aux					; Pull-up inicial para evitar problemas de inicializacao
+				out PIND, aux
 
-				and aux, coluna
-				out PORTB, aux					; Ainda para evitar problemas de inicializacao
+				out PORTB, coluna
 
 				rjmp loop
 
@@ -209,83 +211,81 @@ loop:			ldi r, low(RAMEND)				; Remove lixo da pilha para evitar overflow
 				rcall clenPortB
 
 				ldi aux, 0xFF
-				out PINB, aux				; Pull-up
+				out PIND, aux
 
-				and aux, coluna
-				out PORTB, aux				; Strobe apenas na coluna em que ha o zero.
+				out PORTB, coluna
 
-				in aux, PINB				; Le linhas.
+				in aux, PIND
 
 				swap aux
-				andi aux, 0x0F				; Seleciona apenas botoes de entrada.
-				cpi aux, 0x0F				; Detecta se houve botao pressionado.
-				brne encerra				; Unica forma de sair do loop.
+				andi aux, 0x0F
+				cpi aux, 0x0F
+				brne encerra
 
 				sec
-				rol coluna					; Proxima coluna.
-				cpi coluna, 0xEF			; Detecta se acabaram as 4 colunas.
+				rol coluna
+				cpi coluna, 0xEF
 				brne loop
 
-				ldi coluna, 0xFE			; Retorna para primeira coluna.
-				rjmp loop
+				ldi coluna, 0xFE
 			
 				rjmp loop
 
 
-encerra:									; Apos ser detectado o botao, verifica a qual coluna ele pertence.
-				cpi coluna, 0xF7
-				breq coluna1
-				cpi coluna, 0xFB
-				breq coluna2
-				cpi coluna, 0xFD
-				breq coluna3
-				cpi coluna, 0xFE
-				breq coluna4
-				rjmp loop					; Se chegou aqui, houve erro na contagem das colunas, e volta para o loop de espera.
+encerra:
+	cpi coluna, 0xFE
+	breq coluna1
+	cpi coluna, 0xFD
+	breq coluna2
+	cpi coluna, 0xFB
+	breq coluna3
+	cpi coluna, 0xF7
+	breq coluna4
+	rjmp loop
 
-coluna1:									; Detecta botao a partir da sua linha, considerando coluna 1.
-				cpi aux, 0xE
-				breq key1Link
-				cpi aux, 0xD
-				breq key4Link
-				cpi aux, 0xB
-				breq key7Link
-				cpi aux, 0x7
-				breq keyClearLink
-				rjmp loop					; Se chegou aqui, houve erro no momento da leitura, e volta ao loop.
+coluna1:
+	cpi aux, 0xE
+	breq key1Link
+	cpi aux, 0xD
+	breq key4Link
+	cpi aux, 0xB
+	breq key7Link
+	cpi aux, 0x7
+	breq keyClearLink
+	rjmp loop
 
-coluna2:									; Detecta botao a partir da sua linha, considerando coluna 2.
-				cpi aux, 0xE
-				breq key2Link
-				cpi aux, 0xD
-				breq key5Link
-				cpi aux, 0xB
-				breq key8Link
-				cpi aux, 0x7
-				breq key0
-				rjmp loop					; Se chegou aqui, houve erro no momento da leitura, e volta ao loop.
+coluna2:
+	cpi aux, 0xE
+	breq key2Link
+	cpi aux, 0xD
+	breq key5Link
+	cpi aux, 0xB
+	breq key8Link
+	cpi aux, 0x7
+	breq key0
+	rjmp loop
 
-coluna3:									; Detecta botao a partir da sua linha, considerando coluna 3.
-				cpi aux, 0xE
-				breq key3Link
-				cpi aux, 0xD
-				breq key6Link
-				cpi aux, 0xB
-				breq key9Link
-				cpi aux, 0x7
-				breq keyEnterLink
-				rjmp loop					; Se chegou aqui, houve erro no momento da leitura, e volta ao loop.
+coluna3:
+	cpi aux, 0xE
+	breq key3Link
+	cpi aux, 0xD
+	breq key6Link
+	cpi aux, 0xB
+	breq key9Link
+	cpi aux, 0x7
+	breq keyEnterLink
+	rjmp loop
 
-coluna4:						; Detecta botao a partir da sua linha, considerando coluna 4.
-				cpi aux, 0xE
-				breq keyAddLink
-				cpi aux, 0xD
-				breq keySubLink
-				cpi aux, 0xB
-				breq keyMultLink
-				cpi aux, 0x7
-				breq keyDivLink
-				rjmp loop					; Se chegou aqui, houve erro no momento da leitura, e volta ao loop.
+coluna4:
+	cpi aux, 0xE
+	breq keyAddLink
+	cpi aux, 0xD
+	breq keySubLink
+	cpi aux, 0xB
+	breq keyMultLink
+	cpi aux, 0x7
+	breq keyDivLink
+	rjmp loop
 
 loopLink:		rjmp loop
 
