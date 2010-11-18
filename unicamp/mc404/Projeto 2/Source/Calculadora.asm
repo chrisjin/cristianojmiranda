@@ -63,6 +63,14 @@
 .def			rBin2L		= r19
 
 
+												; Constantes para keypad
+.def aux = r16
+.def coluna = r17
+.def retorno = r18								; O codigo da tecla sera retornado aqui.
+
+
+rcall null										; Hapsim
+
 ; -----------------------------------------------------------------------------
 ; ### MACRO SECTION ###
 ; -----------------------------------------------------------------------------
@@ -72,6 +80,13 @@
 .macro add16
         add @0, @2
 		adc @1, @3
+.endmacro
+
+; Macro para subtrair 2 numeros de 16 bits, guarda o resultado no primeiro parametro
+; -----------------------------------------------------------------------------
+.macro sub16 ;(@0@1 - @2@3)
+		sub @0,@2
+		sbc @1,@3
 .endmacro
 
 
@@ -123,20 +138,52 @@ RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM
 				st Z, r
 				
 
-				; Test ----------------------------------------------------------------------------
-				rcall key1
-				rcall key2
-				rcall key3
-				rcall key3
-				rcall key0
-				rcall key1
-				rcall keyAdd					; Entrada 301 no operando 1, aciona o operador soma
-				rcall key2
-				rcall key2
-				rcall key2
-				rcall key2
-				rcall key1						; Entrada 21 no operando 2
-				rcall keyEnter					; Era esperado o resultado 322 no lcd
+				; Test I ----------------------------------------------------------------------------
+				; Soma
+				;rcall key1
+				;rcall key2
+				;rcall key3
+				;rcall key3
+				;rcall key0
+				;rcall key1
+				;rcall keyAdd					; Entrada 301 no operando 1, aciona o operador soma
+				;rcall key2
+				;rcall key2
+				;rcall key2
+				;rcall key6
+				;rcall key1						; Entrada 61 no operando 2
+				;rcall keyEnter					; Era esperado o resultado 362 no lcd
+
+				; Test II ----------------------------------------------------------------------------
+				; Subtracao
+				;rcall key1
+				;rcall key9
+				;rcall key0
+				;rcall keySub				; Entrada 190, aciona operador de subtracao
+				;rcall key9
+				;rcall key8
+				;rcall keyEnter				; Entrada 98 no operador 2, esperado resultado 92
+
+				; Test III ---------------------------------------------------------------------------
+				; Multiplicacao
+				;rcall key5
+				;rcall key3
+				;rcall keyMult				; Entrada 53 no operador 1, aciona operador de multiplicacao
+				;rcall key6
+				;rcall key1
+				;rcall key0
+				;rcall keyEnter				; Entrada 610 no operador 2, esperado resultado 32330
+
+				ldi aux, 0x0F
+				out DDRB, aux					; Diracao dos dados
+
+				ldi coluna, 0xFE				; coluna eh uma mascara
+
+				ldi aux, 0xFF
+				out PINB, aux					; Pull-up inicial para evitar problemas de inicializacao
+
+				and aux, coluna
+				out PORTB, aux					; Ainda para evitar problemas de inicializacao
 
 				rjmp loop
 
@@ -147,11 +194,106 @@ loop:			ldi r, low(RAMEND)				; Remove lixo da pilha para evitar overflow
 				out	SPL, r
 				ldi	r, high(RAMEND)
 				out SPH,r
+				rcall clenPortB
 
-				sei								; Habilita interrupção
-				sleep							; Entra em loop aguardando uma interrupção
+				ldi aux, 0xFF
+				out PINB, aux				; Pull-up
+
+				and aux, coluna
+				out PORTB, aux				; Strobe apenas na coluna em que ha o zero.
+
+				in aux, PINB				; Le linhas.
+
+				swap aux
+				andi aux, 0x0F				; Seleciona apenas botoes de entrada.
+				cpi aux, 0x0F				; Detecta se houve botao pressionado.
+				brne encerra				; Unica forma de sair do loop.
+
+				sec
+				rol coluna					; Proxima coluna.
+				cpi coluna, 0xEF			; Detecta se acabaram as 4 colunas.
+				brne loop
+
+				ldi coluna, 0xFE			; Retorna para primeira coluna.
+				rjmp loop
+			
 				rjmp loop
 
+
+encerra:									; Apos ser detectado o botao, verifica a qual coluna ele pertence.
+				cpi coluna, 0xF7
+				breq coluna1
+				cpi coluna, 0xFB
+				breq coluna2
+				cpi coluna, 0xFD
+				breq coluna3
+				cpi coluna, 0xFE
+				breq coluna4
+				rjmp loop					; Se chegou aqui, houve erro na contagem das colunas, e volta para o loop de espera.
+
+coluna1:									; Detecta botao a partir da sua linha, considerando coluna 1.
+				cpi aux, 0xE
+				breq key1Link
+				cpi aux, 0xD
+				breq key4Link
+				cpi aux, 0xB
+				breq key7Link
+				cpi aux, 0x7
+				breq keyClearLink
+				rjmp loop					; Se chegou aqui, houve erro no momento da leitura, e volta ao loop.
+
+coluna2:									; Detecta botao a partir da sua linha, considerando coluna 2.
+				cpi aux, 0xE
+				breq key2Link
+				cpi aux, 0xD
+				breq key5Link
+				cpi aux, 0xB
+				breq key8Link
+				cpi aux, 0x7
+				breq key0
+				rjmp loop					; Se chegou aqui, houve erro no momento da leitura, e volta ao loop.
+
+coluna3:									; Detecta botao a partir da sua linha, considerando coluna 3.
+				cpi aux, 0xE
+				breq key3Link
+				cpi aux, 0xD
+				breq key6Link
+				cpi aux, 0xB
+				breq key9Link
+				cpi aux, 0x7
+				breq keyEnterLink
+				rjmp loop					; Se chegou aqui, houve erro no momento da leitura, e volta ao loop.
+
+coluna4:						; Detecta botao a partir da sua linha, considerando coluna 4.
+				cpi aux, 0xE
+				breq keyAddLink
+				cpi aux, 0xD
+				breq keySubLink
+				cpi aux, 0xB
+				breq keyMultLink
+				cpi aux, 0x7
+				breq keyDivLink
+				rjmp loop					; Se chegou aqui, houve erro no momento da leitura, e volta ao loop.
+
+loopLink:		rjmp loop
+
+; Links para rotinas
+; -----------------------------------------------------------------------------
+keyAddLink:		rjmp keyAdd
+keySubLink:		rjmp keySub
+keyMultLink:	rjmp keyMult
+keyDivLink:		rjmp keyDiv
+keyEnterLink:	rjmp keyEnter
+keyClearLink:	rjmp keyClear
+key1Link:		rjmp key1
+key2Link:		rjmp key2
+key3Link:		rjmp key3
+key4Link:		rjmp key4
+key5Link:		rjmp key5
+key7Link:		rjmp key7
+key8Link:		rjmp key8
+key6Link:		rjmp key6
+key9Link:		rjmp key9
 
 
 ; Seta o tipo de operacao a ser executada na SRAM, apontada por OPSR, cujo valor esta em r
@@ -213,7 +355,7 @@ getErroFlag:	ldi Yh, high(ERROFLAG)
 ; -----------------------------------------------------------------------------
 verificaErro:	rcall getErroFlag
 				cpi r, 0x0
-				brne loop
+				brne loopLink
 				ret
 
 ; Trata o acionamento dos botoes da aplicacao
@@ -240,7 +382,7 @@ key1:			rcall verificaErro
 				ldi r, 0x1
 				mov r9, r
 				rcall convertToBin
-				ret
+				rjmp loop
 
 ; Btn Dois
 ; -----------------------------------------------------------------------------
@@ -251,7 +393,7 @@ key2:			rcall verificaErro
 				ldi r, 0x2
 				mov r9, r
 				rcall convertToBin
-				ret
+				rjmp loop
 
 ; Btn Tres
 ; -----------------------------------------------------------------------------
@@ -262,7 +404,7 @@ key3:			rcall verificaErro
 				ldi r, 0x3
 				mov r9, r
 				rcall convertToBin
-				ret
+				rjmp loop
 
 ; Btn Quatro
 ; -----------------------------------------------------------------------------
@@ -274,7 +416,7 @@ key4:			rcall verificaErro
 				ldi r, 0x4
 				mov r9, r
 				rcall convertToBin
-				ret
+				rjmp loop
 
 ; Btn Cinco
 ; -----------------------------------------------------------------------------
@@ -285,7 +427,7 @@ key5:			rcall verificaErro
 				ldi r, 0x5
 				mov r9, r
 				rcall convertToBin
-				ret
+				rjmp loop
 
 ; Btn Seis
 ; -----------------------------------------------------------------------------
@@ -296,7 +438,7 @@ key6:			rcall verificaErro
 				ldi r, 0x6
 				mov r9, r
 				rcall convertToBin
-				ret
+				rjmp loop
 
 ; Btn Sete
 ; -----------------------------------------------------------------------------
@@ -307,7 +449,7 @@ key7:			rcall verificaErro
 				ldi r, 0x7
 				mov r9, r
 				rcall convertToBin
-				ret
+				rjmp loop
 
 ; Btn Oito
 ; -----------------------------------------------------------------------------
@@ -318,7 +460,7 @@ key8:			rcall verificaErro
 				ldi r, 0x8
 				mov r9, r
 				rcall convertToBin
-				ret
+				rjmp loop
 
 ; Btn Nove
 ; -----------------------------------------------------------------------------
@@ -329,7 +471,7 @@ key9:			rcall verificaErro
 				ldi r, 0x9
 				mov r9, r
 				rcall convertToBin
-				ret
+				rjmp loop
 
 ; Btn Clear
 ; -----------------------------------------------------------------------------
@@ -355,7 +497,7 @@ keyAdd:
 				
 				ldi r, 0x1						; Prepara para primeira escrita
 				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
-				ret
+				rjmp loop
 
 ; Btn Sub
 ; -----------------------------------------------------------------------------
@@ -376,7 +518,7 @@ keySub:
 				
 				ldi r, 0x1						; Prepara para primeira escrita
 				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
-				ret
+				rjmp loop
 
 ; Btn Multiplicacao
 ; -----------------------------------------------------------------------------
@@ -397,7 +539,7 @@ keyMult:
 				
 				ldi r, 0x1						; Prepara para primeira escrita
 				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
-				ret
+				rjmp loop
 
 ; Btn Divisao
 ; -----------------------------------------------------------------------------
@@ -418,7 +560,7 @@ keyDiv:
 				
 				ldi r, 0x1						; Prepara para primeira escrita
 				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
-				ret
+				rjmp loop
 
 
 ; Aciona a opcao enter no keypad
@@ -451,7 +593,7 @@ keyEnter:		rcall getOperacao				; Obtem operacao
 				cpi r, OPSUBTRACAO				; Caso seja operador de subtracao
 				breq opSub
 
-				ret
+				rjmp loop
 
 
 ; Soma
@@ -463,6 +605,15 @@ opSoma:			add16 r25, r26, r27, r28		; Executa a soma
 ; Multiplicacao
 ; -----------------------------------------------------------------------------
 opMult:											; Executa a multiplicacao
+				mov m1M, r25					; Seta o operando 1 
+				mov m1L, r26
+				mov m2M, r27
+				mov m2L, r28					; Seta o segundo operando
+				rcall multiply					; Executa a multiplicacao
+
+				mov r25, res2					; Seta o resultado da multiplicacao nos registradores de exibicao
+				mov r26, res1
+
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				ret
 
@@ -474,7 +625,7 @@ opDiv:											; Executa divisao
 
 ; Subtracao
 ; -----------------------------------------------------------------------------
-opSub:											; Executa a subtracao
+opSub:			sub16 r25, r26, r27, r28		; Executa a subtracao
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				ret
 
@@ -810,7 +961,7 @@ Bin2ToAsc:
 Bin2ToAsca:
 				dec rBin2L 						; decrement counter
 				ld rmp,z+ 						; read char and inc pointer
-				cpi rmp,'.' 					; was a blank?
+				cpi rmp, ' ' 					; was a blank?
 				breq Bin2ToAsca 				; Yes, was a blank
 				sbiw ZL,1 						; one char backwards
 				ret ; done
@@ -829,7 +980,7 @@ Bin2ToAsca:
 ; -----------------------------------------------------------------------------
 Bin2ToAsc6:
 				rcall Bin2ToBcd6 				; convert binary to BCD
-				ldi rmp, 4						; Counter is 4 leading digits
+				ldi rmp, 5						; Counter is 5 leading digits
 				mov rBin2L,rmp
 
 ; -----------------------------------------------------------------------------
@@ -837,7 +988,7 @@ Bin2ToAsc6a:
 				ld rmp,z 						; read a BCD digit
 				tst rmp 						; check if leading zero
 				brne Bin2ToAsc6b 				; No, found digit >0
-				ldi rmp,'.' 					; overwrite with blank
+				ldi rmp,' ' 					; overwrite with blank
 				st z+,rmp 						; store and set to next position
 				dec rBin2L 						; decrement counter
 				brne Bin2ToAsc6a 				; further leading blanks
@@ -854,8 +1005,7 @@ Bin2ToAsc6c:
 				ld rmp,z 						; read next char
 				dec rBin2L 						; more chars?
 				brne Bin2ToAsc6c 				; yes, go on
-				sbiw ZL,5 						; Pointer to beginning of the BCD
-				;sbiw ZL, 6 						; Pointer to beginning of the BCD
+				sbiw ZL, 4 						; Pointer to beginning of the BCD
 				ret 							; done
 ;
 
@@ -905,7 +1055,6 @@ Bin2ToBcd6:
 				rcall Bin2ToDigit 				; Calculate digit
 
 				st z,rBin1L 					; Remainder are ones
-				;sbiw ZL,4 						; Put pointer to first BCD
 				sbiw ZL, 5 						; Put pointer to first BCD
 				pop rBin1L 						; Restore original binary
 				pop rBin1H
@@ -956,6 +1105,7 @@ Bin2ToDigitc:
 end:			
 				rjmp loop						; Final do programa
 
+null: 			ret
 
 ; Mensagens e labels
 ; -----------------------------------------------------------------------------
