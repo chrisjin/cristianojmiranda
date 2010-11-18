@@ -6,7 +6,7 @@
 ;
 ;												Grupo:
 ;                                               Cristiano J. Miranda Ra: 083382
-;						Teodoro	O. Wey	     Ra: 072448
+;												Teodoro	O. Wey	     Ra: 072448
 ; -----------------------------------------------------------------------------
 .nolist
 .include "m88def.inc"
@@ -55,6 +55,15 @@
 .def 			tmp = R20						; Registrador temporario da operacao
 
 
+
+.def 			drem16uL=r10			;resto da divisao
+.def 			drem16uH=r11
+.def 			dres16uL=r12			;resultado da divisao
+.def 			dres16uH=r13
+.def dcnt16u = r23						;contador de iteracoes da divisao
+
+
+
 												; Contantes de conversao de binario para Ascii
 .def			rmp 		= r20
 .def			rBin1H		= r16
@@ -84,10 +93,13 @@ rcall null										; Hapsim
 
 ; Macro para subtrair 2 numeros de 16 bits, guarda o resultado no primeiro parametro
 ; -----------------------------------------------------------------------------
-.macro sub16 ;(@0@1 - @2@3)
+.macro sub16 ;(@1@0 - @3@2)
 		sub @0,@2
 		sbc @1,@3
 .endmacro
+
+; Macro para dividir 2 numeros de 16 bits, guarda o resultado no primeiro parametro
+; -----------------------------------------------------------------------------
 
 
 ; Inicializa a aplicacao
@@ -620,6 +632,15 @@ opMult:											; Executa a multiplicacao
 ; Divisao
 ; -----------------------------------------------------------------------------
 opDiv:											; Executa divisao
+				mov m1M, r25					; Seta o operando 1 
+				mov m1L, r26
+				mov m2M, r27
+				mov m2L, r28	
+				rcall divide
+
+				mov r25,dres16uH				;Seta o resultado da divisao nos registradores de exibicao
+				mov r26,dres16uL
+				
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				ret
 
@@ -834,7 +855,35 @@ multiply:		clr R20 						; clear for carry operations
 				adc Res3,R1
 				adc Res4,tmp
 				ret
-				
+		
+		
+;Divisao 16 por 16 bits
+;				
+divide:
+				clr drem16uL			;clear no LOW do resto
+				sub drem16uH,drem16uH	;clear no HIGH do resto
+				ldi dcnt16u,17			;contador regressivo de iteracao
+d16ua:
+				rol m1L 				;shift left no dividendo
+				rol m1M
+				dec dcnt16u 			;contador decrementa e pula pra d16ub,
+				brne d16ub 				;mas caso tenha atingido 0 sai da rotina
+				ret  					
+d16ub: 
+				rol drem16uL			;shift dividend into remainder
+				rol drem16uH
+				sub drem16uL,m2L		;resto = resto - divisor
+				sbc drem16uH,m2M;
+				brcc d16uc 				;se resto < negativo, pula pra d16uc
+				add drem16uL,m2L		;caso contratio resto volta ao valor anterior
+				adc drem16uH,m2M
+				clc  					;zera carry para usar no rol
+				rjmp d16ua 			;else
+d16uc: 
+				sec						;seta carry para usar no rol
+				rjmp d16ua
+
+
 
 ; -----------------------------------------------------------------------------
 ; ### LCD FUNCTIONS ###
