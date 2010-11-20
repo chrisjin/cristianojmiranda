@@ -13,25 +13,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import br.unicamp.mc536.t2010s2a.forum.domain.Usuario;
 
-public class UsuarioDWR extends SpringBeanAutowiringSupport {
-
-	@Autowired
-	private ReloadableResourceBundleMessageSource bundle;
-
-	/**
-	 * @return the bundle
-	 */
-	public ReloadableResourceBundleMessageSource getBundle() {
-		return bundle;
-	}
-
-	/**
-	 * @param bundle
-	 *            the bundle to set
-	 */
-	public void setBundle(ReloadableResourceBundleMessageSource bundle) {
-		this.bundle = bundle;
-	}
+public class UsuarioDWR {
 
 	/**
 	 * Consulta todos os usuarios
@@ -64,22 +46,11 @@ public class UsuarioDWR extends SpringBeanAutowiringSupport {
 			WebContextFactory.get().getHttpServletRequest().setAttribute(
 					"usuarios", usuarios);
 
-			WebContextFactory
-					.get()
-					.getHttpServletRequest()
-					.setAttribute(
-							"labelNome",
-							this.bundle
-									.getMessage(
-											"label_br_unicamp_mc536_t2010s2a_forum_domain_usuario_nmusuario",
-											null,
-											RequestContextUtils
-													.getLocale(WebContextFactory
-															.get()
-															.getHttpServletRequest())));
-
 			WebContextFactory.get().getHttpServletRequest().setAttribute(
 					"labelNome", "Nome");
+
+			WebContextFactory.get().getHttpServletRequest().setAttribute(
+					"labelNomePais", "Pais");
 
 			// Processa a pagina de usuarios
 			result = WebContextFactory.get().forwardToString(
