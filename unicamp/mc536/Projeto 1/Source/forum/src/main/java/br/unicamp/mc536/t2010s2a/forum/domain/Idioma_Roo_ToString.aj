@@ -6,18 +6,11 @@ package br.unicamp.mc536.t2010s2a.forum.domain;
 import java.lang.String;
 
 privileged aspect Idioma_Roo_ToString {
-    
-    public String Idioma.toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Id: ").append(getId()).append(", ");
-        sb.append("Version: ").append(getVersion()).append(", ");
-        sb.append("NmIdioma: ").append(getNmIdioma()).append(", ");
-        sb.append("SgIdioma: ").append(getSgIdioma()).append(", ");
-        sb.append("DsIdioma: ").append(getDsIdioma()).append(", ");
-        sb.append("DsDetalhadaIdioma: ").append(getDsDetalhadaIdioma()).append(", ");
-        sb.append("NmRegiao: ").append(getNmRegiao()).append(", ");
-        sb.append("IdPais: ").append(getIdPais());
-        return sb.toString();
-    }
-    
+
+	public String Idioma.toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("NmIdioma: ").append(getNmIdioma());
+		return sb.toString();
+	}
+
 }
