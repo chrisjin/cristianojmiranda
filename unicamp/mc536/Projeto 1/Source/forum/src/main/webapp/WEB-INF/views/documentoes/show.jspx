@@ -7,7 +7,6 @@
         <field:display field="nmArquivo" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmArquivo" object="${documento}" z="B46unGPRj48YtiI5FKUK6u1WugA="/>
         <field:display field="dsInfoMaquina" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsInfoMaquina" object="${documento}" z="8EnKW18G5U/Be814YY9OOBP8rcs="/>
         <field:display field="tipoDocumento" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_tipoDocumento" object="${documento}" z="OoNeIK0qfWjVbwcMyfKKA0/8l30="/>
-        <field:display field="documento" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_documento" object="${documento}" z="6PPv8XG0LfaeSgFRRV0GheHFd6k="/>
         <field:display date="true" dateTimePattern="${documento_dtcriacao_date_format}" field="dtCriacao" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dtCriacao" object="${documento}" z="FCTCE8+GaHPHSp2D7zp86o5jw30="/>
         <field:display date="true" dateTimePattern="${documento_dtinclusao_date_format}" field="dtInclusao" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dtInclusao" object="${documento}" z="Tc7piZA2JdDt/VOYWYmac5nLH44="/>
         <field:display field="nmAutor" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmAutor" object="${documento}" z="ESASladaEp8OSPRYuzN+U7J9AxM="/>

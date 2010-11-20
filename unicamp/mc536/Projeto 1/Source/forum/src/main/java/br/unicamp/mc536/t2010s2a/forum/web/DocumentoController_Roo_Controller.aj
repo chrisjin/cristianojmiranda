@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import br.unicamp.mc536.t2010s2a.forum.domain.Documento;
 import br.unicamp.mc536.t2010s2a.forum.domain.Idioma;
@@ -35,6 +37,7 @@ import br.unicamp.mc536.t2010s2a.forum.domain.Programa;
 import br.unicamp.mc536.t2010s2a.forum.domain.RedeTrabalho;
 import br.unicamp.mc536.t2010s2a.forum.domain.TipoDocumento;
 import br.unicamp.mc536.t2010s2a.forum.domain.Usuario;
+import br.unicamp.mc536.t2010s2a.forum.utils.Constantes;
 import br.unicamp.mc536.t2010s2a.forum.web.dto.FileUploadBean;
 
 privileged aspect DocumentoController_Roo_Controller {
@@ -43,12 +46,42 @@ privileged aspect DocumentoController_Roo_Controller {
 	public String DocumentoController.create(@Valid Documento documento,
 			BindingResult result, Model model) {
 
+		// Caso não tenha selecionado um documento
+		if (documento.getFileUploadBean() == null
+				|| documento.getFileUploadBean().getFile() == null
+				|| documento.getFileUploadBean().getFile().isEmpty()) {
+
+			model.addAttribute("message", "Selecione um documento");
+			return "documentoes/create";
+
+		}
+
+		// Verifica se ocorreu erro
 		if (result.hasErrors()) {
+
 			model.addAttribute("documento", documento);
 			addDateTimeFormatPatterns(model);
+
+			model.addAttribute("message", "Ocorreu um erro: "
+					+ result.toString());
+
 			return "documentoes/create";
 		}
 
+		// Caso haja usuario logado no sistema
+		// Coloca o usuario na sessão
+		Usuario usuario = (Usuario) RequestContextHolder
+				.currentRequestAttributes().getAttribute(
+						Constantes.SESSION_USER,
+						RequestAttributes.SCOPE_SESSION);
+
+		// Seta o usuario responsavel
+		if (usuario != null) {
+
+			documento.setIdUsuarioResponsavel(usuario);
+		}
+
+		// Salva o documento
 		documento.persist();
 		return "redirect:/documentoes/" + documento.getId();
 	}

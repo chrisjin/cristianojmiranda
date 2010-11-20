@@ -12,6 +12,11 @@ public class Constantes {
 	 * Usuario da sessão
 	 */
 	public static final String SESSION_USER = "SESSION_USER";
+	
+	/**
+	 * Usuario da sessão
+	 */
+	public static final String SESSION_USER_ADM = "SESSION_USER_ADM";
 
 	/**
 	 * Mensagem vazia

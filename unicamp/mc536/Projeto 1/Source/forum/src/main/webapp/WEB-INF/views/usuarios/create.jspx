@@ -4,7 +4,7 @@
     <form:create id="fc_br_unicamp_mc536_t2010s2a_forum_domain_Usuario" modelAttribute="usuario" path="/usuarios" render="${empty dependencies}" z="dJTRQlD5EpGCZ9dwNeIwsrBGZjk=">
         <field:textarea field="nmUsuario" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_nmUsuario" required="true" z="d5efVMVyHtA10OMDli+m443VrT0="/>
         <field:input field="dsLogin" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_dsLogin" max="10" min="5" required="true" z="24SladIzdnnB84kNj90z1ARtFbw="/>
-        <field:input field="dsSenha" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_dsSenha" max="10" required="true" z="hc5IHY9MOS7DzEIY2mhcXoTXKIY="/>
+        <field:password field="dsSenha" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_dsSenha" max="10" required="true" z="hc5IHY9MOS7DzEIY2mhcXoTXKIY="/>
         <field:select field="tpUsuario" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_tpUsuario" items="${usuariotypes}" path="usuariotypes" required="true" z="gkxZxMZBd47Qjso03IClCQSx7vA="/>
         <field:checkbox field="flAtivo" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_flAtivo" z="SPj25JMvz473rkOyNitonHqRG8g="/>
         <field:select field="idIdiomaNativo" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Usuario_idIdiomaNativo" itemValue="id" items="${idiomas}" path="/idiomas" required="true" z="H/JJPLnmayTEh/t3lPA6cEZZgbw="/>

@@ -7,7 +7,6 @@
         <field:textarea field="nmArquivo" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmArquivo" required="true" z="UX1T3jqEaEhuctEd5FC9r7QMfo8="/>
         <field:input field="dsInfoMaquina" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsInfoMaquina" z="7ZtJ2LCYTFSDkDvRficw1SG6oIQ="/>
         <field:select field="tipoDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_tipoDocumento" itemValue="id" items="${tipodocumentoes}" path="/tipodocumentoes" required="true" z="nEHdJie/IC6w8uwh3kgV5nXaq6s="/>
-        <field:input field="documento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_documento" required="true" z="Yn9ECn3OJvpualZC11hOMFUauAA="/>
         <field:datetime dateTimePattern="${documento_dtcriacao_date_format}" field="dtCriacao" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dtCriacao" required="true" z="SVuKt0HUz8aKu2SJ7OHJ+Ut7Ctw="/>
         <field:datetime dateTimePattern="${documento_dtinclusao_date_format}" field="dtInclusao" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dtInclusao" required="true" z="GAthf1U5FL5BmK9XIuRKIZjzFmE="/>
         <field:input field="nmAutor" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmAutor" z="NEm4QjLFMWvSMybBKSYHHBbxLb0="/>

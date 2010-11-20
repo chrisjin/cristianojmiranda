@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
 import br.unicamp.mc536.t2010s2a.forum.domain.Usuario;
+import br.unicamp.mc536.t2010s2a.forum.reference.UsuarioType;
 import br.unicamp.mc536.t2010s2a.forum.utils.Constantes;
 
 import com.mysql.jdbc.StringUtils;
@@ -37,6 +38,8 @@ public class LoginController {
 		// Remove o usuario da sessão
 		RequestContextHolder.currentRequestAttributes().removeAttribute(
 				Constantes.SESSION_USER, RequestAttributes.SCOPE_SESSION);
+		RequestContextHolder.currentRequestAttributes().removeAttribute(
+				Constantes.SESSION_USER_ADM, RequestAttributes.SCOPE_SESSION);
 
 		model.addAttribute("usuario", new Usuario());
 		model.addAttribute("message", Constantes.MSG_EMPTY);
@@ -72,10 +75,20 @@ public class LoginController {
 			// Caso tenha encontrado o usuario
 			if (usuarios != null && usuarios.size() == 1) {
 
+				// Obtem o usuario
+				Usuario usr = usuarios.get(0);
+
 				// Coloca o usuario na sessão
 				RequestContextHolder.currentRequestAttributes().setAttribute(
-						Constantes.SESSION_USER, usuarios.get(0),
+						Constantes.SESSION_USER, usr,
 						RequestAttributes.SCOPE_SESSION);
+
+				// Coloca o usuario administrador na sessão
+				RequestContextHolder.currentRequestAttributes().setAttribute(
+						Constantes.SESSION_USER_ADM,
+						usr.getTpUsuario().equals(UsuarioType.Administrador),
+						RequestAttributes.SCOPE_SESSION);
+
 				return "index";
 
 			} else {

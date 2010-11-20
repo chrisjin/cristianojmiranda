@@ -56,8 +56,11 @@ privileged aspect Documento_Roo_Entity {
 		if (this.getFileUploadBean() != null
 				&& this.getFileUploadBean().getFile() != null) {
 
-			this.setNmArquivo(this.getFileUploadBean().getFile().getName());
+			// Seta o nome do arquivo
+			this.setNmArquivo(this.getFileUploadBean().getFile().getFileItem()
+					.getName());
 
+			// Converte o array de byte em um blob para ser persistido
 			Blob documento = Hibernate.createBlob(this.getFileUploadBean()
 					.getFile().getBytes());
 
