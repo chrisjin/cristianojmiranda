@@ -8,7 +8,6 @@
             <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmArquivo" property="nmArquivo" z="3nUOMnnog8QGbIcPLILdDOhmvCI="/>
             <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsInfoMaquina" property="dsInfoMaquina" z="UapoRtRlal9LBZoWEDpiclP1rjc="/>
             <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_tipoDocumento" property="tipoDocumento" z="EfiOv6sJvTAlbu43PhyqpKRqrss="/>
-            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_documento" property="documento" z="5E2s8+UTl5AhcID8NLr9ZX90INI="/>
         </table:table>
     </page:list>
 </div>

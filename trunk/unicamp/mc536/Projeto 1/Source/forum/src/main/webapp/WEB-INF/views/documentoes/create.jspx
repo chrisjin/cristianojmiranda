@@ -42,6 +42,15 @@
   	 	loading...
   	 
   	 </div>
+  	
+  	<!-- Exibe a mensagem de erro -->
+  	<c:if test="${not empty message}"> 
+	  	 <center>
+			<spring:message code="${message}"/>
+			<br />
+			<br />
+		 </center>
+	</c:if>
     
     <form:create id="fc_br_unicamp_mc536_t2010s2a_forum_domain_Documento" modelAttribute="documento" path="/documentoes" render="${empty dependencies}" z="QPcrI/Z+ryISlA6OpguyYD/2OA0=" enctype="multipart/form-data">
         <field:input field="nmDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmDocumento" required="true" z="9F2G9lVSI1yjfgy44+F7n7XmyxY="/>

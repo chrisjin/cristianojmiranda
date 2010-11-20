@@ -6,7 +6,7 @@
 	xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
 <jsp:output omit-xml-declaration="yes" />
 
-<div style="height: 200px;">
+<div style="height: 200px;cursor:default">
 
 <div style="text-align: right;">
 	<a href="javascript:closeBuscaUsuario();">(x)Close</a>
@@ -27,7 +27,7 @@
 
 		<c:forEach items="${usuarios}" var="user">
 
-			<tr>
+			<tr onclick="alert('boo: ' + ${user.id})">
 				<td>${user.nmUsuario}</td>
 				<td>${user.idIdiomaNativo.idPais.nmPais}</td>
 			</tr>

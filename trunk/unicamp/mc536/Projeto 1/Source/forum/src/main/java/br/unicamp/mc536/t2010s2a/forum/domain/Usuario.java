@@ -22,44 +22,45 @@ import org.springframework.format.annotation.DateTimeFormat;
 @RooEntity
 public class Usuario {
 
-    @NotNull
-    @Size(max = 255)
-    private String nmUsuario;
+	@NotNull
+	@Size(max = 255)
+	private String nmUsuario;
 
-    @NotNull
-    @Size(min = 5, max = 10)
-    private String dsLogin;
+	@NotNull
+	@Size(min = 5, max = 10)
+	private String dsLogin;
 
-    @NotNull
-    @Size(max = 10)
-    private String dsSenha;
+	@NotNull
+	@Size(max = 10)
+	private String dsSenha;
 
-    @NotNull
-    @Enumerated
-    private UsuarioType tpUsuario;
+	@NotNull
+	@Enumerated
+	private UsuarioType tpUsuario;
 
-    @NotNull
-    private boolean flAtivo;
+	@NotNull
+	private boolean flAtivo;
 
-    @NotNull
-    @ManyToOne(targetEntity = Idioma.class)
-    @JoinColumn
-    private Idioma idIdiomaNativo;
+	@NotNull
+	@ManyToOne(targetEntity = Idioma.class)
+	@JoinColumn
+	private Idioma idIdiomaNativo;
 
-    @NotNull
-    @Size(max = 255)
-    private String email;
+	@NotNull
+	@Size(max = 255)
+	private String email;
 
-    @NotNull
-    private boolean flInstitucional;
+	@NotNull
+	private boolean flInstitucional;
 
-    @Size(max = 255)
-    private String nmInstituicao;
+	@Size(max = 255)
+	private String nmInstituicao;
 
-    private String dsInstituicao;
+	private String dsInstituicao;
 
-    @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(style = "S-")
-    private Date dtInclusao;
+	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(style = "S-")
+	private Date dtInclusao;
+
 }
