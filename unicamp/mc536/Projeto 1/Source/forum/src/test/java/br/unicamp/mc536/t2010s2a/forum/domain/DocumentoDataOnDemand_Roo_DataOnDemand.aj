@@ -33,7 +33,6 @@ privileged aspect DocumentoDataOnDemand_Roo_DataOnDemand {
     
     public Documento DocumentoDataOnDemand.getNewTransientDocumento(int index) {
         br.unicamp.mc536.t2010s2a.forum.domain.Documento obj = new br.unicamp.mc536.t2010s2a.forum.domain.Documento();
-        obj.setDocumento("documento_" + index);
         java.lang.String dsDocumento = "dsDocumento_" + index;
         if (dsDocumento.length() > 2000) {
             dsDocumento  = dsDocumento.substring(0, 2000);
