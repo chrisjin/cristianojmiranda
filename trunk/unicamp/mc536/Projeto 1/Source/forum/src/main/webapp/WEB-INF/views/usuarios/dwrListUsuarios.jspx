@@ -27,7 +27,7 @@
 
 		<c:forEach items="${usuarios}" var="user">
 
-			<tr onclick="alert('boo: ' + ${user.id})">
+			<tr onclick="selecionarUsuario('${user.email}', '${user.nmUsuario}')">
 				<td>${user.nmUsuario}</td>
 				<td>${user.idIdiomaNativo.idPais.nmPais}</td>
 			</tr>
