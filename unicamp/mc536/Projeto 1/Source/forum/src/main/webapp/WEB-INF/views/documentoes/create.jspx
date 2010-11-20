@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" version="2.0">
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	 xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" 
+	 xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" 
+	 xmlns:jsp="http://java.sun.com/JSP/Page"
+	 xmlns:sform="http://www.springframework.org/tags/form"  
+	 xmlns:spring="http://www.springframework.org/tags" version="2.0">
     <jsp:output omit-xml-declaration="yes"/>
     
-     <spring:url value="/" var="appContext"/>
-  	 <script type='text/javascript' src='${appContext}dwr/interface/Usuario.js'> </script> 
+     <spring:url value="/dwr/interface/Usuario.js" var="jsDwrUsuario"/>
+  	 <script src="${jsDwrUsuario}" type="text/javascript"><!-- dwr --></script>
   	 
-  	 <script type='text/javascript'>
+  	 <script type="text/javascript">
 
   	 	function openBuscaUsuario() {
 
@@ -38,20 +43,30 @@
   	 
   	 </div>
     
-    <form:create id="fc_br_unicamp_mc536_t2010s2a_forum_domain_Documento" modelAttribute="documento" path="/documentoes" render="${empty dependencies}" z="QPcrI/Z+ryISlA6OpguyYD/2OA0=">
+    <form:create id="fc_br_unicamp_mc536_t2010s2a_forum_domain_Documento" modelAttribute="documento" path="/documentoes" render="${empty dependencies}" z="QPcrI/Z+ryISlA6OpguyYD/2OA0=" enctype="multipart/form-data">
         <field:input field="nmDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmDocumento" required="true" z="9F2G9lVSI1yjfgy44+F7n7XmyxY="/>
         <field:textarea field="dsDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsDocumento" required="true" z="4CPBQMyv/577+9RMH35LXqDze7w="/>
         <field:textarea field="dsInfoMaquina" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsInfoMaquina" z="7ZtJ2LCYTFSDkDvRficw1SG6oIQ="/>
         <field:select field="tipoDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_tipoDocumento" itemValue="id" items="${tipodocumentoes}" path="/tipodocumentoes" required="true" z="nEHdJie/IC6w8uwh3kgV5nXaq6s="/>
-        <field:input field="documento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_documento" required="true" z="Yn9ECn3OJvpualZC11hOMFUauAA="/>
+        
+        Documento:
+        <input type="file" name="fileUploadBean.file" style="float: right;" />
+        <br/>
+        <br/>
+        
         <field:datetime dateTimePattern="${documento_dtcriacao_date_format}" field="dtCriacao" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dtCriacao" required="true" z="SVuKt0HUz8aKu2SJ7OHJ+Ut7Ctw="/>
-        <input type="button" value="Consultar Autor" onclick="openBuscaUsuario()" style="float: right;"/>
+        <input type="button" value="Consultar Autor" onclick="openBuscaUsuario();" style="float: right;"/>
         <field:input field="nmAutor" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmAutor" z="NEm4QjLFMWvSMybBKSYHHBbxLb0="/>
         <field:textarea field="dsEmailAutor" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsEmailAutor" z="ATvWr4dswvjA12ikYOAsUVslR2A="/>
         <field:select field="idIdiomaDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idIdiomaDocumento" itemValue="id" items="${idiomas}" path="/idiomas" required="true" z="COMh9JOIZboqLXBDwtJLnNtOWV8="/>
         <field:select field="idPrograma" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idPrograma" itemValue="id" items="${programas}" path="/programas" z="9nH4mppa2k6S+LlrxcY93INDEAY="/>
         <field:select field="idRedeTrabalho" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idRedeTrabalho" itemValue="id" items="${redetrabalhoes}" path="/redetrabalhoes" z="tvfknSPL7hNyXX9PMLHiAAwegA4="/>
         <field:select field="idPais" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idPais" itemValue="id" items="${paises}" path="/paises" required="true" z="0lGla2FLvoFjB6nc0gzdlDhiWQw="/>
+        
+        <sform:hidden path="qtdVisualizacao"/>
+        <sform:hidden path="nmArquivo" />
+        <sform:hidden path="dtInclusao" />
+        
     </form:create>
     <form:dependency dependencies="${dependencies}" id="d_br_unicamp_mc536_t2010s2a_forum_domain_Documento" render="${not empty dependencies}" z="ndAutRy7k1J12EleOdscnOzzQBs="/>
 </div>

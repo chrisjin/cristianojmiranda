@@ -18,7 +18,7 @@
 
 		<tr>
 			<th>${labelNome}</th>
-			<th>${labelNome}</th>
+			<th>${labelNomePais}</th>
 		</tr>
 
 	</thead>

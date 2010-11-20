@@ -3,15 +3,10 @@
 
 package br.unicamp.mc536.t2010s2a.forum.domain;
 
-import br.unicamp.mc536.t2010s2a.forum.domain.Idioma;
-import br.unicamp.mc536.t2010s2a.forum.domain.Pais;
-import br.unicamp.mc536.t2010s2a.forum.domain.Programa;
-import br.unicamp.mc536.t2010s2a.forum.domain.RedeTrabalho;
-import br.unicamp.mc536.t2010s2a.forum.domain.TipoDocumento;
-import br.unicamp.mc536.t2010s2a.forum.domain.Usuario;
-import java.lang.Long;
-import java.lang.String;
+import java.sql.Blob;
 import java.util.Date;
+
+import br.unicamp.mc536.t2010s2a.forum.web.dto.FileUploadBean;
 
 privileged aspect Documento_Roo_JavaBean {
     
@@ -53,14 +48,6 @@ privileged aspect Documento_Roo_JavaBean {
     
     public void Documento.setTipoDocumento(TipoDocumento tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
-    }
-    
-    public String Documento.getDocumento() {
-        return this.documento;
-    }
-    
-    public void Documento.setDocumento(String documento) {
-        this.documento = documento;
     }
     
     public Date Documento.getDtCriacao() {
@@ -149,6 +136,22 @@ privileged aspect Documento_Roo_JavaBean {
     
     public void Documento.setIdPais(Pais idPais) {
         this.idPais = idPais;
+    }
+    
+    public FileUploadBean Documento.getFileUploadBean() {
+    	return this.fileUploadBean;
+    }
+    
+    public void Documento.setFileUploadBean(FileUploadBean value) {
+    	this.fileUploadBean = value;
+    }
+    
+    public void Documento.setDocumento(Blob doc) {
+    	this.documento = doc;
+    }
+    
+    public Blob Documento.getDocumento() {
+    	return this.documento;
     }
     
 }
