@@ -1,0 +1,197 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<!-- saved from url=(0044)http://localhost:8081/forum/documentoes?form -->
+<html class="dj_khtml dj_safari dj_contentbox"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta content="IE=8" http-equiv="X-UA-Compatible"><link href="./Bem vindo a Forum_Criar_doc_consulta_autor_files/standard.css" media="screen" type="text/css" rel="stylesheet"><link href="./Bem vindo a Forum_Criar_doc_consulta_autor_files/tundra.css" type="text/css" rel="stylesheet"><link href="http://localhost:8081/forum/resources/images/favicon.ico" rel="SHORTCUT ICON"><script type="text/javascript">var djConfig="pt"; </script><script type="text/javascript" src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/dojo.js"></script><script type="text/javascript" src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/Spring.js"></script><script type="text/javascript" src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/Spring-Dojo.js"></script><script type="text/javascript" language="JavaScript">dojo.require("dojo.parser");</script><script type="text/javascript" src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/jquery-1.4.2.min.js"></script><script type="text/javascript" src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/jquery.blockUI.js"></script><script type="text/javascript" src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/engine.js"></script><script type="text/javascript" src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/util.js"></script><title>Bem vindo a Forum</title></head><body class="tundra spring"><div id="wrapper"><div version="2.0" id="header"><a title="Inicio" name="Inicio" href="http://localhost:8081/forum/"><img src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/banner-graphic.png"></a><br></div><div version="2.0" id="menu"><ul id="_menu"><li id="c_documento"><h2>
+				Documento
+			</h2><ul><li id="i_documento_new"><a title="Criar novo Documento" href="./Bem vindo a Forum_Criar_doc_consulta_autor_files/Bem vindo a Forum_Criar_doc_consulta_autor.htm">
+        Criar novo Documento
+      </a></li><li id="i_documento_list"><a title="Listar Documentos" href="http://localhost:8081/forum/documentoes?page=1&size=10">
+        Listar Documentos
+      </a></li></ul></li><li id="c_descricaodocumento"><h2>
+				Descricao Documento
+			</h2><ul><li id="i_descricaodocumento_new"><a title="Criar novo Descricao Documento" href="http://localhost:8081/forum/descricaodocumentoes?form">
+        Criar novo Descricao Documento
+      </a></li><li id="i_descricaodocumento_list"><a title="Listar Descricao Documentoes" href="http://localhost:8081/forum/descricaodocumentoes?page=1&size=10">
+        Listar Descricao Documentoes
+      </a></li></ul></li><li id="c_palavradocumento"><h2>
+				Palavra Documento
+			</h2><ul><li id="i_palavradocumento_new"><a title="Criar novo Palavra Documento" href="http://localhost:8081/forum/palavradocumentoes?form">
+        Criar novo Palavra Documento
+      </a></li><li id="i_palavradocumento_list"><a title="Listar Palavra Documentoes" href="http://localhost:8081/forum/palavradocumentoes?page=1&size=10">
+        Listar Palavra Documentoes
+      </a></li></ul></li><li id="c_documentoreferenciapais"><h2>
+				Documento Referencia Pais
+			</h2><ul><li id="i_documentoreferenciapais_new"><a title="Criar novo Documento Referencia Pais" href="http://localhost:8081/forum/documentoreferenciapaises?form">
+        Criar novo Documento Referencia Pais
+      </a></li><li id="i_documentoreferenciapais_list"><a title="Listar Documento Referencia Paises" href="http://localhost:8081/forum/documentoreferenciapaises?page=1&size=10">
+        Listar Documento Referencia Paises
+      </a></li></ul></li><li id="c_usuariodocumento"><h2>
+				Usuario Documento
+			</h2><ul><li id="i_usuariodocumento_new"><a title="Criar novo Usuario Documento" href="http://localhost:8081/forum/usuariodocumentoes?form">
+        Criar novo Usuario Documento
+      </a></li><li id="i_usuariodocumento_list"><a title="Listar Usuario Documentoes" href="http://localhost:8081/forum/usuariodocumentoes?page=1&size=10">
+        Listar Usuario Documentoes
+      </a></li></ul></li><li id="c_documentovinculo"><h2>
+				Documento Vinculo
+			</h2><ul><li id="i_documentovinculo_new"><a title="Criar novo Documento Vinculo" href="http://localhost:8081/forum/documentovinculoes?form">
+        Criar novo Documento Vinculo
+      </a></li><li id="i_documentovinculo_list"><a title="Listar Documento Vinculoes" href="http://localhost:8081/forum/documentovinculoes?page=1&size=10">
+        Listar Documento Vinculoes
+      </a></li></ul></li><li id="c_comentariodocumento"><h2>
+				Comentario Documento
+			</h2><ul><li id="i_comentariodocumento_new"><a title="Criar novo Comentario Documento" href="http://localhost:8081/forum/comentariodocumentoes?form">
+        Criar novo Comentario Documento
+      </a></li><li id="i_comentariodocumento_list"><a title="Listar Comentario Documentoes" href="http://localhost:8081/forum/comentariodocumentoes?page=1&size=10">
+        Listar Comentario Documentoes
+      </a></li></ul></li></ul></div><div id="main"><div version="2.0"><script type="text/javascript" src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/Usuario.js"></script><script type="text/javascript">
+
+  	 	function openAddPalavra() {
+
+  	 		$('#palavra').val('');
+			$.blockUI({ message: $('#addPalavra') });
+			$('#addPalavra').css('display', 'block');
+  	 		
+  	 	}
+
+  	 	function addPalavra(){
+
+  	 		palavra = $('#palavra').val().trim();
+
+  	 		if (palavra.length > 0) {
+
+  	  	 		key = $('#lstIdioma').val();
+              	$('#palavrasIndex').append('<option value="' + (1 + $('#palavrasIndex option').size()) +'" idioma="' + key + '">' + palavra + '</option>');
+
+              	updatePalavras();
+              	setTimeout($.unblockUI, 5);
+  	 		}
+  	  	 	
+  	 	}
+
+  	 	function carregarPalavras() {
+
+  	 		if ($('#hdPalavras').val().trim().length > 0) {
+
+  	 			p1 = $('#hdPalavras').val().split(';;');
+  	 			$('#palavrasIndex').empty();
+  	 			for (i = 0; i < p1.length; i++) {
+
+  	 				p2 = p1[i].split(':;');
+  	 				if (p2 != null && p2.length > 1) {
+  	 					palavra = p2[0];
+  	 					id = p2[1];
+
+  	 					$('#palavrasIndex').append('<option value="' + i +'" idioma="' + id + '">' + palavra + '</option>');
+  	 				}
+  	 				
+  	  	 			
+  	 			}
+  	  	 		
+  	 		}
+  	  	 	
+  	 	}
+
+  	 	function updatePalavras() {
+
+  	 		hdValue = '';
+  	 		$("#palavrasIndex option").each(function () {
+                hdValue += $(this).text() + ":;" + $(this).attr('idioma') + ";;";
+              });
+
+            $('#hdPalavras').val(hdValue);
+  	  	 	
+  	 	}
+
+  	 	function removePalavra(){
+
+  	 		if ($('#palavrasIndex').val() >= 0 ){
+
+  	 			$('#palavrasIndex option:selected').remove();
+  	 			updatePalavras();
+  	  	 		
+  	 		}
+  	  	 	
+  	 	}
+  	 
+  	 	function openBuscaUsuario() {
+
+  	 		Usuario.listarUsuariosInject(function(list) {
+		  		
+  				$('#buscaUsuario').html(list);
+  				$.blockUI({ message: $('#buscaUsuario') });
+  				$('#buscaUsuario').css('display', 'block');
+  				
+  			});
+  	  	 	
+  	 	}
+
+  	 	function selecionarUsuario(email, nome) {
+
+  	 		if (nome != null && nome.trim().length > 0) {
+
+  	 			$('#_nmAutor_id').val(nome);
+  	 			$('#_dsEmailAutor_id').val(email);
+  	 			closeBuscaUsuario();
+  	 		}
+  	 		  	  	 	
+  	 	}
+
+  	 	function closeBuscaUsuario() {
+
+  	 	 	setTimeout($.unblockUI, 500);
+  	  	 	
+  	 	}
+
+	  	 $(document).ready(function() {
+
+	  		carregarPalavras();
+
+		});
+			
+  	 </script><div style="height: 300px; width: 400px; background: white; display: none;cursor:default" id="addPalavra"><div style="text-align: right;"><a href="javascript:closeBuscaUsuario();">(x)Close</a></div><br><br><br><br><br><table><tbody><tr><td>
+					Idioma:
+				</td><td><select id="lstIdioma"><option value="1">Portugues Brasil</option><option value="3">Espanhol</option></select></td></tr><tr><td>
+					Palavra:
+				</td><td><input id="palavra" style="width: 200px;" type="text"></td></tr><tr><td colspan="2"><center><input onclick="addPalavra()" value="Adicionar" type="button"><input onclick="closeBuscaUsuario()" value="Cancelar" type="button"></center></td></tr></tbody></table></div><script type="text/javascript">dojo.require('dijit.TitlePane');</script><div class="dijitTitlePane" id="_title_fc_br_unicamp_mc536_t2010s2a_forum_domain_Documento_id" widgetid="_title_fc_br_unicamp_mc536_t2010s2a_forum_domain_Documento_id" title="" role="group">
+	<div dojoattachevent="onclick:toggle,onkeypress: _onTitleKey,onfocus:_handleFocus,onblur:_handleFocus" tabindex="0" wairole="button" class="dijitTitlePaneTitle dijitOpen" dojoattachpoint="titleBarNode,focusNode" role="button" aria-haspopup="true">
+		<img src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/blank.gif" alt="" dojoattachpoint="arrowNode" class="dijitArrowNode" wairole="presentation" role="presentation"><span dojoattachpoint="arrowNodeInner" class="dijitArrowNodeInner">-</span><span dojoattachpoint="titleNode" class="dijitTitlePaneTextNode" style="-webkit-user-select: none; ">Criar novo Documento</span>
+	</div>
+	<div class="dijitTitlePaneContentOuter" dojoattachpoint="hideNode">
+		<div class="dijitReset" dojoattachpoint="wipeNode">
+			<div class="dijitTitlePaneContentInner" dojoattachpoint="containerNode" wairole="region" tabindex="-1" role="region" aria-labelledby="">
+				<!-- nested divs because wipeIn()/wipeOut() doesn't work right on node w/padding etc.  Put padding on inner div. -->
+			<script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : '_title_fc_br_unicamp_mc536_t2010s2a_forum_domain_Documento_id', widgetType : 'dijit.TitlePane', widgetAttrs : {title: 'Criar novo Documento', open: true}})); </script><form id="documento" action="http://localhost:8081/forum/documentoes" method="POST" enctype="multipart/form-data"><div id="_c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmDocumento_id"><label for="_nmDocumento_id">
+        Nome do Documento:
+      </label><div class="dijit dijitReset dijitInlineTable dijitLeft dijitTextBox" id="widget__nmDocumento_id" dojoattachevent="onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse" wairole="presentation" role="presentation" widgetid="_nmDocumento_id"><div style="overflow:hidden;"><div class="dijitReset dijitValidationIcon"><br></div><div class="dijitReset dijitValidationIconText">Χ</div><div class="dijitReset dijitInputField"><input class="dijitReset" dojoattachpoint="textbox,focusNode" dojoattachevent="onfocus:_update,onkeyup:_update,onblur:_onMouse,onkeypress:_onKeyPress" autocomplete="off" type="text" name="nmDocumento" id="_nmDocumento_id" tabindex="0" maxlength="524288" aria-required="true" aria-invalid="true" value=""></div></div></div><br><script type="text/javascript">
+        Spring.addDecoration(new Spring.ElementDecoration({elementId : '_nmDocumento_id', widgetType : 'dijit.form.ValidationTextBox', widgetAttrs : {promptMessage: 'Introducir Nome do Documento (obligatorio)', invalidMessage: 'Por favor, introduzca un Nome do Documento v&amp;aacute;lido', required: true}})); 
+      </script></div><br><script type="text/javascript">dojo.require("dijit.form.SimpleTextarea");</script><div id="_c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsDocumento_id"><label for="_dsDocumento_id">
+        Descrição :
+      </label><textarea name="dsDocumento" dojoattachpoint="focusNode,containerNode,textbox" autocomplete="off" id="_dsDocumento_id" aria-disabled="false" tabindex="0" class=" dijitTextArea" widgetid="_dsDocumento_id" value=""></textarea><br><script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : '_dsDocumento_id', widgetType : 'dijit.form.SimpleTextarea', widgetAttrs : {disabled : false}})); </script></div><br><script type="text/javascript">dojo.require("dijit.form.SimpleTextarea");</script><div id="_c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsInfoMaquina_id"><label for="_dsInfoMaquina_id">
+        Informações da Máquina utilizada para postar o Documento :
+      </label><textarea name="dsInfoMaquina" dojoattachpoint="focusNode,containerNode,textbox" autocomplete="off" id="_dsInfoMaquina_id" aria-disabled="false" tabindex="0" class=" dijitTextArea" widgetid="_dsInfoMaquina_id" value=""></textarea><br><script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : '_dsInfoMaquina_id', widgetType : 'dijit.form.SimpleTextarea', widgetAttrs : {disabled : false}})); </script></div><br><div id="_c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_tipoDocumento_id"><label for="_tipoDocumento_id" id="_tipoDocumento_id_label">
+            Tipo de Documento:
+          </label><div class="dijit dijitReset dijitInlineTable dijitLeft dijitComboBox" id="widget__tipoDocumento_id" dojoattachevent="onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse" dojoattachpoint="comboNode" wairole="combobox" tabindex="-1" role="combobox" widgetid="_tipoDocumento_id" aria-labelledby="_tipoDocumento_id_label"><div style="overflow:hidden;"><div class="dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton" dojoattachpoint="downArrowNode" wairole="presentation" dojoattachevent="onmousedown:_onArrowMouseDown,onmouseup:_onMouse,onmouseenter:_onMouse,onmouseleave:_onMouse" role="presentation"><div class="dijitArrowButtonInner"> </div><div class="dijitArrowButtonChar">▼</div></div><div class="dijitReset dijitValidationIcon"><br></div><div class="dijitReset dijitValidationIconText">Χ</div><div class="dijitReset dijitInputField"><input type="text" autocomplete="off" class="dijitReset" dojoattachevent="onkeypress:_onKeyPress, onfocus:_update, compositionend" dojoattachpoint="textbox,focusNode" wairole="textbox" waistate="haspopup-true,autocomplete-list" role="textbox" aria-haspopup="true" aria-autocomplete="list" id="_tipoDocumento_id" aria-invalid="false" tabindex="0" aria-required="true" value="Carta Tipo de documento Carta"><input type="text" style="display: none; " name="tipoDocumento"></div></div></div><br><script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : '_tipoDocumento_id', widgetType: 'dijit.form.FilteringSelect', widgetAttrs : {hasDownArrow : true}})); </script></div><br>
+        
+        Documento:
+        <input style="float: right; width: 435px;" name="fileUploadBean.file" type="file"><br><br><script type="text/javascript">dojo.require('dijit.form.DateTextBox')</script><div id="__id"><label for="_dtCriacao_id">
+        Data de Criação:
+      </label><div class="dijit dijitReset dijitInlineTable dijitLeft dijitTextBox dijitDateTextBox" id="widget__dtCriacao_id" dojoattachevent="onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse" wairole="presentation" role="presentation" widgetid="_dtCriacao_id"><div style="overflow:hidden;"><div class="dijitReset dijitValidationIcon"><br></div><div class="dijitReset dijitValidationIconText">Χ</div><div class="dijitReset dijitInputField"><input class="dijitReset" dojoattachpoint="textbox,focusNode" dojoattachevent="onfocus:_update,onkeyup:_update,onblur:_onMouse,onkeypress:_onKeyPress" autocomplete="off" type="text" id="_dtCriacao_id" aria-valuenow="Sun Nov 21 2010 00:00:00 GMT-0200 (Hor�rio brasileiro de ver�o)" aria-invalid="false" tabindex="0" maxlength="524288" aria-required="true" value="21-11-2010"><input type="text" style="display: none; " name="dtCriacao"></div></div></div><br><script type="text/javascript">
+        Spring.addDecoration(new Spring.ElementDecoration({elementId : '_dtCriacao_id', widgetType : 'dijit.form.DateTextBox', widgetAttrs : {promptMessage: 'Introducir Data de Cria&amp;amp;ccedil;&amp;amp;atilde;o (obligatorio)', invalidMessage: 'Por favor, introduzca un Data de Cria&amp;amp;amp;ccedil;&amp;amp;amp;atilde;o v&amp;aacute;lido', required: true, constraints: {datePattern : 'dd-MM-yyyy', required : true}, datePattern : 'dd-MM-yyyy'}})); </script></div><br><input style="float: right;" onclick="openBuscaUsuario();" value="Consultar Autor" type="button"><div id="_c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmAutor_id"><label for="_nmAutor_id">
+        Nome do Autor:
+      </label><div class="dijit dijitReset dijitInlineTable dijitLeft dijitTextBox" id="widget__nmAutor_id" dojoattachevent="onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse" wairole="presentation" role="presentation" widgetid="_nmAutor_id"><div style="overflow:hidden;"><div class="dijitReset dijitValidationIcon"><br></div><div class="dijitReset dijitValidationIconText">Χ</div><div class="dijitReset dijitInputField"><input class="dijitReset" dojoattachpoint="textbox,focusNode" dojoattachevent="onfocus:_update,onkeyup:_update,onblur:_onMouse,onkeypress:_onKeyPress" autocomplete="off" type="text" name="nmAutor" id="_nmAutor_id" tabindex="0" maxlength="524288" aria-required="false" aria-invalid="false" value=""></div></div></div><br><script type="text/javascript">
+        Spring.addDecoration(new Spring.ElementDecoration({elementId : '_nmAutor_id', widgetType : 'dijit.form.ValidationTextBox', widgetAttrs : {promptMessage: 'Introducir Nome do Autor', invalidMessage: 'Por favor, introduzca un Nome do Autor v&amp;aacute;lido', required: false}})); 
+      </script></div><br><script type="text/javascript">dojo.require("dijit.form.SimpleTextarea");</script><div id="_c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsEmailAutor_id"><label for="_dsEmailAutor_id">
+        Email do Autor :
+      </label><textarea name="dsEmailAutor" dojoattachpoint="focusNode,containerNode,textbox" autocomplete="off" id="_dsEmailAutor_id" aria-disabled="false" tabindex="0" class=" dijitTextArea" widgetid="_dsEmailAutor_id" value=""></textarea><br><script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : '_dsEmailAutor_id', widgetType : 'dijit.form.SimpleTextarea', widgetAttrs : {disabled : false}})); </script></div><br><div id="_c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idIdiomaDocumento_id"><label for="_idIdiomaDocumento_id" id="_idIdiomaDocumento_id_label">
+            Id Idioma Documento:
+          </label><div class="dijit dijitReset dijitInlineTable dijitLeft dijitComboBox" id="widget__idIdiomaDocumento_id" dojoattachevent="onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse" dojoattachpoint="comboNode" wairole="combobox" tabindex="-1" role="combobox" widgetid="_idIdiomaDocumento_id" aria-labelledby="_idIdiomaDocumento_id_label"><div style="overflow:hidden;"><div class="dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton" dojoattachpoint="downArrowNode" wairole="presentation" dojoattachevent="onmousedown:_onArrowMouseDown,onmouseup:_onMouse,onmouseenter:_onMouse,onmouseleave:_onMouse" role="presentation"><div class="dijitArrowButtonInner"> </div><div class="dijitArrowButtonChar">▼</div></div><div class="dijitReset dijitValidationIcon"><br></div><div class="dijitReset dijitValidationIconText">Χ</div><div class="dijitReset dijitInputField"><input type="text" autocomplete="off" class="dijitReset" dojoattachevent="onkeypress:_onKeyPress, onfocus:_update, compositionend" dojoattachpoint="textbox,focusNode" wairole="textbox" waistate="haspopup-true,autocomplete-list" role="textbox" aria-haspopup="true" aria-autocomplete="list" id="_idIdiomaDocumento_id" aria-invalid="false" tabindex="0" aria-required="true" value="Portugues Brasil ptbr Idioma falado no brasil"><input type="text" style="display: none; " name="idIdiomaDocumento"></div></div></div><br><script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : '_idIdiomaDocumento_id', widgetType: 'dijit.form.FilteringSelect', widgetAttrs : {hasDownArrow : true}})); </script></div><br><div id="_c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idPrograma_id"><label for="_idPrograma_id" id="_idPrograma_id_label">
+            Programa:
+          </label><div class="dijit dijitReset dijitInlineTable dijitLeft dijitComboBox" id="widget__idPrograma_id" dojoattachevent="onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse" dojoattachpoint="comboNode" wairole="combobox" tabindex="-1" role="combobox" widgetid="_idPrograma_id" aria-labelledby="_idPrograma_id_label"><div style="overflow:hidden;"><div class="dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton" dojoattachpoint="downArrowNode" wairole="presentation" dojoattachevent="onmousedown:_onArrowMouseDown,onmouseup:_onMouse,onmouseenter:_onMouse,onmouseleave:_onMouse" role="presentation"><div class="dijitArrowButtonInner"> </div><div class="dijitArrowButtonChar">▼</div></div><div class="dijitReset dijitValidationIcon"><br></div><div class="dijitReset dijitValidationIconText">Χ</div><div class="dijitReset dijitInputField"><input type="text" autocomplete="off" class="dijitReset" dojoattachevent="onkeypress:_onKeyPress, onfocus:_update, compositionend" dojoattachpoint="textbox,focusNode" wairole="textbox" waistate="haspopup-true,autocomplete-list" role="textbox" aria-haspopup="true" aria-autocomplete="list" id="_idPrograma_id" aria-invalid="false" tabindex="0" aria-required="true" value="Programa em pro do multilinguismo A Programa"><input type="text" style="display: none; " name="idPrograma"></div></div></div><br><script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : '_idPrograma_id', widgetType: 'dijit.form.FilteringSelect', widgetAttrs : {hasDownArrow : true}})); </script></div><br><div id="_c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idRedeTrabalho_id"><label for="_idRedeTrabalho_id" id="_idRedeTrabalho_id_label">
+            Rede Trabalho:
+          </label><div class="dijit dijitReset dijitInlineTable dijitLeft dijitComboBox" id="widget__idRedeTrabalho_id" dojoattachevent="onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse" dojoattachpoint="comboNode" wairole="combobox" tabindex="-1" role="combobox" widgetid="_idRedeTrabalho_id" aria-labelledby="_idRedeTrabalho_id_label"><div style="overflow:hidden;"><div class="dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton" dojoattachpoint="downArrowNode" wairole="presentation" dojoattachevent="onmousedown:_onArrowMouseDown,onmouseup:_onMouse,onmouseenter:_onMouse,onmouseleave:_onMouse" role="presentation"><div class="dijitArrowButtonInner"> </div><div class="dijitArrowButtonChar">▼</div></div><div class="dijitReset dijitValidationIcon"><br></div><div class="dijitReset dijitValidationIconText">Χ</div><div class="dijitReset dijitInputField"><input type="text" autocomplete="off" class="dijitReset" dojoattachevent="onkeypress:_onKeyPress, onfocus:_update, compositionend" dojoattachpoint="textbox,focusNode" wairole="textbox" waistate="haspopup-true,autocomplete-list" role="textbox" aria-haspopup="true" aria-autocomplete="list" id="_idRedeTrabalho_id" aria-invalid="false" tabindex="0" aria-required="true" value="Alpha Rede de trabalho SP"><input type="text" style="display: none; " name="idRedeTrabalho"></div></div></div><br><script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : '_idRedeTrabalho_id', widgetType: 'dijit.form.FilteringSelect', widgetAttrs : {hasDownArrow : true}})); </script></div><br><div id="_c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idPais_id"><label for="_idPais_id" id="_idPais_id_label">
+            Pais do Documento:
+          </label><div class="dijit dijitReset dijitInlineTable dijitLeft dijitComboBox" id="widget__idPais_id" dojoattachevent="onmouseenter:_onMouse,onmouseleave:_onMouse,onmousedown:_onMouse" dojoattachpoint="comboNode" wairole="combobox" tabindex="-1" role="combobox" widgetid="_idPais_id" aria-labelledby="_idPais_id_label"><div style="overflow:hidden;"><div class="dijitReset dijitRight dijitButtonNode dijitArrowButton dijitDownArrowButton" dojoattachpoint="downArrowNode" wairole="presentation" dojoattachevent="onmousedown:_onArrowMouseDown,onmouseup:_onMouse,onmouseenter:_onMouse,onmouseleave:_onMouse" role="presentation"><div class="dijitArrowButtonInner"> </div><div class="dijitArrowButtonChar">▼</div></div><div class="dijitReset dijitValidationIcon"><br></div><div class="dijitReset dijitValidationIconText">Χ</div><div class="dijitReset dijitInputField"><input type="text" autocomplete="off" class="dijitReset" dojoattachevent="onkeypress:_onKeyPress, onfocus:_update, compositionend" dojoattachpoint="textbox,focusNode" wairole="textbox" waistate="haspopup-true,autocomplete-list" role="textbox" aria-haspopup="true" aria-autocomplete="list" id="_idPais_id" aria-invalid="false" tabindex="0" aria-required="true" value="Brasil BR"><input type="text" style="display: none; " name="idPais"></div></div></div><br><script type="text/javascript">Spring.addDecoration(new Spring.ElementDecoration({elementId : '_idPais_id', widgetType: 'dijit.form.FilteringSelect', widgetAttrs : {hasDownArrow : true}})); </script></div><br><input id="qtdVisualizacao" name="qtdVisualizacao" type="hidden" value="0"><input id="nmArquivo" name="nmArquivo" type="hidden" value=""><input id="dtInclusao" name="dtInclusao" type="hidden" value="21-11-2010"><input id="hdPalavras" name="aux1" type="hidden" value=""><input style="float: right;" onclick="openAddPalavra();" value="Adicionar Palavras" type="button"><input style="float: right;" onclick="removePalavra();" value="Remover Palavras" type="button"><br><table><tbody><tr><td>
+        			Palavras relacionadas ao documento
+        		</td></tr><tr><td><select style="width: 300px" size="10" multiple="multiple" id="palavrasIndex"></select></td></tr></tbody></table><br><div id="fc_br_unicamp_mc536_t2010s2a_forum_domain_Documento_submit" class="submit"><script type="text/javascript">Spring.addDecoration(new Spring.ValidateAllDecoration({elementId:'proceed', event:'onclick'}));</script><input value="Salvar" type="submit" id="proceed"></div></form></div>
+		</div>
+	</div>
+</div></div><div version="2.0" id="footer"><span><a href="http://localhost:8081/forum/">Inicio</a></span> | <span><a href="http://localhost:8081/forum/login?form">Login</a></span><span id="language"> | Idioma: <a title="Alterar idioma para Portuguese" href="http://localhost:8081/forum/documentoes?form&amp;lang=pt"><img alt="Alterar idioma para Portuguese" src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/pt.png" class="flag"></a> <a title="Alterar idioma para English" href="http://localhost:8081/forum/documentoes?form&amp;lang=en"><img alt="Alterar idioma para English" src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/en.png" class="flag"></a> <a title="Alterar idioma para Deutsch" href="http://localhost:8081/forum/documentoes?form&amp;lang=de"><img alt="Alterar idioma para Deutsch" src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/de.png" class="flag"></a> <a title="Alterar idioma para Espanol" href="http://localhost:8081/forum/documentoes?form&amp;lang=es"><img alt="Alterar idioma para Espanol" src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/es.png" class="flag"></a> </span><span> | Tema: <a title="estándar" href="http://localhost:8081/forum/documentoes?theme=standard">estándar</a> | <a title="alt" href="http://localhost:8081/forum/documentoes?theme=alt">alt</a></span><span><a title="Patrocinado por SpringSource" href="http://springsource.com/"><img src="./Bem vindo a Forum_Criar_doc_consulta_autor_files/springsource-logo.png" alt="Patrocinado por SpringSource" align="right"></a></span></div></div></div><div style="display: none; "></div><div class="blockUI" style="display:none"></div><div class="blockUI blockOverlay" style="z-index: 1000; border-top-style: none; border-right-style: none; border-bottom-style: none; border-left-style: none; border-width: initial; border-color: initial; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; width: 100%; height: 100%; top: 0px; left: 0px; background-color: rgb(0, 0, 0); cursor: wait; position: fixed; opacity: 0.6; "></div><div class="blockUI blockMsg blockPage" style="z-index: 1001; position: fixed; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; width: 30%; top: 40%; left: 35%; text-align: center; color: rgb(0, 0, 0); border-top-width: 3px; border-right-width: 3px; border-bottom-width: 3px; border-left-width: 3px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: rgb(170, 170, 170); border-right-color: rgb(170, 170, 170); border-bottom-color: rgb(170, 170, 170); border-left-color: rgb(170, 170, 170); background-color: rgb(255, 255, 255); cursor: wait; "><div style="height: 300px; width: 400px; background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: white; display: block; background-position: initial initial; background-repeat: initial initial; " id="buscaUsuario"><div version="2.0"><div style="height: 200px;cursor:default"><div style="text-align: right;"><a href="javascript:closeBuscaUsuario();">(x)Close</a></div><table><thead><tr><th>Nome</th><th>Pais</th></tr></thead><tbody style="overflow: scroll;"><tr onclick="selecionarUsuario(&#39;&#39;, &#39;cristiano j miranda&#39;)"><td>cristiano j miranda</td><td>Brasil</td></tr><tr onclick="selecionarUsuario(&#39;elrei&#39;, &#39;El Rei&#39;)"><td>El Rei</td><td>Brasil</td></tr><tr onclick="selecionarUsuario(&#39;augusto@gmail.com&#39;, &#39;Augusto&#39;)"><td>Augusto</td><td>Espanha</td></tr></tbody></table></div></div></div></div></body></html>
