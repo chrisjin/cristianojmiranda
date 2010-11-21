@@ -12,11 +12,11 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import br.unicamp.mc536.t2010s2a.forum.web.dto.FileUploadBean;
 
@@ -93,5 +93,14 @@ public class Documento {
 	private FileUploadBean fileUploadBean;
 
 	private Blob documento;
+	
+	@Transient
+	private String aux1;
+	
+	@Transient
+	private String aux2;
+	
+	@Transient
+	private String aux3;
 
 }

@@ -4,16 +4,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 public class FileUploadBean {
 
-	/*private byte[] file;
-
-	public void setFile(byte[] file) {
-		this.file = file;
-	}
-
-	public byte[] getFile() {
-		return file;
-	}*/
-	
 	private CommonsMultipartFile file;
 
 	/**
@@ -24,11 +14,11 @@ public class FileUploadBean {
 	}
 
 	/**
-	 * @param file the file to set
+	 * @param file
+	 *            the file to set
 	 */
 	public void setFile(CommonsMultipartFile file) {
 		this.file = file;
 	}
-	
-	
+
 }

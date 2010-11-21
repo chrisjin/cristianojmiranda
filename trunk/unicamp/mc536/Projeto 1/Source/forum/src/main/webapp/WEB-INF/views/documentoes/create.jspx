@@ -14,9 +14,70 @@
 
   	 	function openAddPalavra() {
 
+  	 		$('#palavra').val('');
 			$.blockUI({ message: $('#addPalavra') });
 			$('#addPalavra').css('display', 'block');
   	 		
+  	 	}
+
+  	 	function addPalavra(){
+
+  	 		palavra = $('#palavra').val().trim();
+
+  	 		if (palavra.length > 0) {
+
+  	  	 		key = $('#lstIdioma').val();
+              	$('#palavrasIndex').append('<option idioma="' + key + '" value="' + (1 + $('#palavrasIndex option').size()) +'">' + palavra + '</option>');
+
+              	updatePalavras();
+              	setTimeout($.unblockUI, 5);
+  	 		}
+  	  	 	
+  	 	}
+
+  	 	function carregarPalavras() {
+
+  	 		if ($('#hdPalavras').val().trim().length > 0) {
+
+  	 			p1 = $('#hdPalavras').val().split(';;');
+  	 			$('#palavrasIndex').empty();
+  	 			for (i = 0; i &lt; p1.length; i++) {
+
+  	 				p2 = p1[i].split(':;');
+  	 				if (p2 != null &amp;&amp; p2.length > 1) {
+  	 					palavra = p2[0];
+  	 					id = p2[1];
+
+  	 					$('#palavrasIndex').append('<option idioma="' + id + '" value="' + i +'">' + palavra + '</option>');
+  	 				}
+  	 				
+  	  	 			
+  	 			}
+  	  	 		
+  	 		}
+  	  	 	
+  	 	}
+
+  	 	function updatePalavras() {
+
+  	 		hdValue = '';
+  	 		$("#palavrasIndex option").each(function () {
+                hdValue += $(this).text() + ":;" + $(this).attr('idioma') + ";;";
+              });
+
+            $('#hdPalavras').val(hdValue);
+  	  	 	
+  	 	}
+
+  	 	function removePalavra(){
+
+  	 		if ($('#palavrasIndex').val() >= 0 ){
+
+  	 			$('#palavrasIndex option:selected').remove();
+  	 			updatePalavras();
+  	  	 		
+  	 		}
+  	  	 	
   	 	}
   	 
   	 	function openBuscaUsuario() {
@@ -50,6 +111,7 @@
 
 	  	 $(document).ready(function() {
 
+	  		carregarPalavras();
 
 		});
 			
@@ -61,7 +123,7 @@
   	 
   	 </div>
   	 
-  	 <div id="addPalavra" style="height: 300px; width: 400px; background: white; display: none;">
+  	 <div id="addPalavra" style="height: 300px; width: 400px; background: white; display: none;cursor:default">
   	 
   	 	<div style="text-align: right;">
 			<a href="javascript:closeBuscaUsuario();">(x)Close</a>
@@ -83,7 +145,15 @@
 			
 				<td>
 				
+					<select id="lstIdioma">
 					
+						<c:forEach items="${idiomas}" var="idioma">
+						
+							<option value="${idioma.id}">${idioma.nmIdioma}</option>
+						
+						</c:forEach>
+						
+					</select>
 				
 				</td>
 			
@@ -106,8 +176,8 @@
 			<tr>
 				<td colspan="2">
 					<center>
-					<input type="button" value="Adicionar" onclick="" />
-					<input type="button" value="Cancelar" onclick="" />
+					<input type="button" value="Adicionar" onclick="addPalavra()" />
+					<input type="button" value="Cancelar" onclick="closeBuscaUsuario()" />
 					</center>
 				</td>
 			</tr>
@@ -149,10 +219,30 @@
         <sform:hidden path="qtdVisualizacao"/>
         <sform:hidden path="nmArquivo" />
         <sform:hidden path="dtInclusao" />
+        <sform:hidden id="hdPalavras" path="aux1" />
         
         <input type="button" value="Adicionar Palavras" onclick="openAddPalavra();" style="float: right;"/>
+        <input type="button" value="Remover Palavras" onclick="removePalavra();" style="float: right;" />
         <br/>
         
+        <table>
+        	<tr>
+        		<td>
+        			Palavras relacionadas ao documento
+        		</td>
+        	</tr>
+        	<tr>
+        		<td>
+        			<select id="palavrasIndex" multiple="multiple" size="10" style="width: 300px">
+        				
+        			</select>
+        		</td>
+        	</tr>
+        </table>
+        <br/>
+        
+        
     </form:create>
+    
     <form:dependency dependencies="${dependencies}" id="d_br_unicamp_mc536_t2010s2a_forum_domain_Documento" render="${not empty dependencies}" z="ndAutRy7k1J12EleOdscnOzzQBs="/>
 </div>
