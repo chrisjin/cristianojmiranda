@@ -10,45 +10,54 @@ import java.lang.String;
 import java.util.Date;
 
 privileged aspect DocumentoVinculo_Roo_JavaBean {
-    
-    public Documento DocumentoVinculo.getIdDocumento() {
-        return this.idDocumento;
-    }
-    
-    public void DocumentoVinculo.setIdDocumento(Documento idDocumento) {
-        this.idDocumento = idDocumento;
-    }
-    
-    public Usuario DocumentoVinculo.getIdUsuario() {
-        return this.idUsuario;
-    }
-    
-    public void DocumentoVinculo.setIdUsuario(Usuario idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-    
-    public Date DocumentoVinculo.getDtInclusao() {
-        return this.dtInclusao;
-    }
-    
-    public void DocumentoVinculo.setDtInclusao(Date dtInclusao) {
-        this.dtInclusao = dtInclusao;
-    }
-    
-    public ReferenciaDocumento DocumentoVinculo.getTpReferenciaDocumento() {
-        return this.tpReferenciaDocumento;
-    }
-    
-    public void DocumentoVinculo.setTpReferenciaDocumento(ReferenciaDocumento tpReferenciaDocumento) {
-        this.tpReferenciaDocumento = tpReferenciaDocumento;
-    }
-    
-    public String DocumentoVinculo.getDsVinculo() {
-        return this.dsVinculo;
-    }
-    
-    public void DocumentoVinculo.setDsVinculo(String dsVinculo) {
-        this.dsVinculo = dsVinculo;
-    }
-    
+
+	public Documento DocumentoVinculo.getIdDocumento() {
+		return this.idDocumento;
+	}
+
+	public void DocumentoVinculo.setIdDocumento(Documento idDocumento) {
+		this.idDocumento = idDocumento;
+	}
+
+	public Documento DocumentoVinculo.getIdDocumentoVinculo() {
+		return this.idDocumentoVinculo;
+	}
+
+	public void DocumentoVinculo.setIdDocumentoVinculo(Documento idDocumento) {
+		this.idDocumentoVinculo = idDocumento;
+	}
+
+	public Usuario DocumentoVinculo.getIdUsuario() {
+		return this.idUsuario;
+	}
+
+	public void DocumentoVinculo.setIdUsuario(Usuario idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
+	public Date DocumentoVinculo.getDtInclusao() {
+		return this.dtInclusao;
+	}
+
+	public void DocumentoVinculo.setDtInclusao(Date dtInclusao) {
+		this.dtInclusao = dtInclusao;
+	}
+
+	public ReferenciaDocumento DocumentoVinculo.getTpReferenciaDocumento() {
+		return this.tpReferenciaDocumento;
+	}
+
+	public void DocumentoVinculo.setTpReferenciaDocumento(
+			ReferenciaDocumento tpReferenciaDocumento) {
+		this.tpReferenciaDocumento = tpReferenciaDocumento;
+	}
+
+	public String DocumentoVinculo.getDsVinculo() {
+		return this.dsVinculo;
+	}
+
+	public void DocumentoVinculo.setDsVinculo(String dsVinculo) {
+		this.dsVinculo = dsVinculo;
+	}
+
 }

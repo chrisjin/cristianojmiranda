@@ -2,6 +2,7 @@ package br.unicamp.mc536.t2010s2a.forum.domain;
 
 import java.sql.Blob;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -16,7 +17,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.roo.addon.entity.RooEntity;
 import org.springframework.roo.addon.javabean.RooJavaBean;
 import org.springframework.roo.addon.tostring.RooToString;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import br.unicamp.mc536.t2010s2a.forum.web.dto.FileUploadBean;
 
@@ -93,13 +93,31 @@ public class Documento {
 	private FileUploadBean fileUploadBean;
 
 	private Blob documento;
-	
+
+	@Transient
+	private List<PalavraDocumento> palavrasAssociadas;
+
+	@Transient
+	private List<ComentarioDocumento> comentarios;
+
+	@Transient
+	private List<UsuarioDocumento> usuariosVinculados;
+
+	@Transient
+	private List<DescricaoDocumento> descricaoDocumentos;
+
+	@Transient
+	private List<DocumentoVinculo> vinculos;
+
+	@Transient
+	private List<DocumentoReferenciaPais> referenciaPaises;
+
 	@Transient
 	private String aux1;
-	
+
 	@Transient
 	private String aux2;
-	
+
 	@Transient
 	private String aux3;
 

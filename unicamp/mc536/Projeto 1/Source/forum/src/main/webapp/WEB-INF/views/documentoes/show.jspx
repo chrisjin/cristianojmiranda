@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" 
+	 xmlns:jsp="http://java.sun.com/JSP/Page"
+	 xmlns:c="http://java.sun.com/jsp/jstl/core"  
+	 xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
     <jsp:output omit-xml-declaration="yes"/>
     <page:show id="ps_br_unicamp_mc536_t2010s2a_forum_domain_Documento" object="${documento}" path="/documentoes" z="Gq/JzTq5vcxVnnETc723JtZ6aeo=">
         <field:display field="nmDocumento" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmDocumento" object="${documento}" z="WoGZiXyW/FanXuAZebswNSree68="/>
-        <field:display field="dsDocumento" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsDocumento" object="${documento}" z="JTc5OOxPLWmtLdfG7kQi/1u4mJ0="/>
-        <field:display field="nmArquivo" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmArquivo" object="${documento}" z="B46unGPRj48YtiI5FKUK6u1WugA="/>
+        <field:display field="dsDocumento" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsDocumento" object="${documento}" z="JTc5OOxPLWmtLdfG7kQi/1u4mJ0="/>        
         <field:display field="dsInfoMaquina" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsInfoMaquina" object="${documento}" z="8EnKW18G5U/Be814YY9OOBP8rcs="/>
         <field:display field="tipoDocumento" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_tipoDocumento" object="${documento}" z="OoNeIK0qfWjVbwcMyfKKA0/8l30="/>
         <field:display date="true" dateTimePattern="${documento_dtcriacao_date_format}" field="dtCriacao" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dtCriacao" object="${documento}" z="FCTCE8+GaHPHSp2D7zp86o5jw30="/>
@@ -18,9 +20,189 @@
         <field:display field="idPrograma" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idPrograma" object="${documento}" z="WUgvchUgT7pNk+fbYcSdCyxp3qU="/>
         <field:display field="idRedeTrabalho" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idRedeTrabalho" object="${documento}" z="cVcC8Z70v17SEW/4SMKhxgnj+no="/>
         <field:display field="idPais" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idPais" object="${documento}" z="QaRfiB6nv4sWJXwxbG7NL02YtMM="/>
-        
-        <br/>
+        <field:display field="nmArquivo" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmArquivo" object="${documento}" z="B46unGPRj48YtiI5FKUK6u1WugA="/>
         <a href="/forum/documentoes/${documento.id}?downloadDoc">Download</a>
+        
+        <c:if test="${not empty documento.palavrasAssociadas}">
+	        <br/>        
+	        <br/>
+	        <!-- Palavras associadas ao documento -->
+	        <table>
+	        	<tr>
+	        		<td><b>Palavras associadas</b></td>
+	        	</tr>
+	        </table>
+			<table>
+				<tbody style="height: 200px; overflow: auto;">
+					<c:forEach items="${documento.palavrasAssociadas}" var="palavra">
+						<tr>
+							<td>
+								${palavra.dsPalavrasChaves}
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</c:if>
+		
+		<c:if test="${not empty documento.descricaoDocumentos}">
+			<br/>
+			<br/>
+	        <!-- Descrição do documento -->
+	        <table>
+	        	<tr>
+	        		<td><b>Descrições</b></td>
+	        	</tr>
+	        </table>
+			<table>
+				<c:forEach items="${documento.descricaoDocumentos}" var="desc">
+					<tr>
+						<td>
+							${desc.idIdiomaDocumento.nmIdioma} - ${desc.dsDocumento}
+						</td>
+					</tr>
+				</c:forEach>
+			</table>
+		</c:if>
+		
+		<c:if test="${not empty documento.usuariosVinculados}">
+			<br/>
+			<br/>
+	        <!-- Usuarios associadas ao documento -->
+	        <table>
+	        	<tr>
+	        		<td><b>Usuarios Vinculados</b></td>
+	        	</tr>
+	        </table>
+			<table>
+				<c:forEach items="${documento.usuariosVinculados}" var="user">
+					<tr>
+						<td>
+							${user.idUsuario.nmUsuario}
+						</td>
+					</tr>
+				</c:forEach>
+			</table>
+		</c:if>
+		
+		<c:if test="${not empty documento.vinculos}">
+			<br/>
+			<br/>
+	        <!-- Usuarios associadas ao documento -->
+	        <table>
+	        	<tr>
+	        		<td><b>Documentos Vinculados</b></td>
+	        	</tr>
+	        </table>
+			<table>
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Descrição</th>
+						<th>Tipo</th>
+						<th>Data Criação</th>
+						<th>Pais</th>
+						<th>Download</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${documento.vinculos}" var="doc">
+						<tr>
+							<td>
+								<a href="/forum/documentoes/${doc.idDocumentoVinculo.id}">${doc.idDocumentoVinculo.nmDocumento}</a>
+							</td>
+							<td>
+								${doc.idDocumentoVinculo.dsDocumento}
+							</td>
+							<td>
+								${doc.idDocumentoVinculo.tipoDocumento}
+							</td>
+							<td>
+								${doc.idDocumentoVinculo.dtCriacao}
+							</td>
+							<td>
+								${doc.idDocumentoVinculo.idPais}
+							</td>
+							<td>
+								<a href="/forum/documentoes/${doc.idDocumentoVinculo.id}?downloadDoc">Baixar Arquivo</a>
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</c:if>
+		
+		<c:if test="${not empty documento.referenciaPaises}">
+			<br/>
+			<br/>
+	        <!-- Paises associadas ao documento -->
+	        <table>
+	        	<tr>
+	        		<td><b>Paises Relacionados</b></td>
+	        	</tr>
+	        </table>
+			<table>
+				<c:forEach items="${documento.referenciaPaises}" var="pais">
+					<tr>
+						<td>
+							<a href="/forum/documentoreferenciapaises/${pais.id}">
+							${pais.idPais.nmPais}
+							</a>
+						</td>
+					</tr>
+				</c:forEach>
+			</table>
+		</c:if>
+		
+		<c:if test="${not empty documento.comentarios}">
+			<br/>
+			<br/>
+	        <!-- Comentarios do documento -->
+	        <table>
+	        	<tr>
+	        		<td><b>Comentarios</b></td>
+	        	</tr>
+	        </table>
+			<table>
+				<thead>
+					<tr>
+					
+						<th>
+							Info
+						</th>
+						
+						<th>
+							Comentário
+						</th>
+					
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${documento.comentarios}" var="com">
+						<tr>
+							<td>
+								<c:if test="${com.idUsuario != null}">
+									${com.idUsuario.nmUsuario}
+								</c:if>
+								<c:if test="${com.idUsuario == null}">
+									Anonimo
+								</c:if>
+								${com.idUsuario.nmUsuario}
+								 - ${com.dtInclusao}
+							</td>
+							<td>
+								<a href="/forum/comentariodocumentoes/${com.id}">
+								${com.dsComentario}
+								</a>
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</c:if>
+	
+        		
+        <br/>
         
     </page:show>
 </div>

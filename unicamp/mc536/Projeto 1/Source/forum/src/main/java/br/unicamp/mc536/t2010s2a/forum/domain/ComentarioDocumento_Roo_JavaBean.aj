@@ -9,55 +9,77 @@ import br.unicamp.mc536.t2010s2a.forum.domain.Usuario;
 import br.unicamp.mc536.t2010s2a.forum.reference.ReferenciaDocumento;
 import java.lang.String;
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Transient;
 
 privileged aspect ComentarioDocumento_Roo_JavaBean {
-    
-    public Usuario ComentarioDocumento.getIdUsuario() {
-        return this.idUsuario;
-    }
-    
-    public void ComentarioDocumento.setIdUsuario(Usuario idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-    
-    public Documento ComentarioDocumento.getIdDocumento() {
-        return this.idDocumento;
-    }
-    
-    public void ComentarioDocumento.setIdDocumento(Documento idDocumento) {
-        this.idDocumento = idDocumento;
-    }
-    
-    public String ComentarioDocumento.getDsComentario() {
-        return this.dsComentario;
-    }
-    
-    public void ComentarioDocumento.setDsComentario(String dsComentario) {
-        this.dsComentario = dsComentario;
-    }
-    
-    public Date ComentarioDocumento.getDtInclusao() {
-        return this.dtInclusao;
-    }
-    
-    public void ComentarioDocumento.setDtInclusao(Date dtInclusao) {
-        this.dtInclusao = dtInclusao;
-    }
-    
-    public ComentarioDocumento ComentarioDocumento.getIdComentario() {
-        return this.idComentario;
-    }
-    
-    public void ComentarioDocumento.setIdComentario(ComentarioDocumento idComentario) {
-        this.idComentario = idComentario;
-    }
-    
-    public ReferenciaDocumento ComentarioDocumento.getTpReferenciaDocumento() {
-        return this.tpReferenciaDocumento;
-    }
-    
-    public void ComentarioDocumento.setTpReferenciaDocumento(ReferenciaDocumento tpReferenciaDocumento) {
-        this.tpReferenciaDocumento = tpReferenciaDocumento;
-    }
-    
+
+	public Usuario ComentarioDocumento.getIdUsuario() {
+		return this.idUsuario;
+	}
+
+	public void ComentarioDocumento.setIdUsuario(Usuario idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
+	public Documento ComentarioDocumento.getIdDocumento() {
+		return this.idDocumento;
+	}
+
+	public void ComentarioDocumento.setIdDocumento(Documento idDocumento) {
+		this.idDocumento = idDocumento;
+	}
+
+	public String ComentarioDocumento.getDsComentario() {
+		return this.dsComentario;
+	}
+
+	public void ComentarioDocumento.setDsComentario(String dsComentario) {
+		this.dsComentario = dsComentario;
+	}
+
+	public Date ComentarioDocumento.getDtInclusao() {
+		return this.dtInclusao;
+	}
+
+	public void ComentarioDocumento.setDtInclusao(Date dtInclusao) {
+		this.dtInclusao = dtInclusao;
+	}
+
+	public ComentarioDocumento ComentarioDocumento.getIdComentario() {
+		return this.idComentario;
+	}
+
+	public void ComentarioDocumento.setIdComentario(
+			ComentarioDocumento idComentario) {
+		this.idComentario = idComentario;
+	}
+
+	public ReferenciaDocumento ComentarioDocumento.getTpReferenciaDocumento() {
+		return this.tpReferenciaDocumento;
+	}
+
+	public void ComentarioDocumento.setTpReferenciaDocumento(
+			ReferenciaDocumento tpReferenciaDocumento) {
+		this.tpReferenciaDocumento = tpReferenciaDocumento;
+	}
+
+	public Long ComentarioDocumento.getIdComentarioPai() {
+		return this.idComentarioPai;
+	}
+
+	public void ComentarioDocumento.setIdComentarioPai(Long value) {
+		this.idComentarioPai = value;
+	}
+
+	public List<ComentarioDocumento> ComentarioDocumento.getComentariosFilhos() {
+		return this.comentariosFilhos;
+	}
+
+	public void ComentarioDocumento.setComentariosFilhos(
+			List<ComentarioDocumento> value) {
+		this.comentariosFilhos = value;
+	}
+
 }

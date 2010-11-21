@@ -33,158 +33,203 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 privileged aspect DocumentoVinculoController_Roo_Controller {
-    
-    @RequestMapping(method = RequestMethod.POST)
-    public String DocumentoVinculoController.create(@Valid DocumentoVinculo documentoVinculo, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("documentoVinculo", documentoVinculo);
-            addDateTimeFormatPatterns(model);
-            return "documentovinculoes/create";
-        }
-        documentoVinculo.persist();
-        return "redirect:/documentovinculoes/" + documentoVinculo.getId();
-    }
-    
-    @RequestMapping(params = "form", method = RequestMethod.GET)
-    public String DocumentoVinculoController.createForm(Model model) {
-        model.addAttribute("documentoVinculo", new DocumentoVinculo());
-        addDateTimeFormatPatterns(model);
-        List dependencies = new ArrayList();
-        if (Documento.countDocumentoes() == 0) {
-            dependencies.add(new String[]{"idDocumento", "documentoes"});
-        }
-        if (Usuario.countUsuarios() == 0) {
-            dependencies.add(new String[]{"idUsuario", "usuarios"});
-        }
-        model.addAttribute("dependencies", dependencies);
-        return "documentovinculoes/create";
-    }
-    
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public String DocumentoVinculoController.show(@PathVariable("id") Long id, Model model) {
-        addDateTimeFormatPatterns(model);
-        model.addAttribute("documentovinculo", DocumentoVinculo.findDocumentoVinculo(id));
-        model.addAttribute("itemId", id);
-        return "documentovinculoes/show";
-    }
-    
-    @RequestMapping(method = RequestMethod.GET)
-    public String DocumentoVinculoController.list(@RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model model) {
-        if (page != null || size != null) {
-            int sizeNo = size == null ? 10 : size.intValue();
-            model.addAttribute("documentovinculoes", DocumentoVinculo.findDocumentoVinculoEntries(page == null ? 0 : (page.intValue() - 1) * sizeNo, sizeNo));
-            float nrOfPages = (float) DocumentoVinculo.countDocumentoVinculoes() / sizeNo;
-            model.addAttribute("maxPages", (int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1 : nrOfPages));
-        } else {
-            model.addAttribute("documentovinculoes", DocumentoVinculo.findAllDocumentoVinculoes());
-        }
-        addDateTimeFormatPatterns(model);
-        return "documentovinculoes/list";
-    }
-    
-    @RequestMapping(method = RequestMethod.PUT)
-    public String DocumentoVinculoController.update(@Valid DocumentoVinculo documentoVinculo, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("documentoVinculo", documentoVinculo);
-            addDateTimeFormatPatterns(model);
-            return "documentovinculoes/update";
-        }
-        documentoVinculo.merge();
-        return "redirect:/documentovinculoes/" + documentoVinculo.getId();
-    }
-    
-    @RequestMapping(value = "/{id}", params = "form", method = RequestMethod.GET)
-    public String DocumentoVinculoController.updateForm(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("documentoVinculo", DocumentoVinculo.findDocumentoVinculo(id));
-        addDateTimeFormatPatterns(model);
-        return "documentovinculoes/update";
-    }
-    
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public String DocumentoVinculoController.delete(@PathVariable("id") Long id, @RequestParam(value = "page", required = false) Integer page, @RequestParam(value = "size", required = false) Integer size, Model model) {
-        DocumentoVinculo.findDocumentoVinculo(id).remove();
-        model.addAttribute("page", (page == null) ? "1" : page.toString());
-        model.addAttribute("size", (size == null) ? "10" : size.toString());
-        return "redirect:/documentovinculoes?page=" + ((page == null) ? "1" : page.toString()) + "&size=" + ((size == null) ? "10" : size.toString());
-    }
-    
-    @ModelAttribute("documentoes")
-    public Collection<Documento> DocumentoVinculoController.populateDocumentoes() {
-        return Documento.findAllDocumentoes();
-    }
-    
-    @ModelAttribute("usuarios")
-    public Collection<Usuario> DocumentoVinculoController.populateUsuarios() {
-        return Usuario.findAllUsuarios();
-    }
-    
-    @ModelAttribute("referenciadocumentoes")
-    public Collection<ReferenciaDocumento> DocumentoVinculoController.populateReferenciaDocumentoes() {
-        return Arrays.asList(ReferenciaDocumento.class.getEnumConstants());
-    }
-    
-    Converter<Documento, String> DocumentoVinculoController.getDocumentoConverter() {
-        return new Converter<Documento, String>() {
-            public String convert(Documento documento) {
-                return new StringBuilder().append(documento.getNmDocumento()).append(" ").append(documento.getDsDocumento()).append(" ").append(documento.getNmArquivo()).toString();
-            }
-        };
-    }
-    
-    Converter<DocumentoVinculo, String> DocumentoVinculoController.getDocumentoVinculoConverter() {
-        return new Converter<DocumentoVinculo, String>() {
-            public String convert(DocumentoVinculo documentoVinculo) {
-                return new StringBuilder().append(documentoVinculo.getDtInclusao()).append(" ").append(documentoVinculo.getDsVinculo()).toString();
-            }
-        };
-    }
-    
-    Converter<Usuario, String> DocumentoVinculoController.getUsuarioConverter() {
-        return new Converter<Usuario, String>() {
-            public String convert(Usuario usuario) {
-                return new StringBuilder().append(usuario.getNmUsuario()).append(" ").append(usuario.getDsLogin()).append(" ").append(usuario.getDsSenha()).toString();
-            }
-        };
-    }
-    
-    @InitBinder
-    void DocumentoVinculoController.registerConverters(WebDataBinder binder) {
-        if (binder.getConversionService() instanceof GenericConversionService) {
-            GenericConversionService conversionService = (GenericConversionService) binder.getConversionService();
-            conversionService.addConverter(getDocumentoConverter());
-            conversionService.addConverter(getDocumentoVinculoConverter());
-            conversionService.addConverter(getUsuarioConverter());
-        }
-    }
-    
-    void DocumentoVinculoController.addDateTimeFormatPatterns(Model model) {
-        model.addAttribute("documentoVinculo_dtinclusao_date_format", DateTimeFormat.patternForStyle("S-", LocaleContextHolder.getLocale()));
-    }
-    
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-    @ResponseBody
-    public String DocumentoVinculoController.showJson(@PathVariable("id") Long id) {
-        return DocumentoVinculo.findDocumentoVinculo(id).toJson();
-    }
-    
-    @RequestMapping(method = RequestMethod.POST, headers = "Accept=application/json")
-    public ResponseEntity<String> DocumentoVinculoController.createFromJson(@RequestBody String json) {
-        DocumentoVinculo.fromJsonToDocumentoVinculo(json).persist();
-        return new ResponseEntity<String>("DocumentoVinculo created", HttpStatus.CREATED);
-    }
-    
-    @RequestMapping(headers = "Accept=application/json")
-    @ResponseBody
-    public String DocumentoVinculoController.listJson() {
-        return DocumentoVinculo.toJsonArray(DocumentoVinculo.findAllDocumentoVinculoes());
-    }
-    
-    @RequestMapping(value = "/jsonArray", method = RequestMethod.POST, headers = "Accept=application/json")
-    public ResponseEntity<String> DocumentoVinculoController.createFromJsonArray(@RequestBody String json) {
-        for (DocumentoVinculo documentovinculo: DocumentoVinculo.fromJsonArrayToDocumentoVinculoes(json)) {
-            documentovinculo.persist();
-        }
-        return new ResponseEntity<String>("DocumentoVinculo created", HttpStatus.CREATED);
-    }
-    
+
+	@RequestMapping(method = RequestMethod.POST)
+	public String DocumentoVinculoController.create(
+			@Valid DocumentoVinculo documentoVinculo, BindingResult result,
+			Model model) {
+		if (result.hasErrors()) {
+			model.addAttribute("documentoVinculo", documentoVinculo);
+			addDateTimeFormatPatterns(model);
+			return "documentovinculoes/create";
+		}
+		documentoVinculo.persist();
+		return "redirect:/documentovinculoes/" + documentoVinculo.getId();
+	}
+
+	@RequestMapping(params = "form", method = RequestMethod.GET)
+	public String DocumentoVinculoController.createForm(Model model) {
+		model.addAttribute("documentoVinculo", new DocumentoVinculo());
+		addDateTimeFormatPatterns(model);
+		List dependencies = new ArrayList();
+		if (Documento.countDocumentoes() == 0) {
+			dependencies.add(new String[] { "idDocumento", "documentoes" });
+		}
+		if (Usuario.countUsuarios() == 0) {
+			dependencies.add(new String[] { "idUsuario", "usuarios" });
+		}
+		model.addAttribute("dependencies", dependencies);
+		return "documentovinculoes/create";
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public String DocumentoVinculoController.show(@PathVariable("id") Long id,
+			Model model) {
+		addDateTimeFormatPatterns(model);
+		model.addAttribute("documentovinculo", DocumentoVinculo
+				.findDocumentoVinculo(id));
+		model.addAttribute("itemId", id);
+		return "documentovinculoes/show";
+	}
+
+	@RequestMapping(method = RequestMethod.GET)
+	public String DocumentoVinculoController.list(
+			@RequestParam(value = "page", required = false) Integer page,
+			@RequestParam(value = "size", required = false) Integer size,
+			Model model) {
+		if (page != null || size != null) {
+			int sizeNo = size == null ? 10 : size.intValue();
+			model.addAttribute("documentovinculoes", DocumentoVinculo
+					.findDocumentoVinculoEntries(page == null ? 0 : (page
+							.intValue() - 1)
+							* sizeNo, sizeNo));
+			float nrOfPages = (float) DocumentoVinculo
+					.countDocumentoVinculoes()
+					/ sizeNo;
+			model
+					.addAttribute(
+							"maxPages",
+							(int) ((nrOfPages > (int) nrOfPages || nrOfPages == 0.0) ? nrOfPages + 1
+									: nrOfPages));
+		} else {
+			model.addAttribute("documentovinculoes", DocumentoVinculo
+					.findAllDocumentoVinculoes());
+		}
+		addDateTimeFormatPatterns(model);
+		return "documentovinculoes/list";
+	}
+
+	@RequestMapping(method = RequestMethod.PUT)
+	public String DocumentoVinculoController.update(
+			@Valid DocumentoVinculo documentoVinculo, BindingResult result,
+			Model model) {
+		if (result.hasErrors()) {
+			model.addAttribute("documentoVinculo", documentoVinculo);
+			addDateTimeFormatPatterns(model);
+			return "documentovinculoes/update";
+		}
+		documentoVinculo.merge();
+		return "redirect:/documentovinculoes/" + documentoVinculo.getId();
+	}
+
+	@RequestMapping(value = "/{id}", params = "form", method = RequestMethod.GET)
+	public String DocumentoVinculoController.updateForm(
+			@PathVariable("id") Long id, Model model) {
+		model.addAttribute("documentoVinculo", DocumentoVinculo
+				.findDocumentoVinculo(id));
+		addDateTimeFormatPatterns(model);
+		return "documentovinculoes/update";
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public String DocumentoVinculoController.delete(
+			@PathVariable("id") Long id,
+			@RequestParam(value = "page", required = false) Integer page,
+			@RequestParam(value = "size", required = false) Integer size,
+			Model model) {
+		DocumentoVinculo.findDocumentoVinculo(id).remove();
+		model.addAttribute("page", (page == null) ? "1" : page.toString());
+		model.addAttribute("size", (size == null) ? "10" : size.toString());
+		return "redirect:/documentovinculoes?page="
+				+ ((page == null) ? "1" : page.toString()) + "&size="
+				+ ((size == null) ? "10" : size.toString());
+	}
+
+	@ModelAttribute("documentoes")
+	public Collection<Documento> DocumentoVinculoController.populateDocumentoes() {
+		return Documento.findAllDocumentoes();
+	}
+
+	@ModelAttribute("usuarios")
+	public Collection<Usuario> DocumentoVinculoController.populateUsuarios() {
+		return Usuario.findAllUsuarios();
+	}
+
+	@ModelAttribute("referenciadocumentoes")
+	public Collection<ReferenciaDocumento> DocumentoVinculoController.populateReferenciaDocumentoes() {
+		return Arrays.asList(ReferenciaDocumento.class.getEnumConstants());
+	}
+
+	Converter<Documento, String> DocumentoVinculoController.getDocumentoConverter() {
+		return new Converter<Documento, String>() {
+			public String convert(Documento documento) {
+				return new StringBuilder().append(documento.getNmDocumento())
+						.append(" ").append(documento.getDsDocumento()).append(
+								" ").append(documento.getNmArquivo())
+						.toString();
+			}
+		};
+	}
+
+	Converter<DocumentoVinculo, String> DocumentoVinculoController.getDocumentoVinculoConverter() {
+		return new Converter<DocumentoVinculo, String>() {
+			public String convert(DocumentoVinculo documentoVinculo) {
+				return new StringBuilder().append(
+						documentoVinculo.getDtInclusao()).append(" ").append(
+						documentoVinculo.getDsVinculo()).toString();
+			}
+		};
+	}
+
+	Converter<Usuario, String> DocumentoVinculoController.getUsuarioConverter() {
+		return new Converter<Usuario, String>() {
+			public String convert(Usuario usuario) {
+				return new StringBuilder().append(usuario.getNmUsuario())
+						.append(" ").append(usuario.getDsLogin()).append(" ")
+						.append(usuario.getDsSenha()).toString();
+			}
+		};
+	}
+
+	@InitBinder
+	void DocumentoVinculoController.registerConverters(WebDataBinder binder) {
+		if (binder.getConversionService() instanceof GenericConversionService) {
+			GenericConversionService conversionService = (GenericConversionService) binder
+					.getConversionService();
+			conversionService.addConverter(getDocumentoConverter());
+			conversionService.addConverter(getDocumentoConverter());
+			conversionService.addConverter(getDocumentoVinculoConverter());
+			conversionService.addConverter(getUsuarioConverter());
+		}
+	}
+
+	void DocumentoVinculoController.addDateTimeFormatPatterns(Model model) {
+		model.addAttribute("documentoVinculo_dtinclusao_date_format",
+				DateTimeFormat.patternForStyle("S-", LocaleContextHolder
+						.getLocale()));
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@ResponseBody
+	public String DocumentoVinculoController.showJson(
+			@PathVariable("id") Long id) {
+		return DocumentoVinculo.findDocumentoVinculo(id).toJson();
+	}
+
+	@RequestMapping(method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<String> DocumentoVinculoController.createFromJson(
+			@RequestBody String json) {
+		DocumentoVinculo.fromJsonToDocumentoVinculo(json).persist();
+		return new ResponseEntity<String>("DocumentoVinculo created",
+				HttpStatus.CREATED);
+	}
+
+	@RequestMapping(headers = "Accept=application/json")
+	@ResponseBody
+	public String DocumentoVinculoController.listJson() {
+		return DocumentoVinculo.toJsonArray(DocumentoVinculo
+				.findAllDocumentoVinculoes());
+	}
+
+	@RequestMapping(value = "/jsonArray", method = RequestMethod.POST, headers = "Accept=application/json")
+	public ResponseEntity<String> DocumentoVinculoController.createFromJsonArray(
+			@RequestBody String json) {
+		for (DocumentoVinculo documentovinculo : DocumentoVinculo
+				.fromJsonArrayToDocumentoVinculoes(json)) {
+			documentovinculo.persist();
+		}
+		return new ResponseEntity<String>("DocumentoVinculo created",
+				HttpStatus.CREATED);
+	}
+
 }

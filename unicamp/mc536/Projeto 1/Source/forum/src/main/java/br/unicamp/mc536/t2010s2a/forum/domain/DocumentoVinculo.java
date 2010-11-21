@@ -26,6 +26,11 @@ public class DocumentoVinculo {
     @ManyToOne(targetEntity = Documento.class)
     @JoinColumn
     private Documento idDocumento;
+    
+    @NotNull
+    @ManyToOne(targetEntity = Documento.class)
+    @JoinColumn
+    private Documento idDocumentoVinculo;
 
     @NotNull
     @ManyToOne(targetEntity = Usuario.class)
