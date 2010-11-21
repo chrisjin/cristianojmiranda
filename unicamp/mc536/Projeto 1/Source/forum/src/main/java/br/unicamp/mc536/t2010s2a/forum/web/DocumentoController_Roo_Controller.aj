@@ -3,11 +3,18 @@
 
 package br.unicamp.mc536.t2010s2a.forum.web;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.joda.time.format.DateTimeFormat;
@@ -41,6 +48,52 @@ import br.unicamp.mc536.t2010s2a.forum.utils.Constantes;
 import br.unicamp.mc536.t2010s2a.forum.web.dto.FileUploadBean;
 
 privileged aspect DocumentoController_Roo_Controller {
+
+	/**
+	 * @param documento
+	 * @param result
+	 * @param model
+	 * @return
+	 * @throws SQLException
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/{id}", params = "downloadDoc", method = RequestMethod.GET)
+	public String DocumentoController.downloadDocumento(
+			@PathVariable("id") Long id, Model model,
+			HttpServletResponse response) throws SQLException, IOException {
+
+		Documento doc = Documento.findDocumento(id);
+		if (doc != null && doc.getDocumento() != null
+				&& doc.getDocumento().length() > 0) {
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			byte[] buf = new byte[1024];
+
+			InputStream in = doc.getDocumento().getBinaryStream();
+
+			int n = 0;
+			while ((n = in.read(buf)) >= 0) {
+				baos.write(buf, 0, n);
+
+			}
+
+			in.close();
+			byte[] bytes = baos.toByteArray();
+
+			response.setContentLength((int) doc.getDocumento().length());
+			response.setContentType("application/x-file-download");
+			response.setHeader("Content-disposition", "attachment; filename="
+					+ URLEncoder.encode(doc.getNmArquivo(), "UTF-8"));
+			response.setHeader("Cache-Control", "max-age=600");
+			ServletOutputStream outStream = response.getOutputStream();
+			outStream.write(bytes);
+			outStream.flush();
+
+		}
+
+		return null;
+
+	}
 
 	@RequestMapping(method = RequestMethod.POST)
 	public String DocumentoController.create(@Valid Documento documento,

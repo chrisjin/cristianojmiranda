@@ -6,17 +6,11 @@ package br.unicamp.mc536.t2010s2a.forum.domain;
 import java.lang.String;
 
 privileged aspect DocumentoVinculo_Roo_ToString {
-    
-    public String DocumentoVinculo.toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Id: ").append(getId()).append(", ");
-        sb.append("Version: ").append(getVersion()).append(", ");
-        sb.append("IdDocumento: ").append(getIdDocumento()).append(", ");
-        sb.append("IdUsuario: ").append(getIdUsuario()).append(", ");
-        sb.append("DtInclusao: ").append(getDtInclusao()).append(", ");
-        sb.append("TpReferenciaDocumento: ").append(getTpReferenciaDocumento()).append(", ");
-        sb.append("DsVinculo: ").append(getDsVinculo());
-        return sb.toString();
-    }
-    
+
+	public String DocumentoVinculo.toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getDsVinculo());
+		return sb.toString();
+	}
+
 }

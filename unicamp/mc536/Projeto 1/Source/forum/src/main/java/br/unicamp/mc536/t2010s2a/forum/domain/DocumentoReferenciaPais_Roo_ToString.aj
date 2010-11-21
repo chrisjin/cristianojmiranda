@@ -6,14 +6,12 @@ package br.unicamp.mc536.t2010s2a.forum.domain;
 import java.lang.String;
 
 privileged aspect DocumentoReferenciaPais_Roo_ToString {
-    
-    public String DocumentoReferenciaPais.toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Id: ").append(getId()).append(", ");
-        sb.append("Version: ").append(getVersion()).append(", ");
-        sb.append("IdPais: ").append(getIdPais()).append(", ");
-        sb.append("IdDocumento: ").append(getIdDocumento());
-        return sb.toString();
-    }
-    
+
+	public String DocumentoReferenciaPais.toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("IdPais: ").append(getIdPais()).append(", ");
+		sb.append("IdDocumento: ").append(getIdDocumento());
+		return sb.toString();
+	}
+
 }

@@ -18,5 +18,9 @@
         <field:display field="idPrograma" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idPrograma" object="${documento}" z="WUgvchUgT7pNk+fbYcSdCyxp3qU="/>
         <field:display field="idRedeTrabalho" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idRedeTrabalho" object="${documento}" z="cVcC8Z70v17SEW/4SMKhxgnj+no="/>
         <field:display field="idPais" id="s_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idPais" object="${documento}" z="QaRfiB6nv4sWJXwxbG7NL02YtMM="/>
+        
+        <br/>
+        <a href="/forum/documentoes/${documento.id}?downloadDoc">Download</a>
+        
     </page:show>
 </div>

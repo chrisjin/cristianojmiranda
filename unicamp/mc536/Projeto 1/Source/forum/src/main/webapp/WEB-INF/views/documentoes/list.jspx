@@ -5,9 +5,9 @@
         <table:table data="${documentoes}" id="l_br_unicamp_mc536_t2010s2a_forum_domain_Documento" path="/documentoes" z="9h31Upmg0cIRVH2Qo20cmCAEBVU=">
             <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmDocumento" property="nmDocumento" z="UgJH13ndfr+I+RChnZ9aJLIg1Ao="/>
             <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsDocumento" property="dsDocumento" z="jdsriBH5LsQnEPJgdSBH+qxjtCc="/>
-            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmArquivo" property="nmArquivo" z="3nUOMnnog8QGbIcPLILdDOhmvCI="/>
-            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dsInfoMaquina" property="dsInfoMaquina" z="UapoRtRlal9LBZoWEDpiclP1rjc="/>
             <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_tipoDocumento" property="tipoDocumento" z="EfiOv6sJvTAlbu43PhyqpKRqrss="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_idIdiomaDocumento" property="idIdiomaDocumento" z="EfiOv6sJvTAlbu43PpKRqrss="/>
+            <table:column id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_dtCriacao" property="dtCriacao" z="sJvTAlbu43PpKRqrss="/>
         </table:table>
     </page:list>
 </div>

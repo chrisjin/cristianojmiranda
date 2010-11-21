@@ -6,14 +6,11 @@ package br.unicamp.mc536.t2010s2a.forum.domain;
 import java.lang.String;
 
 privileged aspect Pais_Roo_ToString {
-    
-    public String Pais.toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Id: ").append(getId()).append(", ");
-        sb.append("Version: ").append(getVersion()).append(", ");
-        sb.append("NmPais: ").append(getNmPais()).append(", ");
-        sb.append("DsPais: ").append(getDsPais());
-        return sb.toString();
-    }
-    
+
+	public String Pais.toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getNmPais());
+		return sb.toString();
+	}
+
 }

@@ -1,0 +1,10 @@
+#Wed Nov 10 23:33:21 BRST 2010
+eclipse.preferences.version=1
+encoding//src/main/webapp/WEB-INF/i18n/application.properties=ISO-8859-1
+encoding//src/main/webapp/WEB-INF/i18n/messages_pt.properties=ISO-8859-1
+encoding//src/main/webapp/WEB-INF/layouts/default.jspx=UTF-8
+encoding//src/main/webapp/WEB-INF/tags/menu/menu.tagx=UTF-8
+encoding//src/main/webapp/WEB-INF/tags/util/theme.tagx=UTF-8
+encoding//src/main/webapp/WEB-INF/views/index.jspx=UTF-8
+encoding//src/main/webapp/WEB-INF/views/login.jspx=UTF-8
+encoding//src/main/webapp/js/jquery-1.4.2.min.js=UTF-8

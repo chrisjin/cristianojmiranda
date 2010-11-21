@@ -9,27 +9,7 @@ privileged aspect Documento_Roo_ToString {
 
 	public String Documento.toString() {
 		StringBuilder sb = new StringBuilder();
-		// sb.append("Id: ").append(getId()).append(", ");
-		// sb.append("Version: ").append(getVersion()).append(", ");
-		sb.append("NmDocumento: ").append(getNmDocumento()).append(", ");
-		sb.append("DsDocumento: ").append(getDsDocumento()).append(", ");
-		// sb.append("NmArquivo: ").append(getNmArquivo()).append(", ");
-		// sb.append("DsInfoMaquina: ").append(getDsInfoMaquina()).append(", ");
-		sb.append("TipoDocumento: ").append(getTipoDocumento()).append(", ");
-		// sb.append("Documento: ").append(getDocumento()).append(", ");
-		// sb.append("DtCriacao: ").append(getDtCriacao()).append(", ");
-		sb.append("DtInclusao: ").append(getDtInclusao()).append(", ");
-		sb.append("NmAutor: ").append(getNmAutor()).append(", ");
-		// sb.append("DsEmailAutor: ").append(getDsEmailAutor()).append(", ");
-		// sb.append("IdIdiomaDocumento: ").append(getIdIdiomaDocumento()).append(", ");
-		sb.append("IdUsuarioResponsavel: ").append(getIdUsuarioResponsavel())
-				.append(", ");
-		//sb.append("IdUsuarioAutor: ").append(getIdUsuarioAutor()).append(", ");
-		sb.append("QtdVisualizacao: ").append(getQtdVisualizacao())
-				.append(", ");
-		//sb.append("IdPrograma: ").append(getIdPrograma()).append(", ");
-		//sb.append("IdRedeTrabalho: ").append(getIdRedeTrabalho()).append(", ");
-		//sb.append("IdPais: ").append(getIdPais());
+		sb.append(getNmDocumento());
 		return sb.toString();
 	}
 

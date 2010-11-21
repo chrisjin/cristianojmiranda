@@ -6,17 +6,10 @@ package br.unicamp.mc536.t2010s2a.forum.domain;
 import java.lang.String;
 
 privileged aspect RedeTrabalho_Roo_ToString {
-    
-    public String RedeTrabalho.toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Id: ").append(getId()).append(", ");
-        sb.append("Version: ").append(getVersion()).append(", ");
-        sb.append("NmRedetrabalho: ").append(getNmRedetrabalho()).append(", ");
-        sb.append("DsRedetrabalho: ").append(getDsRedetrabalho()).append(", ");
-        sb.append("DsDetalhadoRedetrabalho: ").append(getDsDetalhadoRedetrabalho()).append(", ");
-        sb.append("IdUsuario: ").append(getIdUsuario()).append(", ");
-        sb.append("DtInclusao: ").append(getDtInclusao());
-        return sb.toString();
-    }
-    
+
+	public String RedeTrabalho.toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getNmRedetrabalho());
+		return sb.toString();
+	}
 }
