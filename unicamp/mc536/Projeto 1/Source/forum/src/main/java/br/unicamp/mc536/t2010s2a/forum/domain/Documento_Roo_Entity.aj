@@ -16,6 +16,9 @@ import javax.persistence.Version;
 
 import org.hibernate.Hibernate;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.NumberUtils;
+
+import br.unicamp.mc536.t2010s2a.forum.utils.StringUtils;
 
 
 privileged aspect Documento_Roo_Entity {
@@ -54,7 +57,8 @@ privileged aspect Documento_Roo_Entity {
 			this.entityManager = entityManager();
 
 		if (this.getFileUploadBean() != null
-				&& this.getFileUploadBean().getFile() != null) {
+				&& this.getFileUploadBean().getFile() != null
+				&& !this.getFileUploadBean().getFile().isEmpty()) {
 
 			// Seta o nome do arquivo
 			this.setNmArquivo(this.getFileUploadBean().getFile().getFileItem()
@@ -69,6 +73,42 @@ privileged aspect Documento_Roo_Entity {
 		}
 
 		this.entityManager.persist(this);
+
+		// Faz o parse das palavras chaves
+		if (!StringUtils.isBlankOrNull(this.getAux1())) {
+
+			String[] palavrasArr = this.getAux1().split(";;");
+			if (palavrasArr != null) {
+
+				for (String palavra : palavrasArr) {
+
+					String[] pArr = palavra.split(":;");
+					if (pArr != null && pArr.length >= 2) {
+
+						String palavraIdioma = pArr[0];
+						String idIdioma = pArr[1];
+
+						if (!StringUtils.isBlankOrNull(palavra)
+								&& !StringUtils.isBlankOrNull(idIdioma)) {
+
+							Idioma idioma = Idioma
+									.findIdioma(new Long(idIdioma));
+
+							PalavraDocumento p = new PalavraDocumento();
+							p.setDsPalavrasChaves(palavraIdioma);
+							p.setIdDocumento(this);
+							p.setIdIdioma(idioma);
+							this.entityManager.persist(p);
+
+						}
+
+					}
+
+				}
+
+			}
+
+		}
 
 	}
 

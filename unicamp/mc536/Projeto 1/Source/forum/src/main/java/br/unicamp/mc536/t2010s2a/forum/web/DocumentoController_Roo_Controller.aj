@@ -48,10 +48,11 @@ privileged aspect DocumentoController_Roo_Controller {
 
 		// Caso não tenha selecionado um documento
 		if (documento.getFileUploadBean() == null
+				|| documento.getFileUploadBean() == null
 				|| documento.getFileUploadBean().getFile() == null
 				|| documento.getFileUploadBean().getFile().isEmpty()) {
 
-			model.addAttribute("message", "Selecione um documento");
+			model.addAttribute("message", "Selecione um documento.");
 			return "documentoes/create";
 
 		}
@@ -97,6 +98,8 @@ privileged aspect DocumentoController_Roo_Controller {
 		doc.setQtdVisualizacao(0l);
 
 		model.addAttribute("documento", doc);
+		model.addAttribute("hdPalavras", new String());
+
 		addDateTimeFormatPatterns(model);
 		List dependencies = new ArrayList();
 		if (Idioma.countIdiomas() == 0) {

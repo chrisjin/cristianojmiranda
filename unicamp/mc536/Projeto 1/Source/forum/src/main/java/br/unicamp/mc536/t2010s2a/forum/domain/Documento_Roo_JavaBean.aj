@@ -6,152 +6,180 @@ package br.unicamp.mc536.t2010s2a.forum.domain;
 import java.sql.Blob;
 import java.util.Date;
 
+import javax.persistence.Transient;
+
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import br.unicamp.mc536.t2010s2a.forum.web.dto.FileUploadBean;
 
 privileged aspect Documento_Roo_JavaBean {
-    
-    public String Documento.getNmDocumento() {
-        return this.nmDocumento;
-    }
-    
-    public void Documento.setNmDocumento(String nmDocumento) {
-        this.nmDocumento = nmDocumento;
-    }
-    
-    public String Documento.getDsDocumento() {
-        return this.dsDocumento;
-    }
-    
-    public void Documento.setDsDocumento(String dsDocumento) {
-        this.dsDocumento = dsDocumento;
-    }
-    
-    public String Documento.getNmArquivo() {
-        return this.nmArquivo;
-    }
-    
-    public void Documento.setNmArquivo(String nmArquivo) {
-        this.nmArquivo = nmArquivo;
-    }
-    
-    public String Documento.getDsInfoMaquina() {
-        return this.dsInfoMaquina;
-    }
-    
-    public void Documento.setDsInfoMaquina(String dsInfoMaquina) {
-        this.dsInfoMaquina = dsInfoMaquina;
-    }
-    
-    public TipoDocumento Documento.getTipoDocumento() {
-        return this.tipoDocumento;
-    }
-    
-    public void Documento.setTipoDocumento(TipoDocumento tipoDocumento) {
-        this.tipoDocumento = tipoDocumento;
-    }
-    
-    public Date Documento.getDtCriacao() {
-        return this.dtCriacao;
-    }
-    
-    public void Documento.setDtCriacao(Date dtCriacao) {
-        this.dtCriacao = dtCriacao;
-    }
-    
-    public Date Documento.getDtInclusao() {
-        return this.dtInclusao;
-    }
-    
-    public void Documento.setDtInclusao(Date dtInclusao) {
-        this.dtInclusao = dtInclusao;
-    }
-    
-    public String Documento.getNmAutor() {
-        return this.nmAutor;
-    }
-    
-    public void Documento.setNmAutor(String nmAutor) {
-        this.nmAutor = nmAutor;
-    }
-    
-    public String Documento.getDsEmailAutor() {
-        return this.dsEmailAutor;
-    }
-    
-    public void Documento.setDsEmailAutor(String dsEmailAutor) {
-        this.dsEmailAutor = dsEmailAutor;
-    }
-    
-    public Idioma Documento.getIdIdiomaDocumento() {
-        return this.idIdiomaDocumento;
-    }
-    
-    public void Documento.setIdIdiomaDocumento(Idioma idIdiomaDocumento) {
-        this.idIdiomaDocumento = idIdiomaDocumento;
-    }
-    
-    public Usuario Documento.getIdUsuarioResponsavel() {
-        return this.idUsuarioResponsavel;
-    }
-    
-    public void Documento.setIdUsuarioResponsavel(Usuario idUsuarioResponsavel) {
-        this.idUsuarioResponsavel = idUsuarioResponsavel;
-    }
-    
-    public Usuario Documento.getIdUsuarioAutor() {
-        return this.idUsuarioAutor;
-    }
-    
-    public void Documento.setIdUsuarioAutor(Usuario idUsuarioAutor) {
-        this.idUsuarioAutor = idUsuarioAutor;
-    }
-    
-    public Long Documento.getQtdVisualizacao() {
-        return this.qtdVisualizacao;
-    }
-    
-    public void Documento.setQtdVisualizacao(Long qtdVisualizacao) {
-        this.qtdVisualizacao = qtdVisualizacao;
-    }
-    
-    public Programa Documento.getIdPrograma() {
-        return this.idPrograma;
-    }
-    
-    public void Documento.setIdPrograma(Programa idPrograma) {
-        this.idPrograma = idPrograma;
-    }
-    
-    public RedeTrabalho Documento.getIdRedeTrabalho() {
-        return this.idRedeTrabalho;
-    }
-    
-    public void Documento.setIdRedeTrabalho(RedeTrabalho idRedeTrabalho) {
-        this.idRedeTrabalho = idRedeTrabalho;
-    }
-    
-    public Pais Documento.getIdPais() {
-        return this.idPais;
-    }
-    
-    public void Documento.setIdPais(Pais idPais) {
-        this.idPais = idPais;
-    }
-    
-    public FileUploadBean Documento.getFileUploadBean() {
-    	return this.fileUploadBean;
-    }
-    
-    public void Documento.setFileUploadBean(FileUploadBean value) {
-    	this.fileUploadBean = value;
-    }
-    
-    public void Documento.setDocumento(Blob doc) {
-    	this.documento = doc;
-    }
-    
-    public Blob Documento.getDocumento() {
-    	return this.documento;
-    }
-    
+
+	public String Documento.getNmDocumento() {
+		return this.nmDocumento;
+	}
+
+	public void Documento.setNmDocumento(String nmDocumento) {
+		this.nmDocumento = nmDocumento;
+	}
+
+	public String Documento.getDsDocumento() {
+		return this.dsDocumento;
+	}
+
+	public void Documento.setDsDocumento(String dsDocumento) {
+		this.dsDocumento = dsDocumento;
+	}
+
+	public String Documento.getNmArquivo() {
+		return this.nmArquivo;
+	}
+
+	public void Documento.setNmArquivo(String nmArquivo) {
+		this.nmArquivo = nmArquivo;
+	}
+
+	public String Documento.getDsInfoMaquina() {
+		return this.dsInfoMaquina;
+	}
+
+	public void Documento.setDsInfoMaquina(String dsInfoMaquina) {
+		this.dsInfoMaquina = dsInfoMaquina;
+	}
+
+	public TipoDocumento Documento.getTipoDocumento() {
+		return this.tipoDocumento;
+	}
+
+	public void Documento.setTipoDocumento(TipoDocumento tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+
+	public Date Documento.getDtCriacao() {
+		return this.dtCriacao;
+	}
+
+	public void Documento.setDtCriacao(Date dtCriacao) {
+		this.dtCriacao = dtCriacao;
+	}
+
+	public Date Documento.getDtInclusao() {
+		return this.dtInclusao;
+	}
+
+	public void Documento.setDtInclusao(Date dtInclusao) {
+		this.dtInclusao = dtInclusao;
+	}
+
+	public String Documento.getNmAutor() {
+		return this.nmAutor;
+	}
+
+	public void Documento.setNmAutor(String nmAutor) {
+		this.nmAutor = nmAutor;
+	}
+
+	public String Documento.getDsEmailAutor() {
+		return this.dsEmailAutor;
+	}
+
+	public void Documento.setDsEmailAutor(String dsEmailAutor) {
+		this.dsEmailAutor = dsEmailAutor;
+	}
+
+	public Idioma Documento.getIdIdiomaDocumento() {
+		return this.idIdiomaDocumento;
+	}
+
+	public void Documento.setIdIdiomaDocumento(Idioma idIdiomaDocumento) {
+		this.idIdiomaDocumento = idIdiomaDocumento;
+	}
+
+	public Usuario Documento.getIdUsuarioResponsavel() {
+		return this.idUsuarioResponsavel;
+	}
+
+	public void Documento.setIdUsuarioResponsavel(Usuario idUsuarioResponsavel) {
+		this.idUsuarioResponsavel = idUsuarioResponsavel;
+	}
+
+	public Usuario Documento.getIdUsuarioAutor() {
+		return this.idUsuarioAutor;
+	}
+
+	public void Documento.setIdUsuarioAutor(Usuario idUsuarioAutor) {
+		this.idUsuarioAutor = idUsuarioAutor;
+	}
+
+	public Long Documento.getQtdVisualizacao() {
+		return this.qtdVisualizacao;
+	}
+
+	public void Documento.setQtdVisualizacao(Long qtdVisualizacao) {
+		this.qtdVisualizacao = qtdVisualizacao;
+	}
+
+	public Programa Documento.getIdPrograma() {
+		return this.idPrograma;
+	}
+
+	public void Documento.setIdPrograma(Programa idPrograma) {
+		this.idPrograma = idPrograma;
+	}
+
+	public RedeTrabalho Documento.getIdRedeTrabalho() {
+		return this.idRedeTrabalho;
+	}
+
+	public void Documento.setIdRedeTrabalho(RedeTrabalho idRedeTrabalho) {
+		this.idRedeTrabalho = idRedeTrabalho;
+	}
+
+	public Pais Documento.getIdPais() {
+		return this.idPais;
+	}
+
+	public void Documento.setIdPais(Pais idPais) {
+		this.idPais = idPais;
+	}
+
+	public FileUploadBean Documento.getFileUploadBean() {
+		return this.fileUploadBean;
+	}
+
+	public void Documento.setFileUploadBean(FileUploadBean value) {
+		this.fileUploadBean = value;
+	}
+
+	public void Documento.setDocumento(Blob doc) {
+		this.documento = doc;
+	}
+
+	public Blob Documento.getDocumento() {
+		return this.documento;
+	}
+
+	public String Documento.getAux1() {
+		return this.aux1;
+	}
+
+	public void Documento.setAux1(String aux) {
+		this.aux1 = aux;
+	}
+
+	public String Documento.getAux2() {
+		return this.aux2;
+	}
+
+	public void Documento.setAux2(String aux) {
+		this.aux2 = aux;
+	}
+
+	public String Documento.getAux3() {
+		return this.aux3;
+	}
+
+	public void Documento.setAux3(String aux) {
+		this.aux3 = aux;
+	}
+
 }

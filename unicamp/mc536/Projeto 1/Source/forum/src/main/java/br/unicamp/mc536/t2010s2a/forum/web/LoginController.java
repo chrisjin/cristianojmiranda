@@ -43,7 +43,7 @@ public class LoginController {
 
 		model.addAttribute("usuario", new Usuario());
 		model.addAttribute("message", Constantes.MSG_EMPTY);
-
+		
 		return "login";
 	}
 
