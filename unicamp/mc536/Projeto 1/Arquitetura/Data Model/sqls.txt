@@ -1,0 +1,117 @@
+• Sobre qual/is o pais/es é um dado documento? O país ao qual o documento se refere é o país
+onde ele foi postado?
+----------------------
+País onde o documento foi postado
+
+select d.nm_arquivo as nomeArquivo, p.nm_pais as paisPostado from documento d
+inner join pais p on d.id_pais=p.id
+----------------------
+País onde o documento foi postado e país ao qual o documento se refere
+
+select d.nm_arquivo as nomeArquivo, p.nm_pais as paisRefere, p2.nm_pais as paisPostado from documento d
+inner join documento_referencia_pais drp on drp.id_documento = d.id
+inner join pais p on p.id = drp.id_pais
+inner join pais p2 on d.id_pais = p2.id
+-----------------------------------------------------------------
+
+• A quais idiomas o documento se refere? Em qual/is idioma/s está escrito?
+----------------------
+Idioma que os documentos fazem referência
+
+SELECT d.nm_arquivo as nomeArquivo, i.nm_idioma as idiomaReferencia FROM documento d
+inner join documento_referencia_pais drp on drp.id_documento = d.id
+inner join pais p on drp.id_pais = p.id
+inner join idioma i on i.id_pais = p.id
+----------------------
+Idioma que os documentos estão escritos
+
+SELECT d.nm_arquivo as nomeArquivo, i.nm_idioma as idiomaEscrito FROM documento d
+inner join idioma i on d.id_idioma_documento = i.id
+-----------------------------------------------------------------
+
+• Qual sua preferência em termos de conteúdo de navegação?
+----------------------
+Obtem o programa ao qual os documento favoritos do usuario estão associados
+
+SELECT u.nm_usuario, p.nm_programa, count(d.nm_arquivo) from usuario_documento ud
+inner join usuario u on ud.id_usuario = u.id
+inner join documento d on d.id = ud.id_documento
+inner join programa p on d.id_programa = p.id
+group by 1, 2
+order by 3 desc
+-----------------------------------------------------------------
+
+• um mapa de que país mais posta documentos para um dado período de tempo.
+----------------------
+Obtem a quantidade de documentos incluidos no sistema num intervalo de tempo agrupados por pais
+
+select p.nm_pais as pais, count(d.nm_arquivo) as QuantidadeDocumentosPostados from documento d
+inner join pais p on d.id_pais=p.id
+where d.dt_inclusao <='2011/01/01' and d.dt_inclusao >= '2010/01/01'
+group by 1
+order by 2 desc
+-----------------------------------------------------------------
+
+• uma mapa de que assunto é mais recorrente em um dado período de tempo.
+----------------------
+Obtem a quantidade de documentos incluidos no sistema num intervalo de tempo agrupados por programa
+
+select p.nm_programa as programa, count(d.nm_arquivo) as QuantidadeDocumentosPostados from documento d
+inner join programa p on d.id_programa=p.id
+where d.dt_inclusao <='2011/01/01' and d.dt_inclusao >= '2010/01/01'
+group by 1
+order by 2 desc
+-----------------------------------------------------------------
+
+• um cruzamento entre estes dois últimos.
+----------------------
+obtem a quantidade de documentos postados por pais em um determinado periodo e a quantidade de documento por programa
+
+select pais.pais, programa.programa, pais.QuantidadeDocumentosPostados, programa.QuantidadeDocumentosPostados from
+(
+select p.nm_pais as pais, count(d.nm_arquivo) as QuantidadeDocumentosPostados from documento d
+inner join pais p on d.id_pais=p.id
+where d.dt_inclusao <='2011/01/01' and d.dt_inclusao >= '2010/01/01'
+group by 1
+order by 2 desc
+)pais
+inner join
+(
+select p2.nm_pais as pais, p.nm_programa as programa, count(d.nm_arquivo) as QuantidadeDocumentosPostados from documento d
+inner join programa p on d.id_programa=p.id
+inner join pais p2 on d.id_pais = p2.id
+where d.dt_inclusao <='2011/01/01' and d.dt_inclusao >= '2010/01/01'
+group by 1, 2
+order by 3 desc
+)programa
+on pais.pais=programa.pais
+order by 3,4 desc
+-----------------------------------------------------------------
+
+• Quais os documentos mais populares?
+----------------------
+Documentos ordenados por mais quantidade de visualizações
+
+select d.nm_arquivo as nomeArquivo, d.qtd_visualizacao as quantidadeVisualizacoes from documento d
+order by d.qtd_visualizacao desc
+------------------------------------------------------------------
+
+• Recupere documentos que tratem do tema “multinguismo no Brasil”.
+----------------------
+Documentos associados ao programa "Multilinguismo no Brasil"
+
+select d.nm_arquivo as nomeArquivo, p.nm_programa as nomePrograma from documento d
+inner join programa p on p.id = d.id_programa
+where p.nm_programa = 'Multinguismo no Brasil'
+-------------------------------------------------------------------
+
+• quais os programas em prol do multilinguismo que são mais citados?
+----------------------
+Programas que apresentam maior número de comentários associados aos seus documentos
+
+select p.nm_programa as nomePrograma, count(cd.id) as quantidadeComentarios from documento d
+inner join comentario_documento cd on cd.id_documento = d.id
+inner join programa p on d.id_programa = p.id
+group by p.id
+order by quantidadeComentarios desc
+-------------------------------------------------------------------
