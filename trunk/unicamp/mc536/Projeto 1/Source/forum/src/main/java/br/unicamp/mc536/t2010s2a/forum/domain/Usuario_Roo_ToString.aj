@@ -9,7 +9,7 @@ privileged aspect Usuario_Roo_ToString {
 
 	public String Usuario.toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("NmUsuario: ").append(getNmUsuario()).append("");
+		sb.append(getNmUsuario());
 		return sb.toString();
 	}
 

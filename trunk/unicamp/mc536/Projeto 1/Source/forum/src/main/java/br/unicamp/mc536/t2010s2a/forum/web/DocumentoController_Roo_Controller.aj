@@ -154,7 +154,7 @@ privileged aspect DocumentoController_Roo_Controller {
 		model.addAttribute("hdPalavras", new String());
 
 		addDateTimeFormatPatterns(model);
-		List dependencies = new ArrayList();
+		List<String[]> dependencies = new ArrayList<String[]>();
 		if (Idioma.countIdiomas() == 0) {
 			dependencies.add(new String[] { "idIdiomaDocumento", "idiomas" });
 		}

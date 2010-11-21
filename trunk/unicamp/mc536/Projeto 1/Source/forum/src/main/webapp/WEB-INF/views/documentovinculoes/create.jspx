@@ -3,6 +3,7 @@
     <jsp:output omit-xml-declaration="yes"/>
     <form:create id="fc_br_unicamp_mc536_t2010s2a_forum_domain_DocumentoVinculo" modelAttribute="documentoVinculo" path="/documentovinculoes" render="${empty dependencies}" z="voh9q6QrlTlTeMLgklypuTMBFr8=">
         <field:select field="idDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_DocumentoVinculo_idDocumento" itemValue="id" items="${documentoes}" path="/documentoes" required="true" z="k+kuCKWbAuIT46RMLg5mYcEx8a8="/>
+        <field:select field="idDocumentoVinculo" id="c_br_unicamp_mc536_t2010s2a_forum_domain_DocumentoVinculo_idDocumentoVinculo" itemValue="id" items="${documentoes}" path="/documentoes" required="true" z="T46RMLg5mYc8="/>
         <field:select field="idUsuario" id="c_br_unicamp_mc536_t2010s2a_forum_domain_DocumentoVinculo_idUsuario" itemValue="id" items="${usuarios}" path="/usuarios" required="true" z="YAdkZv6BLOgwMRB5fs6xLX72kEg="/>
         <field:datetime dateTimePattern="${documentoVinculo_dtinclusao_date_format}" field="dtInclusao" id="c_br_unicamp_mc536_t2010s2a_forum_domain_DocumentoVinculo_dtInclusao" required="true" z="2QQei8ZbLz5vC4LlX7I2Dd+9Wv4="/>
         <field:select field="tpReferenciaDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_DocumentoVinculo_tpReferenciaDocumento" items="${referenciadocumentoes}" path="referenciadocumentoes" required="true" z="S0zi8u4hFTVXfnzNEFfy1VFCZEM="/>

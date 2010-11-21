@@ -5,6 +5,7 @@ package br.unicamp.mc536.t2010s2a.forum.domain;
 
 import java.sql.Blob;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Transient;
 
@@ -180,6 +181,54 @@ privileged aspect Documento_Roo_JavaBean {
 
 	public void Documento.setAux3(String aux) {
 		this.aux3 = aux;
+	}
+
+	public List<PalavraDocumento> Documento.getPalavrasAssociadas() {
+		return this.palavrasAssociadas;
+	}
+
+	public void Documento.setPalavrasAssociadas(List<PalavraDocumento> aux) {
+		this.palavrasAssociadas = aux;
+	}
+
+	public List<ComentarioDocumento> Documento.getComentarios() {
+		return this.comentarios;
+	}
+
+	public void Documento.setComentarios(List<ComentarioDocumento> aux) {
+		this.comentarios = aux;
+	}
+
+	public List<UsuarioDocumento> Documento.getUsuariosVinculados() {
+		return this.usuariosVinculados;
+	}
+
+	public void Documento.setUsuariosVinculados(List<UsuarioDocumento> aux) {
+		this.usuariosVinculados = aux;
+	}
+
+	public List<DescricaoDocumento> Documento.getDescricaoDocumentos() {
+		return this.descricaoDocumentos;
+	}
+
+	public void Documento.setDescricaoDocumentos(List<DescricaoDocumento> aux) {
+		this.descricaoDocumentos = aux;
+	}
+
+	public List<DocumentoVinculo> Documento.getVinculos() {
+		return this.vinculos;
+	}
+
+	public void Documento.setVinculos(List<DocumentoVinculo> aux) {
+		this.vinculos = aux;
+	}
+
+	public List<DocumentoReferenciaPais> Documento.getReferenciaPaises() {
+		return this.referenciaPaises;
+	}
+
+	public void Documento.setReferenciaPaises(List<DocumentoReferenciaPais> aux) {
+		this.referenciaPaises = aux;
 	}
 
 }

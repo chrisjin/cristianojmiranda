@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.hibernate.Hibernate;
@@ -164,7 +165,37 @@ privileged aspect Documento_Roo_Entity {
 	public static Documento Documento.findDocumento(Long id) {
 		if (id == null)
 			return null;
-		return entityManager().find(Documento.class, id);
+
+		Documento doc = entityManager().find(Documento.class, id);
+		if (doc != null) {
+
+			// Consulta as palavras associadas ao documento
+			doc.setPalavrasAssociadas(PalavraDocumento
+					.findPalavraDocumentoByDocumento(id));
+
+			// Consulta os comentarios do documento
+			doc.setComentarios(ComentarioDocumento
+					.findComentarioDocumentosByDocumento(id));
+
+			// Consulta os usuarios vinculados ao documento
+			doc.setUsuariosVinculados(UsuarioDocumento
+					.findUsuarioDocumentosByDocumento(id));
+
+			// Consulta Descrição do documento
+			doc.setDescricaoDocumentos(DescricaoDocumento
+					.findDescricaoDocumentosByDocumento(id));
+
+			// Consulta os documentos vinculados
+			doc.setVinculos(DocumentoVinculo
+					.findDocumentoVinculosByDocumento(id));
+
+			// Consulta os paises relacionados ao documento
+			doc.setReferenciaPaises(DocumentoReferenciaPais
+					.findDocumentoReferenciaPaisesByDocumento(id));
+
+		}
+
+		return doc;
 	}
 
 	@SuppressWarnings("unchecked")

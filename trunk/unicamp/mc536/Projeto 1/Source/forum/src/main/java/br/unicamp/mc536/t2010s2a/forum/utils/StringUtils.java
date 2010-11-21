@@ -17,4 +17,18 @@ public class StringUtils extends org.springframework.util.StringUtils {
 		return false;
 
 	}
+
+	public static boolean isLong(String value) {
+
+		try {
+
+			new Long(value);
+
+		} catch (Exception e) {
+			return false;
+		}
+
+		return true;
+
+	}
 }
