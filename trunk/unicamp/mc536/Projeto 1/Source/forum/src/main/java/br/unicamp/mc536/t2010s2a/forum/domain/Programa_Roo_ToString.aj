@@ -6,16 +6,11 @@ package br.unicamp.mc536.t2010s2a.forum.domain;
 import java.lang.String;
 
 privileged aspect Programa_Roo_ToString {
-    
-    public String Programa.toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Id: ").append(getId()).append(", ");
-        sb.append("Version: ").append(getVersion()).append(", ");
-        sb.append("NmPrograma: ").append(getNmPrograma()).append(", ");
-        sb.append("DsPrograma: ").append(getDsPrograma()).append(", ");
-        sb.append("DsDetalhadaPrograma: ").append(getDsDetalhadaPrograma()).append(", ");
-        sb.append("IdUsuario: ").append(getIdUsuario());
-        return sb.toString();
-    }
-    
+
+	public String Programa.toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getNmPrograma());
+		return sb.toString();
+	}
+
 }

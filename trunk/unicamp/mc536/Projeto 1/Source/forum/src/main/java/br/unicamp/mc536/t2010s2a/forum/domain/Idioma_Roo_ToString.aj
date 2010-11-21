@@ -9,7 +9,7 @@ privileged aspect Idioma_Roo_ToString {
 
 	public String Idioma.toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("NmIdioma: ").append(getNmIdioma());
+		sb.append(getNmIdioma());
 		return sb.toString();
 	}
 
