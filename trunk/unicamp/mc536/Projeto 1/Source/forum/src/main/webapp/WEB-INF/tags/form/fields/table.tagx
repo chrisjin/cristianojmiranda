@@ -24,11 +24,11 @@
       <c:set var="typeIdFieldName" value="id" />
     </c:if>
 
-    <c:if test="${empty update}">
+    <c:if test="${empty update and SESSION_USER != null}">
       <c:set var="update" value="true" />
     </c:if>
 
-    <c:if test="${empty delete}">
+    <c:if test="${empty delete and SESSION_USER != null}">
       <c:set var="delete" value="true" />
     </c:if>
 

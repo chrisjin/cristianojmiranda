@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	 xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" 
+	 xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" 
+	 xmlns:jsp="http://java.sun.com/JSP/Page"
+	 xmlns:sform="http://www.springframework.org/tags/form"  
+	 xmlns:spring="http://www.springframework.org/tags" version="2.0">
+    <jsp:output omit-xml-declaration="yes"/>
+    
+     <spring:url value="/dwr/interface/Usuario.js" var="jsDwrUsuario"/>
+  	 <script src="${jsDwrUsuario}" type="text/javascript"><!-- dwr --></script>
+  	 
+  	 <script type="text/javascript">
+  	 
+  	 	function openBuscaUsuario() {
+
+  	 		Usuario.listarUsuariosInject(function(list) {
+		  		
+  				$('#buscaUsuario').html(list);
+  				$.blockUI({ message: $('#buscaUsuario') });
+  				$('#buscaUsuario').css('display', 'block');
+  				
+  			});
+  	  	 	
+  	 	}
+
+  	 	function selecionarUsuario(email, nome) {
+
+  	 		if (nome != null &amp;&amp; nome.trim().length > 0) {
+
+  	 			$('#_nmAutor_id').val(nome);
+  	 			$('#_dsEmailAutor_id').val(email);
+  	 			closeBuscaUsuario();
+  	 		}
+  	 		  	  	 	
+  	 	}
+
+  	 	function closeBuscaUsuario() {
+
+  	 	 	setTimeout($.unblockUI, 500);
+  	  	 	
+  	 	}
+
+	  	 $(document).ready(function() {
+
+	  		$('#proceed').val('Pesquisar');
+
+		});
+			
+  	 </script>
+  	 
+  	 <div id="buscaUsuario" style="height: 300px; width: 400px; background: white; display: none;">
+  	 
+  	 	loading...
+  	 
+  	 </div>
+  	
+  	<!-- Exibe a mensagem de erro -->
+  	<c:if test="${not empty message}"> 
+	  	 <center>
+			<spring:message text="${message}"/>
+			<br />
+			<br />
+		 </center>
+	</c:if>
+    
+    <form:create id="fc_br_unicamp_mc536_t2010s2a_forum_domain_Documento" modelAttribute="documento" path="/documentoes?consultar" render="${empty dependencies}" z="QPcrI/Z+ryISlA6OpguyYD/2OA0=">
+    
+    	
+    	<field:input field="id" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_id"  z="9F2G9lVSI1yjfgy44+F7ndf"/>
+        <field:input field="nmDocumento" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmDocumento"  z="9F2G9lVSI1yjfgy44+F7n7XmyxY="/>
+        <br/>
+        <input type="button" value="Consultar Autor" onclick="openBuscaUsuario();" style="float: right;"/>
+        <field:input field="nmAutor" id="c_br_unicamp_mc536_t2010s2a_forum_domain_Documento_nmAutor" z="NEm4QjLFMWvSMybBKSYHHBbxLb0="/>
+        
+        <div>
+        	<label>Tipo de Documento:</label>
+        	<div class="">
+		        <sform:select path="tipoDocumento" >
+		        	<sform:option value="-1">-Selecione-</sform:option>
+		        	<sform:options items="${tipodocumentoes}" itemValue="id" itemLabel="nmTipoDocumento">
+		        	</sform:options>
+		        </sform:select>
+		     </div>
+        </div>
+        <br/>
+        
+        <div>
+        	<label>Idioma:</label>
+        	<div class="">
+		        <sform:select path="idIdiomaDocumento" >
+		        	<sform:option value="-1">-Selecione-</sform:option>
+		        	<sform:options items="${idiomas}" itemValue="id" itemLabel="nmIdioma">
+		        	</sform:options>
+		        </sform:select>
+		     </div>
+        </div>
+        <br/>
+                
+        <div>
+        	<label>Programa:</label>
+        	<div class="">
+		        <sform:select path="idPrograma" >
+		        	<sform:option value="-1">-Selecione-</sform:option>
+		        	<sform:options items="${programas}" itemValue="id" itemLabel="nmPrograma">
+		        	</sform:options>
+		        </sform:select>
+		     </div>
+        </div>
+        <br/>
+        
+        <div>
+        	<label>Rede de Trabalho:</label>
+        	<div class="">
+		        <sform:select path="idRedeTrabalho" >
+		        	<sform:option value="-1">-Selecione-</sform:option>
+		        	<sform:options items="${redetrabalhoes}" itemValue="id" itemLabel="nmRedetrabalho">
+		        	</sform:options>
+		        </sform:select>
+		     </div>
+        </div>
+        <br/>
+        
+	    <div>
+        	<label>Pais:</label>
+        	<div class="">
+		        <sform:select path="idPais" >
+		        	<sform:option value="-1">-Selecione-</sform:option>
+		        	<sform:options items="${paises}" itemValue="id" itemLabel="nmPais">
+		        	</sform:options>
+		        </sform:select>
+		     </div>
+        </div>
+        <br/>
+        <c:if test="${not empty documentos}">
+			<br/>
+			<br/>
+	        <!-- Usuarios associadas ao documento -->
+	        <table>
+	        	<tr>
+	        		<td>
+	        			<b>Resultado</b>
+	        		</td>
+	        	</tr>
+	        </table>
+			<table>
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Descrição</th>
+						<th>Tipo</th>
+						<th>Data Criação</th>
+						<th>Pais</th>
+						<th>Download</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${documentos}" var="doc">
+						<tr>
+							<td>
+								<a href="/forum/documentoes/${doc.id}">${doc.nmDocumento}</a>
+							</td>
+							<td>
+								${doc.dsDocumento}
+							</td>
+							<td>
+								${doc.tipoDocumento}
+							</td>
+							<td>
+								${doc.dtCriacao}
+							</td>
+							<td>
+								${doc.idPais}
+							</td>
+							<td>
+								<a href="/forum/documentoes/${doc.id}?downloadDoc">Baixar Arquivo</a>
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</c:if>        
+    </form:create>
+    
+</div>
