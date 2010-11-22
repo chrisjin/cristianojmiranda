@@ -51,14 +51,14 @@
 	        <!-- Descrição do documento -->
 	        <table>
 	        	<tr>
-	        		<td><b>Descrições</b></td>
+	        		<td><b>Descrições em outros idiomas</b></td>
 	        	</tr>
 	        </table>
 			<table>
 				<c:forEach items="${documento.descricaoDocumentos}" var="desc">
 					<tr>
 						<td>
-							${desc.idIdiomaDocumento.nmIdioma} - ${desc.dsDocumento}
+							<b>${desc.idIdiomaDocumento.nmIdioma} </b> - ${desc.dsDocumento}
 						</td>
 					</tr>
 				</c:forEach>

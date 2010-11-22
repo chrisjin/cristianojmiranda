@@ -12,12 +12,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Transient;
+import javax.persistence.Query;
 import javax.persistence.Version;
 
 import org.hibernate.Hibernate;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.NumberUtils;
 
 import br.unicamp.mc536.t2010s2a.forum.utils.StringUtils;
 
@@ -162,6 +161,79 @@ privileged aspect Documento_Roo_Entity {
 				.getResultList();
 	}
 
+	/**
+	 * @param filtro
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<Documento> Documento.findDocumentoByFiltro(
+			Documento filtro) {
+
+		// Monta o filtro de consulta
+		StringBuffer sql = new StringBuffer("select o from Documento o ");
+
+		if (filtro.getId() == null) {
+
+			if (filtro != null) {
+
+				sql.append(" where 1L = 1L ");
+
+				if (!StringUtils.isBlankOrNull(filtro.getNmDocumento())) {
+					sql
+							.append(" and upper(trim(o.nmDocumento)) = upper(trim('");
+					sql.append(filtro.getNmDocumento());
+					sql.append("')) ");
+				}
+
+				if (!StringUtils.isBlankOrNull(filtro.getNmAutor())) {
+
+					sql.append(" and upper(trim(o.nmAutor)) = upper(trim('");
+					sql.append(filtro.getNmAutor());
+					sql.append("')) ");
+
+				}
+
+				if (filtro.getTipoDocumento() != null) {
+
+					sql.append(" and o.tipoDocumento.id = ");
+					sql.append(filtro.getTipoDocumento().getId());
+				}
+
+				if (filtro.getIdIdiomaDocumento() != null) {
+
+					sql.append(" and o.idIdiomaDocumento.id = ");
+					sql.append(filtro.getIdIdiomaDocumento().getId());
+				}
+
+				if (filtro.getIdPrograma() != null) {
+
+					sql.append(" and o.idPrograma.id = ");
+					sql.append(filtro.getIdPrograma().getId());
+				}
+
+				if (filtro.getIdRedeTrabalho() != null) {
+
+					sql.append(" and o.idRedeTrabalho.id = ");
+					sql.append(filtro.getIdRedeTrabalho().getId());
+				}
+
+				if (filtro.getIdPais() != null) {
+
+					sql.append(" and o.idPais.id = ");
+					sql.append(filtro.getIdPais().getId());
+				}
+
+			}
+		} else {
+
+			sql.append("where o.id = ");
+			sql.append(filtro.getId());
+
+		}
+
+		return entityManager().createQuery(sql.toString()).getResultList();
+	}
+
 	public static Documento Documento.findDocumento(Long id) {
 		if (id == null)
 			return null;
@@ -194,7 +266,6 @@ privileged aspect Documento_Roo_Entity {
 					.findDocumentoReferenciaPaisesByDocumento(id));
 
 		}
-
 		return doc;
 	}
 
@@ -206,4 +277,21 @@ privileged aspect Documento_Roo_Entity {
 				.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
+	public static List<Documento> Documento.findDocumentoPreferenciaPrograma() {
+
+		Query query = entityManager()
+				.createNativeQuery(
+						"SELECT u.nm_usuario, p.nm_programa, count(d.nm_arquivo) from usuario_documento ud "
+								+ " inner join usuario u on ud.id_usuario = u.id "
+								+ " inner join documento d on d.id = ud.id_documento "
+								+ " inner join programa p on d.id_programa = p.id "
+								+ " group by 1, 2" + "order by 3 desc ");
+		query.setFirstResult(1000);
+		query.setMaxResults(1000);
+
+		List result = query.getResultList();
+
+		return null;
+	}
 }

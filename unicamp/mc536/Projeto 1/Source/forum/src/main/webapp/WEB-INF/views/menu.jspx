@@ -36,9 +36,10 @@
     	</c:if>
 	
 	    <menu:category id="c_documento" z="WzVzh/QzBO6in/6YD8UtZh/ZC6Y=">
-	            <menu:item id="i_documento_new" messageCode="global_menu_new" url="/documentoes?form" z="8eYDt0wXoyFKNSCci17dgWWheG8="/>
+	        <menu:item id="i_documento_new" messageCode="global_menu_new" url="/documentoes?form" z="8eYDt0wXoyFKNSCci17dgWWheG8="/>
 	        <menu:item id="i_documento_list" messageCode="global_menu_list" url="/documentoes?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="zToHqBst+6nBF57DcvpDi8yWm1I="/>
-	        </menu:category>
+	        <menu:item id="i_documento_new" messageCode="global_menu_find" url="/documentoes?consultar" z="rr"/>
+	    </menu:category>
 	    <menu:category id="c_descricaodocumento" z="/V4JwLkP2i2e8FWKMRiX8Fr5y4w=">
 	            <menu:item id="i_descricaodocumento_new" messageCode="global_menu_new" url="/descricaodocumentoes?form" z="AcVB2+ZchgGbOVLBey2g81GOQTc="/>
 	        <menu:item id="i_descricaodocumento_list" messageCode="global_menu_list" url="/descricaodocumentoes?page=${empty param.page ? 1 : param.page}&amp;size=${empty param.size ? 10 : param.size}" z="f01b31Jd11JNhIfFIRdWqa4EHHc="/>

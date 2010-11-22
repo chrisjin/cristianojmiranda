@@ -45,6 +45,7 @@ import br.unicamp.mc536.t2010s2a.forum.domain.RedeTrabalho;
 import br.unicamp.mc536.t2010s2a.forum.domain.TipoDocumento;
 import br.unicamp.mc536.t2010s2a.forum.domain.Usuario;
 import br.unicamp.mc536.t2010s2a.forum.utils.Constantes;
+import br.unicamp.mc536.t2010s2a.forum.utils.StringUtils;
 import br.unicamp.mc536.t2010s2a.forum.web.dto.FileUploadBean;
 
 privileged aspect DocumentoController_Roo_Controller {
@@ -65,6 +66,10 @@ privileged aspect DocumentoController_Roo_Controller {
 		Documento doc = Documento.findDocumento(id);
 		if (doc != null && doc.getDocumento() != null
 				&& doc.getDocumento().length() > 0) {
+
+			// Atualiza a quantidade de visualização
+			doc.setQtdVisualizacao(doc.getQtdVisualizacao() + 1L);
+			doc.persist();
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			byte[] buf = new byte[1024];
@@ -167,6 +172,67 @@ privileged aspect DocumentoController_Roo_Controller {
 		}
 		model.addAttribute("dependencies", dependencies);
 		return "documentoes/create";
+	}
+
+	@RequestMapping(params = "consultar", method = RequestMethod.GET)
+	public String DocumentoController.createFormConsulta(Model model) {
+
+		// Seta os parametros iniciais
+		Documento doc = new Documento();
+
+		model.addAttribute("documento", doc);
+		model.addAttribute("documentos", null);
+
+		List<String[]> dependencies = new ArrayList<String[]>();
+		if (Idioma.countIdiomas() == 0) {
+			dependencies.add(new String[] { "idIdiomaDocumento", "idiomas" });
+		}
+		if (Pais.countPaises() == 0) {
+			dependencies.add(new String[] { "idPais", "paises" });
+		}
+		if (TipoDocumento.countTipoDocumentoes() == 0) {
+			dependencies
+					.add(new String[] { "tipoDocumento", "tipodocumentoes" });
+		}
+		model.addAttribute("dependencies", dependencies);
+		return "documentoes/find";
+	}
+
+	@RequestMapping(params = "consultar", method = RequestMethod.POST)
+	public String DocumentoController.findByFilter(Documento documento,
+			Model model) {
+
+		// Verifica se algum filtro foi preenchido
+		if (documento.getId() == null
+				&& StringUtils.isBlankOrNull(documento.getNmDocumento())
+				&& StringUtils.isBlankOrNull(documento.getNmAutor())
+				&& documento.getTipoDocumento() == null
+				&& documento.getIdIdiomaDocumento() == null
+				&& documento.getIdPrograma() == null
+				&& documento.getIdRedeTrabalho() == null
+				&& documento.getIdPais() == null) {
+
+			model.addAttribute("message", "Por favor, preencha algum filtro");
+
+		} else {
+
+			// Executa a consulta pelo filtro
+			List<Documento> documentos = Documento
+					.findDocumentoByFiltro(documento);
+
+			model.addAttribute("documentos", documentos);
+
+			if (documentos == null || documentos.isEmpty()) {
+
+				model
+						.addAttribute("message",
+								"Nenhum resultado foi encontrado para o filtro informado");
+
+			}
+
+		}
+
+		return "documentoes/find";
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
