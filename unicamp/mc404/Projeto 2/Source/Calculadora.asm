@@ -12,7 +12,39 @@
 .include "m88def.inc"
 .list
 
-; Registradores utilzados: r2, r3, r16, r17, r19, r20, r21, r22, r24, r25, r27, r29
+; Mapa de registradores utilzados: 
+; -----------------------------------------------------------------------------
+; r1 - *
+; r2 - Resultado da multiplicacao1
+; r3 - Resultado da multiplicacao2
+; r4 - Resultado da multiplicacao3
+; r5 - Resultado da multiplicacao4
+; r6 - *
+; r7 - *
+; r8 - Utilizado temporariamente para converter ASCII para binario na memoria (utilizado como registrador zerado)
+; r9 - Utilizado temporariamente para converter ASCII para binario na memoria
+; r10 - Utilizado para armazenar o resto da divisao
+; r11 - Utilizado para armazenar o resto da divisao
+; r12 - Utilizado para armazenar o resto da divisao
+; r13 - Utilizado para armazenar o resto da divisao
+; r14 - *
+; r15 - *
+; r16 - Operador 1 da multiplicacao, Operador 1 para conversao binario to ascii
+; r17 - Operador 1 da multiplicacao, Operador 1 para conversao binario to ascii
+; r18 - Operador 2 da multiplicacao, Operador 2 para conversao binario to ascii, variavel auxiliar do keypad ********
+; r19 - Operador 2 da multiplicacao, Operador 2 para conversao binario to ascii, variavel coluna do keypad  ********
+; r20 - LcdInput, registrador tmp de multiplicacao, constante de conversao bin to asc, 
+; r21 - r, 
+; r22 - rr,
+; r23 - dcnt16u (contador de iteracoes divisao)
+; r24 - dgCount (contador de digitos do lcd)
+; r25 - registrador de operador 1
+; r26 - registrador de operador 1
+; r27 - registrador de operador 2
+; r28 - registrador de operador 2
+; r29 - *
+; r30 - Zh
+; r31 - Zl
 ; -----------------------------------------------------------------------------
 
 
@@ -56,11 +88,11 @@
 
 
 
-.def 			drem16uL=r10			;resto da divisao
+.def 			drem16uL=r10					;resto da divisao
 .def 			drem16uH=r11
-.def 			dres16uL=r12			;resultado da divisao
+.def 			dres16uL=r12					;resultado da divisao
 .def 			dres16uH=r13
-.def dcnt16u = r23						;contador de iteracoes da divisao
+.def 			dcnt16u = r23					;contador de iteracoes da divisao
 
 
 
@@ -73,9 +105,8 @@
 
 
 												; Constantes para keypad
-.def aux = r16
-.def coluna = r17
-.def retorno = r18								; O codigo da tecla sera retornado aqui.
+.def aux = r27
+.def coluna = r28
 
 
 rcall null										; Hapsim
@@ -186,7 +217,11 @@ RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM
 				;rcall key0
 				;rcall keyEnter				; Entrada 610 no operador 2, esperado resultado 32330
 
-				ldi aux, 0x0F
+				rcall configKeypad
+				rjmp loop
+
+
+configKeypad:	ldi aux, 0x0F
 				out DDRB, aux
 
 				clr aux
@@ -198,8 +233,9 @@ RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM
 				out PIND, aux
 
 				out PORTB, coluna
+				ret
 
-				rjmp loop
+null: 			ret
 
 
 ; Loop principal da aplicação
@@ -228,64 +264,63 @@ loop:			ldi r, low(RAMEND)				; Remove lixo da pilha para evitar overflow
 				brne loop
 
 				ldi coluna, 0xFE
-			
 				rjmp loop
 
 
 encerra:
-	cpi coluna, 0xFE
-	breq coluna1
-	cpi coluna, 0xFD
-	breq coluna2
-	cpi coluna, 0xFB
-	breq coluna3
-	cpi coluna, 0xF7
-	breq coluna4
-	rjmp loop
+				cpi coluna, 0xFE
+				breq coluna1
+				cpi coluna, 0xFD
+				breq coluna2
+				cpi coluna, 0xFB
+				breq coluna3
+				cpi coluna, 0xF7
+				breq coluna4
+				rjmp loop
 
 coluna1:
-	cpi aux, 0xE
-	breq key1Link
-	cpi aux, 0xD
-	breq key4Link
-	cpi aux, 0xB
-	breq key7Link
-	cpi aux, 0x7
-	breq keyClearLink
-	rjmp loop
+				cpi aux, 0xE
+				breq key1Link
+				cpi aux, 0xD
+				breq key4Link
+				cpi aux, 0xB
+				breq key7Link
+				cpi aux, 0x7
+				breq keyClearLink
+				rjmp loop
 
 coluna2:
-	cpi aux, 0xE
-	breq key2Link
-	cpi aux, 0xD
-	breq key5Link
-	cpi aux, 0xB
-	breq key8Link
-	cpi aux, 0x7
-	breq key0
-	rjmp loop
+				cpi aux, 0xE
+				breq key2Link
+				cpi aux, 0xD
+				breq key5Link
+				cpi aux, 0xB
+				breq key8Link
+				cpi aux, 0x7
+				breq key0
+				rjmp loop
 
 coluna3:
-	cpi aux, 0xE
-	breq key3Link
-	cpi aux, 0xD
-	breq key6Link
-	cpi aux, 0xB
-	breq key9Link
-	cpi aux, 0x7
-	breq keyEnterLink
-	rjmp loop
+				cpi aux, 0xE
+				breq key3Link
+				cpi aux, 0xD
+				breq key6Link
+				cpi aux, 0xB
+				breq key9Link
+				cpi aux, 0x7
+				breq keyEnterLink
+				rjmp loop
 
 coluna4:
-	cpi aux, 0xE
-	breq keyAddLink
-	cpi aux, 0xD
-	breq keySubLink
-	cpi aux, 0xB
-	breq keyMultLink
-	cpi aux, 0x7
-	breq keyDivLink
-	rjmp loop
+				cpi aux, 0xE
+				breq keyAddLink
+				cpi aux, 0xD
+				breq keySubLink
+				cpi aux, 0xB
+				breq keyMultLink
+				cpi aux, 0x7
+				breq keyDivLink
+				rjmp loop
 
 loopLink:		rjmp loop
 
@@ -383,6 +418,7 @@ key0:			rcall verificaErro
 				ldi r, 0x0
 				mov r9, r
 				rcall convertToBin
+				rcall configKeypad
 				ret
 
 ; Btn Um
@@ -394,6 +430,7 @@ key1:			rcall verificaErro
 				ldi r, 0x1
 				mov r9, r
 				rcall convertToBin
+				rcall configKeypad
 				rjmp loop
 
 ; Btn Dois
@@ -405,6 +442,7 @@ key2:			rcall verificaErro
 				ldi r, 0x2
 				mov r9, r
 				rcall convertToBin
+				rcall configKeypad
 				rjmp loop
 
 ; Btn Tres
@@ -416,6 +454,7 @@ key3:			rcall verificaErro
 				ldi r, 0x3
 				mov r9, r
 				rcall convertToBin
+				rcall configKeypad
 				rjmp loop
 
 ; Btn Quatro
@@ -428,6 +467,7 @@ key4:			rcall verificaErro
 				ldi r, 0x4
 				mov r9, r
 				rcall convertToBin
+				rcall configKeypad
 				rjmp loop
 
 ; Btn Cinco
@@ -439,6 +479,7 @@ key5:			rcall verificaErro
 				ldi r, 0x5
 				mov r9, r
 				rcall convertToBin
+				rcall configKeypad
 				rjmp loop
 
 ; Btn Seis
@@ -450,6 +491,7 @@ key6:			rcall verificaErro
 				ldi r, 0x6
 				mov r9, r
 				rcall convertToBin
+				rcall configKeypad
 				rjmp loop
 
 ; Btn Sete
@@ -461,6 +503,7 @@ key7:			rcall verificaErro
 				ldi r, 0x7
 				mov r9, r
 				rcall convertToBin
+				rcall configKeypad
 				rjmp loop
 
 ; Btn Oito
@@ -472,6 +515,7 @@ key8:			rcall verificaErro
 				ldi r, 0x8
 				mov r9, r
 				rcall convertToBin
+				rcall configKeypad
 				rjmp loop
 
 ; Btn Nove
@@ -483,12 +527,15 @@ key9:			rcall verificaErro
 				ldi r, 0x9
 				mov r9, r
 				rcall convertToBin
+				rcall configKeypad
 				rjmp loop
 
 ; Btn Clear
 ; -----------------------------------------------------------------------------
 keyClear:	
 				rjmp start						; Volta para o inicio da aplicação (RESET)
+
+erroOperadorLink:	rjmp erroOperador
 
 ; Btn Add
 ; -----------------------------------------------------------------------------
@@ -509,6 +556,7 @@ keyAdd:
 				
 				ldi r, 0x1						; Prepara para primeira escrita
 				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
+				rcall configKeypad
 				rjmp loop
 
 ; Btn Sub
@@ -530,6 +578,7 @@ keySub:
 				
 				ldi r, 0x1						; Prepara para primeira escrita
 				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
+				rcall configKeypad
 				rjmp loop
 
 ; Btn Multiplicacao
@@ -551,6 +600,7 @@ keyMult:
 				
 				ldi r, 0x1						; Prepara para primeira escrita
 				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
+				rcall configKeypad
 				rjmp loop
 
 ; Btn Divisao
@@ -572,6 +622,7 @@ keyDiv:
 				
 				ldi r, 0x1						; Prepara para primeira escrita
 				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
+				rcall configKeypad
 				rjmp loop
 
 
@@ -579,7 +630,7 @@ keyDiv:
 ; -----------------------------------------------------------------------------
 keyEnter:		rcall getOperacao				; Obtem operacao
 				cpi r, 0x0						; Caso nao haja operacao
-				breq erroOperador				; Notifica falta de operador
+				breq erroOperadorLink				; Notifica falta de operador
 
 												; Obtem os operadores da SRAM
 				ldi	Zh, high(OPSR1)			
@@ -605,6 +656,8 @@ keyEnter:		rcall getOperacao				; Obtem operacao
 				cpi r, OPSUBTRACAO				; Caso seja operador de subtracao
 				breq opSub
 
+				rcall configKeypad
+
 				rjmp loop
 
 
@@ -612,7 +665,8 @@ keyEnter:		rcall getOperacao				; Obtem operacao
 ; -----------------------------------------------------------------------------
 opSoma:			add16 r25, r26, r27, r28		; Executa a soma
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
-				ret
+				rcall configKeypad
+				rjmp loop
 
 ; Multiplicacao
 ; -----------------------------------------------------------------------------
@@ -627,7 +681,8 @@ opMult:											; Executa a multiplicacao
 				mov r26, res1
 
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
-				ret
+				rcall configKeypad
+				rjmp loop
 
 ; Divisao
 ; -----------------------------------------------------------------------------
@@ -642,13 +697,15 @@ opDiv:											; Executa divisao
 				mov r26,dres16uL
 				
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
-				ret
+				rcall configKeypad
+				rjmp loop
 
 ; Subtracao
 ; -----------------------------------------------------------------------------
 opSub:			sub16 r25, r26, r27, r28		; Executa a subtracao
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
-				ret
+				rcall configKeypad
+				rjmp loop
 
 
 ; Exibe os valores dos registradores r25 e r26 no lcd
@@ -893,8 +950,8 @@ d16uc:
 ; -----------------------------------------------------------------------------
 clenPortB:		clr r
 				out ddrb, r
-				out pinb, r
-				ret
+				out portb, r
+ 				ret
 
 ; -----------------------------------------------------------------------------
 lcd_busy:										; test the busy state
@@ -1153,8 +1210,6 @@ Bin2ToDigitc:
 ; -----------------------------------------------------------------------------
 end:			
 				rjmp loop						; Final do programa
-
-null: 			ret
 
 ; Mensagens e labels
 ; -----------------------------------------------------------------------------
