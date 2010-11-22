@@ -18,6 +18,16 @@
     </span>
   </c:if>
   
+  <c:if test="${SESSION_USER_ADM != null and SESSION_USER_ADM}">
+    <c:out value=" | "/>
+    <span>
+      <spring:url value="/documentoes?dash" var="dash"/>
+      <a href="${dash}">
+        <spring:message text="Dashboard"/>
+      </a>
+    </span>
+  </c:if>
+  
   <c:if test="${SESSION_USER != null}">
 	  	<c:out value=" | "/>
 	    <span>

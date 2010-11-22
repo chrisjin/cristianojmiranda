@@ -4,6 +4,9 @@
 package br.unicamp.mc536.t2010s2a.forum.domain;
 
 import java.sql.Blob;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -278,20 +281,141 @@ privileged aspect Documento_Roo_Entity {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<Documento> Documento.findDocumentoPreferenciaPrograma() {
+	public static List<Documento> Documento.findDocumentoOrderByVisualizacao() {
+		return entityManager().createQuery(
+				"select o from Documento o order by o.qtdVisualizacao desc")
+				.getResultList();
+	}
 
-		Query query = entityManager()
-				.createNativeQuery(
-						"SELECT u.nm_usuario, p.nm_programa, count(d.nm_arquivo) from usuario_documento ud "
-								+ " inner join usuario u on ud.id_usuario = u.id "
-								+ " inner join documento d on d.id = ud.id_documento "
-								+ " inner join programa p on d.id_programa = p.id "
-								+ " group by 1, 2" + "order by 3 desc ");
-		query.setFirstResult(1000);
-		query.setMaxResults(1000);
+	@SuppressWarnings("unchecked")
+	public static List<Documento> Documento.findDocumentoMultilinguismoBrasil() {
+		return entityManager()
+				.createQuery(
+						"select o from Documento o where o.idPrograma.nmPrograma = 'Multinguismo no Brasil'")
+				.getResultList();
+	}
 
-		List result = query.getResultList();
+	@SuppressWarnings("unchecked")
+	public static List<Object[]> Documento.findDocumentoPreferenciaPrograma() {
 
-		return null;
+		String sql = "SELECT u.nm_usuario, p.nm_programa, count(d.nm_arquivo) from usuario_documento ud inner join usuario u on ud.id_usuario = u.id  inner join documento d on d.id = ud.id_documento  inner join programa p on d.id_programa = p.id group by u.nm_usuario, p.nm_programa ";
+		Query query = entityManager().createNativeQuery(sql);
+
+		List<Object[]> result = query.getResultList();
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<Object[]> Documento.findDocumentoByIntervaloGroupByPais() {
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+
+		SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+		// Remove um ano
+		calendar.add(Calendar.YEAR, -1);
+		String dtInicial = dtFormat.format(calendar.getTime());
+		String dtFinal = dtFormat.format(new Date());
+
+		StringBuffer sql = new StringBuffer(
+				"select p.nm_pais, count(d.nm_arquivo) from documento d ");
+		sql.append(" inner join pais p on d.id_pais = p.id ");
+		sql.append(" where d.dt_inclusao <= '" + dtFinal
+				+ "' and d.dt_inclusao >= '" + dtInicial + "'");
+		sql.append(" group by 1 ");
+		sql.append(" order by 2 desc");
+		Query query = entityManager().createNativeQuery(sql.toString());
+
+		List<Object[]> result = query.getResultList();
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<Object[]> Documento.findDocumentoByIntervaloGroupByPrograma() {
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+
+		SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+		// Remove um ano
+		calendar.add(Calendar.YEAR, -1);
+		String dtInicial = dtFormat.format(calendar.getTime());
+		String dtFinal = dtFormat.format(new Date());
+
+		StringBuffer sql = new StringBuffer(
+				"select p.nm_programa, count(d.nm_arquivo) from documento d ");
+		sql.append(" inner join programa p on d.id_programa=p.id ");
+		sql.append(" where d.dt_inclusao <='" + dtFinal
+				+ "' and d.dt_inclusao >= '" + dtInicial + "' ");
+		sql.append(" group by 1 order by 2 desc");
+		Query query = entityManager().createNativeQuery(sql.toString());
+
+		List<Object[]> result = query.getResultList();
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<Object[]> Documento.findProgramasMaisComentados() {
+
+		StringBuffer sql = new StringBuffer(
+				"select p.nm_programa, count(cd.id) from documento d ");
+		sql
+				.append(" inner join comentario_documento cd on cd.id_documento = d.id ");
+		sql.append(" inner join programa p on d.id_programa = p.id ");
+		sql.append(" group by p.id ");
+		sql.append(" order by 2 desc ");
+		Query query = entityManager().createNativeQuery(sql.toString());
+
+		List<Object[]> result = query.getResultList();
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<Object[]> Documento.findDocumentoByIntervaloGroupByProgramaAndPais() {
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+
+		SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+		// Remove um ano
+		calendar.add(Calendar.YEAR, -1);
+		String dtInicial = dtFormat.format(calendar.getTime());
+		String dtFinal = dtFormat.format(new Date());
+
+		StringBuffer sql = new StringBuffer(
+				"select pais.pais, programa.programa, pais.QuantidadeDocumentosPostados, programa.QuantidadeDocumentosPostados from ");
+		sql
+				.append(" (select p.nm_pais as pais, count(d.nm_arquivo) as QuantidadeDocumentosPostados from documento d ");
+		sql.append(" inner join pais p on d.id_pais=p.id ");
+		sql.append(" where d.dt_inclusao <='" + dtFinal
+				+ "' and d.dt_inclusao >= '" + dtInicial + "' ");
+		sql.append(" group by 1 ");
+		sql.append(" order by 2 desc ");
+		sql.append(" )pais ");
+		sql.append(" inner join ");
+		sql
+				.append(" ( select p2.nm_pais as pais, p.nm_programa as programa, count(d.nm_arquivo) as QuantidadeDocumentosPostados from documento d ");
+		sql.append(" inner join programa p on d.id_programa=p.id ");
+		sql.append(" inner join pais p2 on d.id_pais = p2.id ");
+		sql.append(" where d.dt_inclusao <='" + dtFinal
+				+ "' and d.dt_inclusao >= '" + dtInicial + "' ");
+		sql.append(" group by 1, 2 ");
+		sql.append(" order by 3 desc ");
+		sql.append(" )programa ");
+		sql.append(" on pais.pais=programa.pais ");
+		sql.append(" order by 3,4 desc ");
+
+		Query query = entityManager().createNativeQuery(sql.toString());
+
+		List<Object[]> result = query.getResultList();
+
+		return result;
 	}
 }
