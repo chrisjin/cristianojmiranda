@@ -7,16 +7,167 @@
 	 xmlns:spring="http://www.springframework.org/tags" version="2.0">
     <jsp:output omit-xml-declaration="yes"/>
     
+    <script type="text/javascript">
+     	 $(document).ready(function() {
+
+	  		$('#proceed').css('display', 'none');
+
+		});			
+  	 </script>
+    
     <form:create id="fc_br_unicamp_mc536_t2010s2a_forum_domain_Documento" modelAttribute="documento" path="/documentoes?consultar" render="${empty dependencies}" z="QPcrI/Z+ryISlA6OpguyYD/2OA0=">
     
-        <c:if test="${not empty documentos}">
+    	=== Dashboard ===
+    	<br/>
+    	<c:if test="${not empty preferenciaPrograma}">
+			<br/>
+			<br/>
+	        <table>
+	        	<tr>
+	        		<td>
+	        			<b>Qual sua preferência em termos de conteúdo de navegação?</b>
+	        		</td>
+	        	</tr>
+	        </table>
+			<table>
+				<thead>
+					<tr>
+						<th>Nome Usuario</th>
+						<th>Nome do Program</th>
+						<th>Totalizador</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${preferenciaPrograma}" var="pref">
+						<tr>
+							<td>
+								${pref[0]}
+							</td>
+							<td>
+								${pref[1]}
+							</td>
+							<td>
+								${pref[2]}
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</c:if>    
+    
+		<br/>
+    	<c:if test="${not empty grupoPaisIntervalo}">
+			<br/>
+			<br/>
+	        <table>
+	        	<tr>
+	        		<td>
+	        			<b>Um mapa de que país mais posta documentos para um dado período de tempo.</b>
+	        		</td>
+	        	</tr>
+	        </table>
+			<table>
+				<thead>
+					<tr>
+						<th>Pais</th>
+						<th>Totalizador</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${grupoPaisIntervalo}" var="pref">
+						<tr>
+							<td>
+								${pref[0]}
+							</td>
+							<td>
+								${pref[1]}
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</c:if>    
+				
+	
+		<br/>
+    	<c:if test="${not empty grupoProgramaIntervalo}">
+			<br/>
+			<br/>
+	        <table>
+	        	<tr>
+	        		<td>
+	        			<b>Um mapa de que assunto é mais recorrente em um dado período de tempo.</b>
+	        		</td>
+	        	</tr>
+	        </table>
+			<table>
+				<thead>
+					<tr>
+						<th>Programa</th>
+						<th>Totalizador</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${grupoProgramaIntervalo}" var="pref">
+						<tr>
+							<td>
+								${pref[0]}
+							</td>
+							<td>
+								${pref[1]}
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</c:if>
+		
+		
+		<br/>
+    	<c:if test="${not empty grupoProgramaPaisIntervalo}">
+			<br/>
+			<br/>
+	        <table>
+	        	<tr>
+	        		<td>
+	        			<b>Um cruzamento entre estes dois últimos.</b>
+	        		</td>
+	        	</tr>
+	        </table>
+			<table>
+				<thead>
+					<tr>
+						<th>Pais</th>
+						<th>Programa</th>
+						<th>Totalizador</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${grupoProgramaPaisIntervalo}" var="pref">
+						<tr>
+							<td>
+								${pref[0]}
+							</td>
+							<td>
+								${pref[1]}
+							</td>
+							<td>
+								${pref[2]}
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</c:if>
+		
+		<c:if test="${not empty docQtdVisualizacao}">
 			<br/>
 			<br/>
 	        <!-- Usuarios associadas ao documento -->
 	        <table>
 	        	<tr>
 	        		<td>
-	        			<b>Resultado</b>
+	        			<b>Quais os documentos mais populares?</b>
 	        		</td>
 	        	</tr>
 	        </table>
@@ -26,13 +177,13 @@
 						<th>Nome</th>
 						<th>Descrição</th>
 						<th>Tipo</th>
-						<th>Data Criação</th>
+						<th>Quantidade Visualização</th>
 						<th>Pais</th>
 						<th>Download</th>
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${documentos}" var="doc">
+					<c:forEach items="${docQtdVisualizacao}" var="doc">
 						<tr>
 							<td>
 								<a href="/forum/documentoes/${doc.id}">${doc.nmDocumento}</a>
@@ -44,7 +195,7 @@
 								${doc.tipoDocumento}
 							</td>
 							<td>
-								${doc.dtCriacao}
+								${doc.qtdVisualizacao}
 							</td>
 							<td>
 								${doc.idPais}
@@ -56,7 +207,91 @@
 					</c:forEach>
 				</tbody>
 			</table>
-		</c:if>        
+		</c:if>   
+		
+		<c:if test="${not empty docMultilinguismoBrasil}">
+			<br/>
+			<br/>
+	        <!-- Usuarios associadas ao documento -->
+	        <table>
+	        	<tr>
+	        		<td>
+	        			<b>Quais os documentos mais populares?</b>
+	        		</td>
+	        	</tr>
+	        </table>
+			<table>
+				<thead>
+					<tr>
+						<th>Nome</th>
+						<th>Descrição</th>
+						<th>Tipo</th>
+						<th>Quantidade Visualização</th>
+						<th>Pais</th>
+						<th>Download</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${docMultilinguismoBrasil}" var="doc">
+						<tr>
+							<td>
+								<a href="/forum/documentoes/${doc.id}">${doc.nmDocumento}</a>
+							</td>
+							<td>
+								${doc.dsDocumento}
+							</td>
+							<td>
+								${doc.tipoDocumento}
+							</td>
+							<td>
+								${doc.qtdVisualizacao}
+							</td>
+							<td>
+								${doc.idPais}
+							</td>
+							<td>
+								<a href="/forum/documentoes/${doc.id}?downloadDoc">Baixar Arquivo</a>
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</c:if>  
+		
+		<br/>
+    	<c:if test="${not empty programasMaisComentados}">
+			<br/>
+			<br/>
+	        <table>
+	        	<tr>
+	        		<td>
+	        			<b>Quais os programas em prol do multilinguismo que são mais citados?</b>
+	        		</td>
+	        	</tr>
+	        </table>
+			<table>
+				<thead>
+					<tr>
+						<th>Nome Programa</th>
+						<th>Totalizador</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${programasMaisComentados}" var="pref">
+						<tr>
+							<td>
+								${pref[0]}
+							</td>
+							<td>
+								${pref[1]}
+							</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</c:if>
+    
+             
     </form:create>
     
 </div>

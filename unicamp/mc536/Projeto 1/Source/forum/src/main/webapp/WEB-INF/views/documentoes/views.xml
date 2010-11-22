@@ -21,4 +21,9 @@
 		<put-attribute name="body"
 			value="/WEB-INF/views/documentoes/find.jspx" />
 	</definition>
+	
+	<definition extends="default" name="documentoes/dash">
+		<put-attribute name="body"
+			value="/WEB-INF/views/documentoes/dashboard.jspx" />
+	</definition>
 </tiles-definitions>

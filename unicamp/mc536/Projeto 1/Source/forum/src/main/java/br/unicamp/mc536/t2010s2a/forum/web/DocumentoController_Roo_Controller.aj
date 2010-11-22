@@ -17,6 +17,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.directwebremoting.convert.DOM4JConverter;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.convert.converter.Converter;
@@ -233,6 +234,50 @@ privileged aspect DocumentoController_Roo_Controller {
 		}
 
 		return "documentoes/find";
+	}
+
+	@RequestMapping(params = "dash", method = RequestMethod.GET)
+	public String DocumentoController.createFormDashBoard(Model model) {
+
+		// Obtem os documentos por preferencias de programas
+		List<Object[]> preferenciaPrograma = Documento
+				.findDocumentoPreferenciaPrograma();
+
+		// Obtem os documentos agrupados por pais no intervalo de um ano
+		List<Object[]> grupoPaisIntervalo = Documento
+				.findDocumentoByIntervaloGroupByPais();
+
+		// Obtem os documentos agrupados por program no intervalo de um ano
+		List<Object[]> grupoProgramaIntervalo = Documento
+				.findDocumentoByIntervaloGroupByPrograma();
+
+		// Obtem os documentos agrupados por pais e programa no intervalo de um
+		// ano
+		List<Object[]> grupoProgramaPaisIntervalo = Documento
+				.findDocumentoByIntervaloGroupByProgramaAndPais();
+
+		// Obtem os documentos por ordem de visualização
+		List<Documento> docQtdVisualizacao = Documento
+				.findDocumentoOrderByVisualizacao();
+
+		// Documentos relacionados ao multilinguismo no brasil
+		List<Documento> docMultilinguismoBrasil = Documento
+				.findDocumentoMultilinguismoBrasil();
+
+		// Programas mais comentados
+		List<Object[]> programasMaisComentados = Documento
+				.findProgramasMaisComentados();
+
+		model.addAttribute("preferenciaPrograma", preferenciaPrograma);
+		model.addAttribute("grupoPaisIntervalo", grupoPaisIntervalo);
+		model.addAttribute("grupoProgramaIntervalo", grupoProgramaIntervalo);
+		model.addAttribute("grupoProgramaPaisIntervalo",
+				grupoProgramaPaisIntervalo);
+		model.addAttribute("docQtdVisualizacao", docQtdVisualizacao);
+		model.addAttribute("docMultilinguismoBrasil", docMultilinguismoBrasil);
+		model.addAttribute("programasMaisComentados", programasMaisComentados);
+
+		return "documentoes/dash";
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
