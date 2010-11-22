@@ -179,43 +179,6 @@ RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM
 				ldi	Zl, low(OPSR2)
 				st Z+, r
 				st Z, r
-				
-
-				; Test I ----------------------------------------------------------------------------
-				; Soma
-				;rcall key1
-				;rcall key2
-				;rcall key3
-				;rcall key3
-				;rcall key0
-				;rcall key1
-				;rcall keyAdd					; Entrada 301 no operando 1, aciona o operador soma
-				;rcall key2
-				;rcall key2
-				;rcall key2
-				;rcall key6
-				;rcall key1						; Entrada 61 no operando 2
-				;rcall keyEnter					; Era esperado o resultado 362 no lcd
-
-				; Test II ----------------------------------------------------------------------------
-				; Subtracao
-				;rcall key1
-				;rcall key9
-				;rcall key0
-				;rcall keySub				; Entrada 190, aciona operador de subtracao
-				;rcall key9
-				;rcall key8
-				;rcall keyEnter				; Entrada 98 no operador 2, esperado resultado 92
-
-				; Test III ---------------------------------------------------------------------------
-				; Multiplicacao
-				;rcall key5
-				;rcall key3
-				;rcall keyMult				; Entrada 53 no operador 1, aciona operador de multiplicacao
-				;rcall key6
-				;rcall key1
-				;rcall key0
-				;rcall keyEnter				; Entrada 610 no operador 2, esperado resultado 32330
 
 				rcall configKeypad
 				rjmp loop
@@ -287,6 +250,7 @@ coluna1:
 				breq key7Link
 				cpi aux, 0x7
 				breq keyClearLink
+				rcall configKeypad
 				rjmp loop
 
 coluna2:
@@ -297,7 +261,8 @@ coluna2:
 				cpi aux, 0xB
 				breq key8Link
 				cpi aux, 0x7
-				breq key0
+				breq key0Link
+				rcall configKeypad
 				rjmp loop
 
 coluna3:
@@ -309,6 +274,7 @@ coluna3:
 				breq key9Link
 				cpi aux, 0x7
 				breq keyEnterLink
+				rcall configKeypad
 				rjmp loop
 
 coluna4:
@@ -320,6 +286,7 @@ coluna4:
 				breq keyMultLink
 				cpi aux, 0x7
 				breq keyDivLink
+				rcall configKeypad
 				rjmp loop
 
 loopLink:		rjmp loop
@@ -332,6 +299,7 @@ keyMultLink:	rjmp keyMult
 keyDivLink:		rjmp keyDiv
 keyEnterLink:	rjmp keyEnter
 keyClearLink:	rjmp keyClear
+key0Link:		rjmp key0
 key1Link:		rjmp key1
 key2Link:		rjmp key2
 key3Link:		rjmp key3
@@ -402,6 +370,7 @@ getErroFlag:	ldi Yh, high(ERROFLAG)
 ; -----------------------------------------------------------------------------
 verificaErro:	rcall getErroFlag
 				cpi r, 0x0
+				rcall configKeypad
 				brne loopLink
 				ret
 
@@ -630,7 +599,7 @@ keyDiv:
 ; -----------------------------------------------------------------------------
 keyEnter:		rcall getOperacao				; Obtem operacao
 				cpi r, 0x0						; Caso nao haja operacao
-				breq erroOperadorLink				; Notifica falta de operador
+				breq erroOperadorLink			; Notifica falta de operador
 
 												; Obtem os operadores da SRAM
 				ldi	Zh, high(OPSR1)			
@@ -753,6 +722,7 @@ erroOperador:	clr r
 						
 				ldi r, 0x1						; Habilita escrita a partir da SRAM
 				rcall setLcdIoFlag
+				rcall configKeypad
 				rjmp loop						
 
 
@@ -1209,6 +1179,7 @@ Bin2ToDigitc:
 ; Final de execucao da aplicacao
 ; -----------------------------------------------------------------------------
 end:			
+				rcall configKeypad
 				rjmp loop						; Final do programa
 
 ; Mensagens e labels
