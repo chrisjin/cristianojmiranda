@@ -141,7 +141,16 @@ start:
 
 ; Inicia a aplicacao
 ; -----------------------------------------------------------------------------
-RESET:			ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM 
+RESET:			
+
+				; Teste ---
+
+				clr r25
+				ldi r26, 222
+				clr r27
+				ldi r28, 111
+
+				ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM 
 				out	SPL,r						
 				ldi	r,high(RAMEND)
 				out SPH,r
@@ -632,7 +641,7 @@ keyEnter:		rcall getOperacao				; Obtem operacao
 
 ; Soma
 ; -----------------------------------------------------------------------------
-opSoma:			add16 r25, r26, r27, r28		; Executa a soma
+opSoma:			add16 r26, r25, r28, r27 		; Executa a soma
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				rcall configKeypad
 				rjmp loop
