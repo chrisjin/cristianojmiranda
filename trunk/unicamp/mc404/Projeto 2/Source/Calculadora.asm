@@ -388,7 +388,7 @@ key0:			rcall verificaErro
 				mov r9, r
 				rcall convertToBin
 				rcall configKeypad
-				ret
+				rjmp loop
 
 ; Btn Um
 ; -----------------------------------------------------------------------------
