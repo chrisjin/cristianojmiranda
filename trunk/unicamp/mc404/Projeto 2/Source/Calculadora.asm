@@ -64,6 +64,8 @@
 												; caso contrario: SRAM
 .equ			ERROFLAG	= 	0x15B			; Flag para registrar erro de operacao, 1 = Erro
 
+.equ			FLNEGATIVO  =  0X15C			; Flag para sinal negativo (Caso 0: positivo, Caso contrario negativo)
+
 .equ			OPSR1		= 0x12A				; Operando 1
 .equ			OPSR2		= 0x13A				; Operando 2
 .equ			OPSR		= 0x14A				; Tipo de Operacao [1 = Soma, 2 = Multiplicacao, 3 = Divisao, 4 = Subtracao]
@@ -178,6 +180,8 @@ RESET:
 
 				clr r							; Limpa a operacao a ser executada
 				rcall setOperacao									
+
+				rcall setFlNegativo				; Seta o resultado como positivo
 				
 												; Limpa operadores 1 e 2 na SRAM
 				ldi	Zh, high(OPSR1)			
@@ -335,6 +339,22 @@ setOperacao:
 ; -----------------------------------------------------------------------------
 getOperacao:	ldi Zh, high(OPSR)
 				ldi Zl, low(OPSR)
+				ld r, Z
+				ret
+
+; Seta o sinal do resultado
+; -----------------------------------------------------------------------------
+setFlNegativo:
+				ldi Zh, high(FLNEGATIVO)
+				ldi Zl, low(FLNEGATIVO)
+				st Z, r
+				ret
+
+; Obtem o sinal do resultado (positivo ou negativo)
+; O valor da SRAM eh armazenado em r
+; -----------------------------------------------------------------------------
+getFlNegativo:	ldi Zh, high(FLNEGATIVO)
+				ldi Zl, low(FLNEGATIVO)
 				ld r, Z
 				ret
 
@@ -681,8 +701,28 @@ opDiv:											; Executa divisao
 
 ; Subtracao
 ; -----------------------------------------------------------------------------
-opSub:			;sub16 r25, r26, r27, r28		; Executa a subtracao
-				sub16 r26, r25, r28, r27
+opSub:			cp r25, r27						; Verifica se OP1 < OP2
+				brlo invertOp
+
+				cp r26, r28						; Verifica se OP1 < OP2
+				brlo invertOp
+				rjmp opSubExec
+				
+; Subtracao - Inverte os operadores da subtracao
+; -----------------------------------------------------------------------------
+invertOp:		ldi r, 0x1						; Seta o flag de operacao negativa
+				rcall setFlNegativo
+				push r25						; Inverte os registradores de subtracao
+				push r26						; Para que o operador maior fique sempre em OP1
+				mov r25, r27
+				mov r26, r28
+				pop r28
+				pop r27
+
+
+; Subtracao - Executa a subtracao
+; -----------------------------------------------------------------------------
+opSubExec:		sub16 r26, r25, r28, r27		; Executa a subtracao
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				rcall configKeypad
 				rjmp loop
@@ -714,8 +754,29 @@ showLcdResult:	ldi   lcdinput,	1				; Apaga o LCD
 
 				ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
         		ldi Xl, low(SRAM_START) 
+
+				rcall getFlNegativo				; Verifica se o resultado eh negativo
+				cpi r, 0x0						; Caso seja negativo
+				brne showResultNeg
+
+				clr r
+				rcall setFlNegativo				; Limpa resultado negativo
+
     			rcall writemsg					; Exibe a mensagem 
 				rcall clenPortB
+				ret
+
+showResultNeg:	ldi r, '-'						; Carrega o sinal a ser exibido
+				ldi Zh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Zl, low(SRAM_START) 
+				st Z, r
+
+				clr r
+				rcall setFlNegativo				; Limpa resultado negativo
+
+    			rcall writemsg					; Exibe a mensagem 
+				rcall clenPortB
+
 				ret
 				
 ; Exibe mensagem de falta de operador
