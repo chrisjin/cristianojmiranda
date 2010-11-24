@@ -144,11 +144,12 @@ start:
 RESET:			
 
 				; Teste ---
-
-				clr r25
-				ldi r26, 222
-				clr r27
-				ldi r28, 111
+				
+				ldi r25, high(450)
+				ldi r26, low(450)
+				ldi r27, high(500)
+				ldi r28, low(500)
+				sub16 r26, r25, r28, r27		; Executa a subtracao
 
 				ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM 
 				out	SPL,r						
@@ -680,7 +681,8 @@ opDiv:											; Executa divisao
 
 ; Subtracao
 ; -----------------------------------------------------------------------------
-opSub:			sub16 r25, r26, r27, r28		; Executa a subtracao
+opSub:			;sub16 r25, r26, r27, r28		; Executa a subtracao
+				sub16 r26, r25, r28, r27
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				rcall configKeypad
 				rjmp loop
