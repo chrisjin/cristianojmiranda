@@ -23,14 +23,14 @@
 ; r7 - *
 ; r8 - Utilizado temporariamente para converter ASCII para binario na memoria (utilizado como registrador zerado)
 ; r9 - Utilizado temporariamente para converter ASCII para binario na memoria
-; r10 - Utilizado para armazenar o resto da divisao
-; r11 - Utilizado para armazenar o resto da divisao
-; r12 - Utilizado para armazenar o resto da divisao
-; r13 - Utilizado para armazenar o resto da divisao
-; r14 - *
-; r15 - *
-; r16 - Operador 1 da multiplicacao, Operador 1 para conversao binario to ascii
-; r17 - Operador 1 da multiplicacao, Operador 1 para conversao binario to ascii
+; r10 - *
+; r11 - *
+; r12 - *
+; r13 - *
+; r14 - Utilizado para armazenar o resto da divisao
+; r15 - Utilizado para armazenar o resto da divisao
+; r16 - Operador 1 da multiplicacao/divisao, Operador 1 para conversao binario to ascii
+; r17 - Operador 1 da multiplicacao/divisao, Operador 1 para conversao binario to ascii
 ; r18 - Operador 2 da multiplicacao, Operador 2 para conversao binario to ascii, variavel auxiliar do keypad ********
 ; r19 - Operador 2 da multiplicacao, Operador 2 para conversao binario to ascii, variavel coluna do keypad  ********
 ; r20 - LcdInput, registrador tmp de multiplicacao, constante de conversao bin to asc, 
@@ -84,18 +84,18 @@
 .def 			Res2 = R3						; Segundos 8bits do resultado da multiplicacao
 .def 			Res3 = R4						; Terceiros 8bits do resultado da multiplicacao
 .def 			Res4 = R5						; 8bits finais do resultado da multiplicacao
-.def 			m1L = R16						; Operador 1 da multiplicacao
+.def 			m1L = R16						; Operador 1 da multiplicacao/divisao
 .def 			m1M = R17
-.def 			m2L = R18						; Operador 2 da multiplicacao
+.def 			m2L = R18						; Operador 2 da multiplicacao/divisao
 .def 			m2M = R19
 .def 			tmp = R20						; Registrador temporario da operacao
 
 
 
-.def 			drem16uL=r10					;resto da divisao
-.def 			drem16uH=r11
-.def 			dres16uL=r12					;resultado da divisao
-.def 			dres16uH=r13
+.def 			drem16uL=r14					;resto da divisao
+.def 			drem16uH=r15
+.def 			dres16uL=r16					;resultado da divisao
+.def 			dres16uH=r17
 .def 			dcnt16u = r23					;contador de iteracoes da divisao
 
 
@@ -841,14 +841,40 @@ showLcdResult:	ldi   lcdinput,	1				; Apaga o LCD
         		ldi Zl, low(SRAM_START) 
 
 				rcall Bin2ToAsc					; Converte o resultado em ascii
-
-				clr r							; Delimita o display numerico no sexto digito
+			
+				;ponto(ou virgula) separa casas
+				clr r						; Delimita o display numerico no sexto digito
 				;ldi Zh, high(0x105)				
 				;ldi Zl, low(0x105)
 				ldi Zh, high(0x106)				
 				ldi Zl, low(0x106)
 				st Z, r
+				
+				;clr r
+				;ldi Zh,high(0x107)
+				;ldi Zl,low(0x107)
+				;st Z,r
+				;casas decimais
+				;ldi r,0
+				;ldi Zh,high(0x108)
+				;ldi Zl,low(0x108)
+				;st Z+,r
+				;st Z,r		
+				
+			
+				;divresto:
+				;ldi rBin1H,0;drem16uH
+				;ldi rBin1L,0 ;drem16uL
 
+				;ldi Zh,high(0x107)
+				;ldi Zl,low(0x107)
+
+				;rcall Bin2ToAsc
+
+				;clr r
+				;ldi Zh,high(0x109)
+				;ldi Zl,low(0x109)
+				;st Z,r
 												; Exibe o resultado convertido
 				ldi r, 0x1						; Habilita a leitura do LCD a partir da SRAM
 				rcall setLcdIoFlag
