@@ -685,7 +685,41 @@ opMult:											; Executa a multiplicacao
 
 ; Divisao
 ; -----------------------------------------------------------------------------
-opDiv:											; Executa divisao
+opDiv:											
+
+				cpi r27, 0x0					; Verifica se o operador 2 eh zero
+				breq opDivZeroH
+				rjmp opDivExecute				; Executa a divisao
+
+; Verifica se o segundo operandoH eh zero, para caracterizar divisao por zero
+; -----------------------------------------------------------------------------
+opDivZeroH:		cpi r28, 0x0
+				breq opDivZeroL
+				rjmp opDivExecute				; Caso nao seja zero executa a divisao
+
+
+; Verifica se o segundo operandoL eh zero, para caracterizar divisao por zero
+; Notifica divisao por zero
+; -----------------------------------------------------------------------------
+opDivZeroL:		clr r
+				rcall setLcdIoFlag				; Marca como leitura Progam Memory
+				ldi   lcdinput,	1				; Apaga o LCD
+				ldi r, 0x1
+				rcall setErroFlag				; Seta o flag de erro
+				rcall lcd_cmd		
+				ldi Zl,low(err_div_zero*2)   	; Seta mensagem de divisao por zero
+    			ldi Zh,high(err_div_zero*2)
+    			rcall writemsg					; Exibe a mensagem 
+				rcall clenPortB
+						
+				ldi r, 0x1						; Habilita escrita a partir da SRAM
+				rcall setLcdIoFlag
+				rcall configKeypad
+				rjmp loop
+
+; Executa a divisao
+; -----------------------------------------------------------------------------
+opDivExecute:									; Executa divisao
 				mov m1M, r25					; Seta o operando 1 
 				mov m1L, r26
 				mov m2M, r27
