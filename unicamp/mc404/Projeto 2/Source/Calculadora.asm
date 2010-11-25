@@ -897,7 +897,7 @@ showLcdDiv:		ldi   lcdinput,	1				; Apaga o LCD
 				ldi r,','
 				ldi Zh,high(0x106)
 				ldi Zl,low(0x106)
-				st Z,r
+				st Z+,r
 
 				ldi r,100
 				mov r26,r14				
@@ -912,8 +912,8 @@ showLcdDiv:		ldi   lcdinput,	1				; Apaga o LCD
 								
 				rcall divide
 			
-				mov rBin1H,dres16uH				;Seta o resultado da divisao nos registradores de exibicao
-				mov rBin1L,dres16uL	
+				clr rBin1H				;Seta o resultado da divisao nos registradores de exibicao
+				mov rBin1L,dres16uH	
 							
 				rcall Bin2ToAsc 				; Converte o resultado em ascii 
 												; Move os digitos para os locais corretos ;0000120				
@@ -922,9 +922,17 @@ showLcdDiv:		ldi   lcdinput,	1				; Apaga o LCD
 				ld r, Z
 				
 				ldi Zh, high(0x107)
-				ldi Zl, low(0x107) 
-				st Z, r
+				ldi Zl, low(0x107)
+				cpi r,0x20  
+				breq showLcdDivA
+				st Z,r
+				rjmp showLcdDivB
 				
+showLcdDivA:
+				ldi r,0x30
+				st Z,r
+					
+showLcdDivB:	
 				ldi Zh, high(0x10C)
 				ldi Zl, low(0x10C) 
 				ld r, Z
