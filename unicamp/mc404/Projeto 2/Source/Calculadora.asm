@@ -796,7 +796,7 @@ opDivExecute:									; Executa divisao
 				mov r25,dres16uH				;Seta o resultado da divisao nos registradores de exibicao
 				mov r26,dres16uL
 				
-				rcall showLcdResult				; Exibe o resultado da operacao no LCD
+				rcall showLcdDiv				; Exibe o resultado da operacao no LCD(caso especial com decimais)
 				rcall configKeypad
 				rjmp loop
 
@@ -842,40 +842,13 @@ showLcdResult:	ldi   lcdinput,	1				; Apaga o LCD
 
 				rcall Bin2ToAsc					; Converte o resultado em ascii
 			
-				;ponto(ou virgula) separa casas
+				
 				clr r						; Delimita o display numerico no sexto digito
-				;ldi Zh, high(0x105)				
-				;ldi Zl, low(0x105)
 				ldi Zh, high(0x106)				
 				ldi Zl, low(0x106)
 				st Z, r
 				
-				;clr r
-				;ldi Zh,high(0x107)
-				;ldi Zl,low(0x107)
-				;st Z,r
-				;casas decimais
-				;ldi r,0
-				;ldi Zh,high(0x108)
-				;ldi Zl,low(0x108)
-				;st Z+,r
-				;st Z,r		
-				
-			
-				;divresto:
-				;ldi rBin1H,0;drem16uH
-				;ldi rBin1L,0 ;drem16uL
-
-				;ldi Zh,high(0x107)
-				;ldi Zl,low(0x107)
-
-				;rcall Bin2ToAsc
-
-				;clr r
-				;ldi Zh,high(0x109)
-				;ldi Zl,low(0x109)
-				;st Z,r
-												; Exibe o resultado convertido
+				; Exibe o resultado convertido
 				ldi r, 0x1						; Habilita a leitura do LCD a partir da SRAM
 				rcall setLcdIoFlag
 
@@ -908,7 +881,81 @@ showResultNeg:	ldi r, '-'						; Carrega o sinal a ser exibido
 				rcall clenPortB
 
 				ret
+
+showLcdDiv:		ldi   lcdinput,	1				; Apaga o LCD
+				rcall lcd_cmd		
+
+				mov rBin1H, r25					; Move o resultado para o registrador de conversao ascii
+				mov rBin1L, r26
+
+				ldi Zh, high(SRAM_START)    	; Seta Zh como o inicio da SRAM para iniciar escrita do resultado em ascii
+        		ldi Zl, low(SRAM_START) 
+
+				rcall Bin2ToAsc					; Converte o resultado em ascii
+			
+							
+				ldi r,','
+				ldi Zh,high(0x106)
+				ldi Zl,low(0x106)
+				st Z,r
+
+				ldi r,100
+				mov r26,r14				
+				mov	r25,r15
+				;mul r25,r
+				mul r26,r
+
+				mov m1M, r0			
+				mov m1L, r1
+				mov m2M, r27
+				mov m2L, r28
+								
+				rcall divide
+			
+				mov rBin1H,dres16uH				;Seta o resultado da divisao nos registradores de exibicao
+				mov rBin1L,dres16uL	
+							
+				rcall Bin2ToAsc 				; Converte o resultado em ascii 
+												; Move os digitos para os locais corretos ;0000120				
+				ldi Zh, high(0x10B)
+				ldi Zl, low(0x10B) 
+				ld r, Z
 				
+				ldi Zh, high(0x107)
+				ldi Zl, low(0x107) 
+				st Z, r
+				
+				ldi Zh, high(0x10C)
+				ldi Zl, low(0x10C) 
+				ld r, Z
+				
+				ldi Zh, high(0x108)
+				ldi Zl, low(0x108) 
+				st Z, r
+
+				clr r
+				ldi Zh,high(0x109)
+				ldi Zl,low(0x109)	
+				st Z,r
+				
+				ldi r, 0x1						; Habilita a leitura do LCD a partir da SRAM
+				rcall setLcdIoFlag
+
+				ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START) 
+
+				rcall getFlNegativo				; Verifica se o resultado eh negativo
+				cpi r, 0x0						; Caso seja negativo
+				brne showResultNeg
+
+				clr r
+				rcall setFlNegativo				; Limpa resultado negativo
+
+    			rcall writemsg					; Exibe a mensagem 
+				rcall clenPortB
+				ret
+
+			
 ; Exibe mensagem de falta de operador
 ; -----------------------------------------------------------------------------
 erroOperador:	clr r
