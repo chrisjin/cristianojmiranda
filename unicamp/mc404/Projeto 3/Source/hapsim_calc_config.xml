@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<HAPSIM>
+   <General>
+      <Build>1930</Build>
+      <Position>
+         <top>123</top>
+         <bottom>554</bottom>
+         <left>835</left>
+         <right>1175</right>
+      </Position>
+      <StayOnTop>0</StayOnTop>
+      <Target>ATmega88</Target>
+   </General>
+   <Views>
+      <LCD>
+         <Name>LCD1</Name>
+         <Position>
+            <top>4</top>
+            <left>13</left>
+         </Position>
+         <DisplayConfig>
+            <columns>16</columns>
+            <rows>1</rows>
+            <bkColor>0xff80</bkColor>
+            <size>3</size>
+         </DisplayConfig>
+         <PortMapping>
+            <DataPort>
+               <Port>PORTB</Port>
+               <HighNibble>bit 4..7</HighNibble>
+               <LowNibble>bit 0..3</LowNibble>
+            </DataPort>
+            <EnablePin>
+               <Port>PORTC</Port>
+               <Bit>0</Bit>
+            </EnablePin>
+            <RW_Pin>
+               <WriteOnly>0</WriteOnly>
+               <Port>PORTC</Port>
+               <Bit>2</Bit>
+            </RW_Pin>
+            <RS_Pin>
+               <Port>PORTC</Port>
+               <Bit>1</Bit>
+            </RS_Pin>
+         </PortMapping>
+      </LCD>
+      <Keypad>
+         <Name>Keypad1</Name>
+         <Position>
+            <top>67</top>
+            <left>3</left>
+         </Position>
+         <PortMapping>
+            <Strobe index="0">
+               <Port>PORTB</Port>
+               <Bit>0</Bit>
+            </Strobe>
+            <Strobe index="1">
+               <Port>PORTB</Port>
+               <Bit>1</Bit>
+            </Strobe>
+            <Strobe index="2">
+               <Port>PORTB</Port>
+               <Bit>2</Bit>
+            </Strobe>
+            <Strobe index="3">
+               <Port>PORTB</Port>
+               <Bit>3</Bit>
+            </Strobe>
+            <Input index="0">
+               <Port>PORTD</Port>
+               <Bit>4</Bit>
+            </Input>
+            <Input index="1">
+               <Port>PORTD</Port>
+               <Bit>5</Bit>
+            </Input>
+            <Input index="2">
+               <Port>PORTD</Port>
+               <Bit>6</Bit>
+            </Input>
+            <Input index="3">
+               <Port>PORTD</Port>
+               <Bit>7</Bit>
+            </Input>
+         </PortMapping>
+         <Buttons>
+            <Button index="0">
+               <Caption>1</Caption>
+               <PCKey>538976288</PCKey>
+            </Button>
+            <Button index="1">
+               <Caption>4</Caption>
+               <PCKey>1953067887</PCKey>
+            </Button>
+            <Button index="2">
+               <Caption>7</Caption>
+               <PCKey>538976266</PCKey>
+            </Button>
+            <Button index="3">
+               <Caption>Clear</Caption>
+               <PCKey>1128013856</PCKey>
+            </Button>
+            <Button index="4">
+               <Caption>2</Caption>
+               <PCKey>1852383335</PCKey>
+            </Button>
+            <Button index="5">
+               <Caption>5</Caption>
+               <PCKey>1042427938</PCKey>
+            </Button>
+            <Button index="6">
+               <Caption>8</Caption>
+               <PCKey>538976288</PCKey>
+            </Button>
+            <Button index="7">
+               <Caption>0</Caption>
+               <PCKey>1632517152</PCKey>
+            </Button>
+            <Button index="8">
+               <Caption>3</Caption>
+               <PCKey>1953653108</PCKey>
+            </Button>
+            <Button index="9">
+               <Caption>6</Caption>
+               <PCKey>1014001524</PCKey>
+            </Button>
+            <Button index="10">
+               <Caption>9</Caption>
+               <PCKey>537542245</PCKey>
+            </Button>
+            <Button index="11">
+               <Caption>Enter</Caption>
+               <PCKey>538976288</PCKey>
+            </Button>
+            <Button index="12">
+               <Caption>Add</Caption>
+               <PCKey>1953656656</PCKey>
+            </Button>
+            <Button index="13">
+               <Caption>Sub</Caption>
+               <PCKey>538976266</PCKey>
+            </Button>
+            <Button index="14">
+               <Caption>Mult</Caption>
+               <PCKey>538976288</PCKey>
+            </Button>
+            <Button index="15">
+               <Caption>Div</Caption>
+               <PCKey>1919897660</PCKey>
+            </Button>
+         </Buttons>
+      </Keypad>
+   </Views>
+</HAPSIM>
