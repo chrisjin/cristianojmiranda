@@ -1,0 +1,2 @@
+@ECHO OFF
+"C:\Arquivos de programas\Atmel\AVR Tools\AvrAssembler2\avrasm2.exe" -S "E:\Unicamp\mc404\svn\Projeto 2\Source\labels.tmp" -fI -W+ie -o "E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.hex" -d "E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.obj" -e "E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.eep" -m "E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.map" "E:\Unicamp\mc404\svn\Projeto 2\Source\Calculadora.asm"
