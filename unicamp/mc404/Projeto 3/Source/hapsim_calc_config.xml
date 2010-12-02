@@ -3,10 +3,10 @@
    <General>
       <Build>1930</Build>
       <Position>
-         <top>123</top>
-         <bottom>554</bottom>
-         <left>835</left>
-         <right>1175</right>
+         <top>-1</top>
+         <bottom>430</bottom>
+         <left>1</left>
+         <right>341</right>
       </Position>
       <StayOnTop>0</StayOnTop>
       <Target>ATmega88</Target>
