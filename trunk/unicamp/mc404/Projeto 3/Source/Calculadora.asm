@@ -1,7 +1,7 @@
 ; -----------------------------------------------------------------------------
 ;  MC404-E
 ;
-;  Atividade Obrigatoria 2 - calculadora
+;  Atividade Obrigatoria 3 - Calculadora de Pilha utilizando RPN (Reverse Polish Notation)
 ;
 ;
 ;												Grupo:
@@ -223,13 +223,7 @@ null: 			ret
 
 ; Loop principal da aplicação
 ; -----------------------------------------------------------------------------
-loop:			ldi r, low(RAMEND)				; Remove lixo da pilha para evitar overflow
-				out	SPL, r
-				ldi	r, high(RAMEND)
-				out SPH,r
-				rcall clenPortB
-
-				ldi aux, 0xFF
+loop:			ldi aux, 0xFF
 				out PIND, aux
 
 				out PORTB, coluna
@@ -715,36 +709,14 @@ opMult:											; Executa a multiplicacao
 				mov m2L, r28					; Seta o segundo operando
 				rcall multiply					; Executa a multiplicacao
 
-				brcs opMultOverflow				; Caso tenha ocorrido overflow
-
 				mov r25, res2					; Seta o resultado da multiplicacao nos registradores de exibicao
 				mov r26, res1
 
-				rcall showLcdResult				; Exibe o resultado da operacao no LCD
+				;rcall showLcdResult				; Exibe o resultado da operacao no LCD
+				rcall showLcdMultRes
 				rcall configKeypad
 				rjmp loop
 
-
-; Overflow na multiplicacao
-; -----------------------------------------------------------------------------
-opMultOverflow:	clr r
-				rcall setLcdIoFlag				; Marca como leitura Progam Memory
-				ldi   lcdinput,	1				; Apaga o LCD
-				ldi r, 0x1
-				rcall setErroFlag				; Seta o flag de erro
-				rcall lcd_cmd		
-				ldi Zl,low(err_precision*2)   	; Seta mensagem de falta de precisao
-    			ldi Zh,high(err_precision*2)
-    			rcall writemsg					; Exibe a mensagem 
-				rcall clenPortB
-
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
-						
-				ldi r, 0x1						; Habilita escrita a partir da SRAM
-				rcall setLcdIoFlag
-				rcall configKeypad
-				rjmp loop
 
 ; Link para opSub
 ; -----------------------------------------------------------------------------
@@ -828,6 +800,48 @@ opSubExec:		sub16 r26, r25, r28, r27		; Executa a subtracao
 				rcall configKeypad
 				rjmp loop
 
+; Exibe os valores dos registradores r25 e r26 no lcd para multiplicacao
+; -----------------------------------------------------------------------------
+showLcdMultRes:	ldi   lcdinput,	1				; Apaga o LCD
+				rcall lcd_cmd		
+
+				mov rBin1H, res4				; Move o resultado para o registrador de conversao ascii
+				mov rBin1L, res3
+
+				ldi Zh, high(SRAM_START)    	; Seta Zh como o inicio da SRAM para iniciar escrita do resultado em ascii
+        		ldi Zl, low(SRAM_START) 
+
+				rcall Bin2ToAsc					; Converte o resultado em ascii
+
+				mov rBin1H, res2				; Move o resultado para o registrador de conversao ascii
+				mov rBin1L, res1
+
+				rcall Bin2ToAsc
+			
+				
+				clr r							; Delimita o display numerico no sexto digito
+				ldi Zh, high(0x106)				
+				ldi Zl, low(0x106)
+				st Z, r
+				
+				; Exibe o resultado convertido
+				ldi r, 0x1						; Habilita a leitura do LCD a partir da SRAM
+				rcall setLcdIoFlag
+
+				ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START) 
+
+				rcall getFlNegativo				; Verifica se o resultado eh negativo
+				cpi r, 0x0						; Caso seja negativo
+				brne showResultNeg
+
+				clr r
+				rcall setFlNegativo				; Limpa resultado negativo
+
+    			rcall writemsg					; Exibe a mensagem 
+				rcall clenPortB
+				ret
+
 
 ; Exibe os valores dos registradores r25 e r26 no lcd
 ; -----------------------------------------------------------------------------
@@ -843,7 +857,7 @@ showLcdResult:	ldi   lcdinput,	1				; Apaga o LCD
 				rcall Bin2ToAsc					; Converte o resultado em ascii
 			
 				
-				clr r						; Delimita o display numerico no sexto digito
+				clr r							; Delimita o display numerico no sexto digito
 				ldi Zh, high(0x106)				
 				ldi Zl, low(0x106)
 				st Z, r
@@ -882,6 +896,8 @@ showResultNeg:	ldi r, '-'						; Carrega o sinal a ser exibido
 
 				ret
 
+; Exibe o resultado da divisao
+; -----------------------------------------------------------------------------
 showLcdDiv:		ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd		
 
@@ -1302,11 +1318,11 @@ lcdinit: 										; initialize LCD
 
 ; Bin2ToAsc
 ; =========
-; converts a 16-bit-binary to a 5-digit ASCII coded decimal,
+; converts a 16-bit-binary to a 6-digit ASCII coded decimal,
 ;   the pointer points to the first significant digit of the
 ;   decimal, returns the number of digits
 ; In: 16-bit-binary in rBin1H:L, Z points to first digit of
-;   the ASCII decimal (requires 5 digits buffer space, even
+;   the ASCII decimal (requires 6 digits buffer space, even
 ;   if the number is smaller!)
 ; Out: Z points to the first significant digit of the ASCII
 ;   decimal, rBin2L has the number of characters (1..6)
@@ -1359,7 +1375,7 @@ Bin2ToAsc6a:
 
 ; -----------------------------------------------------------------------------
 Bin2ToAsc6b:
-				inc rBin2L ; one more char
+				inc rBin2L 						; one more char
 
 ; -----------------------------------------------------------------------------
 Bin2ToAsc6c:
