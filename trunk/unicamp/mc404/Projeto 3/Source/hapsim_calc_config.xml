@@ -13,7 +13,7 @@
    </General>
    <Views>
       <LCD>
-         <Name>LCD1</Name>
+         <Name>DISPLAY</Name>
          <Position>
             <top>4</top>
             <left>13</left>
@@ -46,7 +46,7 @@
          </PortMapping>
       </LCD>
       <Keypad>
-         <Name>Keypad1</Name>
+         <Name>TECLADO</Name>
          <Position>
             <top>67</top>
             <left>3</left>
