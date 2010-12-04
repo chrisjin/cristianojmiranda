@@ -149,12 +149,6 @@ start:
 ; -----------------------------------------------------------------------------
 RESET:			
 
-				; Teste ---
-				
-				ldi r25, low(0b000011110011101001110001)
-				ldi r26, high(0b000011110011101001110001)
-				ldi r27, byte3(0b000011110011101001110001)
-
 				ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM 
 				out	SPL,r						
 				ldi	r,high(RAMEND)
@@ -709,6 +703,7 @@ opMult:											; Executa a multiplicacao
 				mov m2L, r28					; Seta o segundo operando
 				rcall multiply					; Executa a multiplicacao
 
+				mov r10, res3
 				mov r25, res2					; Seta o resultado da multiplicacao nos registradores de exibicao
 				mov r26, res1
 
@@ -805,6 +800,7 @@ opSubExec:		sub16 r26, r25, r28, r27		; Executa a subtracao
 showLcdResult:	ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd		
 
+				mov rBin1T, r10
 				mov rBin1H, r25					; Move o resultado para o registrador de conversao ascii
 				mov rBin1L, r26
 
