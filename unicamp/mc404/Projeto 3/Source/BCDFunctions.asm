@@ -89,30 +89,40 @@ Bin2ToBcd6:
 				push rBin1H 					; Save number
 				push rBin1L
 				
+				ldi rmp,BYTE3(100000) 			; Start with tenthousands
+				mov rBin2T,rmp
 				ldi rmp,HIGH(100000) 			; Start with tenthousands
 				mov rBin2H,rmp
 				ldi rmp,LOW(100000)
 				mov rBin2L,rmp
 				rcall Bin2ToDigit
 
+				ldi rmp,BYTE3(10000) 			; Start with tenthousands
+				mov rBin2T,rmp
 				ldi rmp,HIGH(10000) 			; Start with tenthousands
 				mov rBin2H,rmp
 				ldi rmp,LOW(10000)
 				mov rBin2L,rmp
 				rcall Bin2ToDigit 				; Calculate digit
 
+				ldi rmp,BYTE3(1000) 			; Start with tenthousands
+				mov rBin2T,rmp
 				ldi rmp,HIGH(1000) 				; Next with thousands
 				mov rBin2H,rmp
 				ldi rmp,LOW(1000)
 				mov rBin2L,rmp
 				rcall Bin2ToDigit 				; Calculate digit
 
+				ldi rmp,BYTE3(100) 			; Start with tenthousands
+				mov rBin2T,rmp
 				ldi rmp,HIGH(100) 				; Next with hundreds
 				mov rBin2H,rmp
 				ldi rmp,LOW(100)
 				mov rBin2L,rmp
 				rcall Bin2ToDigit 				; Calculate digit
 
+				ldi rmp,BYTE3(10) 			; Start with tenthousands
+				mov rBin2T,rmp
 				ldi rmp,HIGH(10) 				; Next with tens
 				mov rBin2H,rmp
 				ldi rmp,LOW(10)
@@ -144,6 +154,10 @@ Bin2ToDigit:
 
 ; -----------------------------------------------------------------------------
 Bin2ToDigita:
+				cp rBin1T,rBin2T 				; Number bigger than decimal?
+				brcs Bin2ToDigitc 				; MSB smaller than decimal
+				brne Bin2ToDigitb 				; MSB bigger than decimal
+
 				cp rBin1H,rBin2H 				; Number bigger than decimal?
 				brcs Bin2ToDigitc 				; MSB smaller than decimal
 				brne Bin2ToDigitb 				; MSB bigger than decimal
@@ -153,6 +167,7 @@ Bin2ToDigita:
 Bin2ToDigitb:
 				sub rBin1L,rBin2L 				; Subtract LSB decimal
 				sbc rBin1H,rBin2H 				; Subtract MSB decimal
+				sbc rBin1T,rBin2T 				; Subtract MSB decimal
 				inc rmp 						; Increment digit count
 				rjmp Bin2ToDigita 				; Next loop
 ; -----------------------------------------------------------------------------
