@@ -619,11 +619,31 @@ erroOperadorLink: rjmp erroOperador
 ; -----------------------------------------------------------------------------
 keyMult:		rcall verificaErro	
 				clr dgCount						; Limpa a contagem de digitos do lcd
+
+				ldi	Zh, high(OPSR1)			
+				ldi	Zl, low(OPSR1)
+				ld r25, Z+						; Operador1 em r25 e r26
+				ld r26, Z
+
+				push r26						; Adiciona o operador a pilha
+				push r25
+
+				in Yh, SPh
+				in Yl, SPl
+				rcall verPilha					; Verifica se existem 2 operadores na pilha
+
+
 				ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd
 
-				ldi r, OPMULTIPLIC				; Seta a operacao como MULTIPLICACAO
-				rcall setOperacao
+				pop r27							; Obtem os parametros da operação
+				pop r28	
+				
+				pop r25
+				pop r26		
+
+				rcall opMult
+				
 				
 				ldi r, 0x1						; Prepara para primeira escrita
 				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
@@ -697,6 +717,14 @@ opMult:											; Executa a multiplicacao
 				mov r10, res3
 				mov r25, res2					; Seta o resultado da multiplicacao nos registradores de exibicao
 				mov r26, res1
+
+				pop r28							; Remove o lixo da pilha (TODO: verificar !)
+				pop r28
+
+				ldi	Zh, high(OPSR1)			
+				ldi	Zl, low(OPSR1)
+				st Z+, r25
+				st Z, r26
 
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				rcall configKeypad
