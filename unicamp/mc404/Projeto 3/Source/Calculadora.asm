@@ -102,8 +102,10 @@
 
 												; Contantes de conversao de binario para Ascii
 .def			rmp 		= r20
+.def			rBin1T		= r6
 .def			rBin1H		= r16
 .def			rBin1L		= r17
+.def			rBin2T		= r7
 .def			rBin2H		= r18
 .def			rBin2L		= r19
 
@@ -149,11 +151,9 @@ RESET:
 
 				; Teste ---
 				
-				ldi r25, high(450)
-				ldi r26, low(450)
-				ldi r27, high(500)
-				ldi r28, low(500)
-				sub16 r26, r25, r28, r27		; Executa a subtracao
+				ldi r25, low(0b000011110011101001110001)
+				ldi r26, high(0b000011110011101001110001)
+				ldi r27, byte3(0b000011110011101001110001)
 
 				ldi r, low(RAMEND)				; Inicializar Stack Pointer para o fim RAM 
 				out	SPL,r						
@@ -712,8 +712,7 @@ opMult:											; Executa a multiplicacao
 				mov r25, res2					; Seta o resultado da multiplicacao nos registradores de exibicao
 				mov r26, res1
 
-				;rcall showLcdResult				; Exibe o resultado da operacao no LCD
-				rcall showLcdMultRes
+				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				rcall configKeypad
 				rjmp loop
 
@@ -799,48 +798,6 @@ opSubExec:		sub16 r26, r25, r28, r27		; Executa a subtracao
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				rcall configKeypad
 				rjmp loop
-
-; Exibe os valores dos registradores r25 e r26 no lcd para multiplicacao
-; -----------------------------------------------------------------------------
-showLcdMultRes:	ldi   lcdinput,	1				; Apaga o LCD
-				rcall lcd_cmd		
-
-				mov rBin1H, res4				; Move o resultado para o registrador de conversao ascii
-				mov rBin1L, res3
-
-				ldi Zh, high(SRAM_START)    	; Seta Zh como o inicio da SRAM para iniciar escrita do resultado em ascii
-        		ldi Zl, low(SRAM_START) 
-
-				rcall Bin2ToAsc					; Converte o resultado em ascii
-
-				mov rBin1H, res2				; Move o resultado para o registrador de conversao ascii
-				mov rBin1L, res1
-
-				rcall Bin2ToAsc
-			
-				
-				clr r							; Delimita o display numerico no sexto digito
-				ldi Zh, high(0x106)				
-				ldi Zl, low(0x106)
-				st Z, r
-				
-				; Exibe o resultado convertido
-				ldi r, 0x1						; Habilita a leitura do LCD a partir da SRAM
-				rcall setLcdIoFlag
-
-				ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
-        		ldi Xl, low(SRAM_START) 
-
-				rcall getFlNegativo				; Verifica se o resultado eh negativo
-				cpi r, 0x0						; Caso seja negativo
-				brne showResultNeg
-
-				clr r
-				rcall setFlNegativo				; Limpa resultado negativo
-
-    			rcall writemsg					; Exibe a mensagem 
-				rcall clenPortB
-				ret
 
 
 ; Exibe os valores dos registradores r25 e r26 no lcd
@@ -1215,269 +1172,14 @@ d16uc:
 
 
 
+; Include das funcoes para manipular LCD
 ; -----------------------------------------------------------------------------
-; ### LCD FUNCTIONS ###
+.include "LCDFunctions.asm"
+
+; Include das funcoes para manipular conversao de digitos
 ; -----------------------------------------------------------------------------
+.include "BCDFunctions.asm"
 
-; Limpa a porta B, pois a mesma pode ser utilizada para funcoes lcd e keyboard
-; -----------------------------------------------------------------------------
-clenPortB:		clr r
-				out ddrb, r
-				out portb, r
- 				ret
-
-; -----------------------------------------------------------------------------
-lcd_busy:										; test the busy state
-				sbi portc,RW        			; RW high to read
-				cbi portc,RS        			; RS low to read
-
-				ldi r, 00          				; make port input
-				out ddrb, r
-				out portb, r
-
-; -----------------------------------------------------------------------------
-looplcd:
-				sbi portc,ENABLE    			; begin read sequence
-				in r, pinb       	  			; read it
-				cbi portc,ENABLE    			; set enable back to low
-				sbrc r, 7          				; test bit 7, skip if clear
-				rjmp looplcd       				; jump if set
-
-				ldi r, 0xFF        				; make port output
-				out ddrb, r
-				ret
-
-
-; -----------------------------------------------------------------------------
-lcd_cmd:
-
-				cbi portc,RS    				; RS low for command mode
-				cbi portc,RW    				; RW low to write
-				sbi portc,ENABLE    			; Enable HIGH
-				out portb,lcdinput  			; output
-				cbi portc,ENABLE    			; Enable LOW to execute
-
-				ret
-
-; -----------------------------------------------------------------------------
-lcd_write:
-
-				sbi portc,RS    				; RS high
-				cbi portc,RW    				; RW low to write
-				sbi portc,ENABLE    			; Enable HIGH
-				out portb,lcdinput  			; output
-				cbi portc,ENABLE    			; Enable LOW to execute
-
-				ret
-
-; -----------------------------------------------------------------------------
-writemsg:		rcall getLcdIoFlag
-				cpi r, 0x0
-				breq writemsgmp
-				rjmp writemsgsram
-
-; Le os valores de Memory program para exibir no LCD
-; -----------------------------------------------------------------------------
-writemsgmp:		lpm lcdinput,Z+      			; load lcdinput with the character to display, increment the string counter
-				rjmp writemsgbd
-
-; Le os valores da SRAM para exibir no LCD
-; -----------------------------------------------------------------------------
-writemsgsram:	ld lcdinput, X+
-
-; -----------------------------------------------------------------------------
-writemsgbd: 	cpi lcdinput, 0
-				breq writedone
-    			rcall lcd_write
-    			rcall lcd_busy
-    			rjmp writemsg
-
-; -----------------------------------------------------------------------------
-writedone:
- 				ret
-
-; -----------------------------------------------------------------------------
-lcdinit: 										; initialize LCD
-				ldi r,0xFF
-				out ddrb, r						; portb is the LCD data port, 8 bit mode set for output
-				out ddrc,r						; portc is the LCD control pins set for output
-				ldi lcdinput,56  				; init the LCD. 8 bit mode, 2*16
-				rcall lcd_cmd    				; execute the command
-				rcall lcd_busy   				; test busy
-				ldi lcdinput,1					; clear screen
-				rcall lcd_cmd
-				rcall lcd_busy
-				ldi lcdinput,2      			; cursor home command
-    			rcall lcd_cmd        			; execute command
-    			rcall lcd_busy
-				ret
-
-; -----------------------------------------------------------------------------
-; ### FUNCOES DE CONVERSOES BINARIO, ASCII, BCD ###
-; -----------------------------------------------------------------------------
-
-; Bin2ToAsc
-; =========
-; converts a 16-bit-binary to a 6-digit ASCII coded decimal,
-;   the pointer points to the first significant digit of the
-;   decimal, returns the number of digits
-; In: 16-bit-binary in rBin1H:L, Z points to first digit of
-;   the ASCII decimal (requires 6 digits buffer space, even
-;   if the number is smaller!)
-; Out: Z points to the first significant digit of the ASCII
-;   decimal, rBin2L has the number of characters (1..6)
-; Used registers: rBin1H:L (unchanged), rBin2H (changed),
-;   rBin2L (result, length of number), rmp
-; Called subroutines: Bin2ToBcd5, Bin2ToAsc5
-;
-; -----------------------------------------------------------------------------
-Bin2ToAsc:
-				rcall Bin2ToAsc6 				; Convert binary to ASCII
-				ldi rmp, 5 						; Counter is 6
-				mov rBin2L,rmp
-
-; -----------------------------------------------------------------------------
-Bin2ToAsca:
-				dec rBin2L 						; decrement counter
-				ld rmp,z+ 						; read char and inc pointer
-				cpi rmp, ' ' 					; was a blank?
-				breq Bin2ToAsca 				; Yes, was a blank
-				sbiw ZL,1 						; one char backwards
-				ret ; done
-
-; Bin2ToAsc6
-; ==========
-; converts a 16-bit-binary to a 5 digit ASCII-coded decimal
-; In: 16-bit-binary in rBin1H:L, Z points to the highest
-;   of 5 ASCII digits, where the result goes to
-; Out: Z points to the beginning of the ASCII string, lea-
-;   ding zeros are filled with blanks
-; Used registers: rBin1H:L (content is not changed),
-;   rBin2H:L (content is changed), rmp
-; Called subroutines: Bin2ToBcd5
-;
-; -----------------------------------------------------------------------------
-Bin2ToAsc6:
-				rcall Bin2ToBcd6 				; convert binary to BCD
-				ldi rmp, 5						; Counter is 5 leading digits
-				mov rBin2L,rmp
-
-; -----------------------------------------------------------------------------
-Bin2ToAsc6a:
-				ld rmp,z 						; read a BCD digit
-				tst rmp 						; check if leading zero
-				brne Bin2ToAsc6b 				; No, found digit >0
-				ldi rmp,' ' 					; overwrite with blank
-				st z+,rmp 						; store and set to next position
-				dec rBin2L 						; decrement counter
-				brne Bin2ToAsc6a 				; further leading blanks
-				ld rmp,z 						; Read the last BCD
-
-; -----------------------------------------------------------------------------
-Bin2ToAsc6b:
-				inc rBin2L 						; one more char
-
-; -----------------------------------------------------------------------------
-Bin2ToAsc6c:
-				subi rmp, -'0' 					; Add ASCII-0
-				st z+,rmp 						; store and inc pointer
-				ld rmp,z 						; read next char
-				dec rBin2L 						; more chars?
-				brne Bin2ToAsc6c 				; yes, go on
-				sbiw ZL, 4 						; Pointer to beginning of the BCD
-				ret 							; done
-;
-
-; Bin2ToBcd6
-; ==========
-; converts a 16-bit-binary to a 5-digit-BCD
-; In: 16-bit-binary in rBin1H:L, Z points to first digit
-;   where the result goes to
-; Out: 5-digit-BCD, Z points to first BCD-digit
-; Used registers: rBin1H:L (unchanged), rBin2H:L (changed),
-;   rmp
-; Called subroutines: Bin2ToDigit
-;
-; -----------------------------------------------------------------------------
-Bin2ToBcd6:
-				push rBin1H 					; Save number
-				push rBin1L
-				
-				ldi rmp,HIGH(100000) 			; Start with tenthousands
-				mov rBin2H,rmp
-				ldi rmp,LOW(100000)
-				mov rBin2L,rmp
-				rcall Bin2ToDigit
-
-				ldi rmp,HIGH(10000) 			; Start with tenthousands
-				mov rBin2H,rmp
-				ldi rmp,LOW(10000)
-				mov rBin2L,rmp
-				rcall Bin2ToDigit 				; Calculate digit
-
-				ldi rmp,HIGH(1000) 				; Next with thousands
-				mov rBin2H,rmp
-				ldi rmp,LOW(1000)
-				mov rBin2L,rmp
-				rcall Bin2ToDigit 				; Calculate digit
-
-				ldi rmp,HIGH(100) 				; Next with hundreds
-				mov rBin2H,rmp
-				ldi rmp,LOW(100)
-				mov rBin2L,rmp
-				rcall Bin2ToDigit 				; Calculate digit
-
-				ldi rmp,HIGH(10) 				; Next with tens
-				mov rBin2H,rmp
-				ldi rmp,LOW(10)
-				mov rBin2L,rmp
-				rcall Bin2ToDigit 				; Calculate digit
-
-				st z,rBin1L 					; Remainder are ones
-				sbiw ZL, 5 						; Put pointer to first BCD
-				pop rBin1L 						; Restore original binary
-				pop rBin1H
-
-				ret 							; and return
-;
-; Bin2ToDigit
-; ===========
-; converts one decimal digit by continued subraction of a
-;   binary coded decimal
-; Used by: Bin2ToBcd5, Bin2ToAsc5, Bin2ToAsc
-; In: 16-bit-binary in rBin1H:L, binary coded decimal in
-;   rBin2H:L, Z points to current BCD digit
-; Out: Result in Z, Z incremented
-; Used registers: rBin1H:L (holds remainder of the binary),
-;   rBin2H:L (unchanged), rmp
-; Called subroutines: -
-;
-; -----------------------------------------------------------------------------
-Bin2ToDigit:
-				clr rmp 						; digit count is zero
-
-; -----------------------------------------------------------------------------
-Bin2ToDigita:
-				cp rBin1H,rBin2H 				; Number bigger than decimal?
-				brcs Bin2ToDigitc 				; MSB smaller than decimal
-				brne Bin2ToDigitb 				; MSB bigger than decimal
-				cp rBin1L,rBin2L 				; LSB bigger or equal decimal
-				brcs Bin2ToDigitc 				; LSB smaller than decimal
-; -----------------------------------------------------------------------------
-Bin2ToDigitb:
-				sub rBin1L,rBin2L 				; Subtract LSB decimal
-				sbc rBin1H,rBin2H 				; Subtract MSB decimal
-				inc rmp 						; Increment digit count
-				rjmp Bin2ToDigita 				; Next loop
-; -----------------------------------------------------------------------------
-Bin2ToDigitc:
-				st z+,rmp 						; Save digit and increment
-				ret 							; done
-;
-; **************************************************
-;
-; Package III: From binary to Hex-ASCII
-;
 
 ; Final de execucao da aplicacao
 ; -----------------------------------------------------------------------------
