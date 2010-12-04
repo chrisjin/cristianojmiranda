@@ -86,6 +86,7 @@ Bin2ToAsc6c:
 ;
 ; -----------------------------------------------------------------------------
 Bin2ToBcd6:
+				push rBin1T
 				push rBin1H 					; Save number
 				push rBin1L
 				
@@ -133,6 +134,7 @@ Bin2ToBcd6:
 				sbiw ZL, 5 						; Put pointer to first BCD
 				pop rBin1L 						; Restore original binary
 				pop rBin1H
+				pop rBin1T
 
 				ret 							; and return
 ;
