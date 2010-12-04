@@ -66,8 +66,6 @@
 
 .equ			FLNEGATIVO  =  0X15C			; Flag para sinal negativo (Caso 0: positivo, Caso contrario negativo)
 
-.equ 			OUTOFMEMORY = 0X20A				; Flag para setar Z em um local fora de uso
-
 .equ			OPSR1		= 0x12A				; Operando 1
 .equ			OPSR2		= 0x13A				; Operando 2
 .equ			OPSR		= 0x14A				; Tipo de Operacao [1 = Soma, 2 = Multiplicacao, 3 = Divisao, 4 = Subtracao]
@@ -189,10 +187,6 @@ RESET:
 				ldi	Zl, low(OPSR2)
 				st Z+, r
 				st Z, r
-
-
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
 
 				rcall configKeypad
 				rjmp loop
@@ -328,9 +322,6 @@ setOperacao:
 				ldi Zl, low(OPSR)
 				st Z, r
 
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
-
 				ret
 
 ; Obtem o tipo de operacao a ser executada na SRAM, apontada por OPSR, cujo valor sera armazenado em r
@@ -339,9 +330,6 @@ setOperacao:
 getOperacao:	ldi Zh, high(OPSR)
 				ldi Zl, low(OPSR)
 				ld r, Z
-
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
 
 				ret
 
@@ -352,9 +340,6 @@ setFlNegativo:
 				ldi Zl, low(FLNEGATIVO)
 				st Z, r
 
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
-
 				ret
 
 ; Obtem o sinal do resultado (positivo ou negativo)
@@ -364,8 +349,6 @@ getFlNegativo:	ldi Zh, high(FLNEGATIVO)
 				ldi Zl, low(FLNEGATIVO)
 				ld r, Z
 
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
 
 				ret
 
@@ -544,26 +527,44 @@ key9:			rcall verificaErro
 keyClear:	
 				rjmp start						; Volta para o inicio da aplicação (RESET)
 
+; Verifica se esta prestes a ocorrer overflow com a pilha
+; -----------------------------------------------------------------------------
+verPilha:		mov r, Yh
+				cpi r, high(0x04FD)
+				breq verPilhaa 
+				ret
+
+verPilhaa:		mov r, Yl
+				cpi r, low(0x04FD)
+				breq verPilhab 
+				ret 
+
+verPilhab: 		out SPh, Yh
+				out SPl, Yl
+				rcall configKeypad
+				rjmp loop
+
 ; Btn Add
 ; -----------------------------------------------------------------------------
 keyAdd:			rcall verificaErro
 				clr dgCount						; Limpa a contagem de digitos do lcd
+				
+
+				in Yh, SPh
+				in Yl, SPl
+				rcall verPilha					; Verifica se existem 2 operadores na pilha
+
 				ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd
 
-				clr r
-				rcall setLcdIoFlag				; Marca como leitura Progam Memory
-				ldi Zl,low(lb_add*2)   			; Exibe o operador de soma no lcd
-    			ldi Zh,high(lb_add*2)				
-    			rcall writemsg					; Escreve no lcd
-				rcall clenPortB					
+				pop r25
+				pop r26
 
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
+				pop r27
+				pop r28
 
-				ldi r, OPADICAO					; Seta a operacao como soma
-				rcall setOperacao
-				
+				rcall opSoma
+
 				ldi r, 0x1						; Prepara para primeira escrita
 				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
 				rcall configKeypad
@@ -574,17 +575,7 @@ keyAdd:			rcall verificaErro
 keySub:			rcall verificaErro
 				clr dgCount						; Limpa a contagem de digitos do lcd
 				ldi   lcdinput,	1				; Apaga o LCD
-				rcall lcd_cmd
-
-				clr r
-				rcall setLcdIoFlag				; Marca como leitura Progam Memory
-				ldi Zl,low(lb_sub*2)   			; Exibe o operador de SUBTRACAO no lcd
-    			ldi Zh,high(lb_sub*2)				
-    			rcall writemsg					; Escreve no lcd
-				rcall clenPortB			
-				
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)		
+				rcall lcd_cmd							
 
 				ldi r, OPSUBTRACAO				; Seta a operacao como SUBTRACAO
 				rcall setOperacao
@@ -605,16 +596,6 @@ keyMult:		rcall verificaErro
 				ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd
 
-				clr r
-				rcall setLcdIoFlag				; Marca como leitura Progam Memory
-				ldi Zl,low(lb_mult*2)  			; Exibe o operador de multiplicacao no lcd
-    			ldi Zh,high(lb_mult*2)		
-    			rcall writemsg					; Escreve no lcd
-				rcall clenPortB			
-				
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)		
-
 				ldi r, OPMULTIPLIC				; Seta a operacao como MULTIPLICACAO
 				rcall setOperacao
 				
@@ -630,16 +611,6 @@ keyDiv:			rcall verificaErro
 				ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd
 
-				clr r
-				rcall setLcdIoFlag				; Marca como leitura Progam Memory
-				ldi Zl,low(lb_div*2)  			; Exibe o operador de divisao no lcd
-    			ldi Zh,high(lb_div*2)		
-    			rcall writemsg					; Escreve no lcd
-				rcall clenPortB			
-				
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)		
-
 				ldi r, OPDIVISAO				; Seta a operacao como DIVISAO
 				rcall setOperacao
 				
@@ -651,36 +622,16 @@ keyDiv:			rcall verificaErro
 
 ; Aciona a opcao enter no keypad
 ; -----------------------------------------------------------------------------
-keyEnter:		rcall getOperacao				; Obtem operacao
-				cpi r, 0x0						; Caso nao haja operacao
-				breq erroOperadorLink			; Notifica falta de operador
-
-												; Obtem os operadores da SRAM
+keyEnter:										; Obtem os operadores da SRAM
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
 				ld r25, Z+						; Operador1 em r25 e r26
 				ld r26, Z
 
-				ldi	Zh, high(OPSR2)			
-				ldi	Zl, low(OPSR2)
-				ld r27, Z+						; Operador2 em r27 e r28
-				ld r28, Z
+				ldi dgCount, 0x3				; Limpa o contador de digitos para ocorrer overflow
 
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
-
-												; Verifica qual operador foi acionado
-				cpi r, OPADICAO					; Caso seja operador de soma
-				breq opSoma
-
-				cpi r, OPMULTIPLIC				; Caso seja operador de multiplicacao
-				breq opMult
-
-				cpi r, OPDIVISAO				; Caso seja operador de divisao
-				breq opDiv
-
-				cpi r, OPSUBTRACAO				; Caso seja operador de subtracao
-				breq opSubLink
+				push r26						; Adiciona o operador a pilha
+				push r25
 
 				rcall configKeypad
 
@@ -689,7 +640,16 @@ keyEnter:		rcall getOperacao				; Obtem operacao
 
 ; Soma
 ; -----------------------------------------------------------------------------
-opSoma:			add16 r26, r25, r28, r27 		; Executa a soma
+opSoma:			;add16 r26, r25, r28, r27 		; Executa a soma
+				add r26, r28
+				adc r24, r27
+
+				pop r28							; Remove o lixo da pilha (TODO: verificar !)
+				pop r28
+
+				push r26						; Empilha o resultado
+				push r25
+
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				rcall configKeypad
 				rjmp loop
@@ -838,9 +798,6 @@ showResultNeg:	ldi r, '-'						; Carrega o sinal a ser exibido
         		ldi Zl, low(SRAM_START) 
 				st Z, r
 
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
-
 				clr r
 				rcall setFlNegativo				; Limpa resultado negativo
 
@@ -944,10 +901,7 @@ erroOperador:	clr r
 				ldi Zl,low(err_operator*2)   	; Seta mensagem de falta de operador
     			ldi Zh,high(err_operator*2)
     			rcall writemsg					; Exibe a mensagem 
-				rcall clenPortB
-
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
+				rcall clenPortB				
 						
 				ldi r, 0x1						; Habilita escrita a partir da SRAM
 				rcall setLcdIoFlag
@@ -966,9 +920,6 @@ convertToBin:	rcall getOperacao				; Obtem o operador
 				ld r, Z+
 				ld rr, Z
 
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
-
 				cpi dgCount, 0x1				; Caso seja o primeiro operando
 				breq convertToBin1
 				rjmp convertToBin2
@@ -979,10 +930,7 @@ convertToBin1:	add16 r, rr, r8, r9
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
 				st Z+, r
-				st Z, rr
-
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
+				st Z, rr				
 				
 				ret
 
@@ -1000,9 +948,6 @@ convertToBin2:	mov m1M, r
 				st Z+, r
 				st Z, rr
 
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
-
 				ret
 
 
@@ -1010,10 +955,7 @@ convertToBinA:									; Caso seja o segundo operando
 				ldi	Zh, high(OPSR2)			
 				ldi	Zl, low(OPSR2)
 				ld r, Z+
-				ld rr, Z
-
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
+				ld rr, Z				
 
 				cpi dgCount, 0x1				; Caso seja o primeiro operando
 				breq convertToBinA1
@@ -1026,9 +968,6 @@ convertToBinA1:	add16 r, rr, r8, r9
 				ldi	Zl, low(OPSR2)
 				st Z+, r
 				st Z, rr
-
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
 				
 				ret
 
@@ -1045,11 +984,6 @@ convertToBinA2:	mov m1M, r
 				ldi	Zl, low(OPSR2)
 				st Z+, r
 				st Z, rr
-
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
-
-				ret
 
 				ret
 
@@ -1089,9 +1023,6 @@ lcdInOverflowA:	ldi	Zh, high(OPSR1)
 				st Z+, r
 				st Z, r
 
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
-
 				rjmp indexInLcd1
 
 lcdInOverflowB:	ldi	Zh, high(OPSR2)			
@@ -1100,8 +1031,6 @@ lcdInOverflowB:	ldi	Zh, high(OPSR2)
 				st Z+, r
 				st Z, r
 
-				ldi Zh, high(OUTOFMEMORY)		; Desloca Z para evitar problema de enderecamento
-				ldi Zl, low(OUTOFMEMORY)
 												; Posiciona o cursor em X no inicio da SRAM
 indexInLcd1:	ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
         		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
@@ -1185,11 +1114,7 @@ end:
 
 ; Mensagens e labels
 ; -----------------------------------------------------------------------------
-lb_clear:  		.db      "0", 0					; Label inicial da calculadora, com operador clean
-lb_add:			.db		 "+", 0					; Label de adicao
-lb_sub:			.db		 "-", 0					; Label de subtracao
-lb_mult:		.db		 "*", 0					; Label de multiplicacao
-lb_div:			.db		 "/", 0					; Label de divisao
+lb_clear:  		.db     "0", 0					; Label inicial da calculadora, com operador clean
 err_div_zero:	.db  	"E = div por 0", 0		; Erro ao dividir por zero
 err_precision: 	.db		"E = precisao", 0		; Erro de precissao
 err_operator:	.db		"E = operando?", 0		; Erro de falta de operador
