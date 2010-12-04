@@ -548,6 +548,14 @@ verPilhab: 		out SPh, Yh
 ; -----------------------------------------------------------------------------
 keyAdd:			rcall verificaErro
 				clr dgCount						; Limpa a contagem de digitos do lcd
+
+				ldi	Zh, high(OPSR1)			
+				ldi	Zl, low(OPSR1)
+				ld r25, Z+						; Operador1 em r25 e r26
+				ld r26, Z
+
+				push r26						; Adiciona o operador a pilha
+				push r25
 				
 
 				in Yh, SPh
@@ -574,11 +582,29 @@ keyAdd:			rcall verificaErro
 ; -----------------------------------------------------------------------------
 keySub:			rcall verificaErro
 				clr dgCount						; Limpa a contagem de digitos do lcd
-				ldi   lcdinput,	1				; Apaga o LCD
-				rcall lcd_cmd							
 
-				ldi r, OPSUBTRACAO				; Seta a operacao como SUBTRACAO
-				rcall setOperacao
+				ldi	Zh, high(OPSR1)			
+				ldi	Zl, low(OPSR1)
+				ld r25, Z+						; Operador1 em r25 e r26
+				ld r26, Z
+
+				push r26						; Adiciona o operador a pilha
+				push r25
+
+				in Yh, SPh
+				in Yl, SPl
+				rcall verPilha					; Verifica se existem 2 operadores na pilha
+
+				ldi   lcdinput,	1				; Apaga o LCD
+				rcall lcd_cmd		
+				
+				pop r27							; Obtem os parametros da operação
+				pop r28	
+				
+				pop r25
+				pop r26		
+
+				rcall opSub
 				
 				ldi r, 0x1						; Prepara para primeira escrita
 				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
@@ -647,8 +673,13 @@ opSoma:			;add16 r26, r25, r28, r27 		; Executa a soma
 				pop r28							; Remove o lixo da pilha (TODO: verificar !)
 				pop r28
 
-				push r26						; Empilha o resultado
-				push r25
+				;push r26						; Empilha o resultado
+				;push r25
+
+				ldi	Zh, high(OPSR1)			
+				ldi	Zl, low(OPSR1)
+				st Z+, r25
+				st Z, r26
 
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				rcall configKeypad
@@ -750,6 +781,18 @@ invertOp:		ldi r, 0x1						; Seta o flag de operacao negativa
 ; Subtracao - Executa a subtracao
 ; -----------------------------------------------------------------------------
 opSubExec:		sub16 r26, r25, r28, r27		; Executa a subtracao
+
+				pop r28							; Remove o lixo da pilha (TODO: verificar !)
+				pop r28
+
+				;push r26						; Empilha o resultado
+				;push r25
+
+				ldi	Zh, high(OPSR1)			
+				ldi	Zl, low(OPSR1)
+				st Z+, r25
+				st Z, r26
+
 				rcall showLcdResult				; Exibe o resultado da operacao no LCD
 				rcall configKeypad
 				rjmp loop
