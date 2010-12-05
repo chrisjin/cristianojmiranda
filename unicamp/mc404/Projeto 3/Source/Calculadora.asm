@@ -23,7 +23,7 @@
 ; r7 - *
 ; r8 - Utilizado temporariamente para converter ASCII para binario na memoria (utilizado como registrador zerado)
 ; r9 - Utilizado temporariamente para converter ASCII para binario na memoria
-; r10 - *
+; r10 - Utilizado para exibir o resultado da operacao no lcd junto com r25 e r26
 ; r11 - registrador de operador 1
 ; r12 - *
 ; r13 - *
@@ -67,7 +67,6 @@
 .equ			FLNEGATIVO  =  0X15C			; Flag para sinal negativo (Caso 0: positivo, Caso contrario negativo)
 
 .equ			OPSR1		= 0x12A				; Operando 1
-.equ			OPSR2		= 0x13A				; Operando 2
 .equ			OPSR		= 0x14A				; Tipo de Operacao [1 = Soma, 2 = Multiplicacao, 3 = Divisao, 4 = Subtracao]
 
 												; Constantes para os operadores matematicos da calculadora
@@ -407,7 +406,6 @@ getErroFlag:	ldi Yh, high(ERROFLAG)
 ; -----------------------------------------------------------------------------
 verificaErro:	rcall getErroFlag
 				cpi r, 0x0
-				;rcall configKeypad
 				brne loopLink
 				ret
 
@@ -651,7 +649,7 @@ keyMult:		rcall verificaErro
 
 				pop r27							; Obtem os parametros da operação
 				pop r28
-				pop r11
+				pop r29
 				
 				pop r11
 				pop r25
@@ -710,13 +708,43 @@ opSoma:									 		; Executa a soma
 
 				rjmp showLcdResult				; Exibe o resultado da operacao no LCD
 
+
+; Notifica falta de precisao na operacao a ser executada
+; -----------------------------------------------------------------------------
+erroPrecisao:	clr r							; Marca como leitura Progam Memory
+				rcall setLcdIoFlag
+
+				ldi r, 0x1
+				rcall setErroFlag				; Seta o flag de erro
+
+				ldi Zl,low(err_precision*2)   	; Seta o status inicial no LCD
+    			ldi Zh,high(err_precision*2)
+    			rcall writemsg					; Exibe a mensagem 
+				rcall clenPortB
+												; Prepara para primeira escrita
+												; Habilita escrita no lcd a partir da SRAM
+				ldi r, 0x1
+				rcall setLcdIoFlag
+
+				rcall configKeypad
+				rjmp loop
+			
+
 ; Multiplicacao
 ; -----------------------------------------------------------------------------
 opMult:											; Executa a multiplicacao
+
+				mov r, r11
+				cpi r, 0x0
+				brne erroPrecisao				; Verifica overflow dos registradores
+
+				cpi r27, 0x0
+				brne erroPrecisao
+				
 				mov m1M, r25					; Seta o operando 1 
 				mov m1L, r26
-				mov m2M, r27
-				mov m2L, r28					; Seta o segundo operando
+				mov m2M, r28
+				mov m2L, r29					; Seta o segundo operando
 				rcall multiply					; Executa a multiplicacao
 
 				mov r10, res3
