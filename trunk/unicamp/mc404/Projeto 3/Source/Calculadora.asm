@@ -541,6 +541,8 @@ keyClear:
 ; Verifica se esta prestes a ocorrer overflow com a pilha
 ; -----------------------------------------------------------------------------
 verPilha:		mov r, Yh
+				cpi r, high(0x0500)
+				breq verPilhac
 				cpi r, high(0x04FC)
 				breq verPilhaa 
 				ret
@@ -552,6 +554,13 @@ verPilhaa:		mov r, Yl
 
 verPilhab: 		out SPh, Yh
 				out SPl, Yl
+				rcall configKeypad
+				rjmp loop
+
+verPilhac: 		ldi r, high(RAMEND)
+				out SPh, r
+				ldi r, low(RAMEND)
+				out SPl, r
 				rcall configKeypad
 				rjmp loop
 
@@ -696,7 +705,16 @@ keyEnter:										; Obtem os operadores da SRAM
 ; Soma
 ; -----------------------------------------------------------------------------
 opSoma:									 		; Executa a soma
-				add r10, r27
+
+				mov r, r10
+				cpi r, 0x0						; Verifica overflow dos operandos
+				brne opSomaa
+				rjmp opSomac
+
+opSomaa:		cpi r27, 0x0
+				brne erroPrecisao
+
+opSomac:		add r10, r27
 				adc r25, r28
 				adc r26, r29
 
@@ -757,9 +775,8 @@ opMult:											; Executa a multiplicacao
 				st Z+, r25
 				st Z, r26
 
-				rcall showLcdResult				; Exibe o resultado da operacao no LCD
-				rcall configKeypad
-				rjmp loop
+				rjmp showLcdResult				; Exibe o resultado da operacao no LCD
+				
 
 
 ; Link para opSub
