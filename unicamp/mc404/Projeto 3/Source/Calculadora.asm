@@ -24,7 +24,7 @@
 ; r8 - Utilizado temporariamente para converter ASCII para binario na memoria (utilizado como registrador zerado)
 ; r9 - Utilizado temporariamente para converter ASCII para binario na memoria
 ; r10 - *
-; r11 - *
+; r11 - registrador de operador 1
 ; r12 - *
 ; r13 - *
 ; r14 - Utilizado para armazenar o resto da divisao
@@ -42,7 +42,7 @@
 ; r26 - registrador de operador 1
 ; r27 - registrador de operador 2
 ; r28 - registrador de operador 2
-; r29 - *
+; r29 - registrador de operador 2
 ; r30 - Zh
 ; r31 - Zl
 ; -----------------------------------------------------------------------------
@@ -126,11 +126,28 @@ rcall null										; Hapsim
 		adc @1, @3
 .endmacro
 
+; Macro para somar 2 numeros de 24bits, guarda o resultado no primeiro parametro
+; -----------------------------------------------------------------------------
+.macro add24 ; (@0, @1, @2, | @3, @4, @5)
+        add @0, @3
+		adc @1, @4
+		adc @2, @5
+.endmacro
+
+
 ; Macro para subtrair 2 numeros de 16 bits, guarda o resultado no primeiro parametro
 ; -----------------------------------------------------------------------------
 .macro sub16 ;(@1@0 - @3@2)
 		sub @0,@2
 		sbc @1,@3
+.endmacro
+
+; Macro para subtrair 2 numeros de 24 bits, guarda o resultado no primeiro parametro
+; -----------------------------------------------------------------------------
+.macro sub24 ;(@2@1@0 - @5@4@3)
+		sub @0,@3
+		sbc @1,@4
+		sbc @2,@5
 .endmacro
 
 ; Macro para dividir 2 numeros de 16 bits, guarda o resultado no primeiro parametro
@@ -181,10 +198,6 @@ RESET:
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
 				st Z+, r
-				st Z, r
-
-				ldi	Zh, high(OPSR2)			
-				ldi	Zl, low(OPSR2)
 				st Z+, r
 				st Z, r
 
@@ -530,12 +543,12 @@ keyClear:
 ; Verifica se esta prestes a ocorrer overflow com a pilha
 ; -----------------------------------------------------------------------------
 verPilha:		mov r, Yh
-				cpi r, high(0x04FD)
+				cpi r, high(0x04FC)
 				breq verPilhaa 
 				ret
 
 verPilhaa:		mov r, Yl
-				cpi r, low(0x04FD)
+				cpi r, low(0x04FC)
 				breq verPilhab 
 				ret 
 
@@ -551,11 +564,13 @@ keyAdd:			rcall verificaErro
 
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
+				ld r11, Z+
 				ld r25, Z+						; Operador1 em r25 e r26
 				ld r26, Z
 
 				push r26						; Adiciona o operador a pilha
 				push r25
+				push r11
 				
 
 				in Yh, SPh
@@ -565,18 +580,15 @@ keyAdd:			rcall verificaErro
 				ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd
 
+				pop r10
 				pop r25
 				pop r26
 
 				pop r27
 				pop r28
+				pop r29
 
-				rcall opSoma
-
-				ldi r, 0x1						; Prepara para primeira escrita
-				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
-				rcall configKeypad
-				rjmp loop
+				rjmp opSoma						; Executa a soma
 
 ; Btn Sub
 ; -----------------------------------------------------------------------------
@@ -585,11 +597,13 @@ keySub:			rcall verificaErro
 
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
+				ld r11, Z+
 				ld r25, Z+						; Operador1 em r25 e r26
 				ld r26, Z
 
 				push r26						; Adiciona o operador a pilha
 				push r25
+				push r11
 
 				in Yh, SPh
 				in Yl, SPl
@@ -600,16 +614,13 @@ keySub:			rcall verificaErro
 				
 				pop r27							; Obtem os parametros da operação
 				pop r28	
+				pop r29
 				
+				pop r11
 				pop r25
 				pop r26		
 
-				rcall opSub
-				
-				ldi r, 0x1						; Prepara para primeira escrita
-				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
-				rcall configKeypad
-				rjmp loop
+				rjmp opSub						; Executa a subtracao
 
 ; Link para erroOperador
 ; -----------------------------------------------------------------------------
@@ -622,11 +633,13 @@ keyMult:		rcall verificaErro
 
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
+				ld r11, Z+
 				ld r25, Z+						; Operador1 em r25 e r26
 				ld r26, Z
 
 				push r26						; Adiciona o operador a pilha
 				push r25
+				push r11
 
 				in Yh, SPh
 				in Yl, SPl
@@ -637,18 +650,14 @@ keyMult:		rcall verificaErro
 				rcall lcd_cmd
 
 				pop r27							; Obtem os parametros da operação
-				pop r28	
+				pop r28
+				pop r11
 				
+				pop r11
 				pop r25
 				pop r26		
 
-				rcall opMult
-				
-				
-				ldi r, 0x1						; Prepara para primeira escrita
-				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
-				rcall configKeypad
-				rjmp loop
+				rjmp opMult						; Executa a multiplicacao
 
 ; Btn Divisao
 ; -----------------------------------------------------------------------------
@@ -671,6 +680,7 @@ keyDiv:			rcall verificaErro
 keyEnter:										; Obtem os operadores da SRAM
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
+				ld r11, Z+
 				ld r25, Z+						; Operador1 em r25 e r26
 				ld r26, Z
 
@@ -678,6 +688,7 @@ keyEnter:										; Obtem os operadores da SRAM
 
 				push r26						; Adiciona o operador a pilha
 				push r25
+				push r11
 
 				rcall configKeypad
 
@@ -686,24 +697,18 @@ keyEnter:										; Obtem os operadores da SRAM
 
 ; Soma
 ; -----------------------------------------------------------------------------
-opSoma:			;add16 r26, r25, r28, r27 		; Executa a soma
-				add r26, r28
-				adc r24, r27
-
-				pop r28							; Remove o lixo da pilha (TODO: verificar !)
-				pop r28
-
-				;push r26						; Empilha o resultado
-				;push r25
+opSoma:									 		; Executa a soma
+				add r10, r27
+				adc r25, r28
+				adc r26, r29
 
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
+				st Z+, r10
 				st Z+, r25
 				st Z, r26
 
-				rcall showLcdResult				; Exibe o resultado da operacao no LCD
-				rcall configKeypad
-				rjmp loop
+				rjmp showLcdResult				; Exibe o resultado da operacao no LCD
 
 ; Multiplicacao
 ; -----------------------------------------------------------------------------
@@ -718,11 +723,9 @@ opMult:											; Executa a multiplicacao
 				mov r25, res2					; Seta o resultado da multiplicacao nos registradores de exibicao
 				mov r26, res1
 
-				pop r28							; Remove o lixo da pilha (TODO: verificar !)
-				pop r28
-
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
+				st Z+, r10
 				st Z+, r25
 				st Z, r26
 
@@ -787,46 +790,48 @@ opDivExecute:									; Executa divisao
 
 ; Subtracao
 ; -----------------------------------------------------------------------------
-opSub:			cp r25, r27						; Verifica se OP1 < OP2
+opSub:			cp r11, r27						; Verifica se OP1 < OP2
 				brlo invertOp
 
-				cp r26, r28						; Verifica se OP1 < OP2
+				cp r25, r28						; Verifica se OP1 < OP2
 				brlo invertOp
+
+				cp r26, r29						; Verifica se OP1 < OP2
+				brlo invertOp
+
 				rjmp opSubExec
 				
 ; Subtracao - Inverte os operadores da subtracao
 ; -----------------------------------------------------------------------------
 invertOp:		ldi r, 0x1						; Seta o flag de operacao negativa
 				rcall setFlNegativo
+				push r11
 				push r25						; Inverte os registradores de subtracao
-				push r26						; Para que o operador maior fique sempre em OP1
-				mov r25, r27
-				mov r26, r28
+				push r26
+				mov r11, r27					; Para que o operador maior fique sempre em OP1
+				mov r25, r28
+				mov r26, r29
+				pop r29
 				pop r28
 				pop r27
 
 
 ; Subtracao - Executa a subtracao
 ; -----------------------------------------------------------------------------
-opSubExec:		sub16 r26, r25, r28, r27		; Executa a subtracao
-
-				pop r28							; Remove o lixo da pilha (TODO: verificar !)
-				pop r28
-
-				;push r26						; Empilha o resultado
-				;push r25
+opSubExec:		sub24 r26, r25, r11, r29, r28, r27		; Executa a subtracao
 
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
+				st Z+, r11
 				st Z+, r25
 				st Z, r26
 
-				rcall showLcdResult				; Exibe o resultado da operacao no LCD
-				rcall configKeypad
-				rjmp loop
+				mov r10, r11					; Move o registrador para exibir os valores corretamente
+
+				rjmp showLcdResult				; Exibe o resultado da operacao no LCD
 
 
-; Exibe os valores dos registradores r25 e r26 no lcd
+; Exibe os valores dos registradores r10, r25 e r26 no lcd
 ; -----------------------------------------------------------------------------
 showLcdResult:	ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd		
@@ -846,7 +851,7 @@ showLcdResult:	ldi   lcdinput,	1				; Apaga o LCD
 				ldi Zl, low(0x106)
 				st Z, r
 				
-				; Exibe o resultado convertido
+												; Exibe o resultado convertido
 				ldi r, 0x1						; Habilita a leitura do LCD a partir da SRAM
 				rcall setLcdIoFlag
 
@@ -862,7 +867,9 @@ showLcdResult:	ldi   lcdinput,	1				; Apaga o LCD
 
     			rcall writemsg					; Exibe a mensagem 
 				rcall clenPortB
-				ret
+				
+				rcall configKeypad
+				rjmp loop
 
 showResultNeg:	ldi r, '-'						; Carrega o sinal a ser exibido
 				ldi Zh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
@@ -875,7 +882,8 @@ showResultNeg:	ldi r, '-'						; Carrega o sinal a ser exibido
     			rcall writemsg					; Exibe a mensagem 
 				rcall clenPortB
 
-				ret
+				rcall configKeypad
+				rjmp loop
 
 ; Exibe o resultado da divisao
 ; -----------------------------------------------------------------------------
@@ -982,12 +990,9 @@ erroOperador:	clr r
 
 ; Converte os digitos da calculadora para binario, para fazer as operacoes matematicas
 ; -----------------------------------------------------------------------------
-convertToBin:	rcall getOperacao				; Obtem o operador
-				cpi r, 0x0						; Verifica se algum operador foi setado
-				brne convertToBinA
-
-				ldi	Zh, high(OPSR1)			
+convertToBin:	ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
+				ld r11, Z+
 				ld r, Z+
 				ld rr, Z
 
@@ -1000,6 +1005,8 @@ convertToBin:	rcall getOperacao				; Obtem o operador
 convertToBin1:	add16 r, rr, r8, r9
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
+				clr r11
+				st Z+, r11
 				st Z+, r
 				st Z, rr				
 				
@@ -1016,47 +1023,13 @@ convertToBin2:	mov m1M, r
 				add16 r, rr, r8, r9
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
+				clr r11
+				st Z+, r11
 				st Z+, r
 				st Z, rr
 
 				ret
 
-
-convertToBinA:									; Caso seja o segundo operando
-				ldi	Zh, high(OPSR2)			
-				ldi	Zl, low(OPSR2)
-				ld r, Z+
-				ld rr, Z				
-
-				cpi dgCount, 0x1				; Caso seja o primeiro operando
-				breq convertToBinA1
-				rjmp convertToBinA2
-				
-				ret
-
-convertToBinA1:	add16 r, rr, r8, r9
-				ldi	Zh, high(OPSR2)			
-				ldi	Zl, low(OPSR2)
-				st Z+, r
-				st Z, rr
-				
-				ret
-
-
-convertToBinA2:	mov m1M, r
-				mov m1L, rr
-				ldi m2M, 0x0
-				ldi m2L, 0xA					; Multiplica o valor em memoria por 10
-				rcall multiply
-				mov r, res2
-				mov rr, res1
-				add16 r, rr, r8, r9
-				ldi	Zh, high(OPSR2)			
-				ldi	Zl, low(OPSR2)
-				st Z+, r
-				st Z, rr
-
-				ret
 
 
 ; Posiciona SRAM para escrever lcd input
@@ -1082,26 +1055,13 @@ lcdInOverflow:	ldi dgCount, 0x1				; Limpa a contagem
 				clr r							; Finaliza a escrita do lcd
 				st X+, rr
 				st X+, r
-				rcall getOperacao				; Obtem operacao
-				cpi r, 0x0
-				breq lcdInOverflowA
-				rjmp lcdInOverflowB
-				ret
 
 lcdInOverflowA:	ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
 				clr r
 				st Z+, r
-				st Z, r
-
-				rjmp indexInLcd1
-
-lcdInOverflowB:	ldi	Zh, high(OPSR2)			
-				ldi	Zl, low(OPSR2)
-				clr r
 				st Z+, r
 				st Z, r
-
 												; Posiciona o cursor em X no inicio da SRAM
 indexInLcd1:	ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
         		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
