@@ -421,6 +421,10 @@ key0:			rcall verificaErro
 				clr r8
 				ldi r, 0x0
 				mov r9, r
+
+				clr r
+				rcall setOperacao
+
 				rcall convertToBin
 				rcall configKeypad
 				rjmp loop
@@ -433,6 +437,10 @@ key1:			rcall verificaErro
 				clr r8
 				ldi r, 0x1
 				mov r9, r
+
+				clr r
+				rcall setOperacao
+
 				rcall convertToBin
 				rcall configKeypad
 				rjmp loop
@@ -445,6 +453,10 @@ key2:			rcall verificaErro
 				clr r8
 				ldi r, 0x2
 				mov r9, r
+
+				clr r
+				rcall setOperacao
+
 				rcall convertToBin
 				rcall configKeypad
 				rjmp loop
@@ -457,6 +469,10 @@ key3:			rcall verificaErro
 				clr r8
 				ldi r, 0x3
 				mov r9, r
+
+				clr r
+				rcall setOperacao
+
 				rcall convertToBin
 				rcall configKeypad
 				rjmp loop
@@ -469,6 +485,10 @@ key4:			rcall verificaErro
 				clr r8
 				ldi r, 0x4
 				mov r9, r
+
+				clr r
+				rcall setOperacao
+
 				rcall convertToBin
 				rcall configKeypad
 				rjmp loop
@@ -481,6 +501,10 @@ key5:			rcall verificaErro
 				clr r8
 				ldi r, 0x5
 				mov r9, r
+
+				clr r
+				rcall setOperacao
+
 				rcall convertToBin
 				rcall configKeypad
 				rjmp loop
@@ -493,6 +517,10 @@ key6:			rcall verificaErro
 				clr r8
 				ldi r, 0x6
 				mov r9, r
+
+				clr r
+				rcall setOperacao
+
 				rcall convertToBin
 				rcall configKeypad
 				rjmp loop
@@ -505,6 +533,10 @@ key7:			rcall verificaErro
 				clr r8
 				ldi r, 0x7
 				mov r9, r
+
+				clr r
+				rcall setOperacao
+
 				rcall convertToBin
 				rcall configKeypad
 				rjmp loop
@@ -517,6 +549,10 @@ key8:			rcall verificaErro
 				clr r8
 				ldi r, 0x8
 				mov r9, r
+
+				clr r
+				rcall setOperacao
+
 				rcall convertToBin
 				rcall configKeypad
 				rjmp loop
@@ -529,6 +565,10 @@ key9:			rcall verificaErro
 				clr r8
 				ldi r, 0x9
 				mov r9, r
+
+				clr r
+				rcall setOperacao
+
 				rcall convertToBin
 				rcall configKeypad
 				rjmp loop
@@ -564,21 +604,11 @@ verPilhac: 		ldi r, high(RAMEND)
 				rcall configKeypad
 				rjmp loop
 
+
 ; Btn Add
 ; -----------------------------------------------------------------------------
 keyAdd:			rcall verificaErro
 				clr dgCount						; Limpa a contagem de digitos do lcd
-
-				ldi	Zh, high(OPSR1)			
-				ldi	Zl, low(OPSR1)
-				ld r11, Z+
-				ld r25, Z+						; Operador1 em r25 e r26
-				ld r26, Z
-
-				push r26						; Adiciona o operador a pilha
-				push r25
-				push r11
-				
 
 				in Yh, SPh
 				in Yl, SPl
@@ -601,16 +631,6 @@ keyAdd:			rcall verificaErro
 ; -----------------------------------------------------------------------------
 keySub:			rcall verificaErro
 				clr dgCount						; Limpa a contagem de digitos do lcd
-
-				ldi	Zh, high(OPSR1)			
-				ldi	Zl, low(OPSR1)
-				ld r11, Z+
-				ld r25, Z+						; Operador1 em r25 e r26
-				ld r26, Z
-
-				push r26						; Adiciona o operador a pilha
-				push r25
-				push r11
 
 				in Yh, SPh
 				in Yl, SPl
@@ -638,21 +658,10 @@ erroOperadorLink: rjmp erroOperador
 keyMult:		rcall verificaErro	
 				clr dgCount						; Limpa a contagem de digitos do lcd
 
-				ldi	Zh, high(OPSR1)			
-				ldi	Zl, low(OPSR1)
-				ld r11, Z+
-				ld r25, Z+						; Operador1 em r25 e r26
-				ld r26, Z
-
-				push r26						; Adiciona o operador a pilha
-				push r25
-				push r11
-
 				in Yh, SPh
 				in Yl, SPl
 				rcall verPilha					; Verifica se existem 2 operadores na pilha
-
-
+				
 				ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd
 
@@ -670,16 +679,23 @@ keyMult:		rcall verificaErro
 ; -----------------------------------------------------------------------------
 keyDiv:			rcall verificaErro
 				clr dgCount						; Limpa a contagem de digitos do lcd
+				
+				in Yh, SPh
+				in Yl, SPl
+				rcall verPilha					; Verifica se existem 2 operadores na pilha
+				
 				ldi   lcdinput,	1				; Apaga o LCD
 				rcall lcd_cmd
-
-				ldi r, OPDIVISAO				; Seta a operacao como DIVISAO
-				rcall setOperacao
 				
-				ldi r, 0x1						; Prepara para primeira escrita
-				rcall setLcdIoFlag				; Habilita escrita no lcd a partir da SRAM
-				rcall configKeypad
-				rjmp loop
+				pop r27							; Obtem os parametros da operação
+				pop r28
+				pop r29
+				
+				pop r11
+				pop r25
+				pop r26		
+				
+				rjmp opDiv					 	; Processa a divisao
 
 
 ; Aciona a opcao enter no keypad
@@ -718,11 +734,15 @@ opSomac:		add r10, r27
 				adc r25, r28
 				adc r26, r29
 
-				ldi	Zh, high(OPSR1)			
-				ldi	Zl, low(OPSR1)
-				st Z+, r10
-				st Z+, r25
-				st Z, r26
+				;ldi	Zh, high(OPSR1)			
+				;ldi	Zl, low(OPSR1)
+				;st Z+, r10
+				;st Z+, r25
+				;st Z, r26
+
+				push r26						; Empilha o resultado
+				push r25
+				push r10
 
 				rjmp showLcdResult				; Exibe o resultado da operacao no LCD
 
@@ -769,11 +789,15 @@ opMult:											; Executa a multiplicacao
 				mov r25, res2					; Seta o resultado da multiplicacao nos registradores de exibicao
 				mov r26, res1
 
-				ldi	Zh, high(OPSR1)			
-				ldi	Zl, low(OPSR1)
-				st Z+, r10
-				st Z+, r25
-				st Z, r26
+				;ldi	Zh, high(OPSR1)			
+				;ldi	Zl, low(OPSR1)
+				;st Z+, r10
+				;st Z+, r25
+				;st Z, r26
+
+				push r26						; Empilha o resultado
+				push r25
+				push r10
 
 				rjmp showLcdResult				; Exibe o resultado da operacao no LCD
 				
@@ -787,13 +811,13 @@ opSubLink:		rjmp opSub
 ; -----------------------------------------------------------------------------
 opDiv:											
 
-				cpi r27, 0x0					; Verifica se o operador 2 eh zero
+				cpi r28, 0x0					; Verifica se o operador 2 eh zero
 				breq opDivZeroH
 				rjmp opDivExecute				; Executa a divisao
 
 ; Verifica se o segundo operandoH eh zero, para caracterizar divisao por zero
 ; -----------------------------------------------------------------------------
-opDivZeroH:		cpi r28, 0x0
+opDivZeroH:		cpi r29, 0x0
 				breq opDivZeroL
 				rjmp opDivExecute				; Caso nao seja zero executa a divisao
 
@@ -822,16 +846,14 @@ opDivZeroL:		clr r
 opDivExecute:									; Executa divisao
 				mov m1M, r25					; Seta o operando 1 
 				mov m1L, r26
-				mov m2M, r27
-				mov m2L, r28	
+				mov m2M, r28
+				mov m2L, r29	
 				rcall divide
 
 				mov r25,dres16uH				;Seta o resultado da divisao nos registradores de exibicao
 				mov r26,dres16uL
 				
-				rcall showLcdDiv				; Exibe o resultado da operacao no LCD(caso especial com decimais)
-				rcall configKeypad
-				rjmp loop
+				rjmp showLcdDiv				; Exibe o resultado da operacao no LCD(caso especial com decimais)
 
 ; Subtracao
 ; -----------------------------------------------------------------------------
@@ -863,13 +885,18 @@ invertOp:		ldi r, 0x1						; Seta o flag de operacao negativa
 
 ; Subtracao - Executa a subtracao
 ; -----------------------------------------------------------------------------
-opSubExec:		sub24 r26, r25, r11, r29, r28, r27		; Executa a subtracao
+opSubExec:										; Executa a subtracao
+				sub24 r26, r25, r11, r29, r28, r27 	
 
-				ldi	Zh, high(OPSR1)			
-				ldi	Zl, low(OPSR1)
-				st Z+, r11
-				st Z+, r25
-				st Z, r26
+				;ldi	Zh, high(OPSR1)			
+				;ldi	Zl, low(OPSR1)
+				;st Z+, r11
+				;st Z+, r25
+				;st Z, r26
+
+				push r26						; Empilha o resultado
+				push r25
+				push r11
 
 				mov r10, r11					; Move o registrador para exibir os valores corretamente
 
@@ -962,7 +989,7 @@ showLcdDiv:		ldi   lcdinput,	1				; Apaga o LCD
 								
 				rcall divide
 			
-				clr rBin1H				;Seta o resultado da divisao nos registradores de exibicao
+				clr rBin1H						;Seta o resultado da divisao nos registradores de exibicao
 				mov rBin1L,dres16uH	
 							
 				rcall Bin2ToAsc 				; Converte o resultado em ascii 
@@ -1011,7 +1038,9 @@ showLcdDivB:
 
     			rcall writemsg					; Exibe a mensagem 
 				rcall clenPortB
-				ret
+				
+				rcall configKeypad
+				rjmp loop
 
 			
 ; Exibe mensagem de falta de operador
