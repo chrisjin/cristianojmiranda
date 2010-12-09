@@ -625,7 +625,40 @@ keyAdd:			rcall verificaErro
 				pop r28
 				pop r29
 
+				mov r, r10
+				cpi r, 0x0
+				brne keyAddA
+
+				cpi r27, 0x0
+				brne keyAddC
+
 				rjmp opSoma						; Executa a soma
+
+
+keyAddA:		cpi r27, 0x0					; Verifica se o segundo operador eh negativo, tambem					
+				brne keyAddB
+				rjmp keyAddC
+
+keyAddB:		clt								; Os dois operadores sao negativos
+				bld r10, 7
+				bld r27, 7
+
+				ldi r, 0x1
+				rcall setFlNegativo
+
+				rjmp opSoma						; Exibe a soma como resultado negativo
+
+		
+
+keyAddC:										; Executa a subtracao, pois r10 eh negativo
+
+				mov r11, r10
+				clt
+				bld r11, 7
+				bld r27, 7
+				
+
+				rjmp opSub
 
 ; Btn Sub
 ; -----------------------------------------------------------------------------
@@ -734,11 +767,11 @@ opSomac:		add r10, r27
 				adc r25, r28
 				adc r26, r29
 
-				;ldi	Zh, high(OPSR1)			
-				;ldi	Zl, low(OPSR1)
-				;st Z+, r10
-				;st Z+, r25
-				;st Z, r26
+				ldi	Zh, high(OPSR1)				; Seta o resultado no operado 1 caso queira duplica-lo
+				ldi	Zl, low(OPSR1)
+				st Z+, r10
+				st Z+, r25
+				st Z, r26
 
 				push r26						; Empilha o resultado
 				push r25
@@ -872,12 +905,15 @@ opSub:			cp r11, r27						; Verifica se OP1 < OP2
 ; -----------------------------------------------------------------------------
 invertOp:		ldi r, 0x1						; Seta o flag de operacao negativa
 				rcall setFlNegativo
+
 				push r11
 				push r25						; Inverte os registradores de subtracao
 				push r26
+
 				mov r11, r27					; Para que o operador maior fique sempre em OP1
 				mov r25, r28
 				mov r26, r29
+
 				pop r29
 				pop r28
 				pop r27
@@ -888,17 +924,27 @@ invertOp:		ldi r, 0x1						; Seta o flag de operacao negativa
 opSubExec:										; Executa a subtracao
 				sub24 r26, r25, r11, r29, r28, r27 	
 
-				;ldi	Zh, high(OPSR1)			
-				;ldi	Zl, low(OPSR1)
-				;st Z+, r11
-				;st Z+, r25
-				;st Z, r26
+				cpi r, 0x1
+				breq opSubNeg					; Seta o valor como negativo
 
 				push r26						; Empilha o resultado
 				push r25
 				push r11
 
 				mov r10, r11					; Move o registrador para exibir os valores corretamente
+
+				rjmp showLcdResult				; Exibe o resultado da operacao no LCD
+
+opSubNeg:		set
+				bld r11, 7						; Seta o resultado como negativo
+
+				push r26						; Empilha o resultado
+				push r25
+				push r11
+
+				mov r10, r11					; Move o registrador para exibir os valores corretamente
+				clt
+				bld r10, 7
 
 				rjmp showLcdResult				; Exibe o resultado da operacao no LCD
 
