@@ -630,7 +630,7 @@ keyAdd:			rcall verificaErro
 				brne keyAddA
 
 				cpi r27, 0x0
-				brne keyAddC
+				brne keyAddD
 
 				rjmp opSoma						; Executa a soma
 
@@ -651,6 +651,19 @@ keyAddB:		clt								; Os dois operadores sao negativos
 		
 
 keyAddC:										; Executa a subtracao, pois r10 eh negativo
+
+
+				mov r11, r10
+				clt
+				bld r11, 7
+				bld r27, 7
+				
+				clr r
+				rcall setFlNegativo
+
+				rjmp opSub
+
+keyAddD:										; Executa a subtracao, pois r27 eh negativo
 
 
 				mov r11, r10
