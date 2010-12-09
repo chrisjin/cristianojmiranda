@@ -1076,13 +1076,14 @@ convertToBin:	ldi	Zh, high(OPSR1)
 				
 				ret
 
-convertToBin1:	add16 r, rr, r8, r9
+convertToBin1:	
+				;add16 r, rr, r8, r9
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
 				clr r11
 				st Z+, r11
-				st Z+, r
-				st Z, rr				
+				st Z+, r8
+				st Z, r9				
 				
 				ret
 
