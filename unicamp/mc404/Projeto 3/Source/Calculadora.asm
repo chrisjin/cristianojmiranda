@@ -652,6 +652,7 @@ keyAddB:		clt								; Os dois operadores sao negativos
 
 keyAddC:										; Executa a subtracao, pois r10 eh negativo
 
+
 				mov r11, r10
 				clt
 				bld r11, 7
@@ -829,6 +830,13 @@ erroPrecisao:	clr r							; Marca como leitura Progam Memory
 ; -----------------------------------------------------------------------------
 opMult:											; Executa a multiplicacao
 
+				push r11
+				push r27
+
+				clt
+				bld r11, 7						; Limpa o sinal negativo
+				bld r27, 7
+
 				mov r, r11
 				cpi r, 0x0
 				brne erroPrecisao				; Verifica overflow dos registradores
@@ -838,7 +846,7 @@ opMult:											; Executa a multiplicacao
 				
 				mov m1M, r25					; Seta o operando 1 
 				mov m1L, r26
-				mov m2M, r28
+				mov m2M, r28					; Seta o operador 2
 				mov m2L, r29					; Seta o segundo operando
 				rcall multiply					; Executa a multiplicacao
 
@@ -846,15 +854,28 @@ opMult:											; Executa a multiplicacao
 				mov r25, res2					; Seta o resultado da multiplicacao nos registradores de exibicao
 				mov r26, res1
 
-				;ldi	Zh, high(OPSR1)			
-				;ldi	Zl, low(OPSR1)
-				;st Z+, r10
-				;st Z+, r25
-				;st Z, r26
+				ldi	Zh, high(OPSR1)				; Carrega o resultado no operador para poder ser reutilizado
+				ldi	Zl, low(OPSR1)
+				st Z+, r10
+				st Z+, r25
+				st Z, r26
+
+				pop r27
+				pop r11							; Desempilha o registrador do sinal
 
 				push r26						; Empilha o resultado
 				push r25
 				push r10
+
+
+				and r11, r27						; Verifica se o sinal a ser exibido eh negativo
+				bst r11, 7
+				brtc opMultNeg					; Exibe o resultado negativo
+
+				rjmp showLcdResult				; Exibe o resultado da operacao no LCD
+
+opMultNeg: 		ldi r, 0x1
+				rcall setFlNegativo
 
 				rjmp showLcdResult				; Exibe o resultado da operacao no LCD
 				
