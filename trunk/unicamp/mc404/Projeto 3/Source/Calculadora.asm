@@ -657,6 +657,8 @@ keyAddC:										; Executa a subtracao, pois r10 eh negativo
 				bld r11, 7
 				bld r27, 7
 				
+				clr r
+				rcall setFlNegativo
 
 				rjmp opSub
 
@@ -1023,6 +1025,7 @@ showResultNeg:	ldi r, '-'						; Carrega o sinal a ser exibido
 				rcall clenPortB
 
 				rcall configKeypad
+		
 				rjmp loop
 
 ; Exibe o resultado da divisao
@@ -1038,11 +1041,15 @@ showLcdDiv:		ldi   lcdinput,	1				; Apaga o LCD
 
 				rcall Bin2ToAsc					; Converte o resultado em ascii
 			
-							
+											
 				ldi r,','
 				ldi Zh,high(0x106)
 				ldi Zl,low(0x106)
 				st Z+,r
+
+				rcall inteiro
+				cpi r,0		;confirma semdec	
+				brmi print
 
 				ldi r,100
 				mov r26,r14				
@@ -1050,15 +1057,15 @@ showLcdDiv:		ldi   lcdinput,	1				; Apaga o LCD
 				;mul r25,r
 				mul r26,r
 
-				mov m1M, r0			
-				mov m1L, r1
-				mov m2M, r27
-				mov m2L, r28
+				mov m1M, r1		
+				mov m1L, r0
+				mov m2M, r28
+				mov m2L, r29
 								
 				rcall divide
-			
-				clr rBin1H						;Seta o resultado da divisao nos registradores de exibicao
-				mov rBin1L,dres16uH	
+print:
+				clr rBin1L						;Seta o resultado da divisao nos registradores de exibicao
+				mov rBin1L,dres16uL
 							
 				rcall Bin2ToAsc 				; Converte o resultado em ascii 
 												; Move os digitos para os locais corretos ;0000120				
@@ -1111,6 +1118,26 @@ showLcdDivB:
 				rjmp loop
 
 			
+;divinteiro
+inteiro:
+				push r28		;salva os valores da operacao caso use para
+				push r29		;calculo dos decimais
+				mov yl,r14
+				mov yh,r15
+				sbiw yl,1	;ve se r15:r14 é 0x00, se der neg, pula pra semdec
+				brmi semdec
+				rjmp comdec
+
+semdec:		
+				clr rBin1H				;zera o conteudo dos regs decimais
+				clr rBin1L	
+								
+comdec:			mov r,yl
+				pop r29
+				pop r28
+
+				ret
+
 ; Exibe mensagem de falta de operador
 ; -----------------------------------------------------------------------------
 erroOperador:	clr r
