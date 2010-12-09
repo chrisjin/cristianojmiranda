@@ -1,140 +1,144 @@
 <ASSEMBLER_INFO>
- <VERSION>2.1.42</VERSION>
+ <VERSION>2.1.30</VERSION>
  <DEVICE>ATmega88</DEVICE>
- <WORKING_DIR>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source</WORKING_DIR>
+ <WORKING_DIR>E:\Unicamp\mc404\svn\Projeto 3\Source</WORKING_DIR>
  <INCLUDE_PATH>
   <DIR>C:\Arquivos de programas\Atmel\AVR Tools\AvrAssembler2\Appnotes</DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</SOURCE_FILE>
+ <SOURCE_FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</SOURCE_FILE>
  <INCLUDED_FILES>
   <FILE>C:\Arquivos de programas\Atmel\AVR Tools\AvrAssembler2\Appnotes\m88def.inc</FILE>
+  <FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\LCDFunctions.asm</FILE>
+  <FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\BCDFunctions.asm</FILE>
  </INCLUDED_FILES>
  <OBJECT_FILES>
-  <FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.obj</FILE>
+  <FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.obj</FILE>
  </OBJECT_FILES>
  <HEX_FILES>
-  <FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.hex</FILE>
+  <FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.hex</FILE>
  </HEX_FILES>
  <OUTPUT_FILES>
-  <FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.map</FILE>
+  <FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.map</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <null><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>222</LINE></null>
-  <start><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>142</LINE></start>
-  <RESET><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>148</LINE></RESET>
-  <setErroFlag><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>403</LINE></setErroFlag>
-  <lcdinit><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1301</LINE></lcdinit>
-  <setLcdIoFlag><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>384</LINE></setLcdIoFlag>
-  <lb_clear><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1491</LINE></lb_clear>
-  <writemsg><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1275</LINE></writemsg>
-  <clenPortB><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1225</LINE></clenPortB>
-  <setOperacao><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>333</LINE></setOperacao>
-  <setFlNegativo><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>357</LINE></setFlNegativo>
-  <configKeypad><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>208</LINE></configKeypad>
-  <loop><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>227</LINE></loop>
-  <encerra><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>248</LINE></encerra>
-  <coluna1><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>259</LINE></coluna1>
-  <coluna2><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>271</LINE></coluna2>
-  <coluna3><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>283</LINE></coluna3>
-  <coluna4><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>295</LINE></coluna4>
-  <key1Link><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>319</LINE></key1Link>
-  <key4Link><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>322</LINE></key4Link>
-  <key7Link><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>324</LINE></key7Link>
-  <keyClearLink><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>317</LINE></keyClearLink>
-  <key2Link><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>320</LINE></key2Link>
-  <key5Link><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>323</LINE></key5Link>
-  <key8Link><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>325</LINE></key8Link>
-  <key0Link><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>318</LINE></key0Link>
-  <key3Link><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>321</LINE></key3Link>
-  <key6Link><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>326</LINE></key6Link>
-  <key9Link><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>327</LINE></key9Link>
-  <keyEnterLink><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>316</LINE></keyEnterLink>
-  <keyAddLink><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>312</LINE></keyAddLink>
-  <keySubLink><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>313</LINE></keySubLink>
-  <keyMultLink><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>314</LINE></keyMultLink>
-  <keyDivLink><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>315</LINE></keyDivLink>
-  <loopLink><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>307</LINE></loopLink>
-  <keyAdd><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>556</LINE></keyAdd>
-  <keySub><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>581</LINE></keySub>
-  <keyMult><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>610</LINE></keyMult>
-  <keyDiv><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>635</LINE></keyDiv>
-  <keyEnter><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>661</LINE></keyEnter>
-  <keyClear><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>551</LINE></keyClear>
-  <key0><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>431</LINE></key0>
-  <key1><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>443</LINE></key1>
-  <key2><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>455</LINE></key2>
-  <key3><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>467</LINE></key3>
-  <key4><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>479</LINE></key4>
-  <key5><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>491</LINE></key5>
-  <key7><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>515</LINE></key7>
-  <key8><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>527</LINE></key8>
-  <key6><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>503</LINE></key6>
-  <key9><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>539</LINE></key9>
-  <getOperacao><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>346</LINE></getOperacao>
-  <getFlNegativo><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>370</LINE></getFlNegativo>
-  <getLcdIoFlag><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>395</LINE></getLcdIoFlag>
-  <getErroFlag><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>412</LINE></getErroFlag>
-  <verificaErro><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>419</LINE></verificaErro>
-  <indexInLcd><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1107</LINE></indexInLcd>
-  <convertToBin><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1008</LINE></convertToBin>
-  <lcd_cmd><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1253</LINE></lcd_cmd>
-  <lb_add><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1492</LINE></lb_add>
-  <lb_sub><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1493</LINE></lb_sub>
-  <erroOperadorLink><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>606</LINE></erroOperadorLink>
-  <erroOperador><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>986</LINE></erroOperador>
-  <lb_mult><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1494</LINE></lb_mult>
-  <lb_div><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1495</LINE></lb_div>
-  <opSoma><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>699</LINE></opSoma>
-  <opMult><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>706</LINE></opMult>
-  <opDiv><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>728</LINE></opDiv>
-  <opSubLink><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>724</LINE></opSubLink>
-  <showLcdResult><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>849</LINE></showLcdResult>
-  <multiply><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1173</LINE></multiply>
-  <showLcdMultRes><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>806</LINE></showLcdMultRes>
-  <opSub><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>778</LINE></opSub>
-  <opDivZeroH><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>736</LINE></opDivZeroH>
-  <opDivExecute><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>762</LINE></opDivExecute>
-  <opDivZeroL><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>744</LINE></opDivZeroL>
-  <err_div_zero><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1496</LINE></err_div_zero>
-  <divide><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1193</LINE></divide>
-  <showLcdDiv><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>902</LINE></showLcdDiv>
-  <invertOp><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>787</LINE></invertOp>
-  <opSubExec><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>799</LINE></opSubExec>
-  <Bin2ToAsc><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1335</LINE></Bin2ToAsc>
-  <showResultNeg><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>884</LINE></showResultNeg>
-  <showLcdDivA><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>948</LINE></showLcdDivA>
-  <showLcdDivB><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>952</LINE></showLcdDivB>
-  <err_operator><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1498</LINE></err_operator>
-  <convertToBinA><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1057</LINE></convertToBinA>
-  <convertToBin1><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1026</LINE></convertToBin1>
-  <convertToBin2><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1038</LINE></convertToBin2>
-  <convertToBinA1><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1072</LINE></convertToBinA1>
-  <convertToBinA2><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1084</LINE></convertToBinA2>
-  <lcdInOverflow><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1122</LINE></lcdInOverflow>
-  <indexInLcd1><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1154</LINE></indexInLcd1>
-  <lcdInOverflowA><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1134</LINE></lcdInOverflowA>
-  <lcdInOverflowB><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1145</LINE></lcdInOverflowB>
-  <lcd_busy><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1231</LINE></lcd_busy>
-  <d16ua><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1197</LINE></d16ua>
-  <d16ub><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1203</LINE></d16ub>
-  <d16uc><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1213</LINE></d16uc>
-  <looplcd><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1240</LINE></looplcd>
-  <lcd_write><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1264</LINE></lcd_write>
-  <writemsgmp><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1282</LINE></writemsgmp>
-  <writemsgsram><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1287</LINE></writemsgsram>
-  <writemsgbd><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1290</LINE></writemsgbd>
-  <writedone><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1297</LINE></writedone>
-  <Bin2ToAsc6><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1361</LINE></Bin2ToAsc6>
-  <Bin2ToAsca><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1341</LINE></Bin2ToAsca>
-  <Bin2ToBcd6><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1403</LINE></Bin2ToBcd6>
-  <Bin2ToAsc6a><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1367</LINE></Bin2ToAsc6a>
-  <Bin2ToAsc6b><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1378</LINE></Bin2ToAsc6b>
-  <Bin2ToAsc6c><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1382</LINE></Bin2ToAsc6c>
-  <Bin2ToDigit><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1457</LINE></Bin2ToDigit>
-  <Bin2ToDigita><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1461</LINE></Bin2ToDigita>
-  <Bin2ToDigitc><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1474</LINE></Bin2ToDigitc>
-  <Bin2ToDigitb><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1468</LINE></Bin2ToDigitb>
-  <end><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1485</LINE></end>
-  <err_precision><FILE>C:\Documents and Settings\ra083382\Desktop\svn2\Projeto 3\Source\Calculadora.asm</FILE><LINE>1497</LINE></err_precision>
+  <null><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>221</LINE></null>
+  <start><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>158</LINE></start>
+  <RESET><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>164</LINE></RESET>
+  <setErroFlag><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>391</LINE></setErroFlag>
+  <lcdinit><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\LCDFunctions.asm</FILE><LINE>83</LINE></lcdinit>
+  <setLcdIoFlag><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>372</LINE></setLcdIoFlag>
+  <lb_clear><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1291</LINE></lb_clear>
+  <writemsg><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\LCDFunctions.asm</FILE><LINE>57</LINE></writemsg>
+  <clenPortB><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\LCDFunctions.asm</FILE><LINE>7</LINE></clenPortB>
+  <setOperacao><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>332</LINE></setOperacao>
+  <setFlNegativo><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>350</LINE></setFlNegativo>
+  <configKeypad><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>207</LINE></configKeypad>
+  <loop><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>226</LINE></loop>
+  <encerra><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>247</LINE></encerra>
+  <coluna1><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>258</LINE></coluna1>
+  <coluna2><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>270</LINE></coluna2>
+  <coluna3><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>282</LINE></coluna3>
+  <coluna4><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>294</LINE></coluna4>
+  <key1Link><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>318</LINE></key1Link>
+  <key4Link><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>321</LINE></key4Link>
+  <key7Link><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>323</LINE></key7Link>
+  <keyClearLink><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>316</LINE></keyClearLink>
+  <key2Link><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>319</LINE></key2Link>
+  <key5Link><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>322</LINE></key5Link>
+  <key8Link><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>324</LINE></key8Link>
+  <key0Link><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>317</LINE></key0Link>
+  <key3Link><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>320</LINE></key3Link>
+  <key6Link><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>325</LINE></key6Link>
+  <key9Link><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>326</LINE></key9Link>
+  <keyEnterLink><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>315</LINE></keyEnterLink>
+  <keyAddLink><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>311</LINE></keyAddLink>
+  <keySubLink><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>312</LINE></keySubLink>
+  <keyMultLink><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>313</LINE></keyMultLink>
+  <keyDivLink><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>314</LINE></keyDivLink>
+  <loopLink><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>306</LINE></loopLink>
+  <keyAdd><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>610</LINE></keyAdd>
+  <keySub><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>665</LINE></keySub>
+  <keyMult><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>691</LINE></keyMult>
+  <keyDiv><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>713</LINE></keyDiv>
+  <keyEnter><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>736</LINE></keyEnter>
+  <keyClear><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>578</LINE></keyClear>
+  <key0><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>418</LINE></key0>
+  <key1><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>434</LINE></key1>
+  <key2><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>450</LINE></key2>
+  <key3><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>466</LINE></key3>
+  <key4><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>482</LINE></key4>
+  <key5><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>498</LINE></key5>
+  <key7><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>530</LINE></key7>
+  <key8><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>546</LINE></key8>
+  <key6><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>514</LINE></key6>
+  <key9><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>562</LINE></key9>
+  <getOperacao><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>342</LINE></getOperacao>
+  <getFlNegativo><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>360</LINE></getFlNegativo>
+  <getLcdIoFlag><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>383</LINE></getLcdIoFlag>
+  <getErroFlag><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>400</LINE></getErroFlag>
+  <verificaErro><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>407</LINE></verificaErro>
+  <indexInLcd><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1180</LINE></indexInLcd>
+  <convertToBin><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1135</LINE></convertToBin>
+  <verPilha><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>583</LINE></verPilha>
+  <verPilhac><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>600</LINE></verPilhac>
+  <verPilhaa><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>590</LINE></verPilhaa>
+  <verPilhab><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>595</LINE></verPilhab>
+  <lcd_cmd><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\LCDFunctions.asm</FILE><LINE>35</LINE></lcd_cmd>
+  <keyAddA><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>638</LINE></keyAddA>
+  <keyAddC><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>653</LINE></keyAddC>
+  <opSoma><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>778</LINE></opSoma>
+  <keyAddB><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>642</LINE></keyAddB>
+  <opSub><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>915</LINE></opSub>
+  <erroOperadorLink><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>687</LINE></erroOperadorLink>
+  <erroOperador><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1116</LINE></erroOperador>
+  <opMult><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>828</LINE></opMult>
+  <opDiv><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>867</LINE></opDiv>
+  <opSomaa><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>785</LINE></opSomaa>
+  <opSomac><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>788</LINE></opSomac>
+  <erroPrecisao><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>807</LINE></erroPrecisao>
+  <showLcdResult><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>976</LINE></showLcdResult>
+  <err_precision><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1293</LINE></err_precision>
+  <multiply><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1228</LINE></multiply>
+  <opSubLink><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>863</LINE></opSubLink>
+  <opDivZeroH><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>875</LINE></opDivZeroH>
+  <opDivExecute><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>901</LINE></opDivExecute>
+  <opDivZeroL><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>883</LINE></opDivZeroL>
+  <err_div_zero><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1292</LINE></err_div_zero>
+  <divide><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1248</LINE></divide>
+  <showLcdDiv><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1030</LINE></showLcdDiv>
+  <invertOp><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>928</LINE></invertOp>
+  <opSubExec><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>946</LINE></opSubExec>
+  <opSubNeg><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>960</LINE></opSubNeg>
+  <Bin2ToAsc><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\BCDFunctions.asm</FILE><LINE>20</LINE></Bin2ToAsc>
+  <showResultNeg><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1014</LINE></showResultNeg>
+  <showLcdDivA><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1076</LINE></showLcdDivA>
+  <showLcdDivB><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1080</LINE></showLcdDivB>
+  <err_operator><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1294</LINE></err_operator>
+  <convertToBin1><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1147</LINE></convertToBin1>
+  <convertToBin2><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1159</LINE></convertToBin2>
+  <lcdInOverflow><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1195</LINE></lcdInOverflow>
+  <indexInLcd1><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1209</LINE></indexInLcd1>
+  <lcdInOverflowA><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1202</LINE></lcdInOverflowA>
+  <lcd_busy><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\LCDFunctions.asm</FILE><LINE>13</LINE></lcd_busy>
+  <d16ua><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1252</LINE></d16ua>
+  <d16ub><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1258</LINE></d16ub>
+  <d16uc><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1268</LINE></d16uc>
+  <looplcd><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\LCDFunctions.asm</FILE><LINE>22</LINE></looplcd>
+  <lcd_write><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\LCDFunctions.asm</FILE><LINE>46</LINE></lcd_write>
+  <writemsgmp><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\LCDFunctions.asm</FILE><LINE>64</LINE></writemsgmp>
+  <writemsgsram><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\LCDFunctions.asm</FILE><LINE>69</LINE></writemsgsram>
+  <writemsgbd><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\LCDFunctions.asm</FILE><LINE>72</LINE></writemsgbd>
+  <writedone><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\LCDFunctions.asm</FILE><LINE>79</LINE></writedone>
+  <Bin2ToAsc6><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\BCDFunctions.asm</FILE><LINE>46</LINE></Bin2ToAsc6>
+  <Bin2ToAsca><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\BCDFunctions.asm</FILE><LINE>26</LINE></Bin2ToAsca>
+  <Bin2ToBcd6><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\BCDFunctions.asm</FILE><LINE>88</LINE></Bin2ToBcd6>
+  <Bin2ToAsc6a><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\BCDFunctions.asm</FILE><LINE>52</LINE></Bin2ToAsc6a>
+  <Bin2ToAsc6b><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\BCDFunctions.asm</FILE><LINE>63</LINE></Bin2ToAsc6b>
+  <Bin2ToAsc6c><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\BCDFunctions.asm</FILE><LINE>67</LINE></Bin2ToAsc6c>
+  <Bin2ToDigit><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\BCDFunctions.asm</FILE><LINE>154</LINE></Bin2ToDigit>
+  <Bin2ToDigita><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\BCDFunctions.asm</FILE><LINE>158</LINE></Bin2ToDigita>
+  <Bin2ToDigitc><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\BCDFunctions.asm</FILE><LINE>176</LINE></Bin2ToDigitc>
+  <Bin2ToDigitb><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\BCDFunctions.asm</FILE><LINE>169</LINE></Bin2ToDigitb>
+  <end><FILE>E:\Unicamp\mc404\svn\Projeto 3\Source\Calculadora.asm</FILE><LINE>1285</LINE></end>
  </LABELS>
 </ASSEMBLER_INFO>

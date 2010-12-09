@@ -740,11 +740,33 @@ keyEnter:										; Obtem os operadores da SRAM
 				ld r25, Z+						; Operador1 em r25 e r26
 				ld r26, Z
 
+				mov r, dgCount
 				ldi dgCount, 0x3				; Limpa o contador de digitos para ocorrer overflow
 
 				push r26						; Adiciona o operador a pilha
 				push r25
 				push r11
+
+				ldi rr, low(SRAM_START)
+				add r, rr
+				ldi Xh, high(SRAM_START)
+				;ldi Xl, low(r)
+				mov Xl, r
+				ldi r, ','
+				st X+, R
+				ldi r, '0'
+				st X+, R
+				st X+, R
+				clr r
+				st X+, R
+
+				ldi   lcdinput,	1				; Apaga o LCD
+				rcall lcd_cmd
+
+				ldi Xh, high(SRAM_START)    	; Seta Xh como o inicio da SRAM
+        		ldi Xl, low(SRAM_START)     	; Seta Xl como o inicio da SRAM
+				rcall writemsg					; Exibe a mensagem 
+				rcall clenPortB
 
 				rcall configKeypad
 
