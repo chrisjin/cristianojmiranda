@@ -676,10 +676,6 @@ keyAddD:										; Executa a subtracao, pois r27 eh negativo
 				rjmp opSub
 
 
-; Link para loop
-; -----------------------------------------------------------------------------
-loopLink1: 		rjmp loop
-
 ; Btn Sub
 ; -----------------------------------------------------------------------------
 keySub:			rcall verificaErro
@@ -698,9 +694,58 @@ keySub:			rcall verificaErro
 				
 				pop r11
 				pop r25
-				pop r26		
+				pop r26
+				
+				push r11
+				push r27
 
-				rjmp opSub						; Executa a subtracao
+				eor r11, r27					; Caso os sinais sejam diferentes
+				bst r11, 7
+				brtc keySubA					; Sinais iguais (subtracao)
+
+				pop r27							; Sinais diferentes
+				pop r11
+
+				rjmp keySubB					; Executa a adicao (para operadores diferentes) +-, -+
+
+
+; Sinais iguais - -- = - +
+; -----------------------------------------------------------------
+keySubA:		pop r27
+				pop r11
+				bst r11, 7
+
+				brts keySubC
+
+				clt
+				bld r11, 7
+				bld r27, 7
+
+				rjmp opSub
+
+
+keySubB:		clt
+				bld r11, 7
+				bld r27, 7
+
+				ldi r, 0x1
+				rcall setFlNegativo
+
+				rjmp opSoma
+
+keySubC:		clt
+				bld r11, 7
+				bld r27, 7
+
+				ldi r, 0x1
+				rcall setFlNegativo
+
+				rjmp opSub
+
+; Link para loop
+; -----------------------------------------------------------------------------
+loopLink1: 		rjmp loop
+
 
 ; Link para erroOperador
 ; -----------------------------------------------------------------------------
