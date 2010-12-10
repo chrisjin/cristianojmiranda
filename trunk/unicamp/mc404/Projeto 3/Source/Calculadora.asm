@@ -1001,11 +1001,14 @@ opDivExecute:									; Executa divisao
 
 ; Subtracao
 ; -----------------------------------------------------------------------------
-opSub:			cp r11, r27						; Verifica se OP1 < OP2
+opSub:			cp r11, r27  					; Verifica se OP1 < OP2
 				brlo invertOp
 
 				cp r25, r28						; Verifica se OP1 < OP2
 				brlo invertOp
+
+				cpi r25, 0x0
+				brne opSubExec
 
 				cp r26, r29						; Verifica se OP1 < OP2
 				brlo invertOp
@@ -1033,7 +1036,10 @@ invertOp:		ldi r, 0x1						; Seta o flag de operacao negativa
 ; Subtracao - Executa a subtracao
 ; -----------------------------------------------------------------------------
 opSubExec:										; Executa a subtracao
-				sub24 r26, r25, r11, r29, r28, r27 	
+				;sub24 r26, r25, r11, r29, r28, r27 	
+				sub r26, r29
+				sbc r25, r28
+				sbc r11, r27
 
 				cpi r, 0x1
 				breq opSubNeg					; Seta o valor como negativo
