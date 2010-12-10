@@ -604,7 +604,6 @@ verPilhac: 		ldi r, high(RAMEND)
 				rcall configKeypad
 				rjmp loop
 
-
 ; Btn Add
 ; -----------------------------------------------------------------------------
 keyAdd:			rcall verificaErro
@@ -675,6 +674,11 @@ keyAddD:										; Executa a subtracao, pois r27 eh negativo
 				rcall setFlNegativo
 
 				rjmp opSub
+
+
+; Link para loop
+; -----------------------------------------------------------------------------
+loopLink1: 		rjmp loop
 
 ; Btn Sub
 ; -----------------------------------------------------------------------------
@@ -750,6 +754,10 @@ keyDiv:			rcall verificaErro
 ; Aciona a opcao enter no keypad
 ; -----------------------------------------------------------------------------
 keyEnter:										; Obtem os operadores da SRAM
+
+				cpi dgCount, 0x0				; Caso nao tenha sido digitado nada
+				breq loopLink1
+
 				ldi	Zh, high(OPSR1)			
 				ldi	Zl, low(OPSR1)
 				ld r11, Z+
@@ -766,7 +774,6 @@ keyEnter:										; Obtem os operadores da SRAM
 				ldi rr, low(SRAM_START)
 				add r, rr
 				ldi Xh, high(SRAM_START)
-				;ldi Xl, low(r)
 				mov Xl, r
 				ldi r, ','
 				st X+, R
@@ -801,9 +808,10 @@ opSoma:									 		; Executa a soma
 opSomaa:		cpi r27, 0x0
 				brne erroPrecisao
 
-opSomac:		add r10, r27
+opSomac:		
+				add r26, r29					; Soma os operadores
 				adc r25, r28
-				adc r26, r29
+				adc r10, r27
 
 				ldi	Zh, high(OPSR1)				; Seta o resultado no operado 1 caso queira duplica-lo
 				ldi	Zl, low(OPSR1)
@@ -881,9 +889,9 @@ opMult:											; Executa a multiplicacao
 				push r10
 
 
-				and r11, r27						; Verifica se o sinal a ser exibido eh negativo
+				eor r11, r27					; Verifica se o sinal a ser exibido eh negativo
 				bst r11, 7
-				brtc opMultNeg					; Exibe o resultado negativo
+				brts opMultNeg					; Exibe o resultado negativo
 
 				rjmp showLcdResult				; Exibe o resultado da operacao no LCD
 
