@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -325,4 +326,31 @@ public class ConcursoTO implements Serializable {
 
 	}
 
+	/**
+	 * Verifica a pontuação de uma aposta no concurso
+	 * 
+	 * @param aposta
+	 * @return
+	 */
+	public Integer verificarPontuacaoConcurso(Set<Integer> aposta) {
+
+		Integer pontos = new Integer(0);
+
+		if (this.dezenas != null && aposta != null) {
+
+			for (DezenaTO dezena : this.dezenas) {
+
+				if (aposta.contains(dezena.getVrDezena())) {
+
+					pontos++;
+
+				}
+
+			}
+
+		}
+
+		return pontos;
+
+	}
 }

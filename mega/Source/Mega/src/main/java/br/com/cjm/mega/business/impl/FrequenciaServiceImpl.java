@@ -432,6 +432,43 @@ public class FrequenciaServiceImpl {
 	}
 
 	/**
+	 * @param concurso
+	 */
+	public void processarFrequenciaDezena(ConcursoTO concurso) {
+
+		// Obtem a sessão hibernate
+		Session session = HibernateUtil.getSessionFactory().openSession();
+
+		System.out.println("PROCESSANDO FREQUENCIA DUPLA PARA CONCURSO "
+				+ concurso.getId());
+
+		// Localiza as dezenas da dupla no concurso
+		List<FrequenciaDezenasTO> conflictList = new ArrayList<FrequenciaDezenasTO>();
+		for (DezenaTO dezena1 : concurso.getDezenas()) {
+
+			// Obtem a frequencia na hash
+			FrequenciaDezenasTO freqDupla = (FrequenciaDezenasTO) session
+					.createQuery(
+							"from FrequenciaDezenasTO where dezena = "
+									+ dezena1.getVrDezena()).list().get(0);
+
+			freqDupla.setAtrasoUltimo(freqDupla.getAtrasoAtual() + 1L);
+			freqDupla.setAtrasoAtual(0L);
+
+			if (freqDupla.getAtrasoMaior().longValue() < freqDupla
+					.getAtrasoUltimo().longValue()) {
+				freqDupla.setAtrasoMaior(freqDupla.getAtrasoUltimo());
+			}
+
+			freqDupla.setQtdSorteada(freqDupla.getQtdSorteada() + 1L);
+
+		}
+		
+		//session.createQuery("update FrequenciaDezenasTO set ")
+
+	}
+
+	/**
 	 * Processa a frequencia das dezenas.
 	 * 
 	 * @param concuros
