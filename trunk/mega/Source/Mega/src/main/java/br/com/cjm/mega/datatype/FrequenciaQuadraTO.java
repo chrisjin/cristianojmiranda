@@ -1,6 +1,8 @@
 package br.com.cjm.mega.datatype;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -186,6 +188,19 @@ public class FrequenciaQuadraTO implements Serializable {
 	 */
 	public void setDezena4(Integer dezena4) {
 		this.dezena4 = dezena4;
+	}
+
+	public Set<Integer> obterDezenas() {
+
+		Set<Integer> dezenas = new HashSet<Integer>();
+
+		dezenas.add(this.dezena1);
+		dezenas.add(this.dezena2);
+		dezenas.add(this.dezena3);
+		dezenas.add(this.dezena4);
+
+		return dezenas;
+
 	}
 
 }
