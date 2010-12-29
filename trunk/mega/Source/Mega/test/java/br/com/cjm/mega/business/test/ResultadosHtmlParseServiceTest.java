@@ -195,8 +195,11 @@ public class ResultadosHtmlParseServiceTest extends TestCase {
 		List<Set<Integer>> apostas = SorteioServiceImpl.getInstance()
 				.obtemApostasParaQuadra();
 
-		SorteioServiceImpl.getInstance().processarCenario(
-				apostas.subList(0, 1000), null);
+		if (apostas.size() > 1000) {
+			apostas = apostas.subList(0, 1000);
+		}
+
+		SorteioServiceImpl.getInstance().processarCenario(apostas, null);
 
 	}
 

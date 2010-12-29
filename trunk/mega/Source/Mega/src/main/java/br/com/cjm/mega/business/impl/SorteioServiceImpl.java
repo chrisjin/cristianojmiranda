@@ -395,7 +395,7 @@ public class SorteioServiceImpl {
 		}
 
 		System.out.println("\nMaior intervalo: " + maiorIntervalo);
-		System.out.println("Lucro[" + gasto + "|" + premio + "|"
+		System.out.println("Lucro[aposta(-): " + gasto + "|premio(+): " + premio + "|$ "
 				+ (premio - gasto) + "]");
 
 	}
