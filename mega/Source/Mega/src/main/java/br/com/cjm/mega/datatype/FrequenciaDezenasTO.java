@@ -45,6 +45,21 @@ public class FrequenciaDezenasTO implements Serializable {
 	private Long atrasoMaior = 0L;
 
 	/**
+	 * 
+	 * O seguinte gráfico 'ÍNDICE DE FORÇA RELATIVA DAS DEZENAS' é muito
+	 * importante, pois é a base do IFRAP, abreviatura de 'Índice de Força
+	 * Relativa da Aposta', cujo conceito foi copiado das bolsas de valores. O
+	 * índice das dezenas (do gráfico abaixo) usa os valores vistos
+	 * anteriormente de 'Frequencia acumulada' e 'Quanto tempo a dezena não sai'
+	 * para aplica-los numa fórmula que produz um único número para cada dezena.
+	 * Este número é um indicativo de quanto a dezena 'deseja ser sorteada' para
+	 * ficar emparelhada com as outras.
+	 * 
+	 */
+	@Column(name = "ifrap")
+	private Float ifrap = 0f;
+
+	/**
 	 * @return the id
 	 */
 	public Long getId() {
@@ -134,4 +149,28 @@ public class FrequenciaDezenasTO implements Serializable {
 		this.atrasoMaior = atrasoMaior;
 	}
 
+	/**
+	 * @return the ifrap
+	 */
+	public Float getIfrap() {
+		return ifrap;
+	}
+
+	/**
+	 * @param ifrap
+	 *            the ifrap to set
+	 */
+	public void setIfrap(Float ifrap) {
+		this.ifrap = ifrap;
+	}
+
+	public void processarIfrap() {
+
+		if (this.atrasoAtual != null && this.qtdSorteada != null) {
+			Float f1 = new Float((this.atrasoAtual + 20));
+			Float f2 = new Float(Math.pow((this.qtdSorteada / 10F), 2));
+			this.ifrap = f1 / f2;
+		}
+
+	}
 }

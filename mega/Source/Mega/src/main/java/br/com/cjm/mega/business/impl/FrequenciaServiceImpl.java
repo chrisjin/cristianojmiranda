@@ -443,7 +443,6 @@ public class FrequenciaServiceImpl {
 				+ concurso.getId());
 
 		// Localiza as dezenas da dupla no concurso
-		List<FrequenciaDezenasTO> conflictList = new ArrayList<FrequenciaDezenasTO>();
 		for (DezenaTO dezena1 : concurso.getDezenas()) {
 
 			// Obtem a frequencia na hash
@@ -463,8 +462,8 @@ public class FrequenciaServiceImpl {
 			freqDupla.setQtdSorteada(freqDupla.getQtdSorteada() + 1L);
 
 		}
-		
-		//session.createQuery("update FrequenciaDezenasTO set ")
+
+		// session.createQuery("update FrequenciaDezenasTO set ")
 
 	}
 
@@ -557,6 +556,7 @@ public class FrequenciaServiceImpl {
 		// Atualiza atraso
 		for (FrequenciaDezenasTO freqDupla : frequencias.values()) {
 
+			freqDupla.processarIfrap();
 			session.save(freqDupla);
 			session.flush();
 
@@ -769,8 +769,8 @@ public class FrequenciaServiceImpl {
 					if (!conflictList.contains(fd)
 							&& !fd.getQtdSorteada().equals(0L)) {
 
-						fd.setAtrasoUltimo(fd.getAtrasoAtual() + 1L);
-						fd.setAtrasoAtual(fd.getAtrasoAtual());
+						fd.setAtrasoUltimo(fd.getAtrasoAtual());
+						fd.setAtrasoAtual(fd.getAtrasoAtual() + 1L);
 
 						if (fd.getAtrasoMaior().longValue() < fd
 								.getAtrasoUltimo().longValue()) {
@@ -966,8 +966,8 @@ public class FrequenciaServiceImpl {
 					if (!conflictList.contains(fd)
 							&& !fd.getQtdSorteada().equals(0L)) {
 
-						fd.setAtrasoUltimo(fd.getAtrasoAtual() + 1L);
-						fd.setAtrasoAtual(fd.getAtrasoAtual());
+						fd.setAtrasoUltimo(fd.getAtrasoAtual());
+						fd.setAtrasoAtual(fd.getAtrasoAtual() + 1L);
 
 						if (fd.getAtrasoMaior().longValue() < fd
 								.getAtrasoUltimo().longValue()) {
