@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagrams:Diagrams xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.topcased.org/DI/1.0" xmlns:diagrams="http://www.topcased.org/Diagrams/1.0" xmi:id="_iJ94EHt0EeC56LA8I9zemw" activeDiagram="_iJ-fIXt0EeC56LA8I9zemw">
+  <model href="RegistroBemAdquiridos.uml#_qb8akM37EdqwVrslYOdUDA"/>
+  <subdiagrams xmi:id="_iJ-fIHt0EeC56LA8I9zemw">
+    <model href="RegistroBemAdquiridos.uml#_w8IxIM37EdqwVrslYOdUDA"/>
+    <diagrams xmi:id="_iJ-fIXt0EeC56LA8I9zemw" position="0,0" size="100,100" name="UseCaseView" viewport="-8,0">
+      <property xmi:id="_iJ-fInt0EeC56LA8I9zemw" key="pageFormatName" value="A2"/>
+      <property xmi:id="_iJ-fI3t0EeC56LA8I9zemw" key="diagramWidth" value="1680"/>
+      <property xmi:id="_iJ-fJHt0EeC56LA8I9zemw" key="diagramHeight" value="2376"/>
+      <property xmi:id="_iJ-fJXt0EeC56LA8I9zemw" key="pageMarginName" value="Small Margin"/>
+      <property xmi:id="_iJ-fJnt0EeC56LA8I9zemw" key="diagramTopMargin" value="20"/>
+      <property xmi:id="_iJ-fJ3t0EeC56LA8I9zemw" key="diagramBottomMargin" value="20"/>
+      <property xmi:id="_iJ-fKHt0EeC56LA8I9zemw" key="diagramLeftMargin" value="20"/>
+      <property xmi:id="_iJ-fKXt0EeC56LA8I9zemw" key="diagramRightMargin" value="20"/>
+      <property xmi:id="_iJ-fKnt0EeC56LA8I9zemw" key="orientation" value="portrait"/>
+      <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_iJ-fK3t0EeC56LA8I9zemw" presentation="org.topcased.modeler.uml.usecasediagram">
+        <element href="RegistroBemAdquiridos.uml#_w8IxIM37EdqwVrslYOdUDA"/>
+      </semanticModel>
+      <contained xsi:type="di:GraphNode" xmi:id="_VW28gHt1EeC56LA8I9zemw" position="19,27" size="181,98">
+        <anchorage xmi:id="_fi2kgHt3EeC56LA8I9zemw" graphEdge="_tpV-EHt3EeC56LA8I9zemw _2IlbQHt3EeC56LA8I9zemw"/>
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_VW28gXt1EeC56LA8I9zemw" presentation="default">
+          <element href="RegistroBemAdquiridos.uml#_VZKCkHt1EeC56LA8I9zemw"/>
+        </semanticModel>
+      </contained>
+      <contained xsi:type="di:GraphNode" xmi:id="_0oDHgHt1EeC56LA8I9zemw" position="59,380" size="156,105">
+        <anchorage xmi:id="_d_AzMXt3EeC56LA8I9zemw" graphEdge="_d_EdkHt3EeC56LA8I9zemw _1CrjIHt3EeC56LA8I9zemw"/>
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_0oDukHt1EeC56LA8I9zemw" presentation="default">
+          <element href="RegistroBemAdquiridos.uml#_0pB-8Ht1EeC56LA8I9zemw"/>
+        </semanticModel>
+      </contained>
+      <contained xsi:type="di:GraphNode" xmi:id="_nZBsAHt2EeC56LA8I9zemw" position="12,235" size="120,80">
+        <anchorage xmi:id="_d_AzMHt3EeC56LA8I9zemw" graphEdge="_d_EdkHt3EeC56LA8I9zemw _tpV-EHt3EeC56LA8I9zemw"/>
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_nZBsAXt2EeC56LA8I9zemw" presentation="default">
+          <element href="RegistroBemAdquiridos.uml#_nZKO4Ht2EeC56LA8I9zemw"/>
+        </semanticModel>
+      </contained>
+      <contained xsi:type="di:GraphNode" xmi:id="_qO5F4Ht2EeC56LA8I9zemw" position="425,66" size="120,80">
+        <anchorage xmi:id="_1Cpt8Ht3EeC56LA8I9zemw" graphEdge="_1CrjIHt3EeC56LA8I9zemw _2IlbQHt3EeC56LA8I9zemw _FUCRwHt4EeC56LA8I9zemw"/>
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_qO5F4Xt2EeC56LA8I9zemw" presentation="default">
+          <element href="RegistroBemAdquiridos.uml#_qPCP0Ht2EeC56LA8I9zemw"/>
+        </semanticModel>
+      </contained>
+      <contained xsi:type="di:GraphEdge" xmi:id="_d_EdkHt3EeC56LA8I9zemw" anchor="_d_AzMHt3EeC56LA8I9zemw _d_AzMXt3EeC56LA8I9zemw">
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_d_FEoHt3EeC56LA8I9zemw" presentation="default">
+          <element href="RegistroBemAdquiridos.uml#_d_NngHt3EeC56LA8I9zemw"/>
+        </semanticModel>
+        <contained xsi:type="di:EdgeObjectOffset" xmi:id="_d_FEoXt3EeC56LA8I9zemw" id="nameEdgeObject"/>
+      </contained>
+      <contained xsi:type="di:GraphEdge" xmi:id="_tpV-EHt3EeC56LA8I9zemw" anchor="_fi2kgHt3EeC56LA8I9zemw _d_AzMHt3EeC56LA8I9zemw">
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_tpV-EXt3EeC56LA8I9zemw" presentation="default">
+          <element href="RegistroBemAdquiridos.uml#_tpfvEHt3EeC56LA8I9zemw"/>
+        </semanticModel>
+        <contained xsi:type="di:EdgeObjectUV" xmi:id="_tpV-Ent3EeC56LA8I9zemw" visible="false" id="srcCountEdgeObject" uDistance="10" vDistance="-10"/>
+        <contained xsi:type="di:EdgeObjectUV" xmi:id="_tpV-E3t3EeC56LA8I9zemw" visible="false" id="targetCountEdgeObject" uDistance="10" vDistance="-10"/>
+        <contained xsi:type="di:EdgeObjectOffset" xmi:id="_tpV-FHt3EeC56LA8I9zemw" id="nameEdgeObject" offset="83,-35"/>
+        <contained xsi:type="di:EdgeObjectOffset" xmi:id="_tpV-FXt3EeC56LA8I9zemw" id="stereotypeEdgeObject" offset="0,-10"/>
+      </contained>
+      <contained xsi:type="di:GraphEdge" xmi:id="_1CrjIHt3EeC56LA8I9zemw" anchor="_1Cpt8Ht3EeC56LA8I9zemw _d_AzMXt3EeC56LA8I9zemw">
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_1CrjIXt3EeC56LA8I9zemw" presentation="default">
+          <element href="RegistroBemAdquiridos.uml#_1C17MHt3EeC56LA8I9zemw"/>
+        </semanticModel>
+        <contained xsi:type="di:EdgeObjectOffset" xmi:id="_1CrjInt3EeC56LA8I9zemw" id="nameEdgeObject"/>
+      </contained>
+      <contained xsi:type="di:GraphEdge" xmi:id="_2IlbQHt3EeC56LA8I9zemw" anchor="_fi2kgHt3EeC56LA8I9zemw _1Cpt8Ht3EeC56LA8I9zemw">
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_2IlbQXt3EeC56LA8I9zemw" presentation="default">
+          <element href="RegistroBemAdquiridos.uml#_2IvMQHt3EeC56LA8I9zemw"/>
+        </semanticModel>
+        <contained xsi:type="di:EdgeObjectUV" xmi:id="_2IlbQnt3EeC56LA8I9zemw" visible="false" id="srcCountEdgeObject" uDistance="10" vDistance="-10"/>
+        <contained xsi:type="di:EdgeObjectUV" xmi:id="_2IlbQ3t3EeC56LA8I9zemw" visible="false" id="targetCountEdgeObject" uDistance="10" vDistance="-10"/>
+        <contained xsi:type="di:EdgeObjectOffset" xmi:id="_2ImCUHt3EeC56LA8I9zemw" id="nameEdgeObject" offset="-62,-8"/>
+        <contained xsi:type="di:EdgeObjectOffset" xmi:id="_2ImCUXt3EeC56LA8I9zemw" id="stereotypeEdgeObject" offset="0,-10"/>
+      </contained>
+      <contained xsi:type="di:GraphNode" xmi:id="_4tUB0Ht3EeC56LA8I9zemw" position="910,16" size="123,80">
+        <anchorage xmi:id="_-5i6kHt3EeC56LA8I9zemw" graphEdge="_-5lW0Ht3EeC56LA8I9zemw"/>
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_4tUB0Xt3EeC56LA8I9zemw" presentation="default">
+          <element href="RegistroBemAdquiridos.uml#_4tgPEHt3EeC56LA8I9zemw"/>
+        </semanticModel>
+      </contained>
+      <contained xsi:type="di:GraphNode" xmi:id="_8nFvwHt3EeC56LA8I9zemw" position="679,295" size="120,80">
+        <anchorage xmi:id="_-5jhoHt3EeC56LA8I9zemw" graphEdge="_-5lW0Ht3EeC56LA8I9zemw _FUCRwHt4EeC56LA8I9zemw"/>
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_8nFvwXt3EeC56LA8I9zemw" presentation="default">
+          <element href="RegistroBemAdquiridos.uml#_8nR9AHt3EeC56LA8I9zemw"/>
+        </semanticModel>
+      </contained>
+      <contained xsi:type="di:GraphEdge" xmi:id="_-5lW0Ht3EeC56LA8I9zemw" anchor="_-5i6kHt3EeC56LA8I9zemw _-5jhoHt3EeC56LA8I9zemw">
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_-5lW0Xt3EeC56LA8I9zemw" presentation="default">
+          <element href="RegistroBemAdquiridos.uml#_-5xkEHt3EeC56LA8I9zemw"/>
+        </semanticModel>
+        <contained xsi:type="di:EdgeObjectUV" xmi:id="_-5lW0nt3EeC56LA8I9zemw" visible="false" id="srcCountEdgeObject" uDistance="10" vDistance="-10"/>
+        <contained xsi:type="di:EdgeObjectUV" xmi:id="_-5lW03t3EeC56LA8I9zemw" visible="false" id="targetCountEdgeObject" uDistance="10" vDistance="-10"/>
+        <contained xsi:type="di:EdgeObjectOffset" xmi:id="_-5lW1Ht3EeC56LA8I9zemw" id="nameEdgeObject" offset="0,10"/>
+        <contained xsi:type="di:EdgeObjectOffset" xmi:id="_-5lW1Xt3EeC56LA8I9zemw" id="stereotypeEdgeObject" offset="0,-10"/>
+      </contained>
+      <contained xsi:type="di:GraphEdge" xmi:id="_FUCRwHt4EeC56LA8I9zemw" anchor="_1Cpt8Ht3EeC56LA8I9zemw _-5jhoHt3EeC56LA8I9zemw">
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_FUCRwXt4EeC56LA8I9zemw" presentation="default">
+          <element href="RegistroBemAdquiridos.uml#_FUPGEHt4EeC56LA8I9zemw"/>
+        </semanticModel>
+        <contained xsi:type="di:EdgeObjectOffset" xmi:id="_FUCRwnt4EeC56LA8I9zemw" id="nameEdgeObject"/>
+      </contained>
+    </diagrams>
+  </subdiagrams>
+  <subdiagrams xmi:id="_iJ-fLHt0EeC56LA8I9zemw">
+    <model href="RegistroBemAdquiridos.uml#_wSRJAHFzEduxYLkhQoh7Ag"/>
+    <diagrams xmi:id="_iJ_GMHt0EeC56LA8I9zemw" position="0,0" size="100,100" name="LogicalView" viewport="0,0">
+      <property xmi:id="_iJ_GMXt0EeC56LA8I9zemw" key="pageFormatName" value="A2"/>
+      <property xmi:id="_iJ_GMnt0EeC56LA8I9zemw" key="diagramWidth" value="1680"/>
+      <property xmi:id="_iJ_GM3t0EeC56LA8I9zemw" key="diagramHeight" value="2376"/>
+      <property xmi:id="_iJ_GNHt0EeC56LA8I9zemw" key="pageMarginName" value="Small Margin"/>
+      <property xmi:id="_iJ_GNXt0EeC56LA8I9zemw" key="diagramTopMargin" value="20"/>
+      <property xmi:id="_iJ_GNnt0EeC56LA8I9zemw" key="diagramBottomMargin" value="20"/>
+      <property xmi:id="_iJ_GN3t0EeC56LA8I9zemw" key="diagramLeftMargin" value="20"/>
+      <property xmi:id="_iJ_GOHt0EeC56LA8I9zemw" key="diagramRightMargin" value="20"/>
+      <property xmi:id="_iJ_GOXt0EeC56LA8I9zemw" key="orientation" value="portrait"/>
+      <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_iJ_GOnt0EeC56LA8I9zemw" presentation="org.topcased.modeler.uml.classdiagram">
+        <element href="RegistroBemAdquiridos.uml#_wSRJAHFzEduxYLkhQoh7Ag"/>
+      </semanticModel>
+    </diagrams>
+  </subdiagrams>
+  <subdiagrams xmi:id="_iJ_GO3t0EeC56LA8I9zemw">
+    <model href="RegistroBemAdquiridos.uml#_zwUu0HF0EduxYLkhQoh7Ag"/>
+    <diagrams xmi:id="_iJ_GPHt0EeC56LA8I9zemw" position="0,0" size="100,100" name="ComponentView" viewport="0,0">
+      <property xmi:id="_iJ_GPXt0EeC56LA8I9zemw" key="pageFormatName" value="A2"/>
+      <property xmi:id="_iJ_GPnt0EeC56LA8I9zemw" key="diagramWidth" value="1680"/>
+      <property xmi:id="_iJ_GP3t0EeC56LA8I9zemw" key="diagramHeight" value="2376"/>
+      <property xmi:id="_iJ_GQHt0EeC56LA8I9zemw" key="pageMarginName" value="Small Margin"/>
+      <property xmi:id="_iJ_GQXt0EeC56LA8I9zemw" key="diagramTopMargin" value="20"/>
+      <property xmi:id="_iJ_GQnt0EeC56LA8I9zemw" key="diagramBottomMargin" value="20"/>
+      <property xmi:id="_iJ_GQ3t0EeC56LA8I9zemw" key="diagramLeftMargin" value="20"/>
+      <property xmi:id="_iJ_GRHt0EeC56LA8I9zemw" key="diagramRightMargin" value="20"/>
+      <property xmi:id="_iJ_tQHt0EeC56LA8I9zemw" key="orientation" value="portrait"/>
+      <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_iJ_tQXt0EeC56LA8I9zemw" presentation="org.topcased.modeler.uml.componentdiagram">
+        <element href="RegistroBemAdquiridos.uml#_zwUu0HF0EduxYLkhQoh7Ag"/>
+      </semanticModel>
+    </diagrams>
+  </subdiagrams>
+  <subdiagrams xmi:id="_iJ_tQnt0EeC56LA8I9zemw">
+    <model href="RegistroBemAdquiridos.uml#_1coVEHFzEduxYLkhQoh7Ag"/>
+    <diagrams xmi:id="_iJ_tQ3t0EeC56LA8I9zemw" position="0,0" size="100,100" name="DeploymentView" viewport="0,0">
+      <property xmi:id="_iJ_tRHt0EeC56LA8I9zemw" key="pageFormatName" value="A2"/>
+      <property xmi:id="_iJ_tRXt0EeC56LA8I9zemw" key="diagramWidth" value="1680"/>
+      <property xmi:id="_iJ_tRnt0EeC56LA8I9zemw" key="diagramHeight" value="2376"/>
+      <property xmi:id="_iJ_tR3t0EeC56LA8I9zemw" key="pageMarginName" value="Small Margin"/>
+      <property xmi:id="_iJ_tSHt0EeC56LA8I9zemw" key="diagramTopMargin" value="20"/>
+      <property xmi:id="_iJ_tSXt0EeC56LA8I9zemw" key="diagramBottomMargin" value="20"/>
+      <property xmi:id="_iJ_tSnt0EeC56LA8I9zemw" key="diagramLeftMargin" value="20"/>
+      <property xmi:id="_iJ_tS3t0EeC56LA8I9zemw" key="diagramRightMargin" value="20"/>
+      <property xmi:id="_iJ_tTHt0EeC56LA8I9zemw" key="orientation" value="portrait"/>
+      <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_iJ_tTXt0EeC56LA8I9zemw" presentation="org.topcased.modeler.uml.deploymentdiagram">
+        <element href="RegistroBemAdquiridos.uml#_1coVEHFzEduxYLkhQoh7Ag"/>
+      </semanticModel>
+    </diagrams>
+  </subdiagrams>
+</diagrams:Diagrams>

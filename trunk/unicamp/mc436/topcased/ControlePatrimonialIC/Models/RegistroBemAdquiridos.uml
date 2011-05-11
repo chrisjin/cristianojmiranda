@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="_qb8akM37EdqwVrslYOdUDA" name="RegistroBemAdquiridos">
+  <packagedElement xmi:type="uml:Package" xmi:id="_w8IxIM37EdqwVrslYOdUDA" name="UseCaseView">
+    <packagedElement xmi:type="uml:Actor" xmi:id="_VZKCkHt1EeC56LA8I9zemw" name="Analista de Patrimonio"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_0pB-8Ht1EeC56LA8I9zemw" name="Registrar bem adquirido com verba de orgão de fomento"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_nZKO4Ht2EeC56LA8I9zemw" name="Cadastrar bem no sistema" clientDependency="_beHjwHt3EeC56LA8I9zemw">
+      <include xmi:id="_d_NngHt3EeC56LA8I9zemw" name="Include1" addition="_0pB-8Ht1EeC56LA8I9zemw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_qPCP0Ht2EeC56LA8I9zemw" name="Atualizar bem no sistema">
+      <include xmi:id="_1C17MHt3EeC56LA8I9zemw" name="Include1" addition="_0pB-8Ht1EeC56LA8I9zemw"/>
+      <include xmi:id="_FUPGEHt4EeC56LA8I9zemw" name="Include2" addition="_8nR9AHt3EeC56LA8I9zemw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Dependency" xmi:id="_beHjwHt3EeC56LA8I9zemw" name="Dependency1" supplier="_0pB-8Ht1EeC56LA8I9zemw" client="_nZKO4Ht2EeC56LA8I9zemw"/>
+    <packagedElement xmi:type="uml:Association" xmi:id="_fjQ0MHt3EeC56LA8I9zemw" name="A_&lt;analista de Patrimonio>_&lt;cadastro do bem no sistema>" memberEnd="_fjQ0MXt3EeC56LA8I9zemw _fjQ0NHt3EeC56LA8I9zemw">
+      <ownedEnd xmi:id="_fjQ0MXt3EeC56LA8I9zemw" name="analista de Patrimonio" type="_VZKCkHt1EeC56LA8I9zemw" association="_fjQ0MHt3EeC56LA8I9zemw">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_fjQ0Mnt3EeC56LA8I9zemw" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_fjQ0M3t3EeC56LA8I9zemw" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_fjQ0NHt3EeC56LA8I9zemw" name="cadastro do bem no sistema" type="_nZKO4Ht2EeC56LA8I9zemw" association="_fjQ0MHt3EeC56LA8I9zemw">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_fjQ0NXt3EeC56LA8I9zemw" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_fjQ0Nnt3EeC56LA8I9zemw" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_n0mYQHt3EeC56LA8I9zemw" name="A_&lt;analista de Patrimonio>_&lt;atualização do bem no sistema>" memberEnd="_n0mYQXt3EeC56LA8I9zemw _n0mYRHt3EeC56LA8I9zemw">
+      <ownedEnd xmi:id="_n0mYQXt3EeC56LA8I9zemw" name="analista de Patrimonio" type="_VZKCkHt1EeC56LA8I9zemw" association="_n0mYQHt3EeC56LA8I9zemw">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_n0mYQnt3EeC56LA8I9zemw" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_n0mYQ3t3EeC56LA8I9zemw" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_n0mYRHt3EeC56LA8I9zemw" name="atualização do bem no sistema" type="_qPCP0Ht2EeC56LA8I9zemw" association="_n0mYQHt3EeC56LA8I9zemw">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_n0mYRXt3EeC56LA8I9zemw" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_n0mYRnt3EeC56LA8I9zemw" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_tpfvEHt3EeC56LA8I9zemw" name="A_&lt;analista de Patrimonio>_&lt;cadastrar bem no sistema>" memberEnd="_tpfvEXt3EeC56LA8I9zemw _tpfvFHt3EeC56LA8I9zemw">
+      <ownedEnd xmi:id="_tpfvEXt3EeC56LA8I9zemw" name="analista de Patrimonio" type="_VZKCkHt1EeC56LA8I9zemw" association="_tpfvEHt3EeC56LA8I9zemw">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_tpfvEnt3EeC56LA8I9zemw" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_tpfvE3t3EeC56LA8I9zemw" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_tpfvFHt3EeC56LA8I9zemw" name="cadastrar bem no sistema" type="_nZKO4Ht2EeC56LA8I9zemw" association="_tpfvEHt3EeC56LA8I9zemw">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_tpfvFXt3EeC56LA8I9zemw" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_tpfvFnt3EeC56LA8I9zemw" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_2IvMQHt3EeC56LA8I9zemw" name="A_&lt;analista de Patrimonio>_&lt;atualizar bem no sistema>" memberEnd="_2IvMQXt3EeC56LA8I9zemw _2IvMRHt3EeC56LA8I9zemw">
+      <ownedEnd xmi:id="_2IvMQXt3EeC56LA8I9zemw" name="analista de Patrimonio" type="_VZKCkHt1EeC56LA8I9zemw" association="_2IvMQHt3EeC56LA8I9zemw">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2IvMQnt3EeC56LA8I9zemw" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2IvMQ3t3EeC56LA8I9zemw" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_2IvMRHt3EeC56LA8I9zemw" name="atualizar bem no sistema" type="_qPCP0Ht2EeC56LA8I9zemw" association="_2IvMQHt3EeC56LA8I9zemw">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_2IvMRXt3EeC56LA8I9zemw" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_2IvMRnt3EeC56LA8I9zemw" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Actor" xmi:id="_4tgPEHt3EeC56LA8I9zemw" name="Funcionarios IC"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_8nR9AHt3EeC56LA8I9zemw" name="Consultar bem no sistema">
+      <include xmi:id="_CfqFoHt4EeC56LA8I9zemw" name="Include1" addition="_qPCP0Ht2EeC56LA8I9zemw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_-5xkEHt3EeC56LA8I9zemw" name="A_&lt;funcionarios IC>_&lt;consultar bem no sistema>" memberEnd="_-5xkEXt3EeC56LA8I9zemw _-5xkFHt3EeC56LA8I9zemw">
+      <ownedEnd xmi:id="_-5xkEXt3EeC56LA8I9zemw" name="funcionarios IC" type="_4tgPEHt3EeC56LA8I9zemw" association="_-5xkEHt3EeC56LA8I9zemw">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_-5xkEnt3EeC56LA8I9zemw" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_-5xkE3t3EeC56LA8I9zemw" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_-5xkFHt3EeC56LA8I9zemw" name="consultar bem no sistema" type="_8nR9AHt3EeC56LA8I9zemw" association="_-5xkEHt3EeC56LA8I9zemw">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_-5xkFXt3EeC56LA8I9zemw" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_-5xkFnt3EeC56LA8I9zemw" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_wSRJAHFzEduxYLkhQoh7Ag" name="LogicalView"/>
+  <packagedElement xmi:type="uml:Package" xmi:id="_ypXjQHFzEduxYLkhQoh7Ag" name="ComponentView">
+    <packagedElement xmi:type="uml:Component" xmi:id="_zwUu0HF0EduxYLkhQoh7Ag" name="Main"/>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Package" xmi:id="_1coVEHFzEduxYLkhQoh7Ag" name="DeploymentView"/>
+</uml:Model>
