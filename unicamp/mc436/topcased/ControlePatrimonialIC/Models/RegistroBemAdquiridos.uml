@@ -25,7 +25,7 @@
         <message xmi:id="_mZCQgHzoEeCwt54-WZP6sg" name="Atribui bem como fomento" messageSort="reply" receiveEvent="_mY8w8HzoEeCwt54-WZP6sg" sendEvent="_mY8J4HzoEeCwt54-WZP6sg"/>
       </ownedBehavior>
     </packagedElement>
-    <packagedElement xmi:type="uml:UseCase" xmi:id="_nZKO4Ht2EeC56LA8I9zemw" name="Cadastrar bem no sistema" clientDependency="_beHjwHt3EeC56LA8I9zemw" classifierBehavior="_gtUEEHxJEeCbOLWgxKC3ng">
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_nZKO4Ht2EeC56LA8I9zemw" name="Cadastrar bem no sistema" clientDependency="_beHjwHt3EeC56LA8I9zemw" classifierBehavior="_YkzDYIGwEeCFV-LOw8TpvQ">
       <ownedBehavior xmi:type="uml:Interaction" xmi:id="_gtUEEHxJEeCbOLWgxKC3ng" name="Cadastrar bem no sistemaDetail">
         <lifeline xmi:id="_hSYgAHxJEeCbOLWgxKC3ng" name="Sistema" coveredBy="_wfHlwHySEeCwt54-WZP6sg _mMX4sHyUEeCwt54-WZP6sg _OvZQ4HyUEeCwt54-WZP6sg _F399MHyUEeCwt54-WZP6sg _uffQUHySEeCwt54-WZP6sg"/>
         <lifeline xmi:id="_j16MsHxJEeCbOLWgxKC3ng" name="Cadastrar Bem" coveredBy="_wfIM0HySEeCwt54-WZP6sg _yZ_FEHyUEeCwt54-WZP6sg _ugkjgHyUEeCwt54-WZP6sg _q2uH8HyUEeCwt54-WZP6sg _oETDoHyUEeCwt54-WZP6sg _mMYfwHyUEeCwt54-WZP6sg _x4Z3cHyTEeCwt54-WZP6sg _IxknkHyUEeCwt54-WZP6sg _F3-kQHyUEeCwt54-WZP6sg _sdlNgHyTEeCwt54-WZP6sg _a7P_MHyTEeCwt54-WZP6sg _PPuMMHyTEeCwt54-WZP6sg _6r3GkHySEeCwt54-WZP6sg _1oJVE3ySEeCwt54-WZP6sg _wd76AHySEeCwt54-WZP6sg"/>
@@ -94,6 +94,69 @@
         <message xmi:id="_ugm_wHyUEeCwt54-WZP6sg" name="Usuario não informa nenhum campo e solicita gravação" receiveEvent="_uglxoHyUEeCwt54-WZP6sg" sendEvent="_ugkjgHyUEeCwt54-WZP6sg"/>
         <message xmi:id="_yaBhUHyUEeCwt54-WZP6sg" name="Sistema exibe mensagem solicitando o preenchimento de campos obrigatorios" messageSort="reply" receiveEvent="_yZ_FEHyUEeCwt54-WZP6sg" sendEvent="_yZ9P4HyUEeCwt54-WZP6sg"/>
       </ownedBehavior>
+      <ownedBehavior xmi:type="uml:Activity" xmi:id="_YkzDYIGwEeCFV-LOw8TpvQ" name="Cadastrar bem no sistemaDetail">
+        <ownedBehavior xmi:type="uml:Activity" xmi:id="_YwVWQIG2EeCFV-LOw8TpvQ" name="cff" classifierBehavior="_faaooIG2EeCFV-LOw8TpvQ">
+          <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_faaooIG2EeCFV-LOw8TpvQ" name="StateMachine">
+            <region xmi:id="_faaooYG2EeCFV-LOw8TpvQ" name="Region"/>
+          </ownedBehavior>
+        </ownedBehavior>
+        <ownedBehavior xmi:type="uml:Activity" xmi:id="_E2DjsIG3EeCFV-LOw8TpvQ" name="Verificar Permissão"/>
+        <ownedBehavior xmi:type="uml:Activity" xmi:id="_RF3vgIG3EeCFV-LOw8TpvQ" name="Vai para tela de Login"/>
+        <ownedBehavior xmi:type="uml:Activity" xmi:id="_ibzEEIG4EeCFV-LOw8TpvQ" name="Notifica Usuario sem permissao"/>
+        <ownedBehavior xmi:type="uml:Activity" xmi:id="_3ZpXAIG4EeCFV-LOw8TpvQ" name="Monta a tela de cadastro"/>
+        <ownedBehavior xmi:type="uml:Activity" xmi:id="_FNNQsIG9EeCFV-LOw8TpvQ" name="Validar Dados"/>
+        <ownedBehavior xmi:type="uml:Activity" xmi:id="_1IDVkIG9EeCFV-LOw8TpvQ" name="Grava na base"/>
+        <node xmi:type="uml:InitialNode" xmi:id="_HtUeAIGyEeCFV-LOw8TpvQ" name="InitialNode1" outgoing="_crVMMIG2EeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:CallBehaviorAction" xmi:id="_YwUIIIG2EeCFV-LOw8TpvQ" name="Cadastrar Patrimonio" outgoing="_b5x-AIG3EeCFV-LOw8TpvQ" incoming="_crVMMIG2EeCFV-LOw8TpvQ" behavior="_gtUEEHxJEeCbOLWgxKC3ng"/>
+        <node xmi:type="uml:CallBehaviorAction" xmi:id="_E2C8oIG3EeCFV-LOw8TpvQ" name="a1" outgoing="_Xv-QAIG3EeCFV-LOw8TpvQ _kjHV4IG4EeCFV-LOw8TpvQ _5CoHAIG4EeCFV-LOw8TpvQ" incoming="_b5x-AIG3EeCFV-LOw8TpvQ" behavior="_E2DjsIG3EeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:CallBehaviorAction" xmi:id="_RF2hYIG3EeCFV-LOw8TpvQ" name="a2" incoming="_Xv-QAIG3EeCFV-LOw8TpvQ" behavior="_krgfIHwhEeCbOLWgxKC3ng"/>
+        <node xmi:type="uml:CallBehaviorAction" xmi:id="_ibx18IG4EeCFV-LOw8TpvQ" name="a3" incoming="_kjHV4IG4EeCFV-LOw8TpvQ" behavior="_ibzEEIG4EeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:CallBehaviorAction" xmi:id="_3ZoI4IG4EeCFV-LOw8TpvQ" name="a4" outgoing="_8HY7sIG8EeCFV-LOw8TpvQ _ItReIIG9EeCFV-LOw8TpvQ" incoming="_5CoHAIG4EeCFV-LOw8TpvQ _NHdKcIG9EeCFV-LOw8TpvQ _56KZsIG9EeCFV-LOw8TpvQ" behavior="_3ZpXAIG4EeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:FlowFinalNode" xmi:id="_6qZZQIG8EeCFV-LOw8TpvQ" name="FlowFinalNode1" incoming="_8HY7sIG8EeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:CallBehaviorAction" xmi:id="_FNMpoIG9EeCFV-LOw8TpvQ" name="a5" outgoing="_NHdKcIG9EeCFV-LOw8TpvQ _2n5XsIG9EeCFV-LOw8TpvQ" incoming="_ItReIIG9EeCFV-LOw8TpvQ" behavior="_FNNQsIG9EeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:CallBehaviorAction" xmi:id="_1ICugIG9EeCFV-LOw8TpvQ" name="a6" outgoing="_56KZsIG9EeCFV-LOw8TpvQ" incoming="_2n5XsIG9EeCFV-LOw8TpvQ" behavior="_1IDVkIG9EeCFV-LOw8TpvQ"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_crVMMIG2EeCFV-LOw8TpvQ" name="Acessar tela de cadastro de bem" source="_HtUeAIGyEeCFV-LOw8TpvQ" target="_YwUIIIG2EeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_crVMMYG2EeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_crVMMoG2EeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_Xv-QAIG3EeCFV-LOw8TpvQ" name="Usuario não logado ou sessão expirada" source="_E2C8oIG3EeCFV-LOw8TpvQ" target="_RF2hYIG3EeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_Xv-QAYG3EeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_Xv-3EIG3EeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_b5x-AIG3EeCFV-LOw8TpvQ" name="Verifica se o usuario tem permissão" source="_YwUIIIG2EeCFV-LOw8TpvQ" target="_E2C8oIG3EeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_b5x-AYG3EeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_b5x-AoG3EeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_kjHV4IG4EeCFV-LOw8TpvQ" name="Usurio não tem permissao para cadastrar bem" source="_E2C8oIG3EeCFV-LOw8TpvQ" target="_ibx18IG4EeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_kjHV4YG4EeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_kjHV4oG4EeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_5CoHAIG4EeCFV-LOw8TpvQ" name="Usuario tem perfil para cadastrar patrimonio" source="_E2C8oIG3EeCFV-LOw8TpvQ" target="_3ZoI4IG4EeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_5CoHAYG4EeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_5CoHAoG4EeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_8HY7sIG8EeCFV-LOw8TpvQ" name="Acionar Botão Sair" source="_3ZoI4IG4EeCFV-LOw8TpvQ" target="_6qZZQIG8EeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_8HY7sYG8EeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_8HY7soG8EeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_ItReIIG9EeCFV-LOw8TpvQ" name="Preenche a tela e aciona Salvar" source="_3ZoI4IG4EeCFV-LOw8TpvQ" target="_FNMpoIG9EeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_ItReIYG9EeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_ItReIoG9EeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_NHdKcIG9EeCFV-LOw8TpvQ" name="Dados inconsistentes exibe notificação" source="_FNMpoIG9EeCFV-LOw8TpvQ" target="_3ZoI4IG4EeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_NHdKcYG9EeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_NHdKcoG9EeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_2n5XsIG9EeCFV-LOw8TpvQ" name="Dados consistentes" source="_FNMpoIG9EeCFV-LOw8TpvQ" target="_1ICugIG9EeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_2n5XsYG9EeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_2n5XsoG9EeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_56KZsIG9EeCFV-LOw8TpvQ" name="Limpa a tela e notifica sucesso da operação" source="_1ICugIG9EeCFV-LOw8TpvQ" target="_3ZoI4IG4EeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_56KZsYG9EeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_56KZsoG9EeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <group xmi:type="uml:ActivityPartition" xmi:id="_iZbM4IG1EeCFV-LOw8TpvQ" name="ActivityPartition1"/>
+      </ownedBehavior>
       <include xmi:id="_d_NngHt3EeC56LA8I9zemw" name="Include1" addition="_0pB-8Ht1EeC56LA8I9zemw"/>
       <include xmi:id="_nnbvoHwfEeCbOLWgxKC3ng" name="Include2" addition="_LeqHEHwfEeCbOLWgxKC3ng"/>
     </packagedElement>
@@ -143,6 +206,7 @@
       </ownedBehavior>
       <include xmi:id="_1C17MHt3EeC56LA8I9zemw" name="Include1" addition="_0pB-8Ht1EeC56LA8I9zemw"/>
       <include xmi:id="_hEXrQHwfEeCbOLWgxKC3ng" name="Include3" addition="_LeqHEHwfEeCbOLWgxKC3ng"/>
+      <include xmi:id="_gx6EM4GvEeCFV-LOw8TpvQ" name="Include2" addition="_eyWAMIGvEeCFV-LOw8TpvQ"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Dependency" xmi:id="_beHjwHt3EeC56LA8I9zemw" name="Dependency1" supplier="_0pB-8Ht1EeC56LA8I9zemw" client="_nZKO4Ht2EeC56LA8I9zemw"/>
     <packagedElement xmi:type="uml:Association" xmi:id="_fjQ0MHt3EeC56LA8I9zemw" name="A_&lt;analista de Patrimonio>_&lt;cadastro do bem no sistema>" memberEnd="_fjQ0MXt3EeC56LA8I9zemw _fjQ0NHt3EeC56LA8I9zemw">
@@ -237,7 +301,12 @@
       <include xmi:id="_cgieQHwgEeCbOLWgxKC3ng" name="Include2" addition="_LeqHEHwfEeCbOLWgxKC3ng"/>
       <include xmi:id="_qjek0HwxEeCbOLWgxKC3ng" name="Include3" addition="_m60cEHwxEeCbOLWgxKC3ng"/>
       <include xmi:id="_INnvg3ygEeCwt54-WZP6sg" name="Include4" addition="_qPCP0Ht2EeC56LA8I9zemw"/>
+      <include xmi:id="_eEmGM4GrEeCFV-LOw8TpvQ" name="Include5" addition="_Lih5MIGrEeCFV-LOw8TpvQ"/>
       <extensionPoint xmi:id="_SiptMHzuEeCwt54-WZP6sg" name="ExtensionPoint1"/>
+      <extensionPoint xmi:id="_wvw2wIGpEeCFV-LOw8TpvQ" name="ExtensionPoint2"/>
+      <extensionPoint xmi:id="_1n4cQIGpEeCFV-LOw8TpvQ" name="ExtensionPoint3"/>
+      <extensionPoint xmi:id="_BqfSgIGqEeCFV-LOw8TpvQ" name="ExtensionPoint4"/>
+      <extensionPoint xmi:id="_x2Ca8IGsEeCFV-LOw8TpvQ" name="ExtensionPoint5"/>
     </packagedElement>
     <packagedElement xmi:type="uml:Association" xmi:id="_-5xkEHt3EeC56LA8I9zemw" name="A_&lt;funcionarios IC>_&lt;consultar bem no sistema>" memberEnd="_-5xkEXt3EeC56LA8I9zemw _-5xkFHt3EeC56LA8I9zemw">
       <ownedEnd xmi:id="_-5xkEXt3EeC56LA8I9zemw" name="funcionarios IC" type="_4tgPEHt3EeC56LA8I9zemw" association="_-5xkEHt3EeC56LA8I9zemw">
@@ -321,7 +390,7 @@
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_BcIHrHweEeCbOLWgxKC3ng" value="1"/>
       </ownedEnd>
     </packagedElement>
-    <packagedElement xmi:type="uml:UseCase" xmi:id="_RCvQIHweEeCbOLWgxKC3ng" name="Manter Usuario" classifierBehavior="_jmJcsHzpEeCwt54-WZP6sg">
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_RCvQIHweEeCbOLWgxKC3ng" name="Manter Usuario" classifierBehavior="_odtUcIG-EeCFV-LOw8TpvQ">
       <ownedBehavior xmi:type="uml:Interaction" xmi:id="_jmJcsHzpEeCwt54-WZP6sg" name="Manter UsuarioDetail">
         <lifeline xmi:id="_5g-8UHzpEeCwt54-WZP6sg" name="Sistema" coveredBy="_NZAaM3zrEeCwt54-WZP6sg __rgS8HzrEeCwt54-WZP6sg _MkcJsHzrEeCwt54-WZP6sg"/>
         <lifeline xmi:id="_7eZEMHzpEeCwt54-WZP6sg" name="Manter Usuario" coveredBy="_guWeQHzrEeCwt54-WZP6sg _RirTYHztEeCwt54-WZP6sg _MWHH4HztEeCwt54-WZP6sg _4xn0kHzsEeCwt54-WZP6sg _vIDSQHzsEeCwt54-WZP6sg _X6K2YHzsEeCwt54-WZP6sg _N3i64HzsEeCwt54-WZP6sg _LVw6oHzsEeCwt54-WZP6sg _XrR7Q3zrEeCwt54-WZP6sg _Pv280HzrEeCwt54-WZP6sg _Pvz5gHzrEeCwt54-WZP6sg _LVtQQHzsEeCwt54-WZP6sg"/>
@@ -371,6 +440,39 @@
         <message xmi:id="_4xvJUHzsEeCwt54-WZP6sg" name="Refaz a consulta com o item alterado" messageSort="reply" receiveEvent="_4xn0kHzsEeCwt54-WZP6sg" sendEvent="_4xmmcHzsEeCwt54-WZP6sg"/>
         <message xmi:id="_MWQR0HztEeCwt54-WZP6sg" name="Inativa usuario" receiveEvent="_MWIWAHztEeCwt54-WZP6sg" sendEvent="_MWHH4HztEeCwt54-WZP6sg"/>
         <message xmi:id="_RiyoIHztEeCwt54-WZP6sg" name="Refaz a consulta com o item alterado" messageSort="reply" receiveEvent="_RirTYHztEeCwt54-WZP6sg" sendEvent="_RipeMHztEeCwt54-WZP6sg"/>
+      </ownedBehavior>
+      <ownedBehavior xmi:type="uml:Activity" xmi:id="_odtUcIG-EeCFV-LOw8TpvQ" name="Manter UsuarioDetail">
+        <node xmi:type="uml:InitialNode" xmi:id="_zd29QIHAEeCFV-LOw8TpvQ" name="InitialNode1" outgoing="_7b1gcIHAEeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_2oXxcIHAEeCFV-LOw8TpvQ" name="Acessar Tela Manter Usuario" outgoing="_C3_wAIHBEeCFV-LOw8TpvQ" incoming="_7b1gcIHAEeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_-ID2IIHAEeCFV-LOw8TpvQ" name="Verificar Permissão" outgoing="_KIp6MIHBEeCFV-LOw8TpvQ _VTrBIIHBEeCFV-LOw8TpvQ _bSxc0IHBEeCFV-LOw8TpvQ" incoming="_C3_wAIHBEeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_G0tdMIHBEeCFV-LOw8TpvQ" name="Notifica usuario sem permissão" incoming="_KIp6MIHBEeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_RC69oIHBEeCFV-LOw8TpvQ" name="Monta a tela com a listagem de usuarios cadastrados" outgoing="_rDm4UIHBEeCFV-LOw8TpvQ" incoming="_VTrBIIHBEeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_YyGP0IHBEeCFV-LOw8TpvQ" name="Vai para tela de login" incoming="_bSxc0IHBEeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:FlowFinalNode" xmi:id="_qGWl4IHBEeCFV-LOw8TpvQ" name="FlowFinalNode1" incoming="_rDm4UIHBEeCFV-LOw8TpvQ"/>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_7b1gcIHAEeCFV-LOw8TpvQ" name="Acessar Tela" source="_zd29QIHAEeCFV-LOw8TpvQ" target="_2oXxcIHAEeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_7b1gcYHAEeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_7b1gcoHAEeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_C3_wAIHBEeCFV-LOw8TpvQ" name="Verifica se o usuario tem permissão" source="_2oXxcIHAEeCFV-LOw8TpvQ" target="_-ID2IIHAEeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_C3_wAYHBEeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_C3_wAoHBEeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_KIp6MIHBEeCFV-LOw8TpvQ" name="Usuario não tem permissão" source="_-ID2IIHAEeCFV-LOw8TpvQ" target="_G0tdMIHBEeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_KIp6MYHBEeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_KIp6MoHBEeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_VTrBIIHBEeCFV-LOw8TpvQ" name="Usuario com acesso" source="_-ID2IIHAEeCFV-LOw8TpvQ" target="_RC69oIHBEeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_VTrBIYHBEeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_VTrBIoHBEeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_bSxc0IHBEeCFV-LOw8TpvQ" name="Usuario não logado ou sessão expirada" source="_-ID2IIHAEeCFV-LOw8TpvQ" target="_YyGP0IHBEeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_bSxc0YHBEeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_bSxc0oHBEeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_rDm4UIHBEeCFV-LOw8TpvQ" name="Usuario aciona botão sair" source="_RC69oIHBEeCFV-LOw8TpvQ" target="_qGWl4IHBEeCFV-LOw8TpvQ">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_rDm4UYHBEeCFV-LOw8TpvQ" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_rDm4UoHBEeCFV-LOw8TpvQ" value="1"/>
+        </edge>
       </ownedBehavior>
       <include xmi:id="_YxnVcHwgEeCbOLWgxKC3ng" name="Include1" addition="_LeqHEHwfEeCbOLWgxKC3ng"/>
     </packagedElement>
@@ -625,6 +727,159 @@
     <packagedElement xmi:type="uml:UseCase" xmi:id="_L8SdMHzuEeCwt54-WZP6sg" name="Gerar Relatorio Gerencial de bem">
       <extend xmi:id="_SjSmZHzuEeCwt54-WZP6sg" name="Extend1" extendedCase="_8nR9AHt3EeC56LA8I9zemw" extensionLocation="_SiptMHzuEeCwt54-WZP6sg"/>
     </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_ukhjsIGoEeCFV-LOw8TpvQ" name="Manter Area">
+      <extensionPoint xmi:id="_8Rx94IGoEeCFV-LOw8TpvQ" name="ExtensionPoint1"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_zFKdUIGoEeCFV-LOw8TpvQ" name="A_&lt;gerente Patrimonio>_&lt;manter Area>" memberEnd="_zFKdUYGoEeCFV-LOw8TpvQ _zFKdVIGoEeCFV-LOw8TpvQ">
+      <ownedEnd xmi:id="_zFKdUYGoEeCFV-LOw8TpvQ" name="gerente Patrimonio" type="_3EiBsHwdEeCbOLWgxKC3ng" association="_zFKdUIGoEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_zFKdUoGoEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zFKdU4GoEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_zFKdVIGoEeCFV-LOw8TpvQ" name="manter Area" type="_ukhjsIGoEeCFV-LOw8TpvQ" association="_zFKdUIGoEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_zFKdVYGoEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zFKdVoGoEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_0zgOcIGoEeCFV-LOw8TpvQ" name="Incluir Area">
+      <extend xmi:id="_8SUJZIGoEeCFV-LOw8TpvQ" name="Extend1" extendedCase="_ukhjsIGoEeCFV-LOw8TpvQ" extensionLocation="_8Rx94IGoEeCFV-LOw8TpvQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_36LEcIGoEeCFV-LOw8TpvQ" name="Alterar Area">
+      <extend xmi:id="_-VF5dIGoEeCFV-LOw8TpvQ" name="Extend1" extendedCase="_ukhjsIGoEeCFV-LOw8TpvQ" extensionLocation="_8Rx94IGoEeCFV-LOw8TpvQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_TYwggIGpEeCFV-LOw8TpvQ" name="Consultar Patrimonio Funcionario">
+      <include xmi:id="_eks0gIGpEeCFV-LOw8TpvQ" name="Include1" addition="_X1VZgIGpEeCFV-LOw8TpvQ"/>
+      <extend xmi:id="_x2fG5IGsEeCFV-LOw8TpvQ" name="Extend1" extendedCase="_8nR9AHt3EeC56LA8I9zemw" extensionLocation="_x2Ca8IGsEeCFV-LOw8TpvQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_X1VZgIGpEeCFV-LOw8TpvQ" name="Registrar Incidente Patrimonio">
+      <include xmi:id="_qM8tMIGtEeCFV-LOw8TpvQ" name="Include1" addition="_nlGhMIGtEeCFV-LOw8TpvQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_hBkfloGpEeCFV-LOw8TpvQ" name="A_&lt;funcionarios IC>_&lt;consultar Patrimonio Funcionario>" memberEnd="_hBkfl4GpEeCFV-LOw8TpvQ _hBkfmoGpEeCFV-LOw8TpvQ">
+      <ownedEnd xmi:id="_hBkfl4GpEeCFV-LOw8TpvQ" name="funcionarios IC" type="_4tgPEHt3EeC56LA8I9zemw" association="_hBkfloGpEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_hBkfmIGpEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_hBkfmYGpEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_hBkfmoGpEeCFV-LOw8TpvQ" name="consultar Patrimonio Funcionario" type="_TYwggIGpEeCFV-LOw8TpvQ" association="_hBkfloGpEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_hBkfm4GpEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_hBkfnIGpEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_quXVAIGpEeCFV-LOw8TpvQ" name="Gerar Relatorio Patrimonio por area">
+      <extend xmi:id="_wwOJxIGpEeCFV-LOw8TpvQ" name="Extend1" extendedCase="_8nR9AHt3EeC56LA8I9zemw" extensionLocation="_wvw2wIGpEeCFV-LOw8TpvQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_x8BOgIGpEeCFV-LOw8TpvQ" name="Gerar Relatorio de patrimonio extraviado por periodo">
+      <extend xmi:id="_1oSr8IGpEeCFV-LOw8TpvQ" name="Extend1" extendedCase="_8nR9AHt3EeC56LA8I9zemw" extensionLocation="_1n4cQIGpEeCFV-LOw8TpvQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_8St8kIGpEeCFV-LOw8TpvQ" name="Relatorio de patrimonio sem responsavel ou sem localização">
+      <extend xmi:id="_Bq9MlIGqEeCFV-LOw8TpvQ" name="Extend1" extendedCase="_8nR9AHt3EeC56LA8I9zemw" extensionLocation="_BqfSgIGqEeCFV-LOw8TpvQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_M-tYxoGqEeCFV-LOw8TpvQ" name="A_&lt;gerente Patrimonio>_&lt;relatorio de patrimonio sem responsavel ou sem localização>" memberEnd="_M-tYx4GqEeCFV-LOw8TpvQ _M-tYyoGqEeCFV-LOw8TpvQ">
+      <ownedEnd xmi:id="_M-tYx4GqEeCFV-LOw8TpvQ" name="gerente Patrimonio" type="_3EiBsHwdEeCbOLWgxKC3ng" association="_M-tYxoGqEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_M-tYyIGqEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_M-tYyYGqEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_M-tYyoGqEeCFV-LOw8TpvQ" name="relatorio de patrimonio sem responsavel ou sem localização" type="_8St8kIGpEeCFV-LOw8TpvQ" association="_M-tYxoGqEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_M-tYy4GqEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_M-tYzIGqEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_SJ1Z0IGqEeCFV-LOw8TpvQ" name="A_&lt;gerente Patrimonio>_&lt;gerar Relatorio de patrimonio extraviado por periodo>" memberEnd="_SJ1Z0YGqEeCFV-LOw8TpvQ _SJ1Z1IGqEeCFV-LOw8TpvQ">
+      <ownedEnd xmi:id="_SJ1Z0YGqEeCFV-LOw8TpvQ" name="gerente Patrimonio" type="_3EiBsHwdEeCbOLWgxKC3ng" association="_SJ1Z0IGqEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_SJ1Z0oGqEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_SJ1Z04GqEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_SJ1Z1IGqEeCFV-LOw8TpvQ" name="gerar Relatorio de patrimonio extraviado por periodo" type="_x8BOgIGpEeCFV-LOw8TpvQ" association="_SJ1Z0IGqEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_SJ1Z1YGqEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_SJ1Z1oGqEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_VxKF1oGqEeCFV-LOw8TpvQ" name="A_&lt;funcionarios IC>_&lt;registrar Incidente Patrimonio>" memberEnd="_VxKF14GqEeCFV-LOw8TpvQ _VxKF2oGqEeCFV-LOw8TpvQ">
+      <ownedEnd xmi:id="_VxKF14GqEeCFV-LOw8TpvQ" name="funcionarios IC" type="_4tgPEHt3EeC56LA8I9zemw" association="_VxKF1oGqEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_VxKF2IGqEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_VxKF2YGqEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_VxKF2oGqEeCFV-LOw8TpvQ" name="registrar Incidente Patrimonio" type="_X1VZgIGpEeCFV-LOw8TpvQ" association="_VxKF1oGqEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_VxKF24GqEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_VxKF3IGqEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Actor" xmi:id="_924okIGqEeCFV-LOw8TpvQ" name="Sensor de Localização"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_Lih5MIGrEeCFV-LOw8TpvQ" name="Liberar Saida de Bem">
+      <include xmi:id="_XE_PwIGrEeCFV-LOw8TpvQ" name="Include1" addition="_LeqHEHwfEeCbOLWgxKC3ng"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_T7XMZoGrEeCFV-LOw8TpvQ" name="A_&lt;gerente Patrimonio>_&lt;liberar Saida de Bem>" memberEnd="_T7XMZ4GrEeCFV-LOw8TpvQ _T7XMaoGrEeCFV-LOw8TpvQ">
+      <ownedEnd xmi:id="_T7XMZ4GrEeCFV-LOw8TpvQ" name="gerente Patrimonio" type="_3EiBsHwdEeCbOLWgxKC3ng" association="_T7XMZoGrEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_T7XMaIGrEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_T7XMaYGrEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_T7XMaoGrEeCFV-LOw8TpvQ" name="liberar Saida de Bem" type="_Lih5MIGrEeCFV-LOw8TpvQ" association="_T7XMZoGrEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_T7XMa4GrEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_T7XMbIGrEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_4OLeMIGrEeCFV-LOw8TpvQ" name="Registrar Movimentação patrimonio">
+      <include xmi:id="_JNEBM4GsEeCFV-LOw8TpvQ" name="Include1" addition="_qPCP0Ht2EeC56LA8I9zemw"/>
+      <include xmi:id="_OmwpwIGsEeCFV-LOw8TpvQ" name="Include2" addition="_MhQ84IGsEeCFV-LOw8TpvQ"/>
+      <include xmi:id="_EF1MM4GtEeCFV-LOw8TpvQ" name="Include3" addition="_8nR9AHt3EeC56LA8I9zemw"/>
+      <include xmi:id="_plgSsIGtEeCFV-LOw8TpvQ" name="Include4" addition="_nlGhMIGtEeCFV-LOw8TpvQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_J9c8UIGsEeCFV-LOw8TpvQ" name="A_&lt;sensor de Localização>_&lt;registrar Movimentação patrimonio>" memberEnd="_J9c8UYGsEeCFV-LOw8TpvQ _J9c8VIGsEeCFV-LOw8TpvQ">
+      <ownedEnd xmi:id="_J9c8UYGsEeCFV-LOw8TpvQ" name="sensor de Localização" type="_924okIGqEeCFV-LOw8TpvQ" association="_J9c8UIGsEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_J9c8UoGsEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_J9c8U4GsEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_J9c8VIGsEeCFV-LOw8TpvQ" name="registrar Movimentação patrimonio" type="_4OLeMIGrEeCFV-LOw8TpvQ" association="_J9c8UIGsEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_J9c8VYGsEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_J9c8VoGsEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_MhQ84IGsEeCFV-LOw8TpvQ" name="Verificar saida autorizada">
+      <include xmi:id="_haXSs4GsEeCFV-LOw8TpvQ" name="Include1" addition="_8nR9AHt3EeC56LA8I9zemw"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Actor" xmi:id="_QHGbIIGsEeCFV-LOw8TpvQ" name="Sirene de Notificacao"/>
+    <packagedElement xmi:type="uml:Association" xmi:id="_VJYpRoGsEeCFV-LOw8TpvQ" name="A_&lt;verificar saida autorizada>_&lt;sirene de Notificacao>" memberEnd="_VJYpR4GsEeCFV-LOw8TpvQ _VJYpSoGsEeCFV-LOw8TpvQ">
+      <ownedEnd xmi:id="_VJYpR4GsEeCFV-LOw8TpvQ" name="verificar saida autorizada" type="_MhQ84IGsEeCFV-LOw8TpvQ" association="_VJYpRoGsEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_VJYpSIGsEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_VJYpSYGsEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_VJYpSoGsEeCFV-LOw8TpvQ" name="sirene de Notificacao" type="_QHGbIIGsEeCFV-LOw8TpvQ" association="_VJYpRoGsEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_VJYpS4GsEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_VJYpTIGsEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_nlGhMIGtEeCFV-LOw8TpvQ" name="Gerar Notificação"/>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_s_jXsIGtEeCFV-LOw8TpvQ" name="Tratar Notificação">
+      <include xmi:id="_1_QoM4GuEeCFV-LOw8TpvQ" name="Include1" addition="_LeqHEHwfEeCbOLWgxKC3ng"/>
+      <extensionPoint xmi:id="_FDR2cIGuEeCFV-LOw8TpvQ" name="ExtensionPoint1"/>
+      <extensionPoint xmi:id="_Jal08IGuEeCFV-LOw8TpvQ" name="ExtensionPoint2"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_wpVh0IGtEeCFV-LOw8TpvQ" name="A_&lt;analista de Patrimonio>_&lt;tratar Notificação>" memberEnd="_wpVh0YGtEeCFV-LOw8TpvQ _wpVh1IGtEeCFV-LOw8TpvQ">
+      <ownedEnd xmi:id="_wpVh0YGtEeCFV-LOw8TpvQ" name="analista de Patrimonio" type="_VZKCkHt1EeC56LA8I9zemw" association="_wpVh0IGtEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_wpVh0oGtEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_wpVh04GtEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_wpVh1IGtEeCFV-LOw8TpvQ" name="tratar Notificação" type="_s_jXsIGtEeCFV-LOw8TpvQ" association="_wpVh0IGtEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_wpVh1YGtEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_wpVh1oGtEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Association" xmi:id="_zjzH1oGtEeCFV-LOw8TpvQ" name="A_&lt;gerente Patrimonio>_&lt;tratar Notificação>" memberEnd="_zjzH14GtEeCFV-LOw8TpvQ _zjzH2oGtEeCFV-LOw8TpvQ">
+      <ownedEnd xmi:id="_zjzH14GtEeCFV-LOw8TpvQ" name="gerente Patrimonio" type="_3EiBsHwdEeCbOLWgxKC3ng" association="_zjzH1oGtEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_zjzH2IGtEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zjzH2YGtEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_zjzH2oGtEeCFV-LOw8TpvQ" name="tratar Notificação" type="_s_jXsIGtEeCFV-LOw8TpvQ" association="_zjzH1oGtEeCFV-LOw8TpvQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_zjzH24GtEeCFV-LOw8TpvQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zjzH3IGtEeCFV-LOw8TpvQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_AI0uoIGuEeCFV-LOw8TpvQ" name="Iniciar Verificação">
+      <extend xmi:id="_FDqQ8IGuEeCFV-LOw8TpvQ" name="Extend1" extendedCase="_s_jXsIGtEeCFV-LOw8TpvQ" extensionLocation="_FDR2cIGuEeCFV-LOw8TpvQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_HJ49oIGuEeCFV-LOw8TpvQ" name="Concluir Notificação">
+      <extend xmi:id="_JbArsoGuEeCFV-LOw8TpvQ" name="Extend1" extendedCase="_s_jXsIGtEeCFV-LOw8TpvQ" extensionLocation="_Jal08IGuEeCFV-LOw8TpvQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:UseCase" xmi:id="_eyWAMIGvEeCFV-LOw8TpvQ" name="Inativar patrimonio"/>
+    <packagedElement xmi:type="uml:Package" xmi:id="_k6cm4IGvEeCFV-LOw8TpvQ" name="Package1"/>
   </packagedElement>
   <packagedElement xmi:type="uml:Package" xmi:id="_wSRJAHFzEduxYLkhQoh7Ag" name="LogicalView"/>
   <packagedElement xmi:type="uml:Package" xmi:id="_ypXjQHFzEduxYLkhQoh7Ag" name="ComponentView">
