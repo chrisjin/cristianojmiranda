@@ -442,13 +442,196 @@
         <message xmi:id="_RiyoIHztEeCwt54-WZP6sg" name="Refaz a consulta com o item alterado" messageSort="reply" receiveEvent="_RirTYHztEeCwt54-WZP6sg" sendEvent="_RipeMHztEeCwt54-WZP6sg"/>
       </ownedBehavior>
       <ownedBehavior xmi:type="uml:Activity" xmi:id="_odtUcIG-EeCFV-LOw8TpvQ" name="Manter UsuarioDetail">
+        <ownedBehavior xmi:type="uml:Activity" xmi:id="_s8m8gIIdEeCybZP_rI3l8Q" name="Detalhar Usuario" classifierBehavior="_wGxycIIdEeCybZP_rI3l8Q">
+          <ownedBehavior xmi:type="uml:StateMachine" xmi:id="_wGxycIIdEeCybZP_rI3l8Q" name="StateMachine">
+            <region xmi:id="_wGxycYIdEeCybZP_rI3l8Q" name="Region"/>
+          </ownedBehavior>
+          <ownedBehavior xmi:type="uml:Activity" xmi:id="_meRxsIIeEeCybZP_rI3l8Q" name="Verificar Permissao"/>
+          <ownedBehavior xmi:type="uml:Activity" xmi:id="_FbVfwIIfEeCybZP_rI3l8Q" name="Altear Usuario">
+            <ownedBehavior xmi:type="uml:Activity" xmi:id="_1AEKsIIfEeCybZP_rI3l8Q" name="Verificar Permissão">
+              <node xmi:type="uml:InitialNode" xmi:id="_T-XrwIJpEeCo5djNpSmSfw" name="InitialNode1" outgoing="_5bktEIJpEeCo5djNpSmSfw"/>
+              <node xmi:type="uml:OpaqueAction" xmi:id="_WJA-YIJpEeCo5djNpSmSfw" name="Verificar Permissão" outgoing="_8QoOoIJpEeCo5djNpSmSfw _ESXQcIJqEeCo5djNpSmSfw" incoming="_5bktEIJpEeCo5djNpSmSfw"/>
+              <node xmi:type="uml:OpaqueAction" xmi:id="_2PrY0IJpEeCo5djNpSmSfw" name="Redireciona para a tela de login" incoming="_8QoOoIJpEeCo5djNpSmSfw"/>
+              <node xmi:type="uml:OpaqueAction" xmi:id="_CFqIUIJqEeCo5djNpSmSfw" name="Notifica usuario sem permissão" outgoing="_Kd_FMIJqEeCo5djNpSmSfw" incoming="_ESXQcIJqEeCo5djNpSmSfw"/>
+              <node xmi:type="uml:ActivityFinalNode" xmi:id="_IZCK4IJqEeCo5djNpSmSfw" name="ActivityFinalNode1" incoming="_Kd_FMIJqEeCo5djNpSmSfw"/>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_5bktEIJpEeCo5djNpSmSfw" name="Usuario acessa funcionalidade" source="_T-XrwIJpEeCo5djNpSmSfw" target="_WJA-YIJpEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_5bktEYJpEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_5bktEoJpEeCo5djNpSmSfw" value="1"/>
+              </edge>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_8QoOoIJpEeCo5djNpSmSfw" name="Usuario não logado ou sessão expirada" source="_WJA-YIJpEeCo5djNpSmSfw" target="_2PrY0IJpEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_8Qo1sIJpEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_8Qo1sYJpEeCo5djNpSmSfw" value="1"/>
+              </edge>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_ESXQcIJqEeCo5djNpSmSfw" name="Usuario não apresenta permissão de acesso" source="_WJA-YIJpEeCo5djNpSmSfw" target="_CFqIUIJqEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_ESXQcYJqEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_ESXQcoJqEeCo5djNpSmSfw" value="1"/>
+              </edge>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_Kd_FMIJqEeCo5djNpSmSfw" name="Retorna para a funcionalidade que disparou a ação" source="_CFqIUIJqEeCo5djNpSmSfw" target="_IZCK4IJqEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_Kd_FMYJqEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_Kd_FMoJqEeCo5djNpSmSfw" value="1"/>
+              </edge>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:Activity" xmi:id="_wSucYIIgEeCybZP_rI3l8Q" name="Verificar usuario existe na base">
+              <node xmi:type="uml:InitialNode" xmi:id="_nPQ4MIJqEeCo5djNpSmSfw" name="InitialNode1" outgoing="_3lQ2QIJqEeCo5djNpSmSfw"/>
+              <node xmi:type="uml:OpaqueAction" xmi:id="_0u67QIJqEeCo5djNpSmSfw" name="Pesquisa o usuario na base" outgoing="_Ap6toIJrEeCo5djNpSmSfw _NiqhsIJrEeCo5djNpSmSfw" incoming="_3lQ2QIJqEeCo5djNpSmSfw"/>
+              <node xmi:type="uml:OpaqueAction" xmi:id="_78hKYIJqEeCo5djNpSmSfw" name="Notifica usuário não encontrado" outgoing="_HCrmgIJrEeCo5djNpSmSfw" incoming="_Ap6toIJrEeCo5djNpSmSfw"/>
+              <node xmi:type="uml:ActivityFinalNode" xmi:id="_GLff0IJrEeCo5djNpSmSfw" name="ActivityFinalNode1" incoming="_HCrmgIJrEeCo5djNpSmSfw _NiqhsIJrEeCo5djNpSmSfw"/>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_3lQ2QIJqEeCo5djNpSmSfw" name="Obter dados do usuario" source="_nPQ4MIJqEeCo5djNpSmSfw" target="_0u67QIJqEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_3lQ2QYJqEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_3lQ2QoJqEeCo5djNpSmSfw" value="1"/>
+              </edge>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_Ap6toIJrEeCo5djNpSmSfw" name="Caso o usuario não exista" source="_0u67QIJqEeCo5djNpSmSfw" target="_78hKYIJqEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_Ap6toYJrEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_Ap6tooJrEeCo5djNpSmSfw" value="1"/>
+              </edge>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_HCrmgIJrEeCo5djNpSmSfw" name="Retorna para a funcionalidade que disparou essa ação" source="_78hKYIJqEeCo5djNpSmSfw" target="_GLff0IJrEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_HCrmgYJrEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_HCrmgoJrEeCo5djNpSmSfw" value="1"/>
+              </edge>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_NiqhsIJrEeCo5djNpSmSfw" name="Retorna os dados do usuario para a funcionalidade que solicitou" source="_0u67QIJqEeCo5djNpSmSfw" target="_GLff0IJrEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_NiqhsYJrEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_NiqhsoJrEeCo5djNpSmSfw" value="1"/>
+              </edge>
+            </ownedBehavior>
+            <ownedBehavior xmi:type="uml:Activity" xmi:id="_1f0W4IIhEeCybZP_rI3l8Q" name="Validar dados do Usuario">
+              <node xmi:type="uml:InitialNode" xmi:id="_gSEnIIJrEeCo5djNpSmSfw" name="InitialNode1" outgoing="_srhQEIJrEeCo5djNpSmSfw"/>
+              <node xmi:type="uml:ActivityFinalNode" xmi:id="_h9oxEIJrEeCo5djNpSmSfw" name="ActivityFinalNode1" incoming="_1MekgIJrEeCo5djNpSmSfw _JMfWMIJsEeCo5djNpSmSfw"/>
+              <node xmi:type="uml:OpaqueAction" xmi:id="_jCqfcIJrEeCo5djNpSmSfw" name="Valida campos obrigatorios" outgoing="_w-Ss0IJrEeCo5djNpSmSfw _9rc78IJrEeCo5djNpSmSfw" incoming="_srhQEIJrEeCo5djNpSmSfw"/>
+              <node xmi:type="uml:OpaqueAction" xmi:id="_mUYH0IJrEeCo5djNpSmSfw" name="Notifica inconsistencia de dados" outgoing="_1MekgIJrEeCo5djNpSmSfw" incoming="_w-Ss0IJrEeCo5djNpSmSfw _AjLXAIJsEeCo5djNpSmSfw"/>
+              <node xmi:type="uml:OpaqueAction" xmi:id="_6zURMIJrEeCo5djNpSmSfw" name="Verifica duplicidade de informações" outgoing="_AjLXAIJsEeCo5djNpSmSfw _JMfWMIJsEeCo5djNpSmSfw" incoming="_9rc78IJrEeCo5djNpSmSfw">
+                <eAnnotations xmi:id="_HuqtUIJsEeCo5djNpSmSfw" source="http://www.topcased.org/documentation">
+                  <details xmi:id="_Hur7cIJsEeCo5djNpSmSfw" key="documentation" value="Verifica se já existe um usuario com o mesmo nome, por exemplo.&#xD;&#xA;"/>
+                </eAnnotations>
+              </node>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_srhQEIJrEeCo5djNpSmSfw" name="Verificar dados preenchidos" source="_gSEnIIJrEeCo5djNpSmSfw" target="_jCqfcIJrEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_srhQEYJrEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_srhQEoJrEeCo5djNpSmSfw" value="1"/>
+              </edge>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_w-Ss0IJrEeCo5djNpSmSfw" name="Campos obrigatorios não preenchidos" source="_jCqfcIJrEeCo5djNpSmSfw" target="_mUYH0IJrEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_w-Ss0YJrEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_w-Ss0oJrEeCo5djNpSmSfw" value="1"/>
+              </edge>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_1MekgIJrEeCo5djNpSmSfw" name="Retorna para a funcionalidade que disparou  essa ação" source="_mUYH0IJrEeCo5djNpSmSfw" target="_h9oxEIJrEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_1MekgYJrEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_1MekgoJrEeCo5djNpSmSfw" value="1"/>
+              </edge>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_9rc78IJrEeCo5djNpSmSfw" name="Dados obrigatorios completos" source="_jCqfcIJrEeCo5djNpSmSfw" target="_6zURMIJrEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_9rc78YJrEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_9rc78oJrEeCo5djNpSmSfw" value="1"/>
+              </edge>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_AjLXAIJsEeCo5djNpSmSfw" name="Inconsistencia de dados na base" source="_6zURMIJrEeCo5djNpSmSfw" target="_mUYH0IJrEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_AjLXAYJsEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_AjLXAoJsEeCo5djNpSmSfw" value="1"/>
+              </edge>
+              <edge xmi:type="uml:ControlFlow" xmi:id="_JMfWMIJsEeCo5djNpSmSfw" name="Dados validos retorna para a funcionalidade que disparou essa ação" source="_6zURMIJrEeCo5djNpSmSfw" target="_h9oxEIJrEeCo5djNpSmSfw">
+                <guard xmi:type="uml:LiteralBoolean" xmi:id="_JMfWMYJsEeCo5djNpSmSfw" value="true"/>
+                <weight xmi:type="uml:LiteralInteger" xmi:id="_JMfWMoJsEeCo5djNpSmSfw" value="1"/>
+              </edge>
+            </ownedBehavior>
+            <node xmi:type="uml:InitialNode" xmi:id="_yw16EIIfEeCybZP_rI3l8Q" name="InitialNode1" outgoing="_of1H0IIgEeCybZP_rI3l8Q"/>
+            <node xmi:type="uml:CallBehaviorAction" xmi:id="_1AC8kIIfEeCybZP_rI3l8Q" name="a1" outgoing="_yjRisIIgEeCybZP_rI3l8Q" incoming="_of1H0IIgEeCybZP_rI3l8Q" behavior="_1AEKsIIfEeCybZP_rI3l8Q"/>
+            <node xmi:type="uml:CallBehaviorAction" xmi:id="_wSt1UIIgEeCybZP_rI3l8Q" name="a2" outgoing="_5r05wIIgEeCybZP_rI3l8Q" incoming="_yjRisIIgEeCybZP_rI3l8Q _wEjLkIIiEeCybZP_rI3l8Q" behavior="_wSucYIIgEeCybZP_rI3l8Q"/>
+            <node xmi:type="uml:OpaqueAction" xmi:id="_2HpBUIIgEeCybZP_rI3l8Q" name="Monta a tela de alteração" outgoing="_lt26AIIhEeCybZP_rI3l8Q _4_Q5QIIhEeCybZP_rI3l8Q" incoming="_5r05wIIgEeCybZP_rI3l8Q"/>
+            <node xmi:type="uml:ActivityFinalNode" xmi:id="_jO4WIIIhEeCybZP_rI3l8Q" name="ActivityFinalNode1" incoming="_lt26AIIhEeCybZP_rI3l8Q">
+              <eAnnotations xmi:id="_q_rY8IIhEeCybZP_rI3l8Q" source="http://www.topcased.org/documentation">
+                <details xmi:id="_q_snEIIhEeCybZP_rI3l8Q" key="documentation" value="Retorna para a ação que disparou essa anteriormente"/>
+              </eAnnotations>
+            </node>
+            <node xmi:type="uml:CallBehaviorAction" xmi:id="_1fzIwIIhEeCybZP_rI3l8Q" name="a3" outgoing="_rXyhgIIiEeCybZP_rI3l8Q" incoming="_4_Q5QIIhEeCybZP_rI3l8Q" behavior="_1f0W4IIhEeCybZP_rI3l8Q"/>
+            <node xmi:type="uml:OpaqueAction" xmi:id="_olPhYIIiEeCybZP_rI3l8Q" name="Atualiza a base" outgoing="_wEjLkIIiEeCybZP_rI3l8Q" incoming="_rXyhgIIiEeCybZP_rI3l8Q"/>
+            <edge xmi:type="uml:ControlFlow" xmi:id="_of1H0IIgEeCybZP_rI3l8Q" name="Usuario deseja alterar um usuario" source="_yw16EIIfEeCybZP_rI3l8Q" target="_1AC8kIIfEeCybZP_rI3l8Q">
+              <guard xmi:type="uml:LiteralBoolean" xmi:id="_of1H0YIgEeCybZP_rI3l8Q" value="true"/>
+              <weight xmi:type="uml:LiteralInteger" xmi:id="_of1H0oIgEeCybZP_rI3l8Q" value="1"/>
+            </edge>
+            <edge xmi:type="uml:ControlFlow" xmi:id="_yjRisIIgEeCybZP_rI3l8Q" name="Consulta o usuario na base" source="_1AC8kIIfEeCybZP_rI3l8Q" target="_wSt1UIIgEeCybZP_rI3l8Q">
+              <guard xmi:type="uml:LiteralBoolean" xmi:id="_yjRisYIgEeCybZP_rI3l8Q" value="true"/>
+              <weight xmi:type="uml:LiteralInteger" xmi:id="_yjRisoIgEeCybZP_rI3l8Q" value="1"/>
+            </edge>
+            <edge xmi:type="uml:ControlFlow" xmi:id="_5r05wIIgEeCybZP_rI3l8Q" name="Usuario encontrado na base" source="_wSt1UIIgEeCybZP_rI3l8Q" target="_2HpBUIIgEeCybZP_rI3l8Q">
+              <guard xmi:type="uml:LiteralBoolean" xmi:id="_5r05wYIgEeCybZP_rI3l8Q" value="true"/>
+              <weight xmi:type="uml:LiteralInteger" xmi:id="_5r05woIgEeCybZP_rI3l8Q" value="1"/>
+            </edge>
+            <edge xmi:type="uml:ControlFlow" xmi:id="_lt26AIIhEeCybZP_rI3l8Q" name="Usuario cancela a alteração" source="_2HpBUIIgEeCybZP_rI3l8Q" target="_jO4WIIIhEeCybZP_rI3l8Q">
+              <guard xmi:type="uml:LiteralBoolean" xmi:id="_lt26AYIhEeCybZP_rI3l8Q" value="true"/>
+              <weight xmi:type="uml:LiteralInteger" xmi:id="_lt26AoIhEeCybZP_rI3l8Q" value="1"/>
+            </edge>
+            <edge xmi:type="uml:ControlFlow" xmi:id="_4_Q5QIIhEeCybZP_rI3l8Q" name="Usuario altera os dados e aciona gravar" source="_2HpBUIIgEeCybZP_rI3l8Q" target="_1fzIwIIhEeCybZP_rI3l8Q">
+              <guard xmi:type="uml:LiteralBoolean" xmi:id="_4_Q5QYIhEeCybZP_rI3l8Q" value="true"/>
+              <weight xmi:type="uml:LiteralInteger" xmi:id="_4_Q5QoIhEeCybZP_rI3l8Q" value="1"/>
+            </edge>
+            <edge xmi:type="uml:ControlFlow" xmi:id="_rXyhgIIiEeCybZP_rI3l8Q" name="Dados validos" source="_1fzIwIIhEeCybZP_rI3l8Q" target="_olPhYIIiEeCybZP_rI3l8Q">
+              <guard xmi:type="uml:LiteralBoolean" xmi:id="_rXyhgYIiEeCybZP_rI3l8Q" value="true"/>
+              <weight xmi:type="uml:LiteralInteger" xmi:id="_rXyhgoIiEeCybZP_rI3l8Q" value="1"/>
+            </edge>
+            <edge xmi:type="uml:ControlFlow" xmi:id="_wEjLkIIiEeCybZP_rI3l8Q" name="Notifica sucesso" source="_olPhYIIiEeCybZP_rI3l8Q" target="_wSt1UIIgEeCybZP_rI3l8Q">
+              <guard xmi:type="uml:LiteralBoolean" xmi:id="_wEjLkYIiEeCybZP_rI3l8Q" value="true"/>
+              <weight xmi:type="uml:LiteralInteger" xmi:id="_wEjLkoIiEeCybZP_rI3l8Q" value="1"/>
+            </edge>
+          </ownedBehavior>
+          <ownedBehavior xmi:type="uml:Activity" xmi:id="_QXxYIIIfEeCybZP_rI3l8Q" name="Inativar Usuario">
+            <node xmi:type="uml:InitialNode" xmi:id="_19YLEIJtEeCo5djNpSmSfw" name="InitialNode1" outgoing="_PJSZ4IJuEeCo5djNpSmSfw"/>
+            <node xmi:type="uml:OpaqueAction" xmi:id="_4N7RYIJtEeCo5djNpSmSfw" name="Seta usuario como inativo" outgoing="_YQ0mIIJuEeCo5djNpSmSfw _dBMk4IJuEeCo5djNpSmSfw" incoming="_PJSZ4IJuEeCo5djNpSmSfw"/>
+            <node xmi:type="uml:OpaqueAction" xmi:id="_7hOOIIJtEeCo5djNpSmSfw" name="Atualiza o usuario na base" outgoing="_m2GNcIJuEeCo5djNpSmSfw" incoming="_dBMk4IJuEeCo5djNpSmSfw"/>
+            <node xmi:type="uml:ActivityFinalNode" xmi:id="_AXrmwIJuEeCo5djNpSmSfw" name="ActivityFinalNode1" incoming="_m2GNcIJuEeCo5djNpSmSfw"/>
+            <node xmi:type="uml:OpaqueAction" xmi:id="_CaUz8IJuEeCo5djNpSmSfw" name="Notifica motivo inativação obrigatorio" incoming="_YQ0mIIJuEeCo5djNpSmSfw"/>
+            <edge xmi:type="uml:ControlFlow" xmi:id="_PJSZ4IJuEeCo5djNpSmSfw" name="Seleciona o usuario a ser inativado" source="_19YLEIJtEeCo5djNpSmSfw" target="_4N7RYIJtEeCo5djNpSmSfw">
+              <guard xmi:type="uml:LiteralBoolean" xmi:id="_PJSZ4YJuEeCo5djNpSmSfw" value="true"/>
+              <weight xmi:type="uml:LiteralInteger" xmi:id="_PJSZ4oJuEeCo5djNpSmSfw" value="1"/>
+            </edge>
+            <edge xmi:type="uml:ControlFlow" xmi:id="_YQ0mIIJuEeCo5djNpSmSfw" name=" Motivo de inativação nao preenchido" source="_4N7RYIJtEeCo5djNpSmSfw" target="_CaUz8IJuEeCo5djNpSmSfw">
+              <guard xmi:type="uml:LiteralBoolean" xmi:id="_YQ0mIYJuEeCo5djNpSmSfw" value="true"/>
+              <weight xmi:type="uml:LiteralInteger" xmi:id="_YQ0mIoJuEeCo5djNpSmSfw" value="1"/>
+            </edge>
+            <edge xmi:type="uml:ControlFlow" xmi:id="_dBMk4IJuEeCo5djNpSmSfw" name="Motivo preenchido corretamente" source="_4N7RYIJtEeCo5djNpSmSfw" target="_7hOOIIJtEeCo5djNpSmSfw">
+              <guard xmi:type="uml:LiteralBoolean" xmi:id="_dBMk4YJuEeCo5djNpSmSfw" value="true"/>
+              <weight xmi:type="uml:LiteralInteger" xmi:id="_dBMk4oJuEeCo5djNpSmSfw" value="1"/>
+            </edge>
+            <edge xmi:type="uml:ControlFlow" xmi:id="_m2GNcIJuEeCo5djNpSmSfw" name="Notifica atualização com sucesso e retorna para a ação que solicitou" source="_7hOOIIJtEeCo5djNpSmSfw" target="_AXrmwIJuEeCo5djNpSmSfw">
+              <guard xmi:type="uml:LiteralBoolean" xmi:id="_m2GNcYJuEeCo5djNpSmSfw" value="true"/>
+              <weight xmi:type="uml:LiteralInteger" xmi:id="_m2GNcoJuEeCo5djNpSmSfw" value="1"/>
+            </edge>
+          </ownedBehavior>
+          <ownedBehavior xmi:type="uml:Activity" xmi:id="_8CQUEIJsEeCo5djNpSmSfw" name="a1Detail"/>
+          <node xmi:type="uml:InitialNode" xmi:id="_EahYcIIeEeCybZP_rI3l8Q" name="InitialNode1" outgoing="_oXeH8IIeEeCybZP_rI3l8Q"/>
+          <node xmi:type="uml:CallBehaviorAction" xmi:id="_meRKoIIeEeCybZP_rI3l8Q" name="a1" outgoing="_4u0w4IIeEeCybZP_rI3l8Q" incoming="_oXeH8IIeEeCybZP_rI3l8Q" behavior="_8CQUEIJsEeCo5djNpSmSfw"/>
+          <node xmi:type="uml:OpaqueAction" xmi:id="_trUnMIIeEeCybZP_rI3l8Q" name="Consultar Dados na Base" outgoing="_8LN_QIIeEeCybZP_rI3l8Q _-6JqsIIeEeCybZP_rI3l8Q" incoming="_4u0w4IIeEeCybZP_rI3l8Q"/>
+          <node xmi:type="uml:OpaqueAction" xmi:id="_xfAUMIIeEeCybZP_rI3l8Q" name="Montar Tela de Detalhamento" outgoing="_JkqFkIIfEeCybZP_rI3l8Q _SPFfEIIfEeCybZP_rI3l8Q" incoming="_-6JqsIIeEeCybZP_rI3l8Q"/>
+          <node xmi:type="uml:OpaqueAction" xmi:id="_0F5d8IIeEeCybZP_rI3l8Q" name="Notifica usuário não encontrado" incoming="_8LN_QIIeEeCybZP_rI3l8Q"/>
+          <node xmi:type="uml:CallBehaviorAction" xmi:id="_FbU4sIIfEeCybZP_rI3l8Q" name="a2" incoming="_JkqFkIIfEeCybZP_rI3l8Q" behavior="_FbVfwIIfEeCybZP_rI3l8Q"/>
+          <node xmi:type="uml:CallBehaviorAction" xmi:id="_QXwKAIIfEeCybZP_rI3l8Q" name="a3" incoming="_SPFfEIIfEeCybZP_rI3l8Q" behavior="_QXxYIIIfEeCybZP_rI3l8Q"/>
+          <edge xmi:type="uml:ControlFlow" xmi:id="_oXeH8IIeEeCybZP_rI3l8Q" name="Detalhar dados do Usuario" source="_EahYcIIeEeCybZP_rI3l8Q" target="_meRKoIIeEeCybZP_rI3l8Q">
+            <guard xmi:type="uml:LiteralBoolean" xmi:id="_oXeH8YIeEeCybZP_rI3l8Q" value="true"/>
+            <weight xmi:type="uml:LiteralInteger" xmi:id="_oXeH8oIeEeCybZP_rI3l8Q" value="1"/>
+          </edge>
+          <edge xmi:type="uml:ControlFlow" xmi:id="_4u0w4IIeEeCybZP_rI3l8Q" name="Usuario tem permissão de acesso" source="_meRKoIIeEeCybZP_rI3l8Q" target="_trUnMIIeEeCybZP_rI3l8Q">
+            <guard xmi:type="uml:LiteralBoolean" xmi:id="_4u1X8IIeEeCybZP_rI3l8Q" value="true"/>
+            <weight xmi:type="uml:LiteralInteger" xmi:id="_4u1X8YIeEeCybZP_rI3l8Q" value="1"/>
+          </edge>
+          <edge xmi:type="uml:ControlFlow" xmi:id="_8LN_QIIeEeCybZP_rI3l8Q" name="Usuario procurado não existe na base" source="_trUnMIIeEeCybZP_rI3l8Q" target="_0F5d8IIeEeCybZP_rI3l8Q">
+            <guard xmi:type="uml:LiteralBoolean" xmi:id="_8LN_QYIeEeCybZP_rI3l8Q" value="true"/>
+            <weight xmi:type="uml:LiteralInteger" xmi:id="_8LN_QoIeEeCybZP_rI3l8Q" value="1"/>
+          </edge>
+          <edge xmi:type="uml:ControlFlow" xmi:id="_-6JqsIIeEeCybZP_rI3l8Q" name="Usuario encontrado" source="_trUnMIIeEeCybZP_rI3l8Q" target="_xfAUMIIeEeCybZP_rI3l8Q">
+            <guard xmi:type="uml:LiteralBoolean" xmi:id="_-6JqsYIeEeCybZP_rI3l8Q" value="true"/>
+            <weight xmi:type="uml:LiteralInteger" xmi:id="_-6JqsoIeEeCybZP_rI3l8Q" value="1"/>
+          </edge>
+          <edge xmi:type="uml:ControlFlow" xmi:id="_JkqFkIIfEeCybZP_rI3l8Q" name="Deseja se alterar os dados do usuario" source="_xfAUMIIeEeCybZP_rI3l8Q" target="_FbU4sIIfEeCybZP_rI3l8Q">
+            <guard xmi:type="uml:LiteralBoolean" xmi:id="_JkqFkYIfEeCybZP_rI3l8Q" value="true"/>
+            <weight xmi:type="uml:LiteralInteger" xmi:id="_JkqFkoIfEeCybZP_rI3l8Q" value="1"/>
+          </edge>
+          <edge xmi:type="uml:ControlFlow" xmi:id="_SPFfEIIfEeCybZP_rI3l8Q" name="Deseja se inativar um usuario" source="_xfAUMIIeEeCybZP_rI3l8Q" target="_QXwKAIIfEeCybZP_rI3l8Q">
+            <guard xmi:type="uml:LiteralBoolean" xmi:id="_SPFfEYIfEeCybZP_rI3l8Q" value="true"/>
+            <weight xmi:type="uml:LiteralInteger" xmi:id="_SPFfEoIfEeCybZP_rI3l8Q" value="1"/>
+          </edge>
+        </ownedBehavior>
         <node xmi:type="uml:InitialNode" xmi:id="_zd29QIHAEeCFV-LOw8TpvQ" name="InitialNode1" outgoing="_7b1gcIHAEeCFV-LOw8TpvQ"/>
         <node xmi:type="uml:OpaqueAction" xmi:id="_2oXxcIHAEeCFV-LOw8TpvQ" name="Acessar Tela Manter Usuario" outgoing="_C3_wAIHBEeCFV-LOw8TpvQ" incoming="_7b1gcIHAEeCFV-LOw8TpvQ"/>
         <node xmi:type="uml:OpaqueAction" xmi:id="_-ID2IIHAEeCFV-LOw8TpvQ" name="Verificar Permissão" outgoing="_KIp6MIHBEeCFV-LOw8TpvQ _VTrBIIHBEeCFV-LOw8TpvQ _bSxc0IHBEeCFV-LOw8TpvQ" incoming="_C3_wAIHBEeCFV-LOw8TpvQ"/>
         <node xmi:type="uml:OpaqueAction" xmi:id="_G0tdMIHBEeCFV-LOw8TpvQ" name="Notifica usuario sem permissão" incoming="_KIp6MIHBEeCFV-LOw8TpvQ"/>
-        <node xmi:type="uml:OpaqueAction" xmi:id="_RC69oIHBEeCFV-LOw8TpvQ" name="Monta a tela com a listagem de usuarios cadastrados" outgoing="_rDm4UIHBEeCFV-LOw8TpvQ" incoming="_VTrBIIHBEeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:OpaqueAction" xmi:id="_RC69oIHBEeCFV-LOw8TpvQ" name="Monta a tela com a listagem de usuarios cadastrados" outgoing="_rDm4UIHBEeCFV-LOw8TpvQ _9_B7sIIdEeCybZP_rI3l8Q" incoming="_VTrBIIHBEeCFV-LOw8TpvQ"/>
         <node xmi:type="uml:OpaqueAction" xmi:id="_YyGP0IHBEeCFV-LOw8TpvQ" name="Vai para tela de login" incoming="_bSxc0IHBEeCFV-LOw8TpvQ"/>
         <node xmi:type="uml:FlowFinalNode" xmi:id="_qGWl4IHBEeCFV-LOw8TpvQ" name="FlowFinalNode1" incoming="_rDm4UIHBEeCFV-LOw8TpvQ"/>
+        <node xmi:type="uml:CallBehaviorAction" xmi:id="_s8luYIIdEeCybZP_rI3l8Q" name="a1" incoming="_9_B7sIIdEeCybZP_rI3l8Q" behavior="_s8m8gIIdEeCybZP_rI3l8Q"/>
         <edge xmi:type="uml:ControlFlow" xmi:id="_7b1gcIHAEeCFV-LOw8TpvQ" name="Acessar Tela" source="_zd29QIHAEeCFV-LOw8TpvQ" target="_2oXxcIHAEeCFV-LOw8TpvQ">
           <guard xmi:type="uml:LiteralBoolean" xmi:id="_7b1gcYHAEeCFV-LOw8TpvQ" value="true"/>
           <weight xmi:type="uml:LiteralInteger" xmi:id="_7b1gcoHAEeCFV-LOw8TpvQ" value="1"/>
@@ -472,6 +655,10 @@
         <edge xmi:type="uml:ControlFlow" xmi:id="_rDm4UIHBEeCFV-LOw8TpvQ" name="Usuario aciona botão sair" source="_RC69oIHBEeCFV-LOw8TpvQ" target="_qGWl4IHBEeCFV-LOw8TpvQ">
           <guard xmi:type="uml:LiteralBoolean" xmi:id="_rDm4UYHBEeCFV-LOw8TpvQ" value="true"/>
           <weight xmi:type="uml:LiteralInteger" xmi:id="_rDm4UoHBEeCFV-LOw8TpvQ" value="1"/>
+        </edge>
+        <edge xmi:type="uml:ControlFlow" xmi:id="_9_B7sIIdEeCybZP_rI3l8Q" name="Usuario detalha um usuario" source="_RC69oIHBEeCFV-LOw8TpvQ" target="_s8luYIIdEeCybZP_rI3l8Q">
+          <guard xmi:type="uml:LiteralBoolean" xmi:id="_9_B7sYIdEeCybZP_rI3l8Q" value="true"/>
+          <weight xmi:type="uml:LiteralInteger" xmi:id="_9_B7soIdEeCybZP_rI3l8Q" value="1"/>
         </edge>
       </ownedBehavior>
       <include xmi:id="_YxnVcHwgEeCbOLWgxKC3ng" name="Include1" addition="_LeqHEHwfEeCbOLWgxKC3ng"/>
