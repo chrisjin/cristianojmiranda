@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="idModel" name="SM Cadastrar UsuarioModel">
+  <packagedElement xmi:type="uml:Package" xmi:id="idPackage" name="SM Cadastrar UsuarioPackage">
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="idStateMachine" name="SM Cadastrar UsuarioStateMachine">
+      <region xmi:id="idRegion" name="MainRegion">
+        <subvertex xmi:type="uml:State" xmi:id="_9MZvYIymEeCY2bmJHfrVgg" name="State1">
+          <region xmi:id="_9MZvYYymEeCY2bmJHfrVgg" name="Region1"/>
+        </subvertex>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_-ALVsIymEeCY2bmJHfrVgg" name="Acesso permitido"/>
+        <subvertex xmi:type="uml:State" xmi:id="_AvEk4IynEeCY2bmJHfrVgg" name="Usuario Logado"/>
+        <subvertex xmi:type="uml:State" xmi:id="_Hck-sIynEeCY2bmJHfrVgg" name="State2">
+          <region xmi:id="_Hck-sYynEeCY2bmJHfrVgg" name="Region1"/>
+        </subvertex>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_IczsoIynEeCY2bmJHfrVgg" name="Pseudostate2" kind="entryPoint"/>
+        <subvertex xmi:type="uml:State" xmi:id="_NJQ0sIynEeCY2bmJHfrVgg" name="Tela de Novo Cadastro"/>
+        <subvertex xmi:type="uml:State" xmi:id="_OMOtkIynEeCY2bmJHfrVgg" name="Usuario Logado"/>
+        <subvertex xmi:type="uml:State" xmi:id="_bW9CcIynEeCY2bmJHfrVgg" name="Tela de Manutenção de cadastro"/>
+        <subvertex xmi:type="uml:State" xmi:id="_hyBocIynEeCY2bmJHfrVgg" name="Validar informações"/>
+        <subvertex xmi:type="uml:State" xmi:id="_jv0K0IynEeCY2bmJHfrVgg" name="Inserção efetuada"/>
+        <subvertex xmi:type="uml:State" xmi:id="_j_VNgIynEeCY2bmJHfrVgg" name="Dados incorretos"/>
+        <transition xmi:id="_2MQ4AIynEeCY2bmJHfrVgg" name="Transition1" kind="local" source="_-ALVsIymEeCY2bmJHfrVgg" target="_OMOtkIynEeCY2bmJHfrVgg"/>
+        <transition xmi:id="_23rMgIynEeCY2bmJHfrVgg" name="manter_cadastros" kind="local" source="_OMOtkIynEeCY2bmJHfrVgg" target="_bW9CcIynEeCY2bmJHfrVgg"/>
+        <transition xmi:id="_3rFmcIynEeCY2bmJHfrVgg" name="novo_cadastro" kind="local" source="_bW9CcIynEeCY2bmJHfrVgg" target="_NJQ0sIynEeCY2bmJHfrVgg"/>
+        <transition xmi:id="_4ixcZIynEeCY2bmJHfrVgg" name="enviar_informações" kind="local" source="_NJQ0sIynEeCY2bmJHfrVgg" target="_hyBocIynEeCY2bmJHfrVgg"/>
+        <transition xmi:id="_5kKA5IynEeCY2bmJHfrVgg" name="dados_corretos" kind="local" source="_hyBocIynEeCY2bmJHfrVgg" target="_jv0K0IynEeCY2bmJHfrVgg"/>
+        <transition xmi:id="_6j8C4IynEeCY2bmJHfrVgg" name="dados_incorretos" kind="local" source="_hyBocIynEeCY2bmJHfrVgg" target="_j_VNgIynEeCY2bmJHfrVgg"/>
+        <transition xmi:id="_BpizpIyoEeCY2bmJHfrVgg" name="exibir_msg_sucesso" kind="local" source="_jv0K0IynEeCY2bmJHfrVgg" target="_OMOtkIynEeCY2bmJHfrVgg"/>
+        <transition xmi:id="_EWjzgIyoEeCY2bmJHfrVgg" name="informações_inválidas" kind="local" source="_j_VNgIynEeCY2bmJHfrVgg" target="_hyBocIynEeCY2bmJHfrVgg"/>
+        <transition xmi:id="_O4bPwIyoEeCY2bmJHfrVgg" name="exibir_msg_erro" kind="local" source="_j_VNgIynEeCY2bmJHfrVgg" target="_OMOtkIynEeCY2bmJHfrVgg"/>
+      </region>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>
