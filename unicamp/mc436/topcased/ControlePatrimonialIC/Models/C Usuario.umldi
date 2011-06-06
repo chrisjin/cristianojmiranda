@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <diagrams:Diagrams xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.topcased.org/DI/1.0" xmlns:diagrams="http://www.topcased.org/Diagrams/1.0" xmi:id="_S1ynwIypEeCY2bmJHfrVgg" activeDiagram="_S1ynwYypEeCY2bmJHfrVgg">
   <model href="C%20Usuario.uml#_w8IxIM37EdqwVrslYOdUDA"/>
-  <diagrams xmi:id="_S1ynwYypEeCY2bmJHfrVgg" position="0,0" size="840,100" name="Diagrama de classe" viewport="1169,48">
+  <diagrams xmi:id="_S1ynwYypEeCY2bmJHfrVgg" position="0,0" size="840,100" name="Diagrama de classe" viewport="525,47">
     <property xmi:id="_S2FisIypEeCY2bmJHfrVgg" key="pageFormatName" value="A2"/>
     <property xmi:id="_S2FisYypEeCY2bmJHfrVgg" key="diagramWidth" value="1680"/>
     <property xmi:id="_S2FisoypEeCY2bmJHfrVgg" key="diagramHeight" value="2376"/>
