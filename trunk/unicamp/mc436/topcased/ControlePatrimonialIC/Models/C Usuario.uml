@@ -565,7 +565,7 @@
     <packagedElement xmi:type="uml:Usage" xmi:id="_uB45gI_GEeC9h4FCu_wxjA" name="Usage11" supplier="_GM_boI5TEeCbmo1im7P2_A" client="_ClShkI_GEeC9h4FCu_wxjA"/>
     <packagedElement xmi:type="uml:Usage" xmi:id="_xxG9QI_GEeC9h4FCu_wxjA" name="Usage12" supplier="_dduxEI69EeCgvuYz14gBJg" client="_VexwEI_GEeC9h4FCu_wxjA"/>
     <packagedElement xmi:type="uml:Usage" xmi:id="_zIHMcI_GEeC9h4FCu_wxjA" name="Usage13" supplier="_RAyVYI5TEeCbmo1im7P2_A" client="_eULqgI_GEeC9h4FCu_wxjA"/>
-    <packagedElement xmi:type="uml:Package" xmi:id="_AOv_oI_UEeC9h4FCu_wxjA" name="br.unicamp.ic.controle_patrimonial.web">
+    <packagedElement xmi:type="uml:Package" xmi:id="_AOv_oI_UEeC9h4FCu_wxjA" name="br.unicamp.ic.controle_patrimonial.web.controller">
       <packagedElement xmi:type="uml:Class" xmi:id="_XNVT4I_XEeC9h4FCu_wxjA" name="UsuarioController">
         <ownedAttribute xmi:id="_ZqU6wI_XEeC9h4FCu_wxjA" name="usuarioService" visibility="private" type="_pICYAI-tEeCMMraj8QZOeQ"/>
         <ownedAttribute xmi:id="_m1JWQI_XEeC9h4FCu_wxjA" name="permissaoAcessoService" visibility="private" type="_f6BlwI-sEeCMMraj8QZOeQ"/>
