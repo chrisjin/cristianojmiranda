@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<diagrams:Diagrams xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.topcased.org/DI/1.0" xmlns:diagrams="http://www.topcased.org/Diagrams/1.0" xmi:id="_JXPmAZLFEeCi-tkVf2otXQ" activeDiagram="_JXPmApLFEeCi-tkVf2otXQ">
+  <model href="DS%20ConsultaPatrimonio.uml#idInteraction"/>
+  <diagrams xmi:id="_JXPmApLFEeCi-tkVf2otXQ" position="0,0" size="100,100" name="DS ConsultaPatrimonio" viewport="175,135">
+    <property xmi:id="_JY1hcJLFEeCi-tkVf2otXQ" key="pageFormatName" value="A2"/>
+    <property xmi:id="_JY2IgJLFEeCi-tkVf2otXQ" key="diagramWidth" value="1680"/>
+    <property xmi:id="_JY2IgZLFEeCi-tkVf2otXQ" key="diagramHeight" value="2376"/>
+    <property xmi:id="_JY2IgpLFEeCi-tkVf2otXQ" key="pageMarginName" value="Small Margin"/>
+    <property xmi:id="_JY2Ig5LFEeCi-tkVf2otXQ" key="diagramTopMargin" value="20"/>
+    <property xmi:id="_JY2IhJLFEeCi-tkVf2otXQ" key="diagramBottomMargin" value="20"/>
+    <property xmi:id="_JY2IhZLFEeCi-tkVf2otXQ" key="diagramLeftMargin" value="20"/>
+    <property xmi:id="_JY2IhpLFEeCi-tkVf2otXQ" key="diagramRightMargin" value="20"/>
+    <property xmi:id="_JY2Ih5LFEeCi-tkVf2otXQ" key="orientation" value="portrait"/>
+    <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_JXPmA5LFEeCi-tkVf2otXQ" presentation="org.topcased.modeler.uml.sequencediagram">
+      <element href="DS%20ConsultaPatrimonio.uml#idInteraction"/>
+    </semanticModel>
+    <contained xsi:type="di:GraphNode" xmi:id="_0IRmgJLHEeCi-tkVf2otXQ" position="241,40" size="151,300">
+      <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_0IRmgZLHEeCi-tkVf2otXQ" presentation="default">
+        <element href="DS%20ConsultaPatrimonio.uml#_0Ir2MJLHEeCi-tkVf2otXQ"/>
+      </semanticModel>
+      <contained xsi:type="di:GraphNode" xmi:id="_F8Zh4JLoEeCerYOohZypMA" position="65,47" size="20,104">
+        <anchorage xmi:id="_NTxYEJLoEeCerYOohZypMA" position="9,19" graphEdge="_NTz0UJLoEeCerYOohZypMA"/>
+        <anchorage xmi:id="_ZDIiMJLoEeCerYOohZypMA" position="19,76" graphEdge="_ZDJJQJLoEeCerYOohZypMA"/>
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_F8Zh4ZLoEeCerYOohZypMA" presentation="default">
+          <element href="DS%20ConsultaPatrimonio.uml#_F8bXEJLoEeCerYOohZypMA"/>
+        </semanticModel>
+      </contained>
+    </contained>
+    <contained xsi:type="di:GraphNode" xmi:id="_I024YJLKEeCi-tkVf2otXQ" position="496,40" size="135,300">
+      <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_I024YZLKEeCi-tkVf2otXQ" presentation="default">
+        <element href="DS%20ConsultaPatrimonio.uml#_I1LogJLKEeCi-tkVf2otXQ"/>
+      </semanticModel>
+      <contained xsi:type="di:GraphNode" xmi:id="_HebVUJLoEeCerYOohZypMA" position="57,61" size="20,71">
+        <anchorage xmi:id="_NTzNQJLoEeCerYOohZypMA" position="0,5" graphEdge="_NTz0UJLoEeCerYOohZypMA"/>
+        <anchorage xmi:id="_OyhOAJLoEeCerYOohZypMA" position="15,14" graphEdge="_OyicIJLoEeCerYOohZypMA"/>
+        <anchorage xmi:id="_WpysQJLoEeCerYOohZypMA" position="19,43" graphEdge="_WpzTUJLoEeCerYOohZypMA"/>
+        <anchorage xmi:id="_ZDH7IJLoEeCerYOohZypMA" position="1,62" graphEdge="_ZDJJQJLoEeCerYOohZypMA"/>
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_HebVUZLoEeCerYOohZypMA" presentation="default">
+          <element href="DS%20ConsultaPatrimonio.uml#_HedKgJLoEeCerYOohZypMA"/>
+        </semanticModel>
+      </contained>
+    </contained>
+    <contained xsi:type="di:GraphNode" xmi:id="_n9lD4JLKEeCi-tkVf2otXQ" position="742,40" size="100,300">
+      <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_n9lD4ZLKEeCi-tkVf2otXQ" presentation="default">
+        <element href="DS%20ConsultaPatrimonio.uml#_n-AhsJLKEeCi-tkVf2otXQ"/>
+      </semanticModel>
+      <contained xsi:type="di:GraphNode" xmi:id="_H3mqUJLoEeCerYOohZypMA" position="40,72" size="20,38">
+        <anchorage xmi:id="_Oyh1EJLoEeCerYOohZypMA" position="5,3" graphEdge="_OyicIJLoEeCerYOohZypMA"/>
+        <anchorage xmi:id="_WpyFMJLoEeCerYOohZypMA" position="4,32" graphEdge="_WpzTUJLoEeCerYOohZypMA"/>
+        <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_H3mqUZLoEeCerYOohZypMA" presentation="default">
+          <element href="DS%20ConsultaPatrimonio.uml#_H3ofgJLoEeCerYOohZypMA"/>
+        </semanticModel>
+      </contained>
+    </contained>
+    <contained xsi:type="di:GraphEdge" xmi:id="_NTz0UJLoEeCerYOohZypMA" anchor="_NTxYEJLoEeCerYOohZypMA _NTzNQJLoEeCerYOohZypMA">
+      <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_NTz0UZLoEeCerYOohZypMA" presentation="default">
+        <element href="DS%20ConsultaPatrimonio.uml#_NT3esJLoEeCerYOohZypMA"/>
+      </semanticModel>
+      <contained xsi:type="di:EdgeObjectOffset" xmi:id="_NTz0UpLoEeCerYOohZypMA" id="nameEdgeObject" offset="0,-10"/>
+    </contained>
+    <contained xsi:type="di:GraphEdge" xmi:id="_OyicIJLoEeCerYOohZypMA" anchor="_OyhOAJLoEeCerYOohZypMA _Oyh1EJLoEeCerYOohZypMA">
+      <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_OyicIZLoEeCerYOohZypMA" presentation="default">
+        <element href="DS%20ConsultaPatrimonio.uml#_OymtkJLoEeCerYOohZypMA"/>
+      </semanticModel>
+      <contained xsi:type="di:EdgeObjectOffset" xmi:id="_OyicIpLoEeCerYOohZypMA" id="nameEdgeObject" offset="0,-10"/>
+    </contained>
+    <contained xsi:type="di:GraphEdge" xmi:id="_WpzTUJLoEeCerYOohZypMA" anchor="_WpyFMJLoEeCerYOohZypMA _WpysQJLoEeCerYOohZypMA">
+      <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_WpzTUZLoEeCerYOohZypMA" presentation="default">
+        <element href="DS%20ConsultaPatrimonio.uml#_Wp4L0ZLoEeCerYOohZypMA"/>
+      </semanticModel>
+      <contained xsi:type="di:EdgeObjectOffset" xmi:id="_WpzTUpLoEeCerYOohZypMA" id="nameEdgeObject" offset="0,-10"/>
+    </contained>
+    <contained xsi:type="di:GraphEdge" xmi:id="_ZDJJQJLoEeCerYOohZypMA" anchor="_ZDH7IJLoEeCerYOohZypMA _ZDIiMJLoEeCerYOohZypMA">
+      <semanticModel xsi:type="di:EMFSemanticModelBridge" xmi:id="_ZDJJQZLoEeCerYOohZypMA" presentation="default">
+        <element href="DS%20ConsultaPatrimonio.uml#_ZDPP4JLoEeCerYOohZypMA"/>
+      </semanticModel>
+      <contained xsi:type="di:EdgeObjectOffset" xmi:id="_ZDJJQpLoEeCerYOohZypMA" id="nameEdgeObject" offset="0,-10"/>
+    </contained>
+  </diagrams>
+</diagrams:Diagrams>
