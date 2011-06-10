@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="idModel" name="DS ManterUsuarioModel">
+  <packagedElement xmi:type="uml:Package" xmi:id="idPackage" name="DS ManterUsuarioPackage">
+    <packagedElement xmi:type="uml:Collaboration" xmi:id="idCollaboration" name="DS ManterUsuarioCollaboration">
+      <ownedBehavior xmi:type="uml:Interaction" xmi:id="idInteraction" name="DS ManterUsuarioInteraction">
+        <lifeline xmi:id="_mCCVsJL1EeCerYOohZypMA" name="Lifeline1"/>
+      </ownedBehavior>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>

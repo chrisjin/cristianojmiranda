@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="idModel" name="DS CadastrarPatrimonioModel">
+  <packagedElement xmi:type="uml:Package" xmi:id="idPackage" name="DS CadastrarPatrimonioPackage">
+    <packagedElement xmi:type="uml:Collaboration" xmi:id="idCollaboration" name="DS CadastrarPatrimonioCollaboration">
+      <ownedBehavior xmi:type="uml:Interaction" xmi:id="idInteraction" name="DS CadastrarPatrimonioInteraction">
+        <lifeline xmi:id="_67hHAJLqEeCerYOohZypMA" name="PatrimonioController" coveredBy="_H41SA5LrEeCerYOohZypMA _RSS7wJLrEeCerYOohZypMA _BnB8wJLrEeCerYOohZypMA"/>
+        <lifeline xmi:id="_8LWXMJLqEeCerYOohZypMA" name="PatrimonioService" coveredBy="_H415EJLrEeCerYOohZypMA _RSSUsJLrEeCerYOohZypMA _PtDcQJLrEeCerYOohZypMA _KALZAJLrEeCerYOohZypMA _B54AQJLrEeCerYOohZypMA"/>
+        <lifeline xmi:id="_9Y5vcJLqEeCerYOohZypMA" name="ItemDAO" coveredBy="_KAMAEJLrEeCerYOohZypMA _PtC1MJLrEeCerYOohZypMA _CSvzQJLrEeCerYOohZypMA"/>
+        <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_RSSUsJLrEeCerYOohZypMA" name="MessageOccurrenceSpecification7" covered="_8LWXMJLqEeCerYOohZypMA" event="_RSTi0JLrEeCerYOohZypMA" message="_RSTi0ZLrEeCerYOohZypMA"/>
+        <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_RSS7wJLrEeCerYOohZypMA" name="MessageOccurrenceSpecification8" covered="_67hHAJLqEeCerYOohZypMA" event="_RSTi0JLrEeCerYOohZypMA" message="_RSTi0ZLrEeCerYOohZypMA"/>
+        <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_PtC1MJLrEeCerYOohZypMA" name="MessageOccurrenceSpecification5" covered="_9Y5vcJLqEeCerYOohZypMA" event="_PtEDUJLrEeCerYOohZypMA" message="_PtEDUZLrEeCerYOohZypMA"/>
+        <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_PtDcQJLrEeCerYOohZypMA" name="MessageOccurrenceSpecification6" covered="_8LWXMJLqEeCerYOohZypMA" event="_PtEDUJLrEeCerYOohZypMA" message="_PtEDUZLrEeCerYOohZypMA"/>
+        <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_KALZAJLrEeCerYOohZypMA" name="MessageOccurrenceSpecification3" covered="_8LWXMJLqEeCerYOohZypMA" event="_KAMnIJLrEeCerYOohZypMA" message="_KAMnIZLrEeCerYOohZypMA"/>
+        <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_KAMAEJLrEeCerYOohZypMA" name="MessageOccurrenceSpecification4" covered="_9Y5vcJLqEeCerYOohZypMA" event="_KAMnIJLrEeCerYOohZypMA" message="_KAMnIZLrEeCerYOohZypMA"/>
+        <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_H41SA5LrEeCerYOohZypMA" name="MessageOccurrenceSpecification1" covered="_67hHAJLqEeCerYOohZypMA" event="_H42gIJLrEeCerYOohZypMA" message="_H42gIZLrEeCerYOohZypMA"/>
+        <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_H415EJLrEeCerYOohZypMA" name="MessageOccurrenceSpecification2" covered="_8LWXMJLqEeCerYOohZypMA" event="_H42gIJLrEeCerYOohZypMA" message="_H42gIZLrEeCerYOohZypMA"/>
+        <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_BnB8wJLrEeCerYOohZypMA" name="BehaviorExecutionSpecification1" covered="_67hHAJLqEeCerYOohZypMA" start="_H41SA5LrEeCerYOohZypMA" finish="_RSS7wJLrEeCerYOohZypMA"/>
+        <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_CSvzQJLrEeCerYOohZypMA" name="BehaviorExecutionSpecification3" covered="_9Y5vcJLqEeCerYOohZypMA" start="_KAMAEJLrEeCerYOohZypMA" finish="_PtC1MJLrEeCerYOohZypMA"/>
+        <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_B54AQJLrEeCerYOohZypMA" name="BehaviorExecutionSpecification2" covered="_8LWXMJLqEeCerYOohZypMA" start="_H415EJLrEeCerYOohZypMA" finish="_RSSUsJLrEeCerYOohZypMA"/>
+        <message xmi:id="_H42gIZLrEeCerYOohZypMA" name="incluirPatrimonio()" receiveEvent="_H415EJLrEeCerYOohZypMA" sendEvent="_H41SA5LrEeCerYOohZypMA"/>
+        <message xmi:id="_KAMnIZLrEeCerYOohZypMA" name="incluirPatrimonio()" receiveEvent="_KAMAEJLrEeCerYOohZypMA" sendEvent="_KALZAJLrEeCerYOohZypMA"/>
+        <message xmi:id="_PtEDUZLrEeCerYOohZypMA" name="Retorna Objeto Salvo" messageSort="reply" receiveEvent="_PtDcQJLrEeCerYOohZypMA" sendEvent="_PtC1MJLrEeCerYOohZypMA"/>
+        <message xmi:id="_RSTi0ZLrEeCerYOohZypMA" name="Retorna Objeto Salvo" messageSort="reply" receiveEvent="_RSS7wJLrEeCerYOohZypMA" sendEvent="_RSSUsJLrEeCerYOohZypMA"/>
+      </ownedBehavior>
+    </packagedElement>
+    <packagedElement xmi:type="uml:CallEvent" xmi:id="_H42gIJLrEeCerYOohZypMA" name="CallEvent1"/>
+    <packagedElement xmi:type="uml:CallEvent" xmi:id="_KAMnIJLrEeCerYOohZypMA" name="CallEvent2"/>
+    <packagedElement xmi:type="uml:CallEvent" xmi:id="_PtEDUJLrEeCerYOohZypMA" name="CallEvent3"/>
+    <packagedElement xmi:type="uml:CallEvent" xmi:id="_RSTi0JLrEeCerYOohZypMA" name="CallEvent4"/>
+  </packagedElement>
+</uml:Model>
