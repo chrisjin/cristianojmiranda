@@ -3,7 +3,7 @@
   <packagedElement xmi:type="uml:Package" xmi:id="idPackage" name="DS LogarSistemaPackage">
     <packagedElement xmi:type="uml:Collaboration" xmi:id="idCollaboration" name="DS LogarSistemaCollaboration">
       <ownedBehavior xmi:type="uml:Interaction" xmi:id="idInteraction" name="DS LogarSistemaInteraction">
-        <lifeline xmi:id="_fd4T4JLvEeCerYOohZypMA" name="LoginController" coveredBy="_Yro5IJLxEeCerYOohZypMA _LuFWMJL0EeCerYOohZypMA _k_fF0JLwEeCerYOohZypMA"/>
+        <lifeline xmi:id="_fd4T4JLvEeCerYOohZypMA" name="LoginController" coveredBy="_Yro5IJLxEeCerYOohZypMA _RQYVkJL-EeCerYOohZypMA _RQWgYJL-EeCerYOohZypMA _LuFWMJL0EeCerYOohZypMA _k_fF0JLwEeCerYOohZypMA _RQTdEJL-EeCerYOohZypMA"/>
         <lifeline xmi:id="_iHYswJLvEeCerYOohZypMA" name="UsuarioService" coveredBy="_wTB2oJLwEeCerYOohZypMA _9_DsUJLxEeCerYOohZypMA _kn2McJLxEeCerYOohZypMA _p-xDQ5LwEeCerYOohZypMA _l0NuYJLwEeCerYOohZypMA"/>
         <lifeline xmi:id="_jRiLsJLvEeCerYOohZypMA" name="PermissaoAcessoService" coveredBy="_YrpgMJLxEeCerYOohZypMA _LuDhAJL0EeCerYOohZypMA _DRbS8JL0EeCerYOohZypMA _05XBMJLzEeCerYOohZypMA _Xdf1kJLyEeCerYOohZypMA _FrdXUJLyEeCerYOohZypMA _9_E6cJLxEeCerYOohZypMA _kn0-UJLxEeCerYOohZypMA _mh1pYJLwEeCerYOohZypMA"/>
         <lifeline xmi:id="_k2TKEJLvEeCerYOohZypMA" name="PatrimonioService"/>
@@ -15,6 +15,8 @@
         <lifeline xmi:id="_At8mYJLwEeCerYOohZypMA" name="IUsarioDAO" coveredBy="_wTBPkJLwEeCerYOohZypMA _p-xqUJLwEeCerYOohZypMA _mKuJ4JLwEeCerYOohZypMA"/>
         <lifeline xmi:id="_PC1BQJLwEeCerYOohZypMA" name="IPerfilDAO" coveredBy="_FrelcJLyEeCerYOohZypMA _WT5JMJLyEeCerYOohZypMA _nHvLwJLwEeCerYOohZypMA"/>
         <lifeline xmi:id="_RwYzsJLwEeCerYOohZypMA" name="IFuncionalidadeDAO" coveredBy="_2mIsEJLzEeCerYOohZypMA _DRaE0JL0EeCerYOohZypMA _nkRWwJLwEeCerYOohZypMA"/>
+        <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_RQWgYJL-EeCerYOohZypMA" name="MessageOccurrenceSpecification21" covered="_fd4T4JLvEeCerYOohZypMA" event="_RQYVkZL-EeCerYOohZypMA"/>
+        <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_RQYVkJL-EeCerYOohZypMA" name="MessageOccurrenceSpecification22" covered="_fd4T4JLvEeCerYOohZypMA" event="_RQYVkZL-EeCerYOohZypMA"/>
         <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_LuDhAJL0EeCerYOohZypMA" name="MessageOccurrenceSpecification19" covered="_jRiLsJLvEeCerYOohZypMA" event="_LuF9QJL0EeCerYOohZypMA" message="_LuGkUJL0EeCerYOohZypMA"/>
         <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_LuFWMJL0EeCerYOohZypMA" name="MessageOccurrenceSpecification20" covered="_fd4T4JLvEeCerYOohZypMA" event="_LuF9QJL0EeCerYOohZypMA" message="_LuGkUJL0EeCerYOohZypMA"/>
         <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_DRaE0JL0EeCerYOohZypMA" name="MessageOccurrenceSpecification17" covered="_RwYzsJLwEeCerYOohZypMA" event="_DRb6AJL0EeCerYOohZypMA" message="_DRchEJL0EeCerYOohZypMA"/>
@@ -35,12 +37,13 @@
         <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_YrpgMJLxEeCerYOohZypMA" name="MessageOccurrenceSpecification2" covered="_jRiLsJLvEeCerYOohZypMA" event="_YrpgMZLxEeCerYOohZypMA" message="_YrpgMpLxEeCerYOohZypMA"/>
         <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_wTBPkJLwEeCerYOohZypMA" name="MessageOccurrenceSpecification5" covered="_At8mYJLwEeCerYOohZypMA" event="_wTCdsJLwEeCerYOohZypMA" message="_wTCdsZLwEeCerYOohZypMA"/>
         <fragment xmi:type="uml:MessageOccurrenceSpecification" xmi:id="_wTB2oJLwEeCerYOohZypMA" name="MessageOccurrenceSpecification6" covered="_iHYswJLvEeCerYOohZypMA" event="_wTCdsJLwEeCerYOohZypMA" message="_wTCdsZLwEeCerYOohZypMA"/>
-        <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_k_fF0JLwEeCerYOohZypMA" name="BehaviorExecutionSpecification1" covered="_fd4T4JLvEeCerYOohZypMA" start="_Yro5IJLxEeCerYOohZypMA" finish="_LuFWMJL0EeCerYOohZypMA"/>
+        <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_k_fF0JLwEeCerYOohZypMA" name="BehaviorExecutionSpecification1" covered="_fd4T4JLvEeCerYOohZypMA" start="_Yro5IJLxEeCerYOohZypMA" finish="_RQWgYJL-EeCerYOohZypMA"/>
         <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_l0NuYJLwEeCerYOohZypMA" name="BehaviorExecutionSpecification2" covered="_iHYswJLvEeCerYOohZypMA" start="_kn2McJLxEeCerYOohZypMA" finish="_9_DsUJLxEeCerYOohZypMA"/>
         <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_mKuJ4JLwEeCerYOohZypMA" name="BehaviorExecutionSpecification3" covered="_At8mYJLwEeCerYOohZypMA" start="_p-xqUJLwEeCerYOohZypMA" finish="_wTBPkJLwEeCerYOohZypMA"/>
         <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_mh1pYJLwEeCerYOohZypMA" name="BehaviorExecutionSpecification4" covered="_jRiLsJLvEeCerYOohZypMA" start="_YrpgMJLxEeCerYOohZypMA" finish="_LuDhAJL0EeCerYOohZypMA"/>
         <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_nHvLwJLwEeCerYOohZypMA" name="BehaviorExecutionSpecification5" covered="_PC1BQJLwEeCerYOohZypMA" start="_FrelcJLyEeCerYOohZypMA" finish="_WT5JMJLyEeCerYOohZypMA"/>
         <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_nkRWwJLwEeCerYOohZypMA" name="BehaviorExecutionSpecification6" covered="_RwYzsJLwEeCerYOohZypMA" start="_2mIsEJLzEeCerYOohZypMA" finish="_DRaE0JL0EeCerYOohZypMA"/>
+        <fragment xmi:type="uml:BehaviorExecutionSpecification" xmi:id="_RQTdEJL-EeCerYOohZypMA" name="BehaviorExecutionSpecification7" covered="_fd4T4JLvEeCerYOohZypMA" start="_RQYVkJL-EeCerYOohZypMA" finish="_RQYVkJL-EeCerYOohZypMA"/>
         <message xmi:id="_p-yRYZLwEeCerYOohZypMA" name="consultarUsuario(login, senha)" receiveEvent="_p-xqUJLwEeCerYOohZypMA" sendEvent="_p-xDQ5LwEeCerYOohZypMA"/>
         <message xmi:id="_wTCdsZLwEeCerYOohZypMA" name="Retorna Usuario" messageSort="reply" receiveEvent="_wTB2oJLwEeCerYOohZypMA" sendEvent="_wTBPkJLwEeCerYOohZypMA"/>
         <message xmi:id="_YrpgMpLxEeCerYOohZypMA" name="executarLogin(login, senha)" receiveEvent="_YrpgMJLxEeCerYOohZypMA" sendEvent="_Yro5IJLxEeCerYOohZypMA"/>
@@ -63,5 +66,6 @@
     <packagedElement xmi:type="uml:CallEvent" xmi:id="_05XBMZLzEeCerYOohZypMA" name="CallEvent8"/>
     <packagedElement xmi:type="uml:CallEvent" xmi:id="_DRb6AJL0EeCerYOohZypMA" name="CallEvent9"/>
     <packagedElement xmi:type="uml:CallEvent" xmi:id="_LuF9QJL0EeCerYOohZypMA" name="CallEvent10"/>
+    <packagedElement xmi:type="uml:CallEvent" xmi:id="_RQYVkZL-EeCerYOohZypMA" name="CallEvent11"/>
   </packagedElement>
 </uml:Model>
