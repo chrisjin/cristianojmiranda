@@ -1,0 +1,141 @@
+project --topLevelPackage br.unicamp.ic.controle_patrimonial
+
+persistence setup --provider HIBERNATE --database HYPERSONIC_PERSISTENT
+
+#
+# Enum Enabled
+#
+enum type --class ~.reference.EnabledEnum
+enum constant --name Ativo
+enum constant --name Inativo
+
+#
+# Enum Status Patrimonio
+#
+enum type --class ~.reference.StatusPatrimonioEnum
+enum constant --name Ativo
+enum constant --name Inativo
+enum constant --name Extraviado
+enum constant --name Emprestado
+enum constant --name Procura
+
+
+#
+# Entidade Funcionalidade
+#
+entity --class ~.domain.Funcionalidade --testAutomatically
+field string descricao --notNull --sizeMin 1 --sizeMax 250 
+field enum --fieldName enabled --type ~.reference.EnabledEnum --notNull --value ~.reference.EnabledEnum.Ativo
+
+
+#
+# Entidade Perfil
+#
+entity --class ~.domain.Perfil --testAutomatically
+field string tipo --notNull --sizeMin 1 --sizeMax 30
+field enum --fieldName enabled --type ~.reference.EnabledEnum --notNull --value ~.reference.EnabledEnum.Ativo
+field set --class ~.domain.Funcionalidade --fieldName funcionalidades --type ~.domain.Funcionalidade --mappedBy id --notNull false --cardinality ONE_TO_MANY
+
+
+#
+# Entidade Departamento
+#
+entity --class ~.domain.Departamento --testAutomatically
+field string nome --notNull --sizeMin 1 --sizeMax 20
+field string descricao --notNull --sizeMin 1 --sizeMax 200
+field enum --fieldName enabled --type ~.reference.EnabledEnum --notNull --value ~.reference.EnabledEnum.Ativo
+field date dtCriacao --type java.util.Calendar --notNull
+field string responsavel --notNull --sizeMin 1 --sizeMax 100
+
+
+#
+# Entidade Area
+#
+entity --class ~.domain.Area --testAutomatically
+field string nome --notNull --sizeMin 1 --sizeMax 20
+field string descricao --notNull --sizeMin 1 --sizeMax 200
+field string endereco --notNull --sizeMin 1 --sizeMax 200
+field string responsavel --notNull --sizeMin 1 --sizeMax 100
+field reference --fieldName departamento --type ~.domain.Departamento --notNull
+field enum --fieldName enabled --type ~.reference.EnabledEnum --notNull --value ~.reference.EnabledEnum.Ativo
+field date dtCriacao --type java.util.Calendar --notNull
+
+
+#
+# Entidade Usuario
+#
+entity --class ~.domain.Usuario --testAutomatically
+field string nome --notNull --sizeMin 1 --sizeMax 100
+field string email --notNull --sizeMin 1 --sizeMax 200
+field string senha --notNull --sizeMin 1 --sizeMax 10
+field string ramal --notNull --sizeMin 1 --sizeMax 10
+field string sala --notNull --sizeMin 1 --sizeMax 50
+field string observacoes --notNull --sizeMin 1 --sizeMax 1000
+field reference --fieldName perfil --type ~.domain.Perfil --notNull
+field reference --fieldName area --type ~.domain.Area --notNull
+field enum --fieldName enabled --type ~.reference.EnabledEnum --notNull --value ~.reference.EnabledEnum.Ativo
+field date dtCriacao --type java.util.Calendar --notNull
+field date dtAtualizacao --type java.util.Calendar --notNull
+
+
+#
+# Entidade Categoria
+#
+entity --class ~.domain.Categoria --testAutomatically
+field string nome --notNull --sizeMin 1 --sizeMax 100
+field string descricao --notNull --sizeMin 1 --sizeMax 500
+
+#
+# Entidade Patrimonio
+#
+entity --class ~.domain.Item --testAutomatically
+field string pid --notNull --sizeMin 1 --sizeMax 20
+field string nome --notNull --sizeMin 1 --sizeMax 200
+field string categoria --notNull --sizeMin 1 --sizeMax 100
+field string descricao --notNull --sizeMin 1 --sizeMax 500
+field enum --fieldName status --type ~.reference.StatusPatrimonioEnum --notNull
+field reference --fieldName area --type ~.domain.Area
+field string flagFomento --notNull --sizeMin 1 --sizeMax 1 --value "N"
+field string flagLiberarSaida --notNull --sizeMin 1 --sizeMax 1 --value "N" --comment Flag para liberar saida de um item de patrimonio.
+field date dtCriacao --type java.util.Calendar --notNull
+field date dtAtualizacao --type java.util.Calendar --notNull
+field reference --fieldName usuarioResponsavel --type ~.domain.Usuario
+field reference --fieldName usuarioResponsavelAnterior --type ~.domain.Usuario
+field reference --fieldName usuarioAtualizacao --type ~.domain.Usuario --notNull
+
+	
+###################################
+# Criando os controllers
+###################################
+controller all --package ~.web
+
+###################################
+# Configurando seguranca
+###################################
+security setup
+
+###################################
+# Setando i18n
+###################################
+web mvc install language --code de
+web mvc install language --code es
+
+###################################
+# Montando suite de testes
+###################################
+selenium test --controller ~.web.PaisController
+
+###################################
+# Setando nivel de logger
+###################################
+logging setup --level DEBUG
+
+###################################
+# Configurando o banco de dados
+###################################
+database properties set --key database.username --value root
+database properties set --key database.password --value root123
+database properties set --key database.url --value jdbc:mysql://localhost:3306/forum
+
+perform eclipse
+perform package
