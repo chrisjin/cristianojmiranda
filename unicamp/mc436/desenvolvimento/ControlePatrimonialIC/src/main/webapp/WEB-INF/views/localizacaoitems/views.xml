@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition extends="default" name="localizacaoitems/list">
+        <put-attribute name="body" value="/WEB-INF/views/localizacaoitems/list.jspx"/>
+    </definition>
+<definition extends="default" name="localizacaoitems/show">
+        <put-attribute name="body" value="/WEB-INF/views/localizacaoitems/show.jspx"/>
+    </definition>
+<definition extends="default" name="localizacaoitems/create">
+        <put-attribute name="body" value="/WEB-INF/views/localizacaoitems/create.jspx"/>
+    </definition>
+<definition extends="default" name="localizacaoitems/update">
+        <put-attribute name="body" value="/WEB-INF/views/localizacaoitems/update.jspx"/>
+    </definition>
+</tiles-definitions>

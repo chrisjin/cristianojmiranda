@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_br_unicamp_ic_controle_patrimonial_domain_Departamento" object="${departamento}" path="/departamentoes" z="ASoc9b9K4KvDeKQai1/XDAtCMXs=">
+        <field:display field="nome" id="s_br_unicamp_ic_controle_patrimonial_domain_Departamento_nome" object="${departamento}" z="qs9oSwOm4A+doA0fG8CU12Zc6+w="/>
+        <field:display field="descricao" id="s_br_unicamp_ic_controle_patrimonial_domain_Departamento_descricao" object="${departamento}" z="9ltoxsL/hDBiVd+OBxIGGH6qNcA="/>
+        <field:display field="ativo" id="s_br_unicamp_ic_controle_patrimonial_domain_Departamento_ativo" object="${departamento}" z="mGW52c0IN1H4qStEuADoNsJ0pi0="/>
+        <field:display calendar="true" dateTimePattern="${departamento_dtcriacao_date_format}" field="dtCriacao" id="s_br_unicamp_ic_controle_patrimonial_domain_Departamento_dtCriacao" object="${departamento}" z="2SESMl9gczMWCF+BXe4rdus8wlc="/>
+        <field:display field="responsavel" id="s_br_unicamp_ic_controle_patrimonial_domain_Departamento_responsavel" object="${departamento}" z="9bnVL3+8xG3vFGsMTR5QqllZMXc="/>
+    </page:show>
+</div>

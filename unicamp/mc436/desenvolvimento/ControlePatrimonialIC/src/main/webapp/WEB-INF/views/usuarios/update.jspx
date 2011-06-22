@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_br_unicamp_ic_controle_patrimonial_domain_Usuario" modelAttribute="usuario" path="/usuarios" versionField="Version" z="j9yU0reOfUYKxRg1pp618TSBxUw=">
+        <field:textarea field="nome" id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_nome" required="true" z="0ZiZk3B5xj2CBM4JoHJy1vc2nbM="/>
+        <field:textarea field="email" id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_email" required="true" validationMessageCode="field_invalid_email" z="gfV8b8nDrMOK63aW54MgMQdYAH0="/>
+        <field:input field="senha" id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_senha" max="10" min="1" required="true" z="2BAR7t2bXxPZ0ubSZzphnL8gInQ="/>
+        <field:input field="ramal" id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_ramal" max="10" min="1" required="true" z="ZHFmgVC5u4Fqjdtr6XBP+WkXI/o="/>
+        <field:textarea field="sala" id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_sala" required="true" z="CgO0yk0HTl33jZfstqZ1OtUMJqk="/>
+        <field:textarea field="observacoes" id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_observacoes" required="true" z="9iGLqTydHdO02dN8v07WcdwlSfk="/>
+        <field:select field="perfil" id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_perfil" itemValue="id" items="${perfils}" path="/perfils" required="true" z="5ufzp2wIpfQGw+X5aGqLmtF2XMw="/>
+        <field:select field="area" id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_area" itemValue="id" items="${areas}" path="/areas" required="true" z="gdjsS+YfjPAVALSB/O2KOX0QmHI="/>
+        <field:select field="ativo" id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_ativo" items="${enabledenums}" path="enabledenums" required="true" z="6BfVfpD96x4/48dud5e+SgG9ox0="/>
+        <field:datetime dateTimePattern="${usuario_dtcriacao_date_format}" field="dtCriacao" id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_dtCriacao" required="true" z="1lwvRdY/makamjnFRQ150Ygw8aU="/>
+        <field:datetime dateTimePattern="${usuario_dtatualizacao_date_format}" field="dtAtualizacao" id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_dtAtualizacao" required="true" z="n0IDY/TKufMjQXXK8v+wfUx/XOU="/>
+    </form:update>
+</div>

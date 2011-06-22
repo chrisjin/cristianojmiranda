@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_br_unicamp_ic_controle_patrimonial_domain_Usuario" object="${usuario}" path="/usuarios" z="inXwm6JK6SR8PAAazjq4/YyJ2gQ=">
+        <field:display field="nome" id="s_br_unicamp_ic_controle_patrimonial_domain_Usuario_nome" object="${usuario}" z="P6kxdksfTb46w87nNuQK2ERXMUw="/>
+        <field:display field="email" id="s_br_unicamp_ic_controle_patrimonial_domain_Usuario_email" object="${usuario}" z="/bP76s260UAYMRba59Xg/OjUYAw="/>
+        <field:display field="senha" id="s_br_unicamp_ic_controle_patrimonial_domain_Usuario_senha" object="${usuario}" z="1bHZ9v3wCty5nwmZyTnHoY2MqB8="/>
+        <field:display field="ramal" id="s_br_unicamp_ic_controle_patrimonial_domain_Usuario_ramal" object="${usuario}" z="SiDXAXdPHAFlymAIioknsrZyRUA="/>
+        <field:display field="sala" id="s_br_unicamp_ic_controle_patrimonial_domain_Usuario_sala" object="${usuario}" z="6SyuKIhmiqYmP9YwsgaZ9Gg3gCk="/>
+        <field:display field="observacoes" id="s_br_unicamp_ic_controle_patrimonial_domain_Usuario_observacoes" object="${usuario}" z="N5Ju9t8DjD6iGotJu/Ctt9plTR0="/>
+        <field:display field="perfil" id="s_br_unicamp_ic_controle_patrimonial_domain_Usuario_perfil" object="${usuario}" z="gWke7Vz/ULd4JImHqDDqGaLseaI="/>
+        <field:display field="area" id="s_br_unicamp_ic_controle_patrimonial_domain_Usuario_area" object="${usuario}" z="W3kDwLsohIixiPquGczWLKhpxT0="/>
+        <field:display field="ativo" id="s_br_unicamp_ic_controle_patrimonial_domain_Usuario_ativo" object="${usuario}" z="WyopmtujH0lYLRD1c1pv3MtCOkI="/>
+        <field:display calendar="true" dateTimePattern="${usuario_dtcriacao_date_format}" field="dtCriacao" id="s_br_unicamp_ic_controle_patrimonial_domain_Usuario_dtCriacao" object="${usuario}" z="NItjAtuT4QHY4gRxZxOTH8zJEpk="/>
+        <field:display calendar="true" dateTimePattern="${usuario_dtatualizacao_date_format}" field="dtAtualizacao" id="s_br_unicamp_ic_controle_patrimonial_domain_Usuario_dtAtualizacao" object="${usuario}" z="wmSnKWZic8iE9GoYD96b0vTkEdk="/>
+    </page:show>
+</div>

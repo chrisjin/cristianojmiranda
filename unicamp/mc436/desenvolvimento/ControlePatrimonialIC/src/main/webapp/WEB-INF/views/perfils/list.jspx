@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_ic_controle_patrimonial_domain_Perfil" items="${perfils}" z="lhEjMSU9O/BYeN1NQHLJiFh0Ep0=">
+        <table:table data="${perfils}" id="l_br_unicamp_ic_controle_patrimonial_domain_Perfil" path="/perfils" z="rylowO03EmRgCaQhIP2HGZ7kgoM=">
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Perfil_tipo" property="tipo" z="x7hBlNZmhbzgnoLwIkg4ifkEaOw="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Perfil_ativo" property="ativo" z="i0zB/kT1yUakjNfpsNLaCcYvyG8="/>
+        </table:table>
+    </page:list>
+</div>

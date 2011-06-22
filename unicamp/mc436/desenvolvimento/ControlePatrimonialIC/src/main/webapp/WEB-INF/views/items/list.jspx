@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_ic_controle_patrimonial_domain_Item" items="${items}" z="OzHikKGpKUKkICrqZIpMHvkD/+A=">
+        <table:table data="${items}" id="l_br_unicamp_ic_controle_patrimonial_domain_Item" path="/items" z="uZ5WtQeMthl+rmisZO7YP4Au0Fo=">
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Item_pid" property="pid" z="ltrtJNATXeFWlF6omoe6MTXHjgA="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Item_rfid" property="rfid" z="8JQ3trxfF5YwAcEDHgU5iB7N1Es="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Item_nome" property="nome" z="5z7BGGWhjB9eZd3FnIRth9qhnWM="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Item_categoria" property="categoria" z="AHe3ngqzM8LzLHSdHK9iS0LnMb0="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Item_descricao" property="descricao" z="w0PEoN1aGlufegq6/hbjwjjPGZo="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Item_status" property="status" z="vjStmqsGBnhl8d7h602fqojRtvc="/>
+        </table:table>
+    </page:list>
+</div>

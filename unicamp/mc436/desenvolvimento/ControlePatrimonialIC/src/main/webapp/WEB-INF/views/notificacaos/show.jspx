@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_br_unicamp_ic_controle_patrimonial_domain_Notificacao" object="${notificacao}" path="/notificacaos" z="LVjmpPi3RKSxGoujnI7FRKhOsDM=">
+        <field:display field="tipoNotificacao" id="s_br_unicamp_ic_controle_patrimonial_domain_Notificacao_tipoNotificacao" object="${notificacao}" z="5943lml0fiaaSfQ7jBW+H3bnaIw="/>
+        <field:display calendar="true" dateTimePattern="${notificacao_dtcriacao_date_format}" field="dtCriacao" id="s_br_unicamp_ic_controle_patrimonial_domain_Notificacao_dtCriacao" object="${notificacao}" z="4XzBcp6Ts/L0SXXS0fbLKs60U9k="/>
+        <field:display calendar="true" dateTimePattern="${notificacao_dtatualizacao_date_format}" field="dtAtualizacao" id="s_br_unicamp_ic_controle_patrimonial_domain_Notificacao_dtAtualizacao" object="${notificacao}" z="xZ4GFKwGqUcGfDB5gPATIb1JuxE="/>
+        <field:display field="usuarioResponsavel" id="s_br_unicamp_ic_controle_patrimonial_domain_Notificacao_usuarioResponsavel" object="${notificacao}" z="9l4ADrcGLHZLi4G+gLNJP483pxo="/>
+        <field:display field="usuarioAnalise" id="s_br_unicamp_ic_controle_patrimonial_domain_Notificacao_usuarioAnalise" object="${notificacao}" z="XGnVcE/QaEh4gsDTND6cr2rYU5s="/>
+        <field:display field="descricao" id="s_br_unicamp_ic_controle_patrimonial_domain_Notificacao_descricao" object="${notificacao}" z="bmQe40IjqlLBr4hevNYB9OHt9p8="/>
+        <field:display field="observacao" id="s_br_unicamp_ic_controle_patrimonial_domain_Notificacao_observacao" object="${notificacao}" z="/904LH32lZV+8D3oIsZ3aQ7+xzQ="/>
+        <field:display field="ativo" id="s_br_unicamp_ic_controle_patrimonial_domain_Notificacao_ativo" object="${notificacao}" z="sJKcTOd72CRn56IrgHad9gE6aUg="/>
+    </page:show>
+</div>

@@ -1,0 +1,102 @@
+// Spring Roo 1.1.4.RELEASE [rev f787ce7] log opened at 2011-06-22 13:23:00
+project --topLevelPackage br.unicamp.ic.controle.patrimonial
+persistence setup --provider HIBERNATE --database HYPERSONIC_PERSISTENT
+enum type --class ~.reference.EnabledEnum
+enum constant --name Ativo
+enum constant --name Inativo
+enum type --class ~.reference.StatusPatrimonioEnum
+enum constant --name Ativo
+enum constant --name Inativo
+enum constant --name Extraviado
+enum constant --name Emprestado
+enum constant --name Procura
+enum type --class ~.reference.StatusNotificacaoEnum
+enum constant --name Pendente
+enum constant --name EmAnalise
+enum constant --name Fechado
+entity --class ~.domain.Funcionalidade
+field string --fieldName descricao --notNull  --sizeMin 1 --sizeMax 250 --class ~.domain.Funcionalidade 
+field enum --fieldName ativo --notNull --type  ~.reference.EnabledEnum --class ~.domain.Funcionalidade
+entity --class ~.domain.Perfil
+field string --fieldName tipo --notNull --sizeMin 1 --sizeMax 30 --class ~.domain.Perfil
+field enum --fieldName ativo --type ~.reference.EnabledEnum --notNull
+entity --class ~.domain.PerfilFuncionalidade
+field reference --fieldName perfil --type ~.domain.Perfil --notNull
+field reference --fieldName funcionalidade --type ~.domain.Funcionalidade --notNull
+entity --class ~.domain.Departamento
+field string --fieldName nome --notNull --sizeMin 1 --sizeMax 20 --class ~.domain.Departamento
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 200
+field enum --fieldName ativo --type ~.reference.EnabledEnum --notNull
+field date --fieldName dtCriacao --type java.util.Calendar --notNull
+field string --fieldName responsavel --notNull --sizeMin 1 --sizeMax 100
+entity --class ~.domain.Area
+field string --fieldName nome --notNull --sizeMin 1 --sizeMax 20 --class ~.domain.Area
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 200
+field string --fieldName endereco --notNull --sizeMin 1 --sizeMax 200
+field string --fieldName responsavel --notNull --sizeMin 1 --sizeMax 100
+field reference --fieldName departamento --type ~.domain.Departamento --notNull
+field enum --fieldName ativo --type ~.reference.EnabledEnum --notNull
+field date --fieldName dtCriacao --type java.util.Calendar --notNull
+entity --class ~.domain.Usuario 
+field string --fieldName nome --notNull --sizeMin 1 --sizeMax 100 --class ~.domain.Usuario
+field string --fieldName email --notNull --sizeMin 1 --sizeMax 200
+field string --fieldName senha --notNull --sizeMin 1 --sizeMax 10
+field string --fieldName ramal --notNull --sizeMin 1 --sizeMax 10
+field string --fieldName sala --notNull --sizeMin 1 --sizeMax 50
+field string --fieldName observacoes --notNull --sizeMin 1 --sizeMax 1000
+field reference --fieldName perfil --type ~.domain.Perfil --notNull
+field reference --fieldName area --type ~.domain.Area --notNull
+field enum --fieldName ativo --type ~.reference.EnabledEnum --notNull
+field date --fieldName dtCriacao --type java.util.Calendar --notNull
+field date --fieldName dtAtualizacao --type java.util.Calendar --notNull
+entity --class ~.domain.Categoria 
+field string --fieldName nome --notNull --sizeMin 1 --sizeMax 100 --class ~.domain.Categoria
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 500
+entity --class ~.domain.Item 
+field string --fieldName pid --notNull --sizeMin 1 --sizeMax 20 --class ~.domain.Item
+field string --fieldName rfid --sizeMin 1 --sizeMax 20
+field string --fieldName nome --notNull --sizeMin 1 --sizeMax 200
+field string --fieldName categoria --notNull --sizeMin 1 --sizeMax 100
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 500
+field enum --fieldName status --type ~.reference.StatusPatrimonioEnum --notNull
+field reference --fieldName area --type ~.domain.Area
+field string --fieldName flagFomento --notNull --sizeMin 1 --sizeMax 1 --value N
+field string --fieldName flagLiberarSaida --notNull --sizeMin 1 --sizeMax 1 --value N
+field date --fieldName dtLiberacao --type java.util.Calendar
+field date --fieldName dtCriacao --type java.util.Calendar --notNull
+field date --fieldName dtAtualizacao --type java.util.Calendar --notNull
+field reference --fieldName usuarioResponsavel --type ~.domain.Usuario --class ~.domain.Item
+field reference --fieldName usuarioResponsavelAnterior --type ~.domain.Usuario --class ~.domain.Item
+field reference --fieldName usuarioAtualizacao --type ~.domain.Usuario --notNull
+field string --fieldName observacoes --sizeMax 1000
+entity --class ~.domain.LocalizacaoItem 
+field reference --fieldName area --type ~.domain.Area --notNull --class ~.domain.LocalizacaoItem
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 1000
+field date --fieldName dtAtualizacao --type java.util.Calendar --notNull
+field reference --fieldName item --type ~.domain.Item --notNull
+field reference --fieldName usuarioAtualizacao --type ~.domain.Usuario --notNull
+field string --fieldName observacoes --sizeMax 1000
+entity --class ~.domain.TipoNotificacao 
+field string --fieldName tipo --notNull --sizeMin 1 --sizeMax 20 --class ~.domain.TipoNotificacao
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 1000
+field enum --fieldName ativo --type ~.reference.EnabledEnum --notNull
+entity --class ~.domain.Notificacao
+field reference --fieldName tipoNotificacao --type ~.domain.TipoNotificacao --notNull --class ~.domain.Notificacao
+field date --fieldName dtCriacao --type java.util.Calendar --notNull --class ~.domain.Notificacao
+field date --fieldName dtAtualizacao --type java.util.Calendar --notNull --class ~.domain.Notificacao
+field reference --fieldName usuarioResponsavel --type ~.domain.Usuario --notNull --class ~.domain.Notificacao
+field reference --fieldName usuarioAnalise --type ~.domain.Usuario --notNull --class ~.domain.Notificacao
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 1000 --class ~.domain.Notificacao
+field string --fieldName observacao --sizeMax 1000 --class ~.domain.Notificacao
+field enum --fieldName ativo --type ~.reference.StatusNotificacaoEnum --notNull --class ~.domain.Notificacao
+controller all --package ~.web
+security setup
+web mvc install language --code pt
+web mvc install language --code en
+selenium test --controller ~.web.ItemController
+logging setup --level DEBUG
+perform eclipse
+perform package
+// script --file controle-patrimonial-ic.roo
+quit
+// Spring Roo 1.1.4.RELEASE [rev f787ce7] log closed at 2011-06-22 13:24:15

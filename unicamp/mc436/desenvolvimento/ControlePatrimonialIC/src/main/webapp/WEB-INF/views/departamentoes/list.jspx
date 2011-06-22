@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_ic_controle_patrimonial_domain_Departamento" items="${departamentoes}" z="7ngm74VsykLN7IKaIm+tXj3n3k8=">
+        <table:table data="${departamentoes}" id="l_br_unicamp_ic_controle_patrimonial_domain_Departamento" path="/departamentoes" z="rJtZ7yE869zzhe3IVCZ6Jxs+hmc=">
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Departamento_nome" property="nome" z="uQp+s8XuxYAKM7ToEl1H1osrEMo="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Departamento_descricao" property="descricao" z="7y+F+lgbMdkgFhYa5LKiaK0Ud5c="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Departamento_ativo" property="ativo" z="APXAsUIgcVoH6JNCykAfPgN59ec="/>
+            <table:column calendar="true" dateTimePattern="${departamento_dtcriacao_date_format}" id="c_br_unicamp_ic_controle_patrimonial_domain_Departamento_dtCriacao" property="dtCriacao" z="KwIjd857xgFr25MSM2170146O3g="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Departamento_responsavel" property="responsavel" z="1xE/+04/4y+omwGJuNyFYeVISE0="/>
+        </table:table>
+    </page:list>
+</div>

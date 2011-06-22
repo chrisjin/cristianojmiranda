@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_ic_controle_patrimonial_domain_Usuario" items="${usuarios}" z="zPpg+IqMf16uGczBCz2dLujyUcg=">
+        <table:table data="${usuarios}" id="l_br_unicamp_ic_controle_patrimonial_domain_Usuario" path="/usuarios" z="fnrGAYIWqiXvmV855fo4Ly0gH48=">
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_nome" property="nome" z="ZtEGZEa4XKz51Vk4cJCR10bQbGI="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_email" property="email" z="pZFq+5ia9uRj+CXk0Gil734vAkA="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_senha" property="senha" z="EswVy9HGQHd4O0HcQSkFqTOFLGA="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_ramal" property="ramal" z="+YKWdpFaZ0QwYTuhYx0HfYtYLyg="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_sala" property="sala" z="8fQpt4GffrSm/x13fjELL/TZ4kY="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Usuario_observacoes" property="observacoes" z="+YW92Xlg98h3F4uldDuHUEJ7uSo="/>
+        </table:table>
+    </page:list>
+</div>
