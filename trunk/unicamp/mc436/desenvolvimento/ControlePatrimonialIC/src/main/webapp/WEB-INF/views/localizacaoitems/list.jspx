@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem" items="${localizacaoitems}" z="d6H8yTfDSZiJYpOzc4S5yNyDbJU=">
+        <table:table data="${localizacaoitems}" id="l_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem" path="/localizacaoitems" z="FrcQlHpPinK5cWQHYxqVZmcest8=">
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem_area" property="area" z="iYrjoaz4AVSRcBqQoXImT70hDGs="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem_descricao" property="descricao" z="RS/k69+WKrg7iJD47oLEIUvwPxU="/>
+            <table:column calendar="true" dateTimePattern="${localizacaoItem_dtatualizacao_date_format}" id="c_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem_dtAtualizacao" property="dtAtualizacao" z="SztSObGuOQizr6NQDeRAWpo0bNM="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem_item" property="item" z="H8SMXs4EC1gyO+zvwajFQmQQxUk="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem_usuarioAtualizacao" property="usuarioAtualizacao" z="O370SuNi6IqbptZZ+a265s++Ve4="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem_observacoes" property="observacoes" z="lsXhDSXEEIHLLmOUVYJ1LPqrtvU="/>
+        </table:table>
+    </page:list>
+</div>

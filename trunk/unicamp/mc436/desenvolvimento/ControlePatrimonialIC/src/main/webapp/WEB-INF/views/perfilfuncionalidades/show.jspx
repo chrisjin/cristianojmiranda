@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_br_unicamp_ic_controle_patrimonial_domain_PerfilFuncionalidade" object="${perfilfuncionalidade}" path="/perfilfuncionalidades" z="RXkEqVM6ta5PWbllpQPb2iAzvf8=">
+        <field:display field="perfil" id="s_br_unicamp_ic_controle_patrimonial_domain_PerfilFuncionalidade_perfil" object="${perfilfuncionalidade}" z="ebKn92WSLrqKQMG6nlr8zmEMw9M="/>
+        <field:display field="funcionalidade" id="s_br_unicamp_ic_controle_patrimonial_domain_PerfilFuncionalidade_funcionalidade" object="${perfilfuncionalidade}" z="b7n4ltNS1ByruL11C/xlUzQ0140="/>
+    </page:show>
+</div>

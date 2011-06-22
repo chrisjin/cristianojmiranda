@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_ic_controle_patrimonial_domain_TipoNotificacao" items="${tiponotificacaos}" z="RW/5YZevIHeq9bv5tjcyDBacma0=">
+        <table:table data="${tiponotificacaos}" id="l_br_unicamp_ic_controle_patrimonial_domain_TipoNotificacao" path="/tiponotificacaos" z="9+OMJN3tnPMqV1fdn0EAYDPmC8E=">
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_TipoNotificacao_tipo" property="tipo" z="xMtAerVpT0WA8ylKKSLf2Ur1bos="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_TipoNotificacao_descricao" property="descricao" z="vDgga0YJWQSkhWHG++MBC/dUmhM="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_TipoNotificacao_ativo" property="ativo" z="8p0tXuf7OWHam8gON9Wy4GhuSZE="/>
+        </table:table>
+    </page:list>
+</div>

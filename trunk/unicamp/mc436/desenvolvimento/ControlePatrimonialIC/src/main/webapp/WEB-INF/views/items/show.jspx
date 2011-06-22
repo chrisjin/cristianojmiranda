@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_br_unicamp_ic_controle_patrimonial_domain_Item" object="${item}" path="/items" z="ZTJCnxD9z8nW4XVp7unuClLHWK4=">
+        <field:display field="pid" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_pid" object="${item}" z="ws82gq1bj5TexzYNCe5peKH0dwA="/>
+        <field:display field="rfid" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_rfid" object="${item}" z="KeMDHCiEYTZPRcfgQ+lluY2Ry+w="/>
+        <field:display field="nome" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_nome" object="${item}" z="cB50+VU0tScOZ2KvUpbTvl7KaUc="/>
+        <field:display field="categoria" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_categoria" object="${item}" z="uIgjOvGcGOA4nQhfZoDvTolW3Ww="/>
+        <field:display field="descricao" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_descricao" object="${item}" z="niNPnQjsBAI1TtDjkU6WB6g4Nmw="/>
+        <field:display field="status" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_status" object="${item}" z="I9d9SHI/nSEXKP5N1pSxcvTNBPI="/>
+        <field:display field="area" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_area" object="${item}" z="F8TvmTIHFdD5HK40yo1TE9Z+7tE="/>
+        <field:display field="flagFomento" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_flagFomento" object="${item}" z="mBZwgFy9J4IeKpEcHkFs2Ch5ApU="/>
+        <field:display field="flagLiberarSaida" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_flagLiberarSaida" object="${item}" z="tllNFmwyWehHcdUKqJLgogveGXc="/>
+        <field:display calendar="true" dateTimePattern="${item_dtliberacao_date_format}" field="dtLiberacao" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_dtLiberacao" object="${item}" z="XTnPSJyY7S7HYdaBb9Yi/YM0bgI="/>
+        <field:display calendar="true" dateTimePattern="${item_dtcriacao_date_format}" field="dtCriacao" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_dtCriacao" object="${item}" z="FdndDxnAzEsjvRd45IhopDzxDao="/>
+        <field:display calendar="true" dateTimePattern="${item_dtatualizacao_date_format}" field="dtAtualizacao" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_dtAtualizacao" object="${item}" z="kCxAwXH/xQUtNy05+mooFj6sJeg="/>
+        <field:display field="usuarioResponsavel" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_usuarioResponsavel" object="${item}" z="LGnH+rXVXkYcPtP2JsUCg7A9/Mk="/>
+        <field:display field="usuarioResponsavelAnterior" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_usuarioResponsavelAnterior" object="${item}" z="qal63rYwqFXQ9+MKXkF46Q04ouc="/>
+        <field:display field="usuarioAtualizacao" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_usuarioAtualizacao" object="${item}" z="vCEe8tcr4PSSVlf+BwgFN2J4YFc="/>
+        <field:display field="observacoes" id="s_br_unicamp_ic_controle_patrimonial_domain_Item_observacoes" object="${item}" z="b2tJUTz472/j4M2dgNaUASd47Qk="/>
+    </page:show>
+</div>

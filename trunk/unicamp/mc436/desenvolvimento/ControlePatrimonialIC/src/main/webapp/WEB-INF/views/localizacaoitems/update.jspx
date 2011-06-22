@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem" modelAttribute="localizacaoItem" path="/localizacaoitems" versionField="Version" z="Uu6bQW7TbMJDXvKF3tAQ27iS77s=">
+        <field:select field="area" id="c_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem_area" itemValue="id" items="${areas}" path="/areas" required="true" z="nsFtvfX+x0Q8p3Va87UL29iXi94="/>
+        <field:textarea field="descricao" id="c_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem_descricao" required="true" z="sx0szaq7RL9HDbSQmP3JvMcfoRs="/>
+        <field:datetime dateTimePattern="${localizacaoItem_dtatualizacao_date_format}" field="dtAtualizacao" id="c_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem_dtAtualizacao" required="true" z="E44Dic2bKovDmeZUoL0QCnkC7hE="/>
+        <field:select field="item" id="c_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem_item" itemValue="id" items="${items}" path="/items" required="true" z="WcaiU7tm4NdPPROG+FQ9jKE2VE0="/>
+        <field:select field="usuarioAtualizacao" id="c_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem_usuarioAtualizacao" itemValue="id" items="${usuarios}" path="/usuarios" required="true" z="1j02BGvTEu+rnQkAuKvsto0Vh4U="/>
+        <field:textarea field="observacoes" id="c_br_unicamp_ic_controle_patrimonial_domain_LocalizacaoItem_observacoes" z="uw/qitKHyGBDTBH9jgIEr9DLBA0="/>
+    </form:update>
+</div>

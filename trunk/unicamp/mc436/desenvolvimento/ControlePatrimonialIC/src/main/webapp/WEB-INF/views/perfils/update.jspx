@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <form:update id="fu_br_unicamp_ic_controle_patrimonial_domain_Perfil" modelAttribute="perfil" path="/perfils" versionField="Version" z="z1lj1X/6vAigKdZTTQzouLWWCx4=">
+        <field:input field="tipo" id="c_br_unicamp_ic_controle_patrimonial_domain_Perfil_tipo" max="30" min="1" required="true" z="AKjoubd0EAxZDzVM9LyTjU4oSvQ="/>
+        <field:select field="ativo" id="c_br_unicamp_ic_controle_patrimonial_domain_Perfil_ativo" items="${enabledenums}" path="enabledenums" required="true" z="dFV0QlTrBCwsBmUeTHb+/zes8gc="/>
+    </form:update>
+</div>

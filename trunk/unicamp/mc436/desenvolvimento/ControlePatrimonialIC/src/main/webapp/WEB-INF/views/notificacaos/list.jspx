@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_ic_controle_patrimonial_domain_Notificacao" items="${notificacaos}" z="0/zNviQVYCv9+GDW+YipbZhamEo=">
+        <table:table data="${notificacaos}" id="l_br_unicamp_ic_controle_patrimonial_domain_Notificacao" path="/notificacaos" z="uhLnDAH+hn1H1rlNpSVqI80pvAA=">
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Notificacao_tipoNotificacao" property="tipoNotificacao" z="Y4kC53cc0LqQ6WtjTKg0in5aI3Q="/>
+            <table:column calendar="true" dateTimePattern="${notificacao_dtcriacao_date_format}" id="c_br_unicamp_ic_controle_patrimonial_domain_Notificacao_dtCriacao" property="dtCriacao" z="CkvjHVHJzQyIn6xM0HGypjGnm8E="/>
+            <table:column calendar="true" dateTimePattern="${notificacao_dtatualizacao_date_format}" id="c_br_unicamp_ic_controle_patrimonial_domain_Notificacao_dtAtualizacao" property="dtAtualizacao" z="Tc1G50UxVJw+I7EPn0v+ZSUQAqM="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Notificacao_usuarioResponsavel" property="usuarioResponsavel" z="ZQIIINJSptcU6yJi9HKkxkbTlUk="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Notificacao_usuarioAnalise" property="usuarioAnalise" z="7Vh3ymaoSme3xS5vl48yfQyJ35U="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Notificacao_descricao" property="descricao" z="1sK9lsnogNwF8I63Zg/Z/tceiP8="/>
+        </table:table>
+    </page:list>
+</div>

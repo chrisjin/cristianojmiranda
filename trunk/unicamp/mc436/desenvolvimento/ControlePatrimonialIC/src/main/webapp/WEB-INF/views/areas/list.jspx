@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" xmlns:table="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:list id="pl_br_unicamp_ic_controle_patrimonial_domain_Area" items="${areas}" z="Z7SYQZfcSByzDRAydWUn7+wyyec=">
+        <table:table data="${areas}" id="l_br_unicamp_ic_controle_patrimonial_domain_Area" path="/areas" z="dp+zCeEXNssIBot2RYp1806iJOE=">
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Area_nome" property="nome" z="tF11Y43lQ+S7kKnpPTk6x7yqHLE="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Area_descricao" property="descricao" z="EsLSDrHgWF5tcGW9f5KjKIUKjJs="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Area_endereco" property="endereco" z="zG8QLDdln7b6RZ6nU6a4dVsGRK8="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Area_responsavel" property="responsavel" z="fN61kr95jFFyAUr7CN5Imp0t+J8="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Area_departamento" property="departamento" z="WA8/Bbl5M5XpXquzkPzI6GCOJpM="/>
+            <table:column id="c_br_unicamp_ic_controle_patrimonial_domain_Area_ativo" property="ativo" z="xA4wHut47DkPN82zj+g0AuPqvaY="/>
+        </table:table>
+    </page:list>
+</div>
