@@ -1,17 +1,29 @@
-project --topLevelPackage br.unicamp.ic.controle_patrimonial
+###################################
+# Projeto de controle patrimonial 
+# do IC-Unicamp.
+# MC436 - 2011 (Grupo 19)
+###################################
+project --topLevelPackage br.unicamp.ic.controle.patrimonial
 
+#############################################
+#
+# SETANDO O MODO DE PERSISTENCIA DO PROJETO
+#
+#############################################
+#persistence setup --provider HIBERNATE --database MYSQL
 persistence setup --provider HIBERNATE --database HYPERSONIC_PERSISTENT
 
-#
+###################################
 # Enum Enabled
-#
+###################################
 enum type --class ~.reference.EnabledEnum
 enum constant --name Ativo
 enum constant --name Inativo
 
-#
+
+###################################
 # Enum Status Patrimonio
-#
+###################################
 enum type --class ~.reference.StatusPatrimonioEnum
 enum constant --name Ativo
 enum constant --name Inativo
@@ -20,88 +32,141 @@ enum constant --name Emprestado
 enum constant --name Procura
 
 
-#
+###################################
+# Enum Status Notificacao
+###################################
+enum type --class ~.reference.StatusNotificacaoEnum
+enum constant --name Pendente
+enum constant --name EmAnalise
+enum constant --name Fechado
+
+
+###################################
 # Entidade Funcionalidade
-#
-entity --class ~.domain.Funcionalidade --testAutomatically
-field string descricao --notNull --sizeMin 1 --sizeMax 250 
-field enum --fieldName enabled --type ~.reference.EnabledEnum --notNull --value ~.reference.EnabledEnum.Ativo
+###################################
+entity --class ~.domain.Funcionalidade
+field string --fieldName descricao --notNull  --sizeMin 1 --sizeMax 250 --class ~.domain.Funcionalidade 
+field enum --fieldName ativo --notNull --type  ~.reference.EnabledEnum --class ~.domain.Funcionalidade
 
 
-#
+###################################
 # Entidade Perfil
-#
-entity --class ~.domain.Perfil --testAutomatically
-field string tipo --notNull --sizeMin 1 --sizeMax 30
-field enum --fieldName enabled --type ~.reference.EnabledEnum --notNull --value ~.reference.EnabledEnum.Ativo
-field set --class ~.domain.Funcionalidade --fieldName funcionalidades --type ~.domain.Funcionalidade --mappedBy id --notNull false --cardinality ONE_TO_MANY
+###################################
+entity --class ~.domain.Perfil
+field string --fieldName tipo --notNull --sizeMin 1 --sizeMax 30 --class ~.domain.Perfil
+field enum --fieldName ativo --type ~.reference.EnabledEnum --notNull
+
+###################################
+# Entidade PerfilFuncionalidade
+###################################
+entity --class ~.domain.PerfilFuncionalidade
+field reference --fieldName perfil --type ~.domain.Perfil --notNull
+field reference --fieldName funcionalidade --type ~.domain.Funcionalidade --notNull
 
 
-#
+###################################
 # Entidade Departamento
-#
-entity --class ~.domain.Departamento --testAutomatically
-field string nome --notNull --sizeMin 1 --sizeMax 20
-field string descricao --notNull --sizeMin 1 --sizeMax 200
-field enum --fieldName enabled --type ~.reference.EnabledEnum --notNull --value ~.reference.EnabledEnum.Ativo
-field date dtCriacao --type java.util.Calendar --notNull
-field string responsavel --notNull --sizeMin 1 --sizeMax 100
+###################################
+entity --class ~.domain.Departamento
+field string --fieldName nome --notNull --sizeMin 1 --sizeMax 20 --class ~.domain.Departamento
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 200
+field enum --fieldName ativo --type ~.reference.EnabledEnum --notNull
+field date --fieldName dtCriacao --type java.util.Calendar --notNull
+field string --fieldName responsavel --notNull --sizeMin 1 --sizeMax 100
 
 
-#
+###################################
 # Entidade Area
-#
-entity --class ~.domain.Area --testAutomatically
-field string nome --notNull --sizeMin 1 --sizeMax 20
-field string descricao --notNull --sizeMin 1 --sizeMax 200
-field string endereco --notNull --sizeMin 1 --sizeMax 200
-field string responsavel --notNull --sizeMin 1 --sizeMax 100
+###################################
+entity --class ~.domain.Area
+field string --fieldName nome --notNull --sizeMin 1 --sizeMax 20 --class ~.domain.Area
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 200
+field string --fieldName endereco --notNull --sizeMin 1 --sizeMax 200
+field string --fieldName responsavel --notNull --sizeMin 1 --sizeMax 100
 field reference --fieldName departamento --type ~.domain.Departamento --notNull
-field enum --fieldName enabled --type ~.reference.EnabledEnum --notNull --value ~.reference.EnabledEnum.Ativo
-field date dtCriacao --type java.util.Calendar --notNull
+field enum --fieldName ativo --type ~.reference.EnabledEnum --notNull
+field date --fieldName dtCriacao --type java.util.Calendar --notNull
 
 
-#
+###################################
 # Entidade Usuario
-#
-entity --class ~.domain.Usuario --testAutomatically
-field string nome --notNull --sizeMin 1 --sizeMax 100
-field string email --notNull --sizeMin 1 --sizeMax 200
-field string senha --notNull --sizeMin 1 --sizeMax 10
-field string ramal --notNull --sizeMin 1 --sizeMax 10
-field string sala --notNull --sizeMin 1 --sizeMax 50
-field string observacoes --notNull --sizeMin 1 --sizeMax 1000
+###################################
+entity --class ~.domain.Usuario 
+field string --fieldName nome --notNull --sizeMin 1 --sizeMax 100 --class ~.domain.Usuario
+field string --fieldName email --notNull --sizeMin 1 --sizeMax 200
+field string --fieldName senha --notNull --sizeMin 1 --sizeMax 10
+field string --fieldName ramal --notNull --sizeMin 1 --sizeMax 10
+field string --fieldName sala --notNull --sizeMin 1 --sizeMax 50
+field string --fieldName observacoes --notNull --sizeMin 1 --sizeMax 1000
 field reference --fieldName perfil --type ~.domain.Perfil --notNull
 field reference --fieldName area --type ~.domain.Area --notNull
-field enum --fieldName enabled --type ~.reference.EnabledEnum --notNull --value ~.reference.EnabledEnum.Ativo
-field date dtCriacao --type java.util.Calendar --notNull
-field date dtAtualizacao --type java.util.Calendar --notNull
+field enum --fieldName ativo --type ~.reference.EnabledEnum --notNull
+field date --fieldName dtCriacao --type java.util.Calendar --notNull
+field date --fieldName dtAtualizacao --type java.util.Calendar --notNull
 
 
-#
+###################################
 # Entidade Categoria
-#
-entity --class ~.domain.Categoria --testAutomatically
-field string nome --notNull --sizeMin 1 --sizeMax 100
-field string descricao --notNull --sizeMin 1 --sizeMax 500
+###################################
+entity --class ~.domain.Categoria 
+field string --fieldName nome --notNull --sizeMin 1 --sizeMax 100 --class ~.domain.Categoria
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 500
 
-#
+###################################
 # Entidade Patrimonio
-#
-entity --class ~.domain.Item --testAutomatically
-field string pid --notNull --sizeMin 1 --sizeMax 20
-field string nome --notNull --sizeMin 1 --sizeMax 200
-field string categoria --notNull --sizeMin 1 --sizeMax 100
-field string descricao --notNull --sizeMin 1 --sizeMax 500
+###################################
+entity --class ~.domain.Item 
+field string --fieldName pid --notNull --sizeMin 1 --sizeMax 20 --class ~.domain.Item
+field string --fieldName rfid --sizeMin 1 --sizeMax 20
+field string --fieldName nome --notNull --sizeMin 1 --sizeMax 200
+field string --fieldName categoria --notNull --sizeMin 1 --sizeMax 100
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 500
 field enum --fieldName status --type ~.reference.StatusPatrimonioEnum --notNull
 field reference --fieldName area --type ~.domain.Area
-field string flagFomento --notNull --sizeMin 1 --sizeMax 1 --value "N"
-field string flagLiberarSaida --notNull --sizeMin 1 --sizeMax 1 --value "N" --comment Flag para liberar saida de um item de patrimonio.
-field date dtCriacao --type java.util.Calendar --notNull
-field date dtAtualizacao --type java.util.Calendar --notNull
-field reference --fieldName usuarioResponsavel --type ~.domain.Usuario
-field reference --fieldName usuarioResponsavelAnterior --type ~.domain.Usuario
+field string --fieldName flagFomento --notNull --sizeMin 1 --sizeMax 1 --value N
+field string --fieldName flagLiberarSaida --notNull --sizeMin 1 --sizeMax 1 --value N
+field date --fieldName dtLiberacao --type java.util.Calendar
+field date --fieldName dtCriacao --type java.util.Calendar --notNull
+field date --fieldName dtAtualizacao --type java.util.Calendar --notNull
+field reference --fieldName usuarioResponsavel --type ~.domain.Usuario --class ~.domain.Item
+field reference --fieldName usuarioResponsavelAnterior --type ~.domain.Usuario --class ~.domain.Item
 field reference --fieldName usuarioAtualizacao --type ~.domain.Usuario --notNull
+field string --fieldName observacoes --sizeMax 1000
+
+
+###################################
+# Entidade Localizacao Item
+###################################
+entity --class ~.domain.LocalizacaoItem 
+field reference --fieldName area --type ~.domain.Area --notNull --class ~.domain.LocalizacaoItem
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 1000
+field date --fieldName dtAtualizacao --type java.util.Calendar --notNull
+field reference --fieldName item --type ~.domain.Item --notNull
+field reference --fieldName usuarioAtualizacao --type ~.domain.Usuario --notNull
+field string --fieldName observacoes --sizeMax 1000
+
+
+###################################
+# Entidade Tipo Notificacao
+###################################
+entity --class ~.domain.TipoNotificacao 
+field string --fieldName tipo --notNull --sizeMin 1 --sizeMax 20 --class ~.domain.TipoNotificacao
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 1000
+field enum --fieldName ativo --type ~.reference.EnabledEnum --notNull
+
+
+###################################
+# Entidade Notificacao
+###################################
+entity --class ~.domain.Notificacao
+field reference --fieldName tipoNotificacao --type ~.domain.TipoNotificacao --notNull --class ~.domain.Notificacao
+field date --fieldName dtCriacao --type java.util.Calendar --notNull --class ~.domain.Notificacao
+field date --fieldName dtAtualizacao --type java.util.Calendar --notNull --class ~.domain.Notificacao
+field reference --fieldName usuarioResponsavel --type ~.domain.Usuario --notNull --class ~.domain.Notificacao
+field reference --fieldName usuarioAnalise --type ~.domain.Usuario --notNull --class ~.domain.Notificacao
+field string --fieldName descricao --notNull --sizeMin 1 --sizeMax 1000 --class ~.domain.Notificacao
+field string --fieldName observacao --sizeMax 1000 --class ~.domain.Notificacao
+field enum --fieldName ativo --type ~.reference.StatusNotificacaoEnum --notNull --class ~.domain.Notificacao
 
 	
 ###################################
@@ -117,13 +182,13 @@ security setup
 ###################################
 # Setando i18n
 ###################################
-web mvc install language --code de
-web mvc install language --code es
+web mvc install language --code pt
+web mvc install language --code en
 
 ###################################
 # Montando suite de testes
 ###################################
-selenium test --controller ~.web.PaisController
+selenium test --controller ~.web.ItemController
 
 ###################################
 # Setando nivel de logger
@@ -131,11 +196,11 @@ selenium test --controller ~.web.PaisController
 logging setup --level DEBUG
 
 ###################################
-# Configurando o banco de dados
+# Configurando o banco de dados (MySql)
 ###################################
-database properties set --key database.username --value root
-database properties set --key database.password --value root123
-database properties set --key database.url --value jdbc:mysql://localhost:3306/forum
+#database properties set --key database.username --value root
+#database properties set --key database.password --value root123
+#database properties set --key database.url --value jdbc:mysql://localhost:3306/controle-patrimonial-ic
 
 perform eclipse
 perform package
