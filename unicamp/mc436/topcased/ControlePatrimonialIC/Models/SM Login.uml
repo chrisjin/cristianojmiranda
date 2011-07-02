@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="idModel" name="SM LoginModel">
+  <packagedElement xmi:type="uml:Package" xmi:id="idPackage" name="SM LoginPackage">
+    <packagedElement xmi:type="uml:StateMachine" xmi:id="idStateMachine" name="SM LoginStateMachine">
+      <region xmi:id="idRegion" name="MainRegion">
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_p9o0gKRMEeCuC5iXbcJtNw" name="Inicial"/>
+        <subvertex xmi:type="uml:State" xmi:id="_0k8KYKRMEeCuC5iXbcJtNw" name="Acessar Banco de dados"/>
+        <subvertex xmi:type="uml:State" xmi:id="_N-jeAKRNEeCuC5iXbcJtNw" name="Efetuar autenticação"/>
+        <subvertex xmi:type="uml:State" xmi:id="_RFlgYKRNEeCuC5iXbcJtNw" name="Banco de Dados"/>
+        <subvertex xmi:type="uml:Pseudostate" xmi:id="_o2uk4KROEeCuC5iXbcJtNw" name="Fim" kind="exitPoint"/>
+        <transition xmi:id="_EeVE9KRNEeCuC5iXbcJtNw" name="consultarUsuario(login, senha)" kind="local" source="_p9o0gKRMEeCuC5iXbcJtNw" target="_0k8KYKRMEeCuC5iXbcJtNw"/>
+        <transition xmi:id="_TzAv9KRNEeCuC5iXbcJtNw" name="Atenticar(login, senha)" kind="local" source="_0k8KYKRMEeCuC5iXbcJtNw" target="_N-jeAKRNEeCuC5iXbcJtNw"/>
+        <transition xmi:id="_XbQB8KRNEeCuC5iXbcJtNw" name="Transition1" kind="local" source="_N-jeAKRNEeCuC5iXbcJtNw" target="_RFlgYKRNEeCuC5iXbcJtNw"/>
+        <transition xmi:id="_qcV31KROEeCuC5iXbcJtNw" name="setUsuarioLogado" kind="local" source="_N-jeAKRNEeCuC5iXbcJtNw" target="_o2uk4KROEeCuC5iXbcJtNw"/>
+        <transition xmi:id="_zafekKROEeCuC5iXbcJtNw" name="Transition2" kind="local" source="_0k8KYKRMEeCuC5iXbcJtNw" target="_p9o0gKRMEeCuC5iXbcJtNw"/>
+        <transition xmi:id="_1SMAAKROEeCuC5iXbcJtNw" name="msg_SemPermissão" kind="local" source="_N-jeAKRNEeCuC5iXbcJtNw" target="_p9o0gKRMEeCuC5iXbcJtNw"/>
+      </region>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>
