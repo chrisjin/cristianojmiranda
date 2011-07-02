@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<diagrams:Diagrams xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.topcased.org/DI/1.0" xmlns:diagrams="http://www.topcased.org/Diagrams/1.0" xmi:id="_iJ94EHt0EeC56LA8I9zemw" activeDiagram="_04mUUIJtEeCo5djNpSmSfw">
+<diagrams:Diagrams xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.topcased.org/DI/1.0" xmlns:diagrams="http://www.topcased.org/Diagrams/1.0" xmi:id="_iJ94EHt0EeC56LA8I9zemw" activeDiagram="_iJ-fIXt0EeC56LA8I9zemw">
   <model href="RegistroBemAdquiridos.uml#_qb8akM37EdqwVrslYOdUDA"/>
   <subdiagrams xmi:id="_iJ-fIHt0EeC56LA8I9zemw">
     <model href="RegistroBemAdquiridos.uml#_w8IxIM37EdqwVrslYOdUDA"/>
-    <diagrams xmi:id="_iJ-fIXt0EeC56LA8I9zemw" position="0,0" size="100,100" name="UseCaseView" zoom="0.5" viewport="0,0">
-      <property xmi:id="_iJ-fInt0EeC56LA8I9zemw" key="pageFormatName" value="A2"/>
-      <property xmi:id="_iJ-fI3t0EeC56LA8I9zemw" key="diagramWidth" value="1680"/>
-      <property xmi:id="_iJ-fJHt0EeC56LA8I9zemw" key="diagramHeight" value="2376"/>
+    <diagrams xmi:id="_iJ-fIXt0EeC56LA8I9zemw" position="0,0" size="100,100" name="UseCaseView" zoom="0.5" viewport="0,504">
+      <property xmi:id="_iJ-fInt0EeC56LA8I9zemw" key="pageFormatName" value="A1"/>
+      <property xmi:id="_iJ-fI3t0EeC56LA8I9zemw" key="diagramWidth" value="2376"/>
+      <property xmi:id="_iJ-fJHt0EeC56LA8I9zemw" key="diagramHeight" value="3364"/>
       <property xmi:id="_iJ-fJXt0EeC56LA8I9zemw" key="pageMarginName" value="Small Margin"/>
       <property xmi:id="_iJ-fJnt0EeC56LA8I9zemw" key="diagramTopMargin" value="20"/>
       <property xmi:id="_iJ-fJ3t0EeC56LA8I9zemw" key="diagramBottomMargin" value="20"/>
@@ -2715,7 +2715,7 @@
         </subdiagrams>
         <subdiagrams xmi:id="_04ltQIJtEeCo5djNpSmSfw">
           <model href="RegistroBemAdquiridos.uml#_QXxYIIIfEeCybZP_rI3l8Q"/>
-          <diagrams xmi:id="_04mUUIJtEeCo5djNpSmSfw" position="0,0" size="100,100" name="Inativar Usuario" viewport="89,0">
+          <diagrams xmi:id="_04mUUIJtEeCo5djNpSmSfw" position="0,0" size="100,100" name="Inativar Usuario" viewport="9,0">
             <property xmi:id="_05azsIJtEeCo5djNpSmSfw" key="pageFormatName" value="A4"/>
             <property xmi:id="_05azsYJtEeCo5djNpSmSfw" key="diagramWidth" value="840"/>
             <property xmi:id="_05azsoJtEeCo5djNpSmSfw" key="diagramHeight" value="1188"/>

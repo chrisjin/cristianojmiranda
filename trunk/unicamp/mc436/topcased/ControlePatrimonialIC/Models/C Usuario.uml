@@ -621,6 +621,9 @@
         <ownedAttribute xmi:id="_ntl50I_aEeC9h4FCu_wxjA" name="relatorioService" visibility="private" type="_HFaN4I-yEeCMMraj8QZOeQ"/>
         <ownedOperation xmi:id="_yt8B0I_aEeC9h4FCu_wxjA" name="gerarRelatorioPatrimonioPorArea"/>
       </packagedElement>
+      <packagedElement xmi:type="uml:Class" xmi:id="_8YYbsJLsEeCerYOohZypMA" name="MenuController">
+        <ownedOperation xmi:id="_DUyNIJLtEeCerYOohZypMA" name="montarHome"/>
+      </packagedElement>
     </packagedElement>
     <packagedElement xmi:type="uml:Association" xmi:id="_DaOAoI_VEeC9h4FCu_wxjA" name="A_&lt;notificacaoVO>_&lt;usuarioVO>" memberEnd="_DaOAoY_VEeC9h4FCu_wxjA _DaOApI_VEeC9h4FCu_wxjA">
       <ownedEnd xmi:id="_DaOAoY_VEeC9h4FCu_wxjA" name="notificacaoVO" type="_GM_boI5TEeCbmo1im7P2_A" association="_DaOAoI_VEeC9h4FCu_wxjA">
