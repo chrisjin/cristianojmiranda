@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:uml="http://www.eclipse.org/uml2/3.0.0/UML" xmi:id="idModel" name="Diagrama de DeploymentModel">
+  <packagedElement xmi:type="uml:Package" xmi:id="idPackage" name="Diagrama de DeploymentPackage">
+    <packagedElement xmi:type="uml:Device" xmi:id="_LQDfIKRHEeC9uOgveCV3WQ" name="Servidor IIS 6" clientDependency="_mZnmEKRKEeC9uOgveCV3WQ">
+      <nestedClassifier xmi:type="uml:Component" xmi:id="_slJ7QKRKEeC9uOgveCV3WQ" name="controle-patrimonio-ic-web">
+        <packagedElement xmi:type="uml:Package" xmi:id="_slJ7QaRKEeC9uOgveCV3WQ" name="br.unicamp.ic.controle_patrimonio.web.controller">
+          <packagedElement xmi:type="uml:Class" xmi:id="_slJ7QqRKEeC9uOgveCV3WQ" name="UsuarioController">
+            <ownedAttribute xmi:id="_slJ7Q6RKEeC9uOgveCV3WQ" name="usuarioService" visibility="private"/>
+            <ownedAttribute xmi:id="_slJ7RKRKEeC9uOgveCV3WQ" name="permissaoAcessoService" visibility="private"/>
+            <ownedOperation xmi:id="_slJ7RaRKEeC9uOgveCV3WQ" name="pesquisarUsuario"/>
+            <ownedOperation xmi:id="_slJ7RqRKEeC9uOgveCV3WQ" name="preIncluirUsuario"/>
+            <ownedOperation xmi:id="_slJ7R6RKEeC9uOgveCV3WQ" name="salvarUsuario"/>
+            <ownedOperation xmi:id="_slJ7SKRKEeC9uOgveCV3WQ" name="preAlterarUsuario"/>
+            <ownedOperation xmi:id="_slJ7SaRKEeC9uOgveCV3WQ" name="alterarUsuario"/>
+            <ownedOperation xmi:id="_slJ7SqRKEeC9uOgveCV3WQ" name="prePesquisar"/>
+            <ownedOperation xmi:id="_slJ7S6RKEeC9uOgveCV3WQ" name="setUsuarioService"/>
+            <ownedOperation xmi:id="_slJ7TKRKEeC9uOgveCV3WQ" name="setPermissaoAcessoService"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_slJ7TaRKEeC9uOgveCV3WQ" name="LoginController">
+            <ownedAttribute xmi:id="_slJ7TqRKEeC9uOgveCV3WQ" name="usuarioService" visibility="private"/>
+            <ownedAttribute xmi:id="_slJ7T6RKEeC9uOgveCV3WQ" name="permissaoAcessoService" visibility="private"/>
+            <ownedOperation xmi:id="_slJ7UKRKEeC9uOgveCV3WQ" name="preLogin"/>
+            <ownedOperation xmi:id="_slJ7UaRKEeC9uOgveCV3WQ" name="executarLogin"/>
+            <ownedOperation xmi:id="_slJ7UqRKEeC9uOgveCV3WQ" name="executarLogout"/>
+            <ownedOperation xmi:id="_slJ7U6RKEeC9uOgveCV3WQ" name="montarMenu"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_slJ7VKRKEeC9uOgveCV3WQ" name="TratarNotificacaoController">
+            <ownedAttribute xmi:id="_slJ7VaRKEeC9uOgveCV3WQ" name="notificacaoService" visibility="private"/>
+            <ownedAttribute xmi:id="_slJ7VqRKEeC9uOgveCV3WQ" name="patrimonioService" visibility="private"/>
+            <ownedOperation xmi:id="_slJ7V6RKEeC9uOgveCV3WQ" name="prePesquisarNotificacao"/>
+            <ownedOperation xmi:id="_slJ7WKRKEeC9uOgveCV3WQ" name="iniciarVerificacao"/>
+            <ownedOperation xmi:id="_slJ7WaRKEeC9uOgveCV3WQ" name="concluirNotificacao"/>
+            <ownedOperation xmi:id="_slJ7WqRKEeC9uOgveCV3WQ" name="cancelarVerificacao"/>
+            <ownedOperation xmi:id="_slJ7W6RKEeC9uOgveCV3WQ" name="pesquisarNotificacao"/>
+            <ownedOperation xmi:id="_slJ7XKRKEeC9uOgveCV3WQ" name="pesquisarNotificacaoPorFiltro"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_slJ7XaRKEeC9uOgveCV3WQ" name="RelatorioController">
+            <ownedAttribute xmi:id="_slJ7XqRKEeC9uOgveCV3WQ" name="relatorioService" visibility="private"/>
+            <ownedOperation xmi:id="_slJ7X6RKEeC9uOgveCV3WQ" name="gerarRelatorioPatrimonioPorArea"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_slJ7YKRKEeC9uOgveCV3WQ" name="PatrimonioController">
+            <ownedAttribute xmi:id="_slJ7YaRKEeC9uOgveCV3WQ" name="permissaoAcessoService" visibility="private"/>
+            <ownedAttribute xmi:id="_slJ7YqRKEeC9uOgveCV3WQ" name="patrimonioService" visibility="private"/>
+            <ownedAttribute xmi:id="_slJ7Y6RKEeC9uOgveCV3WQ" name="usuarioService" visibility="private"/>
+            <ownedAttribute xmi:id="_slJ7ZKRKEeC9uOgveCV3WQ" name="relatorioService" visibility="private"/>
+            <ownedAttribute xmi:id="_slJ7ZaRKEeC9uOgveCV3WQ" name="areaService" visibility="private"/>
+            <ownedAttribute xmi:id="_slJ7ZqRKEeC9uOgveCV3WQ" name="notificacaoService" visibility="private"/>
+            <ownedOperation xmi:id="_slJ7Z6RKEeC9uOgveCV3WQ" name="preConsultarPatrimonio"/>
+            <ownedOperation xmi:id="_slJ7aKRKEeC9uOgveCV3WQ" name="pesquisarPatrimonioPorFiltro"/>
+            <ownedOperation xmi:id="_slJ7aaRKEeC9uOgveCV3WQ" name="preAlterarPatrimonio"/>
+            <ownedOperation xmi:id="_slJ7aqRKEeC9uOgveCV3WQ" name="alterarPatrimonio"/>
+            <ownedOperation xmi:id="_slJ7a6RKEeC9uOgveCV3WQ" name="cancelarAlteracao"/>
+            <ownedOperation xmi:id="_slJ7bKRKEeC9uOgveCV3WQ" name="incluirPatrimonio"/>
+            <ownedOperation xmi:id="_slJ7baRKEeC9uOgveCV3WQ" name="cancelarInclusao"/>
+            <ownedOperation xmi:id="_slJ7bqRKEeC9uOgveCV3WQ" name="pesquisarUsuario"/>
+            <ownedOperation xmi:id="_slJ7b6RKEeC9uOgveCV3WQ" name="setarLocalizacao"/>
+            <ownedOperation xmi:id="_slJ7cKRKEeC9uOgveCV3WQ" name="gerarRelatorio"/>
+            <ownedOperation xmi:id="_slJ7caRKEeC9uOgveCV3WQ" name="inativarItemPatrimonio"/>
+            <ownedOperation xmi:id="_slJ7cqRKEeC9uOgveCV3WQ" name="pesquisarArea"/>
+            <ownedOperation xmi:id="_slJ7c6RKEeC9uOgveCV3WQ" name="gerarNotificacao"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_slJ7dKRKEeC9uOgveCV3WQ" name="RelatorioController">
+            <ownedAttribute xmi:id="_slJ7daRKEeC9uOgveCV3WQ" name="relatorioService" visibility="private"/>
+            <ownedOperation xmi:id="_slJ7dqRKEeC9uOgveCV3WQ" name="gerarRelatorioPatrimonioPorArea"/>
+          </packagedElement>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_slJ7d6RKEeC9uOgveCV3WQ" name="br.unicamp.ic.controle_patrimonio.web.controller.service.facade">
+          <ownedComment xmi:id="_slKiUKRKEeC9uOgveCV3WQ">
+            <body>Facade com os serviços disponiveis para a camada de web&#xD;
+</body>
+          </ownedComment>
+          <packagedElement xmi:type="uml:Class" xmi:id="_slKiUaRKEeC9uOgveCV3WQ" name="ControlePatrimonioServiceFacade" clientDependency="_slKiV6RKEeC9uOgveCV3WQ">
+            <ownedAttribute xmi:id="_slKiUqRKEeC9uOgveCV3WQ" name="usurioService"/>
+            <ownedAttribute xmi:id="_slKiU6RKEeC9uOgveCV3WQ" name="patrimonioService"/>
+            <ownedAttribute xmi:id="_slKiVKRKEeC9uOgveCV3WQ" name="areaService"/>
+            <ownedAttribute xmi:id="_slKiVaRKEeC9uOgveCV3WQ" name="permissaoAcessoService"/>
+            <ownedAttribute xmi:id="_slKiVqRKEeC9uOgveCV3WQ" name="notificacaoService"/>
+            <interfaceRealization xmi:id="_slKiV6RKEeC9uOgveCV3WQ" name="InterfaceRealization1" supplier="_slKiYKRKEeC9uOgveCV3WQ" client="_slKiUaRKEeC9uOgveCV3WQ" contract="_slKiYKRKEeC9uOgveCV3WQ"/>
+            <ownedOperation xmi:id="_slKiWKRKEeC9uOgveCV3WQ" name="obterUsuarioService"/>
+            <ownedOperation xmi:id="_slKiWaRKEeC9uOgveCV3WQ" name="Operation1"/>
+            <ownedOperation xmi:id="_slKiWqRKEeC9uOgveCV3WQ" name="obterUsuarioService"/>
+            <ownedOperation xmi:id="_slKiW6RKEeC9uOgveCV3WQ" name="obterNotificacaoService"/>
+            <ownedOperation xmi:id="_slKiXKRKEeC9uOgveCV3WQ" name="obterPermissaoAcessoService"/>
+            <ownedOperation xmi:id="_slKiXaRKEeC9uOgveCV3WQ" name="obterAreaService"/>
+            <ownedOperation xmi:id="_slKiXqRKEeC9uOgveCV3WQ" name="obterPatrimonioService"/>
+            <ownedOperation xmi:id="_slKiX6RKEeC9uOgveCV3WQ" name="Operation2"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_slKiYKRKEeC9uOgveCV3WQ" name="IControlePatrimonioServiceFacade">
+            <ownedOperation xmi:id="_slKiYaRKEeC9uOgveCV3WQ" name="obterUsuarioService"/>
+            <ownedOperation xmi:id="_slKiYqRKEeC9uOgveCV3WQ" name="obterPatrimonioService"/>
+            <ownedOperation xmi:id="_slKiY6RKEeC9uOgveCV3WQ" name="obterAreaService"/>
+            <ownedOperation xmi:id="_slKiZKRKEeC9uOgveCV3WQ" name="obterPermissaoAcessoService"/>
+            <ownedOperation xmi:id="_slKiZaRKEeC9uOgveCV3WQ" name="obterNotificacaoService"/>
+          </packagedElement>
+        </packagedElement>
+      </nestedClassifier>
+      <nestedClassifier xmi:type="uml:Component" xmi:id="_vKnhoKRKEeC9uOgveCV3WQ" name="controle-patrimonio-ic-domain">
+        <packagedElement xmi:type="uml:Package" xmi:id="_vKnhoaRKEeC9uOgveCV3WQ" name="br.unicamp.ic.controle_patrimonio.domain">
+          <packagedElement xmi:type="uml:Class" xmi:id="_vKnhoqRKEeC9uOgveCV3WQ" name="AreaVO">
+            <ownedAttribute xmi:id="_vKnho6RKEeC9uOgveCV3WQ" name="id" type="_vKoI1aRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhpKRKEeC9uOgveCV3WQ" name="nome" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhpaRKEeC9uOgveCV3WQ" name="descricao" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhpqRKEeC9uOgveCV3WQ" name="endereco" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhp6RKEeC9uOgveCV3WQ" name="responsavel" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhqKRKEeC9uOgveCV3WQ" name="departamento" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhqaRKEeC9uOgveCV3WQ" name="ativo" type="_vKoI2KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhqqRKEeC9uOgveCV3WQ" name="dtCriacao" type="_vKoI1qRKEeC9uOgveCV3WQ"/>
+            <ownedOperation xmi:id="_vKnhq6RKEeC9uOgveCV3WQ" name="getters"/>
+            <ownedOperation xmi:id="_vKnhrKRKEeC9uOgveCV3WQ" name="setters"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_vKnhraRKEeC9uOgveCV3WQ" name="PerfilVO">
+            <ownedAttribute xmi:id="_vKnhrqRKEeC9uOgveCV3WQ" name="id" type="_vKoI1aRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhr6RKEeC9uOgveCV3WQ" name="tipo" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhsKRKEeC9uOgveCV3WQ" name="ativo" type="_vKoI2KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhsaRKEeC9uOgveCV3WQ" name="Property1"/>
+            <ownedAttribute xmi:id="_vKnhsqRKEeC9uOgveCV3WQ" name="nome" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedOperation xmi:id="_vKnhs6RKEeC9uOgveCV3WQ" name="getters"/>
+            <ownedOperation xmi:id="_vKnhtKRKEeC9uOgveCV3WQ" name="setters"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_vKnhtaRKEeC9uOgveCV3WQ" name="FuncionalidadeVO">
+            <ownedAttribute xmi:id="_vKnhtqRKEeC9uOgveCV3WQ" name="id" type="_vKoI1aRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnht6RKEeC9uOgveCV3WQ" name="descricao" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhuKRKEeC9uOgveCV3WQ" name="ativo" type="_vKoI2KRKEeC9uOgveCV3WQ"/>
+            <ownedOperation xmi:id="_vKnhuaRKEeC9uOgveCV3WQ" name="getters"/>
+            <ownedOperation xmi:id="_vKnhuqRKEeC9uOgveCV3WQ" name="setters"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_vKnhu6RKEeC9uOgveCV3WQ" name="NotificacaoVO">
+            <ownedAttribute xmi:id="_vKnhvKRKEeC9uOgveCV3WQ" name="id" type="_vKoI1aRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhvaRKEeC9uOgveCV3WQ" name="tipoNotificacao" type="_vKnh16RKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhvqRKEeC9uOgveCV3WQ" name="dtCriacao" type="_vKoI1qRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhv6RKEeC9uOgveCV3WQ" name="dtAtualizacao" type="_vKoI1qRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhwKRKEeC9uOgveCV3WQ" name="responsavel" type="_vKnhyKRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhwaRKEeC9uOgveCV3WQ" name="usuarioAnalise"/>
+            <ownedAttribute xmi:id="_vKnhwqRKEeC9uOgveCV3WQ" name="descricao"/>
+            <ownedAttribute xmi:id="_vKnhw6RKEeC9uOgveCV3WQ" name="observacoes"/>
+            <ownedAttribute xmi:id="_vKnhxKRKEeC9uOgveCV3WQ" name="status"/>
+            <ownedAttribute xmi:id="_vKnhxaRKEeC9uOgveCV3WQ" name="patrimonio"/>
+            <ownedOperation xmi:id="_vKnhxqRKEeC9uOgveCV3WQ" name="getters"/>
+            <ownedOperation xmi:id="_vKnhx6RKEeC9uOgveCV3WQ" name="setters"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_vKnhyKRKEeC9uOgveCV3WQ" name="UsuarioVO">
+            <ownedAttribute xmi:id="_vKnhyaRKEeC9uOgveCV3WQ" name="id" type="_vKoI1aRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhyqRKEeC9uOgveCV3WQ" name="email" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhy6RKEeC9uOgveCV3WQ" name="nome" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhzKRKEeC9uOgveCV3WQ" name="senha" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhzaRKEeC9uOgveCV3WQ" name="ramal" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhzqRKEeC9uOgveCV3WQ" name="sala" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnhz6RKEeC9uOgveCV3WQ" name="observacoes" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh0KRKEeC9uOgveCV3WQ" name="perfil" type="_vKnhraRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh0aRKEeC9uOgveCV3WQ" name="area" type="_vKnhoqRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh0qRKEeC9uOgveCV3WQ" name="ativo" type="_vKoI2KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh06RKEeC9uOgveCV3WQ" name="dtCriacao" type="_vKoI1qRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh1KRKEeC9uOgveCV3WQ" name="dtAtualizacao" type="_vKoI1qRKEeC9uOgveCV3WQ"/>
+            <ownedOperation xmi:id="_vKnh1aRKEeC9uOgveCV3WQ" name="getters"/>
+            <ownedOperation xmi:id="_vKnh1qRKEeC9uOgveCV3WQ" name="setters"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_vKnh16RKEeC9uOgveCV3WQ" name="TipoNotificacaoVO"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="_vKnh2KRKEeC9uOgveCV3WQ" name="PatrimonioVO">
+            <ownedAttribute xmi:id="_vKnh2aRKEeC9uOgveCV3WQ" name="id" type="_vKoI1aRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh2qRKEeC9uOgveCV3WQ" name="pid" type="_vKoI1aRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh26RKEeC9uOgveCV3WQ" name="rfid" type="_vKoI1aRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh3KRKEeC9uOgveCV3WQ" name="nome" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh3aRKEeC9uOgveCV3WQ" name="descricao" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh3qRKEeC9uOgveCV3WQ" name="categoria" type="_vKniBqRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh36RKEeC9uOgveCV3WQ" name="status" type="_vKoI26RKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh4KRKEeC9uOgveCV3WQ" name="area" type="_vKnhoqRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh4aRKEeC9uOgveCV3WQ" name="flagFomento" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh4qRKEeC9uOgveCV3WQ" name="flagLiberarSaida" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh46RKEeC9uOgveCV3WQ" name="dtLiberacao" type="_vKoI1qRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh5KRKEeC9uOgveCV3WQ" name="dtCriacao" type="_vKoI1qRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh5aRKEeC9uOgveCV3WQ" name="dtAtualizacao" type="_vKoI1qRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh5qRKEeC9uOgveCV3WQ" name="responsavel" type="_vKnhyKRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh56RKEeC9uOgveCV3WQ" name="responsavelAnterior" type="_vKnhyKRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh6KRKEeC9uOgveCV3WQ" name="usuarioAtualizacao" type="_vKnhyKRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh6aRKEeC9uOgveCV3WQ" name="observacoes" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedOperation xmi:id="_vKnh6qRKEeC9uOgveCV3WQ" name="getters"/>
+            <ownedOperation xmi:id="_vKnh66RKEeC9uOgveCV3WQ" name="setters"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_vKnh7KRKEeC9uOgveCV3WQ" name="LocalizacaoItemVO">
+            <ownedAttribute xmi:id="_vKnh7aRKEeC9uOgveCV3WQ" name="id"/>
+            <ownedAttribute xmi:id="_vKnh7qRKEeC9uOgveCV3WQ" name="area"/>
+            <ownedAttribute xmi:id="_vKnh76RKEeC9uOgveCV3WQ" name="descricao"/>
+            <ownedAttribute xmi:id="_vKnh8KRKEeC9uOgveCV3WQ" name="dtAtualizacao"/>
+            <ownedAttribute xmi:id="_vKnh8aRKEeC9uOgveCV3WQ" name="patrimonio"/>
+            <ownedAttribute xmi:id="_vKnh8qRKEeC9uOgveCV3WQ" name="usuarioAtualizacao"/>
+            <ownedAttribute xmi:id="_vKnh86RKEeC9uOgveCV3WQ" name="observacoes"/>
+            <ownedAttribute xmi:id="_vKnh9KRKEeC9uOgveCV3WQ" name="localizacaoAtual"/>
+            <ownedOperation xmi:id="_vKnh9aRKEeC9uOgveCV3WQ" name="getters"/>
+            <ownedOperation xmi:id="_vKnh9qRKEeC9uOgveCV3WQ" name="setters"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_vKnh96RKEeC9uOgveCV3WQ" name="PerfilFuncionalidadeVO">
+            <ownedAttribute xmi:id="_vKnh-KRKEeC9uOgveCV3WQ" name="perfil" type="_vKnhraRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh-aRKEeC9uOgveCV3WQ" name="funcionalidade" type="_vKnhtaRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh-qRKEeC9uOgveCV3WQ" name="id" type="_vKoI1aRKEeC9uOgveCV3WQ"/>
+            <ownedOperation xmi:id="_vKnh-6RKEeC9uOgveCV3WQ" name="getters"/>
+            <ownedOperation xmi:id="_vKnh_KRKEeC9uOgveCV3WQ" name="setters"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_vKnh_aRKEeC9uOgveCV3WQ" name="DepartamentoVO">
+            <ownedAttribute xmi:id="_vKnh_qRKEeC9uOgveCV3WQ" name="nome" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKnh_6RKEeC9uOgveCV3WQ" name="descricao" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKniAKRKEeC9uOgveCV3WQ" name="ativo" type="_vKoI2KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKniAaRKEeC9uOgveCV3WQ" name="dtCriacao" type="_vKoI1qRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKniAqRKEeC9uOgveCV3WQ" name="responsavel" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKniA6RKEeC9uOgveCV3WQ" name="id" type="_vKoI1aRKEeC9uOgveCV3WQ"/>
+            <ownedOperation xmi:id="_vKniBKRKEeC9uOgveCV3WQ" name="getters"/>
+            <ownedOperation xmi:id="_vKniBaRKEeC9uOgveCV3WQ" name="setters"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_vKniBqRKEeC9uOgveCV3WQ" name="CategoriaVO">
+            <ownedAttribute xmi:id="_vKniB6RKEeC9uOgveCV3WQ" name="id" type="_vKoI1aRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKniCKRKEeC9uOgveCV3WQ" name="nome" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKniCaRKEeC9uOgveCV3WQ" name="descricao" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedOperation xmi:id="_vKniCqRKEeC9uOgveCV3WQ" name="getters"/>
+            <ownedOperation xmi:id="_vKniC6RKEeC9uOgveCV3WQ" name="setters"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_vKniDKRKEeC9uOgveCV3WQ" name="TipoNotificacaoVO">
+            <ownedAttribute xmi:id="_vKniDaRKEeC9uOgveCV3WQ" name="id" type="_vKoI1aRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKniDqRKEeC9uOgveCV3WQ" name="tipo" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKniD6RKEeC9uOgveCV3WQ" name="descricao" type="_vKoI1KRKEeC9uOgveCV3WQ"/>
+            <ownedAttribute xmi:id="_vKniEKRKEeC9uOgveCV3WQ" name="ativo" type="_vKoI2KRKEeC9uOgveCV3WQ"/>
+            <ownedOperation xmi:id="_vKniEaRKEeC9uOgveCV3WQ" name="getters"/>
+            <ownedOperation xmi:id="_vKniEqRKEeC9uOgveCV3WQ" name="setters"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKniE6RKEeC9uOgveCV3WQ" name="A_&lt;perfilVO>_&lt;perfilFuncionalidadeVO>" memberEnd="_vKniFKRKEeC9uOgveCV3WQ _vKniF6RKEeC9uOgveCV3WQ" navigableOwnedEnd="_vKniF6RKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKniFKRKEeC9uOgveCV3WQ" name="perfilVO" type="_vKnhraRKEeC9uOgveCV3WQ" association="_vKniE6RKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniFaRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniFqRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKniF6RKEeC9uOgveCV3WQ" name="perfilFuncionalidadeVO" type="_vKnh96RKEeC9uOgveCV3WQ" association="_vKniE6RKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniGKRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniGaRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKniGqRKEeC9uOgveCV3WQ" name="A_&lt;funcionalidadeVO>_&lt;perfilFuncionalidadeVO>" memberEnd="_vKniG6RKEeC9uOgveCV3WQ _vKniHqRKEeC9uOgveCV3WQ" navigableOwnedEnd="_vKniHqRKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKniG6RKEeC9uOgveCV3WQ" name="funcionalidadeVO" type="_vKnhtaRKEeC9uOgveCV3WQ" association="_vKniGqRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniHKRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniHaRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKniHqRKEeC9uOgveCV3WQ" name="perfilFuncionalidadeVO" type="_vKnh96RKEeC9uOgveCV3WQ" association="_vKniGqRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniH6RKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniIKRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKniIaRKEeC9uOgveCV3WQ" name="A_&lt;perfilVO>_&lt;perfilFuncionalidadeVO>_2" memberEnd="_vKniIqRKEeC9uOgveCV3WQ _vKniJaRKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKniIqRKEeC9uOgveCV3WQ" name="perfilVO" type="_vKnhraRKEeC9uOgveCV3WQ" association="_vKniIaRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniI6RKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniJKRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKniJaRKEeC9uOgveCV3WQ" name="perfilFuncionalidadeVO" type="_vKnh96RKEeC9uOgveCV3WQ" association="_vKniIaRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniJqRKEeC9uOgveCV3WQ" value="*"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniJ6RKEeC9uOgveCV3WQ"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKniKKRKEeC9uOgveCV3WQ" name="A_&lt;funcionalidadeVO>_&lt;perfilFuncionalidadeVO>_2" memberEnd="_vKniKaRKEeC9uOgveCV3WQ _vKniLKRKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKniKaRKEeC9uOgveCV3WQ" name="funcionalidadeVO" type="_vKnhtaRKEeC9uOgveCV3WQ" association="_vKniKKRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniKqRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniK6RKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKniLKRKEeC9uOgveCV3WQ" name="perfilFuncionalidadeVO" type="_vKnh96RKEeC9uOgveCV3WQ" association="_vKniKKRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniLaRKEeC9uOgveCV3WQ" value="*"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniLqRKEeC9uOgveCV3WQ"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKniL6RKEeC9uOgveCV3WQ" name="A_&lt;usuarioVO>_&lt;perfilVO>" memberEnd="_vKniMKRKEeC9uOgveCV3WQ _vKniM6RKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKniMKRKEeC9uOgveCV3WQ" name="usuarioVO" type="_vKnhyKRKEeC9uOgveCV3WQ" association="_vKniL6RKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniMaRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniMqRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKniM6RKEeC9uOgveCV3WQ" name="perfilVO" type="_vKnhraRKEeC9uOgveCV3WQ" association="_vKniL6RKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniNKRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniNaRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKniNqRKEeC9uOgveCV3WQ" name="A_&lt;departamentoVO>_&lt;areaVO>" memberEnd="_vKniN6RKEeC9uOgveCV3WQ _vKniOqRKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKniN6RKEeC9uOgveCV3WQ" name="departamentoVO" type="_vKnh_aRKEeC9uOgveCV3WQ" association="_vKniNqRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniOKRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniOaRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKniOqRKEeC9uOgveCV3WQ" name="areaVO" type="_vKnhoqRKEeC9uOgveCV3WQ" association="_vKniNqRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniO6RKEeC9uOgveCV3WQ" value="*"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniPKRKEeC9uOgveCV3WQ"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKniPaRKEeC9uOgveCV3WQ" name="A_&lt;areaVO>_&lt;usuarioVO>" memberEnd="_vKniPqRKEeC9uOgveCV3WQ _vKniQaRKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKniPqRKEeC9uOgveCV3WQ" name="areaVO" type="_vKnhoqRKEeC9uOgveCV3WQ" association="_vKniPaRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniP6RKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniQKRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKniQaRKEeC9uOgveCV3WQ" name="usuarioVO" type="_vKnhyKRKEeC9uOgveCV3WQ" association="_vKniPaRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniQqRKEeC9uOgveCV3WQ" value="*"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniQ6RKEeC9uOgveCV3WQ"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKniRKRKEeC9uOgveCV3WQ" name="A_&lt;usuarioVO>_&lt;patrimonioVO>" memberEnd="_vKniRaRKEeC9uOgveCV3WQ _vKniSKRKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKniRaRKEeC9uOgveCV3WQ" name="usuarioVO" type="_vKnhyKRKEeC9uOgveCV3WQ" association="_vKniRKRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniRqRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniR6RKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKniSKRKEeC9uOgveCV3WQ" name="patrimonioVO" type="_vKnh2KRKEeC9uOgveCV3WQ" association="_vKniRKRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKniSaRKEeC9uOgveCV3WQ" value="*"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKniSqRKEeC9uOgveCV3WQ"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKoIsKRKEeC9uOgveCV3WQ" name="A_&lt;patrimonioVO>_&lt;localizacaoItemVO>" memberEnd="_vKoIsaRKEeC9uOgveCV3WQ _vKoItKRKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKoIsaRKEeC9uOgveCV3WQ" name="patrimonioVO" type="_vKnh2KRKEeC9uOgveCV3WQ" association="_vKoIsKRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoIsqRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoIs6RKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKoItKRKEeC9uOgveCV3WQ" name="localizacaoItemVO" type="_vKnh7KRKEeC9uOgveCV3WQ" association="_vKoIsKRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoItaRKEeC9uOgveCV3WQ" value="*"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoItqRKEeC9uOgveCV3WQ"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKoIt6RKEeC9uOgveCV3WQ" name="A_&lt;notificacaoVO>_&lt;patrimonioVO>" memberEnd="_vKoIuKRKEeC9uOgveCV3WQ _vKoIu6RKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKoIuKRKEeC9uOgveCV3WQ" name="notificacaoVO" type="_vKnhu6RKEeC9uOgveCV3WQ" association="_vKoIt6RKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoIuaRKEeC9uOgveCV3WQ" value="*"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoIuqRKEeC9uOgveCV3WQ"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKoIu6RKEeC9uOgveCV3WQ" name="patrimonioVO" type="_vKnh2KRKEeC9uOgveCV3WQ" association="_vKoIt6RKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoIvKRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoIvaRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKoIvqRKEeC9uOgveCV3WQ" name="A_&lt;categoria>_&lt;patrimonioVO>" memberEnd="_vKoIv6RKEeC9uOgveCV3WQ _vKoIwqRKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKoIv6RKEeC9uOgveCV3WQ" name="categoria" type="_vKniBqRKEeC9uOgveCV3WQ" association="_vKoIvqRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoIwKRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoIwaRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKoIwqRKEeC9uOgveCV3WQ" name="patrimonioVO" type="_vKnh2KRKEeC9uOgveCV3WQ" association="_vKoIvqRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoIw6RKEeC9uOgveCV3WQ" value="*"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoIxKRKEeC9uOgveCV3WQ"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKoIxaRKEeC9uOgveCV3WQ" name="A_&lt;tipoNotificacaoVO>_&lt;notificacaoVO>" memberEnd="_vKoIxqRKEeC9uOgveCV3WQ _vKoIyaRKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKoIxqRKEeC9uOgveCV3WQ" name="tipoNotificacaoVO" type="_vKniDKRKEeC9uOgveCV3WQ" association="_vKoIxaRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoIx6RKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoIyKRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKoIyaRKEeC9uOgveCV3WQ" name="notificacaoVO" type="_vKnhu6RKEeC9uOgveCV3WQ" association="_vKoIxaRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoIyqRKEeC9uOgveCV3WQ" value="*"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoIy6RKEeC9uOgveCV3WQ"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKoIzKRKEeC9uOgveCV3WQ" name="A_&lt;localizacaoItemVO>_&lt;usuarioVO>" memberEnd="_vKoIzaRKEeC9uOgveCV3WQ _vKoI0KRKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKoIzaRKEeC9uOgveCV3WQ" name="localizacaoItemVO" type="_vKnh7KRKEeC9uOgveCV3WQ" association="_vKoIzKRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoIzqRKEeC9uOgveCV3WQ" value="*"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoIz6RKEeC9uOgveCV3WQ"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKoI0KRKEeC9uOgveCV3WQ" name="usuarioVO" type="_vKnhyKRKEeC9uOgveCV3WQ" association="_vKoIzKRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoI0aRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoI0qRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_vKoI06RKEeC9uOgveCV3WQ" name="String"/>
+          <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_vKoI1KRKEeC9uOgveCV3WQ" name="String"/>
+          <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_vKoI1aRKEeC9uOgveCV3WQ" name="Long"/>
+          <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_vKoI1qRKEeC9uOgveCV3WQ" name="Date"/>
+          <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_vKoI16RKEeC9uOgveCV3WQ" name="List"/>
+          <packagedElement xmi:type="uml:PrimitiveType" xmi:id="_vKoI2KRKEeC9uOgveCV3WQ" name="Boolean"/>
+          <packagedElement xmi:type="uml:Enumeration" xmi:id="_vKoI2aRKEeC9uOgveCV3WQ" name="StatusPatrimonioEnum"/>
+          <packagedElement xmi:type="uml:Enumeration" xmi:id="_vKoI2qRKEeC9uOgveCV3WQ" name="Enumeration1"/>
+          <packagedElement xmi:type="uml:Enumeration" xmi:id="_vKoI26RKEeC9uOgveCV3WQ" name="StatusPatrimonioEnum">
+            <ownedLiteral xmi:id="_vKoI3KRKEeC9uOgveCV3WQ" name="Ativo"/>
+            <ownedLiteral xmi:id="_vKoI3aRKEeC9uOgveCV3WQ" name="Inativo"/>
+            <ownedLiteral xmi:id="_vKoI3qRKEeC9uOgveCV3WQ" name="Extraviado"/>
+            <ownedLiteral xmi:id="_vKoI36RKEeC9uOgveCV3WQ" name="Emprestado"/>
+            <ownedLiteral xmi:id="_vKoI4KRKEeC9uOgveCV3WQ" name="Procura"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKoI4aRKEeC9uOgveCV3WQ" name="A_&lt;usuarioVO>_&lt;notificacaoVO>" memberEnd="_vKoI4qRKEeC9uOgveCV3WQ _vKoI5aRKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKoI4qRKEeC9uOgveCV3WQ" name="usuarioVO" type="_vKnhyKRKEeC9uOgveCV3WQ" association="_vKoI4aRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoI46RKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoI5KRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKoI5aRKEeC9uOgveCV3WQ" name="notificacaoVO" type="_vKnhu6RKEeC9uOgveCV3WQ" association="_vKoI4aRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoI5qRKEeC9uOgveCV3WQ" value="*"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoI56RKEeC9uOgveCV3WQ"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKoI6KRKEeC9uOgveCV3WQ" name="A_&lt;usuarioVO>_&lt;patrimonioVO>_2" memberEnd="_vKoI6aRKEeC9uOgveCV3WQ _vKoI7KRKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKoI6aRKEeC9uOgveCV3WQ" name="usuarioVO" type="_vKnhyKRKEeC9uOgveCV3WQ" association="_vKoI6KRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoI6qRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoI66RKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKoI7KRKEeC9uOgveCV3WQ" name="patrimonioVO" type="_vKnh2KRKEeC9uOgveCV3WQ" association="_vKoI6KRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoI7aRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoI7qRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKoI76RKEeC9uOgveCV3WQ" name="A_&lt;usuarioVO>_&lt;patrimonioVO>_3" memberEnd="_vKoI8KRKEeC9uOgveCV3WQ _vKoI86RKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKoI8KRKEeC9uOgveCV3WQ" name="usuarioVO" type="_vKnhyKRKEeC9uOgveCV3WQ" association="_vKoI76RKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoI8aRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoI8qRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKoI86RKEeC9uOgveCV3WQ" name="patrimonioVO" type="_vKnh2KRKEeC9uOgveCV3WQ" association="_vKoI76RKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoI9KRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoI9aRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Association" xmi:id="_vKoI9qRKEeC9uOgveCV3WQ" name="A_&lt;usuarioVO>_&lt;notificacaoVO>_2" memberEnd="_vKoI96RKEeC9uOgveCV3WQ _vKoI-qRKEeC9uOgveCV3WQ">
+            <ownedEnd xmi:id="_vKoI96RKEeC9uOgveCV3WQ" name="usuarioVO" type="_vKnhyKRKEeC9uOgveCV3WQ" association="_vKoI9qRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoI-KRKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoI-aRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+            <ownedEnd xmi:id="_vKoI-qRKEeC9uOgveCV3WQ" name="notificacaoVO" type="_vKnhu6RKEeC9uOgveCV3WQ" association="_vKoI9qRKEeC9uOgveCV3WQ">
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vKoI-6RKEeC9uOgveCV3WQ" value="1"/>
+              <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vKoI_KRKEeC9uOgveCV3WQ" value="1"/>
+            </ownedEnd>
+          </packagedElement>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_vKoI_aRKEeC9uOgveCV3WQ" name="br.unicamp.ic.controle_patrimonio.services">
+          <packagedElement xmi:type="uml:Interface" xmi:id="_vKoI_qRKEeC9uOgveCV3WQ" name="IUsuario">
+            <ownedOperation xmi:id="_vKoI_6RKEeC9uOgveCV3WQ" name="criarUsuario"/>
+            <ownedOperation xmi:id="_vKoJAKRKEeC9uOgveCV3WQ" name="alterarUsuario"/>
+            <ownedOperation xmi:id="_vKoJAaRKEeC9uOgveCV3WQ" name="consultarPorEmailSenha"/>
+            <ownedOperation xmi:id="_vKoJAqRKEeC9uOgveCV3WQ" name="consultarTodos"/>
+            <ownedOperation xmi:id="_vKoJA6RKEeC9uOgveCV3WQ" name="inativarUsuario"/>
+            <ownedOperation xmi:id="_vKoJBKRKEeC9uOgveCV3WQ" name="consultarPorId"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_vKoJBaRKEeC9uOgveCV3WQ" name="IPatrimonio">
+            <ownedOperation xmi:id="_vKoJBqRKEeC9uOgveCV3WQ" name="incluirPatrimonio"/>
+            <ownedOperation xmi:id="_vKoJB6RKEeC9uOgveCV3WQ" name="consultarPatrimonioPorId"/>
+            <ownedOperation xmi:id="_vKoJCKRKEeC9uOgveCV3WQ" name="consultarPatrimonioPorPid"/>
+            <ownedOperation xmi:id="_vKoJCaRKEeC9uOgveCV3WQ" name="consultarPatrimonioPorFiltro"/>
+            <ownedOperation xmi:id="_vKoJCqRKEeC9uOgveCV3WQ" name="consultarPatrimonioPorResponsavel"/>
+            <ownedOperation xmi:id="_vKoJC6RKEeC9uOgveCV3WQ" name="alterarItem"/>
+            <ownedOperation xmi:id="_vKoJDKRKEeC9uOgveCV3WQ" name="mudarLocalizacaoItem"/>
+            <ownedOperation xmi:id="_vKoJDaRKEeC9uOgveCV3WQ" name="consultarPatrimonioDetalhado"/>
+            <ownedOperation xmi:id="_vKoJDqRKEeC9uOgveCV3WQ" name="habilitarSaidaPatrimonio"/>
+            <ownedOperation xmi:id="_vKoJD6RKEeC9uOgveCV3WQ" name="registrarItenAdquiridoOrgaoFomento"/>
+            <ownedOperation xmi:id="_vKoJEKRKEeC9uOgveCV3WQ" name="bloquearSaida"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_vKoJEaRKEeC9uOgveCV3WQ" name="IPermissaoAcesso">
+            <ownedOperation xmi:id="_vKoJEqRKEeC9uOgveCV3WQ" name="verificarPermissao"/>
+            <ownedOperation xmi:id="_vKoJE6RKEeC9uOgveCV3WQ" name="notificarAcesso"/>
+            <ownedOperation xmi:id="_vKoJFKRKEeC9uOgveCV3WQ" name="executarLogin"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_vKoJFaRKEeC9uOgveCV3WQ" name="IArea">
+            <ownedOperation xmi:id="_vKoJFqRKEeC9uOgveCV3WQ" name="incluirArea"/>
+            <ownedOperation xmi:id="_vKoJF6RKEeC9uOgveCV3WQ" name="alterarArea"/>
+            <ownedOperation xmi:id="_vKoJGKRKEeC9uOgveCV3WQ" name="consultarAreaPorId"/>
+            <ownedOperation xmi:id="_vKoJGaRKEeC9uOgveCV3WQ" name="inativarArea"/>
+            <ownedOperation xmi:id="_vKoJGqRKEeC9uOgveCV3WQ" name="consultarTodasAreas"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_vKoJG6RKEeC9uOgveCV3WQ" name="INotificacao">
+            <ownedOperation xmi:id="_vKoJHKRKEeC9uOgveCV3WQ" name="gerarNotificacao"/>
+            <ownedOperation xmi:id="_vKoJHaRKEeC9uOgveCV3WQ" name="alterarNotificacao"/>
+            <ownedOperation xmi:id="_vKoJHqRKEeC9uOgveCV3WQ" name="consultarNotificacaoPorPeriodo"/>
+            <ownedOperation xmi:id="_vKoJH6RKEeC9uOgveCV3WQ" name="consultarNotificacaoPorId"/>
+            <ownedOperation xmi:id="_vKoJIKRKEeC9uOgveCV3WQ" name="incluirIncidente"/>
+            <ownedOperation xmi:id="_vKoJIaRKEeC9uOgveCV3WQ" name="consultarNotificacoesPendentes"/>
+            <ownedOperation xmi:id="_vKoJIqRKEeC9uOgveCV3WQ" name="iniciarVerificacaoNotificacao"/>
+            <ownedOperation xmi:id="_vKoJI6RKEeC9uOgveCV3WQ" name="concluirNotificacao"/>
+            <ownedOperation xmi:id="_vKoJJKRKEeC9uOgveCV3WQ" name="registrarIncidente"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_vKoJJaRKEeC9uOgveCV3WQ" name="IAlarme">
+            <ownedOperation xmi:id="_vKoJJqRKEeC9uOgveCV3WQ" name="acionarAlarme"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_vKoJJ6RKEeC9uOgveCV3WQ" name="IPermissaoAcesso">
+            <ownedOperation xmi:id="_vKoJKKRKEeC9uOgveCV3WQ" name="verificarPermissao"/>
+            <ownedOperation xmi:id="_vKoJKaRKEeC9uOgveCV3WQ" name="notificarAcesso"/>
+            <ownedOperation xmi:id="_vKoJKqRKEeC9uOgveCV3WQ" name="executarLogin"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_vKoJK6RKEeC9uOgveCV3WQ" name="ISensor">
+            <ownedOperation xmi:id="_vKoJLKRKEeC9uOgveCV3WQ" name="registrarMovimentacao"/>
+            <ownedOperation xmi:id="_vKoJLaRKEeC9uOgveCV3WQ" name="verificarItenLiberado"/>
+            <ownedOperation xmi:id="_vKoJLqRKEeC9uOgveCV3WQ" name="acionarAlarme"/>
+            <ownedOperation xmi:id="_vKoJL6RKEeC9uOgveCV3WQ" name="verificarPermissaoAutorizada"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_vKoJMKRKEeC9uOgveCV3WQ" name="ISensor">
+            <ownedOperation xmi:id="_vKoJMaRKEeC9uOgveCV3WQ" name="registrarMovimentacao"/>
+            <ownedOperation xmi:id="_vKoJMqRKEeC9uOgveCV3WQ" name="verificarItenLiberado"/>
+            <ownedOperation xmi:id="_vKoJM6RKEeC9uOgveCV3WQ" name="acionarAlarme"/>
+            <ownedOperation xmi:id="_vKoJNKRKEeC9uOgveCV3WQ" name="verificarPermissaoAutorizada"/>
+            <nestedClassifier xmi:type="uml:Interface" xmi:id="_vKoJNaRKEeC9uOgveCV3WQ" name="IRelatorio">
+              <ownedOperation xmi:id="_vKoJNqRKEeC9uOgveCV3WQ" name="gerarRelatorioPorArea"/>
+              <ownedOperation xmi:id="_vKoJN6RKEeC9uOgveCV3WQ" name="gerarRelatorioDeItens"/>
+              <ownedOperation xmi:id="_vKoJOKRKEeC9uOgveCV3WQ" name="gerarRelatorioItensSemLocalizacaoSemResponsavel"/>
+              <ownedOperation xmi:id="_vKoJOaRKEeC9uOgveCV3WQ" name="gerarRelatorioItensExtraviadosPorPeriodo"/>
+              <ownedOperation xmi:id="_vKoJOqRKEeC9uOgveCV3WQ" name="gerarRelatorioItensAcessoLiberado"/>
+              <nestedClassifier xmi:type="uml:Interface" xmi:id="_vKoJO6RKEeC9uOgveCV3WQ" name="ISensor">
+                <ownedOperation xmi:id="_vKoJPKRKEeC9uOgveCV3WQ" name="registrarMovimentacao"/>
+                <ownedOperation xmi:id="_vKoJPaRKEeC9uOgveCV3WQ" name="verificarItenLiberado"/>
+                <ownedOperation xmi:id="_vKoJPqRKEeC9uOgveCV3WQ" name="acionarAlarme"/>
+                <ownedOperation xmi:id="_vKoJP6RKEeC9uOgveCV3WQ" name="verificarPermissaoAutorizada"/>
+              </nestedClassifier>
+            </nestedClassifier>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_vKoJQKRKEeC9uOgveCV3WQ" name="IRelatorio">
+            <ownedOperation xmi:id="_vKoJQaRKEeC9uOgveCV3WQ" name="gerarRelatorioPorArea"/>
+            <ownedOperation xmi:id="_vKoJQqRKEeC9uOgveCV3WQ" name="gerarRelatorioDeItens"/>
+            <ownedOperation xmi:id="_vKoJQ6RKEeC9uOgveCV3WQ" name="gerarRelatorioItensSemLocalizacaoSemResponsavel"/>
+            <ownedOperation xmi:id="_vKoJRKRKEeC9uOgveCV3WQ" name="gerarRelatorioItensExtraviadosPorPeriodo"/>
+            <ownedOperation xmi:id="_vKoJRaRKEeC9uOgveCV3WQ" name="gerarRelatorioItensAcessoLiberado"/>
+            <nestedClassifier xmi:type="uml:Interface" xmi:id="_vKoJRqRKEeC9uOgveCV3WQ" name="ISensor">
+              <ownedOperation xmi:id="_vKoJR6RKEeC9uOgveCV3WQ" name="registrarMovimentacao"/>
+              <ownedOperation xmi:id="_vKoJSKRKEeC9uOgveCV3WQ" name="verificarItenLiberado"/>
+              <ownedOperation xmi:id="_vKoJSaRKEeC9uOgveCV3WQ" name="acionarAlarme"/>
+              <ownedOperation xmi:id="_vKoJSqRKEeC9uOgveCV3WQ" name="verificarPermissaoAutorizada"/>
+            </nestedClassifier>
+          </packagedElement>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_vKoJS6RKEeC9uOgveCV3WQ" name="Package1"/>
+      </nestedClassifier>
+      <nestedClassifier xmi:type="uml:Component" xmi:id="_4c5lUKRKEeC9uOgveCV3WQ" name="controle-patrimonio-ic-service">
+        <packagedElement xmi:type="uml:Package" xmi:id="_4c5lUaRKEeC9uOgveCV3WQ" name="br.unicamp.ic.controle_patrimonio.services.impl">
+          <packagedElement xmi:type="uml:Class" xmi:id="_4c5lUqRKEeC9uOgveCV3WQ" name="UsuarioService">
+            <ownedAttribute xmi:id="_4c5lU6RKEeC9uOgveCV3WQ" name="usuarioDao" visibility="private"/>
+            <ownedOperation xmi:id="_4c5lVKRKEeC9uOgveCV3WQ" name="criarUsuario"/>
+            <ownedOperation xmi:id="_4c5lVaRKEeC9uOgveCV3WQ" name="alterarUsuario"/>
+            <ownedOperation xmi:id="_4c5lVqRKEeC9uOgveCV3WQ" name="consultarPorEmailSenha"/>
+            <ownedOperation xmi:id="_4c5lV6RKEeC9uOgveCV3WQ" name="consultarTodos"/>
+            <ownedOperation xmi:id="_4c5lWKRKEeC9uOgveCV3WQ" name="inativarUsuario"/>
+            <ownedOperation xmi:id="_4c5lWaRKEeC9uOgveCV3WQ" name="consultarPorId"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_4c5lWqRKEeC9uOgveCV3WQ" name="AlarmeService" clientDependency="_4c5lW6RKEeC9uOgveCV3WQ">
+            <interfaceRealization xmi:id="_4c5lW6RKEeC9uOgveCV3WQ" name="InterfaceRealization1" client="_4c5lWqRKEeC9uOgveCV3WQ">
+              <supplier xmi:type="uml:Interface" href="C%20Usuario.uml#_bzIbUI_MEeC9h4FCu_wxjA"/>
+              <contract href="C%20Usuario.uml#_bzIbUI_MEeC9h4FCu_wxjA"/>
+            </interfaceRealization>
+            <ownedOperation xmi:id="_4c5lXKRKEeC9uOgveCV3WQ" name="verificarAlarmeAtivo" visibility="private"/>
+            <ownedOperation xmi:id="_4c5lXaRKEeC9uOgveCV3WQ" name="acionarAlarme"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_4c5lXqRKEeC9uOgveCV3WQ" name="PatrimonioService">
+            <ownedAttribute xmi:id="_4c5lX6RKEeC9uOgveCV3WQ" name="patrimonioDao" visibility="private"/>
+            <ownedOperation xmi:id="_4c5lYKRKEeC9uOgveCV3WQ" name="incluirPatrimonio"/>
+            <ownedOperation xmi:id="_4c5lYaRKEeC9uOgveCV3WQ" name="alterarPatrimonio"/>
+            <ownedOperation xmi:id="_4c5lYqRKEeC9uOgveCV3WQ" name="consultarPatrimonioPorId"/>
+            <ownedOperation xmi:id="_4c5lY6RKEeC9uOgveCV3WQ" name="consultarPatrimonioPorResponsavel"/>
+            <ownedOperation xmi:id="_4c5lZKRKEeC9uOgveCV3WQ" name="alterarLocalizacaoPatrimonio"/>
+            <ownedOperation xmi:id="_4c5lZaRKEeC9uOgveCV3WQ" name="consultarPatrimonioPorFiltro"/>
+            <ownedOperation xmi:id="_4c5lZqRKEeC9uOgveCV3WQ" name="bloquearSaidaPatrimonio"/>
+            <ownedOperation xmi:id="_4c5lZ6RKEeC9uOgveCV3WQ" name="liberarSaidaPatrimonio"/>
+            <ownedOperation xmi:id="_4c5laKRKEeC9uOgveCV3WQ" name="consultarPatrimonioPorRfid"/>
+            <ownedOperation xmi:id="_4c5laaRKEeC9uOgveCV3WQ" name="registrarAdquiridoOrgaoFomento"/>
+            <ownedOperation xmi:id="_4c5laqRKEeC9uOgveCV3WQ" name="consultarPorPid"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_4c5la6RKEeC9uOgveCV3WQ" name="PermissaoAcessoService">
+            <ownedAttribute xmi:id="_4c5lbKRKEeC9uOgveCV3WQ" name="usuarioDao" visibility="private"/>
+            <ownedAttribute xmi:id="_4c5lbaRKEeC9uOgveCV3WQ" name="perfilDao" visibility="private"/>
+            <ownedAttribute xmi:id="_4c5lbqRKEeC9uOgveCV3WQ" name="funcionalidadeDao" visibility="private"/>
+            <ownedOperation xmi:id="_4c5lb6RKEeC9uOgveCV3WQ" name="verificarPermissao"/>
+            <ownedOperation xmi:id="_4c5lcKRKEeC9uOgveCV3WQ" name="executarLogin"/>
+            <ownedOperation xmi:id="_4c5lcaRKEeC9uOgveCV3WQ" name="consultarFuncionalidadePorPerfil"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_4c5lcqRKEeC9uOgveCV3WQ" name="Class1"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="_4c5lc6RKEeC9uOgveCV3WQ" name="RelatorioService">
+            <ownedAttribute xmi:id="_4c5ldKRKEeC9uOgveCV3WQ" name="patrimonioService" visibility="private"/>
+            <ownedOperation xmi:id="_4c5ldaRKEeC9uOgveCV3WQ" name="gerarRelatorioPatrimonioPorResponsavel"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_4c5ldqRKEeC9uOgveCV3WQ" name="AreaService"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="_4c5ld6RKEeC9uOgveCV3WQ" name="NotificacaoService"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_4c5leKRKEeC9uOgveCV3WQ" name="br.unicamp.ic.controle_patrimonio.services.dao">
+          <packagedElement xmi:type="uml:Interface" xmi:id="_4c5leaRKEeC9uOgveCV3WQ" name="IUsuarioDAO">
+            <ownedOperation xmi:id="_4c5leqRKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_4c5le6RKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_4c5lfKRKEeC9uOgveCV3WQ" name="delete"/>
+          </packagedElement>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_4c5lfaRKEeC9uOgveCV3WQ" name="br.unicamp.ic.controle_patrimonio.services.dao.impl"/>
+      </nestedClassifier>
+      <nestedClassifier xmi:type="uml:Component" xmi:id="_6EOvgKRKEeC9uOgveCV3WQ" name="controle-patrimonio-ic-service">
+        <packagedElement xmi:type="uml:Package" xmi:id="_6EOvgaRKEeC9uOgveCV3WQ" name="br.unicamp.ic.controle_patrimonio.services.impl">
+          <packagedElement xmi:type="uml:Class" xmi:id="_6EOvgqRKEeC9uOgveCV3WQ" name="UsuarioService">
+            <ownedAttribute xmi:id="_6EOvg6RKEeC9uOgveCV3WQ" name="usuarioDao" visibility="private"/>
+            <ownedOperation xmi:id="_6EOvhKRKEeC9uOgveCV3WQ" name="criarUsuario"/>
+            <ownedOperation xmi:id="_6EOvhaRKEeC9uOgveCV3WQ" name="alterarUsuario"/>
+            <ownedOperation xmi:id="_6EOvhqRKEeC9uOgveCV3WQ" name="consultarPorEmailSenha"/>
+            <ownedOperation xmi:id="_6EOvh6RKEeC9uOgveCV3WQ" name="consultarTodos"/>
+            <ownedOperation xmi:id="_6EOviKRKEeC9uOgveCV3WQ" name="inativarUsuario"/>
+            <ownedOperation xmi:id="_6EOviaRKEeC9uOgveCV3WQ" name="consultarPorId"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_6EOviqRKEeC9uOgveCV3WQ" name="AlarmeService" clientDependency="_6EOvi6RKEeC9uOgveCV3WQ">
+            <interfaceRealization xmi:id="_6EOvi6RKEeC9uOgveCV3WQ" name="InterfaceRealization1" client="_6EOviqRKEeC9uOgveCV3WQ">
+              <supplier xmi:type="uml:Interface" href="C%20Usuario.uml#_bzIbUI_MEeC9h4FCu_wxjA"/>
+              <contract href="C%20Usuario.uml#_bzIbUI_MEeC9h4FCu_wxjA"/>
+            </interfaceRealization>
+            <ownedOperation xmi:id="_6EOvjKRKEeC9uOgveCV3WQ" name="verificarAlarmeAtivo" visibility="private"/>
+            <ownedOperation xmi:id="_6EOvjaRKEeC9uOgveCV3WQ" name="acionarAlarme"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_6EOvjqRKEeC9uOgveCV3WQ" name="PatrimonioService">
+            <ownedAttribute xmi:id="_6EOvj6RKEeC9uOgveCV3WQ" name="patrimonioDao" visibility="private"/>
+            <ownedOperation xmi:id="_6EOvkKRKEeC9uOgveCV3WQ" name="incluirPatrimonio"/>
+            <ownedOperation xmi:id="_6EOvkaRKEeC9uOgveCV3WQ" name="alterarPatrimonio"/>
+            <ownedOperation xmi:id="_6EOvkqRKEeC9uOgveCV3WQ" name="consultarPatrimonioPorId"/>
+            <ownedOperation xmi:id="_6EOvk6RKEeC9uOgveCV3WQ" name="consultarPatrimonioPorResponsavel"/>
+            <ownedOperation xmi:id="_6EOvlKRKEeC9uOgveCV3WQ" name="alterarLocalizacaoPatrimonio"/>
+            <ownedOperation xmi:id="_6EOvlaRKEeC9uOgveCV3WQ" name="consultarPatrimonioPorFiltro"/>
+            <ownedOperation xmi:id="_6EOvlqRKEeC9uOgveCV3WQ" name="bloquearSaidaPatrimonio"/>
+            <ownedOperation xmi:id="_6EOvl6RKEeC9uOgveCV3WQ" name="liberarSaidaPatrimonio"/>
+            <ownedOperation xmi:id="_6EOvmKRKEeC9uOgveCV3WQ" name="consultarPatrimonioPorRfid"/>
+            <ownedOperation xmi:id="_6EOvmaRKEeC9uOgveCV3WQ" name="registrarAdquiridoOrgaoFomento"/>
+            <ownedOperation xmi:id="_6EOvmqRKEeC9uOgveCV3WQ" name="consultarPorPid"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_6EOvm6RKEeC9uOgveCV3WQ" name="PermissaoAcessoService">
+            <ownedAttribute xmi:id="_6EOvnKRKEeC9uOgveCV3WQ" name="usuarioDao" visibility="private"/>
+            <ownedAttribute xmi:id="_6EOvnaRKEeC9uOgveCV3WQ" name="perfilDao" visibility="private"/>
+            <ownedAttribute xmi:id="_6EOvnqRKEeC9uOgveCV3WQ" name="funcionalidadeDao" visibility="private"/>
+            <ownedOperation xmi:id="_6EOvn6RKEeC9uOgveCV3WQ" name="verificarPermissao"/>
+            <ownedOperation xmi:id="_6EOvoKRKEeC9uOgveCV3WQ" name="executarLogin"/>
+            <ownedOperation xmi:id="_6EOvoaRKEeC9uOgveCV3WQ" name="consultarFuncionalidadePorPerfil"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_6EOvoqRKEeC9uOgveCV3WQ" name="Class1"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="_6EOvo6RKEeC9uOgveCV3WQ" name="RelatorioService">
+            <ownedAttribute xmi:id="_6EOvpKRKEeC9uOgveCV3WQ" name="patrimonioService" visibility="private"/>
+            <ownedOperation xmi:id="_6EOvpaRKEeC9uOgveCV3WQ" name="gerarRelatorioPatrimonioPorResponsavel"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_6EOvpqRKEeC9uOgveCV3WQ" name="AreaService"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="_6EOvp6RKEeC9uOgveCV3WQ" name="NotificacaoService"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_6EOvqKRKEeC9uOgveCV3WQ" name="br.unicamp.ic.controle_patrimonio.services.dao">
+          <packagedElement xmi:type="uml:Interface" xmi:id="_6EOvqaRKEeC9uOgveCV3WQ" name="IUsuarioDAO">
+            <ownedOperation xmi:id="_6EOvqqRKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_6EOvq6RKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_6EOvrKRKEeC9uOgveCV3WQ" name="delete"/>
+          </packagedElement>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_6EOvraRKEeC9uOgveCV3WQ" name="br.unicamp.ic.controle_patrimonio.services.dao.impl"/>
+      </nestedClassifier>
+      <nestedClassifier xmi:type="uml:Component" xmi:id="_9qu8IKRKEeC9uOgveCV3WQ" name="controle-patrimonio-ic-persistence">
+        <packagedElement xmi:type="uml:Package" xmi:id="_9qu8IaRKEeC9uOgveCV3WQ" name="br.unicamp.ic.controle_patrimonio.services.dao">
+          <packagedElement xmi:type="uml:Interface" xmi:id="_9qu8IqRKEeC9uOgveCV3WQ" name="IUsuarioDAO">
+            <ownedOperation xmi:id="_9qu8I6RKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8JKRKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8JaRKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8JqRKEeC9uOgveCV3WQ" name="findById"/>
+            <ownedOperation xmi:id="_9qu8J6RKEeC9uOgveCV3WQ" name="findAll"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_9qu8KKRKEeC9uOgveCV3WQ" name="IPatrimonioDAO">
+            <ownedOperation xmi:id="_9qu8KaRKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8KqRKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8K6RKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8LKRKEeC9uOgveCV3WQ" name="findById"/>
+            <ownedOperation xmi:id="_9qu8LaRKEeC9uOgveCV3WQ" name="findAll"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:ExecutionEvent" xmi:id="_9qu8LqRKEeC9uOgveCV3WQ" name="ExecutionEvent1"/>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_9qu8L6RKEeC9uOgveCV3WQ" name="INotificacaoDAO">
+            <ownedOperation xmi:id="_9qu8MKRKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8MaRKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8MqRKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8M6RKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8NKRKEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_9qu8NaRKEeC9uOgveCV3WQ" name="Interface1"/>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_9qu8NqRKEeC9uOgveCV3WQ" name="IAreaDAO">
+            <ownedOperation xmi:id="_9qu8N6RKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8OKRKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8OaRKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8OqRKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8O6RKEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_9qu8PKRKEeC9uOgveCV3WQ" name="IFuncionalidadeDAO">
+            <ownedOperation xmi:id="_9qu8PaRKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8PqRKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8P6RKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8QKRKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8QaRKEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_9qu8QqRKEeC9uOgveCV3WQ" name="IPerfilDAO">
+            <ownedOperation xmi:id="_9qu8Q6RKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8RKRKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8RaRKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8RqRKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8R6RKEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_9qu8SKRKEeC9uOgveCV3WQ" name="ILocalizacaoDAO">
+            <ownedOperation xmi:id="_9qu8SaRKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8SqRKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8S6RKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8TKRKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8TaRKEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_9qu8TqRKEeC9uOgveCV3WQ" name="ICategoriaDAO">
+            <ownedOperation xmi:id="_9qu8T6RKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8UKRKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8UaRKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8UqRKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8U6RKEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_9qu8VKRKEeC9uOgveCV3WQ" name="br.unicamp.ic.controle_patrimonio.services.dao.impl">
+          <packagedElement xmi:type="uml:Class" xmi:id="_9qu8VaRKEeC9uOgveCV3WQ" name="UsuarioDAOImpl">
+            <ownedOperation xmi:id="_9qu8VqRKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8V6RKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8WKRKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8WaRKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8WqRKEeC9uOgveCV3WQ" name="findById"/>
+            <ownedOperation xmi:id="_9qu8W6RKEeC9uOgveCV3WQ" name="findByEmailSenha"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_9qu8XKRKEeC9uOgveCV3WQ" name="PatrimonioDAOImpl">
+            <ownedOperation xmi:id="_9qu8XaRKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8XqRKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8X6RKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8YKRKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8YaRKEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_9qu8YqRKEeC9uOgveCV3WQ" name="AreaDAOImpl">
+            <ownedOperation xmi:id="_9qu8Y6RKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8ZKRKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8ZaRKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8ZqRKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8Z6RKEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_9qu8aKRKEeC9uOgveCV3WQ" name="DepartamentoDAOImpl">
+            <ownedOperation xmi:id="_9qu8aaRKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8aqRKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8a6RKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8bKRKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8baRKEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_9qu8bqRKEeC9uOgveCV3WQ" name="PerfilDAOImpl">
+            <ownedOperation xmi:id="_9qu8b6RKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8cKRKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8caRKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8cqRKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8c6RKEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_9qu8dKRKEeC9uOgveCV3WQ" name="NotificacaoDAOImpl">
+            <ownedOperation xmi:id="_9qu8daRKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8dqRKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8d6RKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8eKRKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8eaRKEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_9qu8eqRKEeC9uOgveCV3WQ" name="CategoriaDAOImpl">
+            <ownedOperation xmi:id="_9qu8e6RKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8fKRKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8faRKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8fqRKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8f6RKEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_9qu8gKRKEeC9uOgveCV3WQ" name="LocalizacaoDAOImpl">
+            <ownedOperation xmi:id="_9qu8gaRKEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_9qu8gqRKEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_9qu8g6RKEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_9qu8hKRKEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_9qu8haRKEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_9qu8hqRKEeC9uOgveCV3WQ" name="br.unicmap.ic.controle_patrimonio.service.dao.orm"/>
+      </nestedClassifier>
+      <nestedClassifier xmi:type="uml:Component" xmi:id="_C24Q4KRLEeC9uOgveCV3WQ" name="controle-patrimonio-ic-sensores"/>
+      <deployment xmi:id="_mZnmEKRKEeC9uOgveCV3WQ" name="Deployment1" supplier="_jdoWEKRKEeC9uOgveCV3WQ" client="_LQDfIKRHEeC9uOgveCV3WQ" deployedArtifact="_jdoWEKRKEeC9uOgveCV3WQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Node" xmi:id="_f0hBsKRHEeC9uOgveCV3WQ" name="Node1"/>
+    <packagedElement xmi:type="uml:Node" xmi:id="_oNKHoKRHEeC9uOgveCV3WQ" name="mySql"/>
+    <packagedElement xmi:type="uml:Node" xmi:id="_0XWMkKRHEeC9uOgveCV3WQ" name="Sensor RFID"/>
+    <packagedElement xmi:type="uml:Node" xmi:id="_3O9S4KRHEeC9uOgveCV3WQ" name="Alarme"/>
+    <packagedElement xmi:type="uml:Device" xmi:id="_30HY8KRIEeC9uOgveCV3WQ" name="Sensor RFID"/>
+    <packagedElement xmi:type="uml:Component" xmi:id="_CcshMKRJEeC9uOgveCV3WQ">
+      <nestedClassifier xmi:type="uml:Component" xmi:id="_K1vPwKRJEeC9uOgveCV3WQ" name="controle-patrimonio-ic-web"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:DeploymentSpecification" xmi:id="_mhiocKRJEeC9uOgveCV3WQ" name="DeploymentSpecification1"/>
+    <packagedElement xmi:type="uml:ExecutionEnvironment" xmi:id="_kD66AKRKEeC9uOgveCV3WQ" name="ExecutionEnvironment1" clientDependency="_laS3EKRKEeC9uOgveCV3WQ">
+      <deployment xmi:id="_laS3EKRKEeC9uOgveCV3WQ" name="Deployment1" supplier="_jdoWEKRKEeC9uOgveCV3WQ" client="_kD66AKRKEeC9uOgveCV3WQ" deployedArtifact="_jdoWEKRKEeC9uOgveCV3WQ"/>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Artifact" xmi:id="_jdoWEKRKEeC9uOgveCV3WQ" name="Artifact1"/>
+    <packagedElement xmi:type="uml:Device" xmi:id="_6EF3gKRIEeC9uOgveCV3WQ" name="Alarme"/>
+    <packagedElement xmi:type="uml:Device" xmi:id="_N7fN0KRLEeC9uOgveCV3WQ" name="Servidor MySql"/>
+    <packagedElement xmi:type="uml:CommunicationPath" xmi:id="_UAlj0KRLEeC9uOgveCV3WQ" name="Link dedicado" memberEnd="_UAmK4KRLEeC9uOgveCV3WQ _UAmK46RLEeC9uOgveCV3WQ">
+      <ownedEnd xmi:id="_UAmK4KRLEeC9uOgveCV3WQ" name="source" type="_N7fN0KRLEeC9uOgveCV3WQ" association="_UAlj0KRLEeC9uOgveCV3WQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UAmK4aRLEeC9uOgveCV3WQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UAmK4qRLEeC9uOgveCV3WQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_UAmK46RLEeC9uOgveCV3WQ" name="target" type="_LQDfIKRHEeC9uOgveCV3WQ" association="_UAlj0KRLEeC9uOgveCV3WQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UAmK5KRLEeC9uOgveCV3WQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UAmK5aRLEeC9uOgveCV3WQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:CommunicationPath" xmi:id="_U-4_IKRLEeC9uOgveCV3WQ" name="Hardware de rede" memberEnd="_U-4_IaRLEeC9uOgveCV3WQ _U-4_JKRLEeC9uOgveCV3WQ">
+      <ownedEnd xmi:id="_U-4_IaRLEeC9uOgveCV3WQ" name="source" type="_6EF3gKRIEeC9uOgveCV3WQ" association="_U-4_IKRLEeC9uOgveCV3WQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_U-4_IqRLEeC9uOgveCV3WQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_U-4_I6RLEeC9uOgveCV3WQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_U-4_JKRLEeC9uOgveCV3WQ" name="target" type="_LQDfIKRHEeC9uOgveCV3WQ" association="_U-4_IKRLEeC9uOgveCV3WQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_U-4_JaRLEeC9uOgveCV3WQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_U-4_JqRLEeC9uOgveCV3WQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+    <packagedElement xmi:type="uml:CommunicationPath" xmi:id="_aRjyoKRLEeC9uOgveCV3WQ" name="Hardware de rede" memberEnd="_aRjyoaRLEeC9uOgveCV3WQ _aRjypKRLEeC9uOgveCV3WQ">
+      <ownedEnd xmi:id="_aRjyoaRLEeC9uOgveCV3WQ" name="source" type="_30HY8KRIEeC9uOgveCV3WQ" association="_aRjyoKRLEeC9uOgveCV3WQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_aRjyoqRLEeC9uOgveCV3WQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_aRjyo6RLEeC9uOgveCV3WQ" value="1"/>
+      </ownedEnd>
+      <ownedEnd xmi:id="_aRjypKRLEeC9uOgveCV3WQ" name="target" type="_LQDfIKRHEeC9uOgveCV3WQ" association="_aRjyoKRLEeC9uOgveCV3WQ">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_aRjypaRLEeC9uOgveCV3WQ" value="1"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_aRjypqRLEeC9uOgveCV3WQ" value="1"/>
+      </ownedEnd>
+    </packagedElement>
+  </packagedElement>
+</uml:Model>

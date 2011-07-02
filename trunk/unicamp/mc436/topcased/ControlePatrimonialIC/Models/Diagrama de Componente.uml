@@ -406,9 +406,99 @@
             </nestedClassifier>
           </packagedElement>
         </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_lovVAKRFEeC9uOgveCV3WQ" name="Package1"/>
       </nestedClassifier>
       <nestedClassifier xmi:type="uml:Component" xmi:id="_xVoX4KKuEeC3vv9jNiwkuA" name="controle-patrimonio-ic-web" clientDependency="_iWtsEKKvEeC3vv9jNiwkuA _4AKnEKN7EeCZa7fb0lzPNQ _6_uIcKN7EeCZa7fb0lzPNQ">
-        <packagedElement xmi:type="uml:Package" xmi:id="_0IlhcKOPEeCBTYScmpynJw" name="br.unicamp.ic.controle_patrimonio.web.controller"/>
+        <packagedElement xmi:type="uml:Package" xmi:id="_0IlhcKOPEeCBTYScmpynJw" name="br.unicamp.ic.controle_patrimonio.web.controller">
+          <packagedElement xmi:type="uml:Class" xmi:id="_SXD64KRDEeC9uOgveCV3WQ" name="UsuarioController">
+            <ownedAttribute xmi:id="_SXD64aRDEeC9uOgveCV3WQ" name="usuarioService" visibility="private"/>
+            <ownedAttribute xmi:id="_SXD64qRDEeC9uOgveCV3WQ" name="permissaoAcessoService" visibility="private"/>
+            <ownedOperation xmi:id="_SXD646RDEeC9uOgveCV3WQ" name="pesquisarUsuario"/>
+            <ownedOperation xmi:id="_SXD65KRDEeC9uOgveCV3WQ" name="preIncluirUsuario"/>
+            <ownedOperation xmi:id="_SXD65aRDEeC9uOgveCV3WQ" name="salvarUsuario"/>
+            <ownedOperation xmi:id="_SXD65qRDEeC9uOgveCV3WQ" name="preAlterarUsuario"/>
+            <ownedOperation xmi:id="_SXD656RDEeC9uOgveCV3WQ" name="alterarUsuario"/>
+            <ownedOperation xmi:id="_SXD66KRDEeC9uOgveCV3WQ" name="prePesquisar"/>
+            <ownedOperation xmi:id="_SXD66aRDEeC9uOgveCV3WQ" name="setUsuarioService"/>
+            <ownedOperation xmi:id="_SXD66qRDEeC9uOgveCV3WQ" name="setPermissaoAcessoService"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_TlxwwKRDEeC9uOgveCV3WQ" name="LoginController">
+            <ownedAttribute xmi:id="_TlxwwaRDEeC9uOgveCV3WQ" name="usuarioService" visibility="private"/>
+            <ownedAttribute xmi:id="_TlxwwqRDEeC9uOgveCV3WQ" name="permissaoAcessoService" visibility="private"/>
+            <ownedOperation xmi:id="_Tlxww6RDEeC9uOgveCV3WQ" name="preLogin"/>
+            <ownedOperation xmi:id="_TlxwxKRDEeC9uOgveCV3WQ" name="executarLogin"/>
+            <ownedOperation xmi:id="_TlxwxaRDEeC9uOgveCV3WQ" name="executarLogout"/>
+            <ownedOperation xmi:id="_TlxwxqRDEeC9uOgveCV3WQ" name="montarMenu"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_VVdlsKRDEeC9uOgveCV3WQ" name="TratarNotificacaoController">
+            <ownedAttribute xmi:id="_VVdlsaRDEeC9uOgveCV3WQ" name="notificacaoService" visibility="private"/>
+            <ownedAttribute xmi:id="_VVdlsqRDEeC9uOgveCV3WQ" name="patrimonioService" visibility="private"/>
+            <ownedOperation xmi:id="_VVdls6RDEeC9uOgveCV3WQ" name="prePesquisarNotificacao"/>
+            <ownedOperation xmi:id="_VVdltKRDEeC9uOgveCV3WQ" name="iniciarVerificacao"/>
+            <ownedOperation xmi:id="_VVdltaRDEeC9uOgveCV3WQ" name="concluirNotificacao"/>
+            <ownedOperation xmi:id="_VVdltqRDEeC9uOgveCV3WQ" name="cancelarVerificacao"/>
+            <ownedOperation xmi:id="_VVdlt6RDEeC9uOgveCV3WQ" name="pesquisarNotificacao"/>
+            <ownedOperation xmi:id="_VVdluKRDEeC9uOgveCV3WQ" name="pesquisarNotificacaoPorFiltro"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_XH1iQKRDEeC9uOgveCV3WQ" name="RelatorioController">
+            <ownedAttribute xmi:id="_XH1iQaRDEeC9uOgveCV3WQ" name="relatorioService" visibility="private"/>
+            <ownedOperation xmi:id="_XH1iQqRDEeC9uOgveCV3WQ" name="gerarRelatorioPatrimonioPorArea"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_YjQ-cKRDEeC9uOgveCV3WQ" name="PatrimonioController">
+            <ownedAttribute xmi:id="_YjQ-caRDEeC9uOgveCV3WQ" name="permissaoAcessoService" visibility="private"/>
+            <ownedAttribute xmi:id="_YjQ-cqRDEeC9uOgveCV3WQ" name="patrimonioService" visibility="private"/>
+            <ownedAttribute xmi:id="_YjQ-c6RDEeC9uOgveCV3WQ" name="usuarioService" visibility="private"/>
+            <ownedAttribute xmi:id="_YjQ-dKRDEeC9uOgveCV3WQ" name="relatorioService" visibility="private"/>
+            <ownedAttribute xmi:id="_YjQ-daRDEeC9uOgveCV3WQ" name="areaService" visibility="private"/>
+            <ownedAttribute xmi:id="_YjQ-dqRDEeC9uOgveCV3WQ" name="notificacaoService" visibility="private"/>
+            <ownedOperation xmi:id="_YjQ-d6RDEeC9uOgveCV3WQ" name="preConsultarPatrimonio"/>
+            <ownedOperation xmi:id="_YjQ-eKRDEeC9uOgveCV3WQ" name="pesquisarPatrimonioPorFiltro"/>
+            <ownedOperation xmi:id="_YjQ-eaRDEeC9uOgveCV3WQ" name="preAlterarPatrimonio"/>
+            <ownedOperation xmi:id="_YjQ-eqRDEeC9uOgveCV3WQ" name="alterarPatrimonio"/>
+            <ownedOperation xmi:id="_YjQ-e6RDEeC9uOgveCV3WQ" name="cancelarAlteracao"/>
+            <ownedOperation xmi:id="_YjQ-fKRDEeC9uOgveCV3WQ" name="incluirPatrimonio"/>
+            <ownedOperation xmi:id="_YjQ-faRDEeC9uOgveCV3WQ" name="cancelarInclusao"/>
+            <ownedOperation xmi:id="_YjQ-fqRDEeC9uOgveCV3WQ" name="pesquisarUsuario"/>
+            <ownedOperation xmi:id="_YjQ-f6RDEeC9uOgveCV3WQ" name="setarLocalizacao"/>
+            <ownedOperation xmi:id="_YjQ-gKRDEeC9uOgveCV3WQ" name="gerarRelatorio"/>
+            <ownedOperation xmi:id="_YjQ-gaRDEeC9uOgveCV3WQ" name="inativarItemPatrimonio"/>
+            <ownedOperation xmi:id="_YjQ-gqRDEeC9uOgveCV3WQ" name="pesquisarArea"/>
+            <ownedOperation xmi:id="_YjQ-g6RDEeC9uOgveCV3WQ" name="gerarNotificacao"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_iLpN8KRDEeC9uOgveCV3WQ" name="RelatorioController">
+            <ownedAttribute xmi:id="_iLpN8aRDEeC9uOgveCV3WQ" name="relatorioService" visibility="private"/>
+            <ownedOperation xmi:id="_iLpN8qRDEeC9uOgveCV3WQ" name="gerarRelatorioPatrimonioPorArea"/>
+          </packagedElement>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_qdXhoKRFEeC9uOgveCV3WQ" name="br.unicamp.ic.controle_patrimonio.web.controller.service.facade">
+          <ownedComment xmi:id="_lAIncKRGEeC9uOgveCV3WQ">
+            <body>Facade com os serviços disponiveis para a camada de web&#xD;
+</body>
+          </ownedComment>
+          <packagedElement xmi:type="uml:Class" xmi:id="_uyz34KRFEeC9uOgveCV3WQ" name="ControlePatrimonioServiceFacade" clientDependency="_j3QT0KRGEeC9uOgveCV3WQ">
+            <ownedAttribute xmi:id="_b6AJYKRGEeC9uOgveCV3WQ" name="usurioService" type="_UE42EKN8EeCZa7fb0lzPNQ"/>
+            <ownedAttribute xmi:id="_dMVT8KRGEeC9uOgveCV3WQ" name="patrimonioService" type="_kdT2AKN8EeCZa7fb0lzPNQ"/>
+            <ownedAttribute xmi:id="_eeuv8KRGEeC9uOgveCV3WQ" name="areaService" type="_sgzyYKN8EeCZa7fb0lzPNQ"/>
+            <ownedAttribute xmi:id="_fR2O8KRGEeC9uOgveCV3WQ" name="permissaoAcessoService" type="_0sL4YKN8EeCZa7fb0lzPNQ"/>
+            <ownedAttribute xmi:id="_hF4_cKRGEeC9uOgveCV3WQ" name="notificacaoService" type="_xN8P4KN8EeCZa7fb0lzPNQ"/>
+            <interfaceRealization xmi:id="_j3QT0KRGEeC9uOgveCV3WQ" name="InterfaceRealization1" supplier="_zss_AKRFEeC9uOgveCV3WQ" client="_uyz34KRFEeC9uOgveCV3WQ" contract="_zss_AKRFEeC9uOgveCV3WQ"/>
+            <ownedOperation xmi:id="_Cb9BsKRGEeC9uOgveCV3WQ" name="obterUsuarioService"/>
+            <ownedOperation xmi:id="_XRTf8KRGEeC9uOgveCV3WQ" name="Operation1"/>
+            <ownedOperation xmi:id="_ZtLsgKRGEeC9uOgveCV3WQ" name="obterUsuarioService"/>
+            <ownedOperation xmi:id="_ZtLsgaRGEeC9uOgveCV3WQ" name="obterNotificacaoService"/>
+            <ownedOperation xmi:id="_ZtLsgqRGEeC9uOgveCV3WQ" name="obterPermissaoAcessoService"/>
+            <ownedOperation xmi:id="_ZtLsg6RGEeC9uOgveCV3WQ" name="obterAreaService"/>
+            <ownedOperation xmi:id="_ZtLshKRGEeC9uOgveCV3WQ" name="obterPatrimonioService"/>
+            <ownedOperation xmi:id="_bBLD8KRGEeC9uOgveCV3WQ" name="Operation2"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_zss_AKRFEeC9uOgveCV3WQ" name="IControlePatrimonioServiceFacade">
+            <ownedOperation xmi:id="_3TeRYKRFEeC9uOgveCV3WQ" name="obterUsuarioService"/>
+            <ownedOperation xmi:id="_6eCv8KRFEeC9uOgveCV3WQ" name="obterPatrimonioService"/>
+            <ownedOperation xmi:id="_8SUJ8KRFEeC9uOgveCV3WQ" name="obterAreaService"/>
+            <ownedOperation xmi:id="_9RtxcKRFEeC9uOgveCV3WQ" name="obterPermissaoAcessoService"/>
+            <ownedOperation xmi:id="_EK6d4KRGEeC9uOgveCV3WQ" name="obterNotificacaoService"/>
+          </packagedElement>
+        </packagedElement>
       </nestedClassifier>
       <nestedClassifier xmi:type="uml:Component" xmi:id="_zHU_AKKuEeC3vv9jNiwkuA" name="controle-patrimonio-ic-service" clientDependency="_YvQ0MKKwEeC3vv9jNiwkuA _Glht8KN8EeCZa7fb0lzPNQ __HZysKN_EeCZa7fb0lzPNQ">
         <packagedElement xmi:type="uml:Package" xmi:id="_YlPRQKN7EeCZa7fb0lzPNQ" name="br.unicamp.ic.controle_patrimonio.services.impl">
@@ -429,6 +519,35 @@
             <ownedOperation xmi:id="_PenjoqN-EeCZa7fb0lzPNQ" name="verificarAlarmeAtivo" visibility="private"/>
             <ownedOperation xmi:id="_Penjo6N-EeCZa7fb0lzPNQ" name="acionarAlarme"/>
           </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_cnXX8KRBEeC9uOgveCV3WQ" name="PatrimonioService">
+            <ownedAttribute xmi:id="_hx7_YKRBEeC9uOgveCV3WQ" name="patrimonioDao" visibility="private"/>
+            <ownedOperation xmi:id="_3pZa4KRBEeC9uOgveCV3WQ" name="incluirPatrimonio"/>
+            <ownedOperation xmi:id="_4l1N8KRBEeC9uOgveCV3WQ" name="alterarPatrimonio"/>
+            <ownedOperation xmi:id="_6tA84KRBEeC9uOgveCV3WQ" name="consultarPatrimonioPorId"/>
+            <ownedOperation xmi:id="_8PhRcKRBEeC9uOgveCV3WQ" name="consultarPatrimonioPorResponsavel"/>
+            <ownedOperation xmi:id="_A41l8KRCEeC9uOgveCV3WQ" name="alterarLocalizacaoPatrimonio"/>
+            <ownedOperation xmi:id="_EI0I8KRCEeC9uOgveCV3WQ" name="consultarPatrimonioPorFiltro"/>
+            <ownedOperation xmi:id="_G8VZcKRCEeC9uOgveCV3WQ" name="bloquearSaidaPatrimonio"/>
+            <ownedOperation xmi:id="_Ia3M8KRCEeC9uOgveCV3WQ" name="liberarSaidaPatrimonio"/>
+            <ownedOperation xmi:id="_Y3kP8KRCEeC9uOgveCV3WQ" name="consultarPatrimonioPorRfid"/>
+            <ownedOperation xmi:id="_gULLcKRCEeC9uOgveCV3WQ" name="registrarAdquiridoOrgaoFomento"/>
+            <ownedOperation xmi:id="_mRkW8KRCEeC9uOgveCV3WQ" name="consultarPorPid"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_qJsfEKRCEeC9uOgveCV3WQ" name="PermissaoAcessoService">
+            <ownedAttribute xmi:id="_slKb8KRCEeC9uOgveCV3WQ" name="usuarioDao" visibility="private"/>
+            <ownedAttribute xmi:id="_ur-XcKRCEeC9uOgveCV3WQ" name="perfilDao" visibility="private"/>
+            <ownedAttribute xmi:id="_yXHMcKRCEeC9uOgveCV3WQ" name="funcionalidadeDao" visibility="private"/>
+            <ownedOperation xmi:id="_uTQVcKRCEeC9uOgveCV3WQ" name="verificarPermissao"/>
+            <ownedOperation xmi:id="_yEfycKRCEeC9uOgveCV3WQ" name="executarLogin"/>
+            <ownedOperation xmi:id="_34a44KRCEeC9uOgveCV3WQ" name="consultarFuncionalidadePorPerfil"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_D1GGQKRDEeC9uOgveCV3WQ" name="Class1"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="_nga6QKRDEeC9uOgveCV3WQ" name="RelatorioService">
+            <ownedAttribute xmi:id="_sFkgcKRDEeC9uOgveCV3WQ" name="patrimonioService" visibility="private"/>
+            <ownedOperation xmi:id="_3JWW8KRDEeC9uOgveCV3WQ" name="gerarRelatorioPatrimonioPorResponsavel"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_7gIJ8KRDEeC9uOgveCV3WQ" name="AreaService"/>
+          <packagedElement xmi:type="uml:Class" xmi:id="__NS_QKRDEeC9uOgveCV3WQ" name="NotificacaoService"/>
         </packagedElement>
         <packagedElement xmi:type="uml:Package" xmi:id="_XFRzAKN-EeCZa7fb0lzPNQ" name="br.unicamp.ic.controle_patrimonio.services.dao">
           <packagedElement xmi:type="uml:Interface" xmi:id="_iGy_sKN-EeCZa7fb0lzPNQ" name="IUsuarioDAO">
@@ -441,7 +560,7 @@
       </nestedClassifier>
       <nestedClassifier xmi:type="uml:Component" xmi:id="_bGOhAKKvEeC3vv9jNiwkuA" name="controle-patrimonio-ic-sensores" clientDependency="_ayyyMKKwEeC3vv9jNiwkuA _cJh7oKKwEeC3vv9jNiwkuA _D4m0sKN8EeCZa7fb0lzPNQ"/>
       <nestedClassifier xmi:type="uml:Component" xmi:id="_n0lMcKN_EeCZa7fb0lzPNQ" name="controle-patrimonio-ic-persistence">
-        <packagedElement xmi:type="uml:Package" xmi:id="_mR_tcKOBEeCZa7fb0lzPNQ" name="br.unicamp.ic.controle_patrimonio.services.dao">
+        <packagedElement xmi:type="uml:Package" xmi:id="_mR_tcKOBEeCZa7fb0lzPNQ" name="br.unicamp.ic.controle_patrimonio.persistence.dao">
           <packagedElement xmi:type="uml:Interface" xmi:id="_mR_tcaOBEeCZa7fb0lzPNQ" name="IUsuarioDAO">
             <ownedOperation xmi:id="_mR_tcqOBEeCZa7fb0lzPNQ" name="create"/>
             <ownedOperation xmi:id="_mR_tc6OBEeCZa7fb0lzPNQ" name="update"/>
@@ -464,16 +583,103 @@
             <ownedOperation xmi:id="_J6TpsKOCEeCZa7fb0lzPNQ" name="findAll"/>
             <ownedOperation xmi:id="_OQUAoKOCEeCZa7fb0lzPNQ" name="findById"/>
           </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_Jq60sKREEeC9uOgveCV3WQ" name="Interface1"/>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_LOanwKREEeC9uOgveCV3WQ" name="IAreaDAO">
+            <ownedOperation xmi:id="_LOanwaREEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_LOanwqREEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_LOanw6REEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_LOanxKREEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_LOanxaREEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_NTgE8KREEeC9uOgveCV3WQ" name="IFuncionalidadeDAO">
+            <ownedOperation xmi:id="_NTgE8aREEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_NTgE8qREEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_NTgE86REEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_NTgE9KREEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_NTgE9aREEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_PsadEKREEeC9uOgveCV3WQ" name="IPerfilDAO">
+            <ownedOperation xmi:id="_PsadEaREEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_PsadEqREEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_PsadE6REEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_PsadFKREEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_PsadFaREEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_R1-KkKREEeC9uOgveCV3WQ" name="ILocalizacaoDAO">
+            <ownedOperation xmi:id="_R1-KkaREEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_R1-KkqREEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_R1-Kk6REEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_R1-KlKREEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_R1-KlaREEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Interface" xmi:id="_VC29UKREEeC9uOgveCV3WQ" name="ICategoriaDAO">
+            <ownedOperation xmi:id="_VC29UaREEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_VC29UqREEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_VC29U6REEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_VC29VKREEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_VC29VaREEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
         </packagedElement>
-        <packagedElement xmi:type="uml:Package" xmi:id="_mR_tdaOBEeCZa7fb0lzPNQ" name="br.unicamp.ic.controle_patrimonio.services.dao.impl">
+        <packagedElement xmi:type="uml:Package" xmi:id="_mR_tdaOBEeCZa7fb0lzPNQ" name="br.unicamp.ic.controle_patrimonio.persistence.dao.impl">
           <packagedElement xmi:type="uml:Class" xmi:id="_SP5boKOCEeCZa7fb0lzPNQ" name="UsuarioDAOImpl">
             <ownedOperation xmi:id="_ZPvioKOCEeCZa7fb0lzPNQ" name="create"/>
             <ownedOperation xmi:id="_aFEoIKOCEeCZa7fb0lzPNQ" name="update"/>
             <ownedOperation xmi:id="_awx3kKOCEeCZa7fb0lzPNQ" name="delete"/>
             <ownedOperation xmi:id="_bbb-IKOCEeCZa7fb0lzPNQ" name="findAll"/>
             <ownedOperation xmi:id="_cadLIKOCEeCZa7fb0lzPNQ" name="findById"/>
+            <ownedOperation xmi:id="_bV2v8KRFEeC9uOgveCV3WQ" name="findByEmailSenha"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_oCoaAKREEeC9uOgveCV3WQ" name="PatrimonioDAOImpl">
+            <ownedOperation xmi:id="_oCoaAaREEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_oCoaAqREEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_oCoaA6REEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_oCoaBKREEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_oCoaBaREEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_pmv4IKREEeC9uOgveCV3WQ" name="AreaDAOImpl">
+            <ownedOperation xmi:id="_pmv4IaREEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_pmv4IqREEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_pmv4I6REEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_pmv4JKREEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_pmv4JaREEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_quKzMKREEeC9uOgveCV3WQ" name="DepartamentoDAOImpl">
+            <ownedOperation xmi:id="_quKzMaREEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_quKzMqREEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_quKzM6REEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_quKzNKREEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_quKzNaREEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_r8XEoKREEeC9uOgveCV3WQ" name="PerfilDAOImpl">
+            <ownedOperation xmi:id="_r8XEoaREEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_r8XEoqREEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_r8XEo6REEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_r8XEpKREEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_r8XEpaREEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_uLvtUKREEeC9uOgveCV3WQ" name="NotificacaoDAOImpl">
+            <ownedOperation xmi:id="_uLvtUaREEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_uLvtUqREEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_uLvtU6REEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_uLvtVKREEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_uLvtVaREEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_vuVhcKREEeC9uOgveCV3WQ" name="CategoriaDAOImpl">
+            <ownedOperation xmi:id="_vuVhcaREEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_vuVhcqREEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_vuVhc6REEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_vuVhdKREEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_vuVhdaREEeC9uOgveCV3WQ" name="findById"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_xyRIEKREEeC9uOgveCV3WQ" name="LocalizacaoDAOImpl">
+            <ownedOperation xmi:id="_xyRIEaREEeC9uOgveCV3WQ" name="create"/>
+            <ownedOperation xmi:id="_xyRIEqREEeC9uOgveCV3WQ" name="update"/>
+            <ownedOperation xmi:id="_xyRIE6REEeC9uOgveCV3WQ" name="delete"/>
+            <ownedOperation xmi:id="_xyRIFKREEeC9uOgveCV3WQ" name="findAll"/>
+            <ownedOperation xmi:id="_xyRIFaREEeC9uOgveCV3WQ" name="findById"/>
           </packagedElement>
         </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_59e2AKREEeC9uOgveCV3WQ" name="br.unicmap.ic.controle_patrimonio.persistence.dao.orm"/>
       </nestedClassifier>
       <packagedElement xmi:type="uml:Dependency" xmi:id="_iWtsEKKvEeC3vv9jNiwkuA" name="Dependency1" supplier="_k1ROoKKuEeC3vv9jNiwkuA" client="_xVoX4KKuEeC3vv9jNiwkuA"/>
       <packagedElement xmi:type="uml:Dependency" xmi:id="_YU8PsKKwEeC3vv9jNiwkuA" name="" supplier="_xVoX4KKuEeC3vv9jNiwkuA" client="_k1ROoKKuEeC3vv9jNiwkuA"/>
