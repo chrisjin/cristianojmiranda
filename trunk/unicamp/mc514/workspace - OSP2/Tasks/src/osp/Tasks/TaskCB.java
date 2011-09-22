@@ -70,6 +70,9 @@ public class TaskCB extends IflTaskCB {
 	public static void init() {
 		// your code goes here
 
+		// This method is called at the very beginning of simulation and can be
+		// used to initialize static variables of the class, if necessary.
+
 	}
 
 	/**
@@ -88,32 +91,36 @@ public class TaskCB extends IflTaskCB {
 
 		// allocation of resources to the task, and various initializations
 
-		// Create a new page
+		System.out.println("Create a new page");
 		task.setPageTable(new PageTable(task));
 
-		// Set creation time
+		System.out.println("Set creation time");
 		task.setCreationTime(HClock.get());
 		System.out.println("Creation time: " + task.getCreationTime());
 
-		// Set task status
+		System.out.println("Set task status");
 		task.setStatus(TaskLive);
 		System.out.println("Status: " + TaskLive);
 
-		// Generate swap file Name
+		System.out.println("Generate swap file Name");
 		String swapFileName = generateSwapFileName(task);
 
 		try {
 
-			// Create swap file
+			System.out.println("Create swap file");
 			FileSys.create(swapFileName, MMU.getVirtualAddressBits());
 
-			// Set swap file
+			System.out.println("Attach swap file to task");
 			task.setSwapFile(OpenFile.open(swapFileName, task));
 
 		} catch (Exception e) {
+			System.out.println("Exception occurs: ");
 			e.printStackTrace();
 			task = null;
 		}
+
+		System.out.println("Creating first thread for task");
+		create(task);
 
 		// Return task instance
 		return task;
@@ -181,6 +188,7 @@ public class TaskCB extends IflTaskCB {
 	 */
 	public int do_getThreadCount() {
 
+		System.out.println("Getting thread size: " + this.threadList.size());
 		return this.threadList.size();
 
 	}
@@ -317,13 +325,18 @@ public class TaskCB extends IflTaskCB {
 
 	public final static void dispatch() {
 
-		//instance.do_addThread(new ThreadCB());
-
 	}
 
 	public final static ThreadCB create(TaskCB task) {
 
-		ThreadCB thread = new ThreadCB();
+		System.out.println("Creating thread for task " + task.getID());
+		ThreadCB thread = null;
+		if (task != null) {
+			thread = ThreadCB.create(task);
+			task.do_addThread(thread);
+		}
+
+		dispatch();
 
 		return thread;
 
