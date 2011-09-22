@@ -108,7 +108,15 @@ public class TaskCB extends IflTaskCB {
 		try {
 
 			System.out.println("Create swap file");
-			FileSys.create(swapFileName, MMU.getVirtualAddressBits());
+
+			System.out.println("VirtualAddresBits: "
+					+ MMU.getVirtualAddressBits());
+
+			if (FileSys.create(swapFileName,
+					(int) Math.pow(5.0, MMU.getVirtualAddressBits())) == FAILURE) {
+
+				return null;
+			}
 
 			System.out.println("Attach swap file to task");
 			task.setSwapFile(OpenFile.open(swapFileName, task));
@@ -202,10 +210,13 @@ public class TaskCB extends IflTaskCB {
 	 */
 	public int do_addThread(ThreadCB thread) {
 
+		assert (thread.c9().getID() == this.getID());
+
 		// Verify full list
 		if (this.threadList.size() >= this.MaxThreadsPerTask) {
 			return FAILURE;
 		}
+
 		// Append a new thread
 		this.threadList.add(thread);
 
@@ -308,6 +319,8 @@ public class TaskCB extends IflTaskCB {
 	public static void atError() {
 		// your code goes here
 
+		System.out.println("ERROR Custom !");
+
 	}
 
 	/**
@@ -319,11 +332,13 @@ public class TaskCB extends IflTaskCB {
 	 * @OSPProject Tasks
 	 */
 	public static void atWarning() {
-		// your code goes here
 
+		System.out.println("WARNING Custom !");
 	}
 
 	public final static void dispatch() {
+
+		do_create();
 
 	}
 
@@ -336,7 +351,7 @@ public class TaskCB extends IflTaskCB {
 			task.do_addThread(thread);
 		}
 
-		dispatch();
+		// dispatch();
 
 		return thread;
 

@@ -1,5 +1,5 @@
 Sim: 0 [EventEngine.EventDriver]  
-	Simulation Start Time: Thu Sep 22 20:24:55 BRT 2011
+	Simulation Start Time: Thu Sep 22 20:58:31 BRT 2011
 	Parameter file: Misc\params.osp
 
 	Legend:
@@ -20,176 +20,14 @@ Sim: 0 [IFLModules.ResourceCB]
 Sim: 0 [IFLModules.TaskCB]  
 	Entering create()
 Sim: 0 [IFLModules.FileSys]  
-	Creating file: create(/vm/1,16)
-Mod: 0 [FileSys.FileSys]  
-	Creating file: create(/vm/1,16)
-Mod: 0 [FileSys.FileSys]  
-	New file size 1 blocks
-Mod: 0 [FileSys.FileSys]  
-	Inode(Id(0),Device(0),BlockCount(1),OpenCount(0),LinkCount(1))
-	  File `/vm/1', blocksize=1 created on device 0
+	Creating file: create(/vm/1,2147483647)
 Sim: 0 [IFLModules.FileSys]  
-	System call create(`/vm/1')  succeeded, as expected
-Sim: 0 [IFLModules.OpenFile]  
-	System call open(`/vm/1')
-Sim: 0 [Tasks.TaskCB]  
-	Adding Openfile(0:1/0) to the open files table of Task(1/L)
-Mod: 0 [FileSys.OpenFile]  
-	File `/vm/1' opened 1 times
-Sim: 0 [IFLModules.OpenFile]  
-	File `/vm/1' opened as Openfile(0:1/0)
+	Before do_create(`/vm/1'): No free space left on device 0 -- the call must fail
+Mod: 0 [FileSys.FileSys]  
+	Creating file: create(/vm/1,2147483647)
+Mod: 0 [FileSys.FileSys]  
+	New file size 2097152 blocks
+Mod: 0 [FileSys.FileSys]  
+	Not enough free blocks on device 0
 Sim: 0 [IFLModules.FileSys]  
-	System call open(`/vm/1')  succeeded, as expected
-Sim: 0 [IFLModules.ThreadCB]  
-	Trying to create new thread for Task(1/L)
-Mod: 0 [Threads.ThreadCB]  
-	Created Thread(0:null/NN)
-Mod: 0 [Threads.ThreadCB]  
-	Successfully added Thread(0:1/RD) to Task(1/L)
-Sim: 0 [IFLModules.ThreadCB]  
-	Created new thread Thread(0:1/RD)
-Sim: 0 <<Error!>> [IFLModules.TaskCB]  
-	Task(1/L): Swap file has wrong size: 1 blocks; should be: 64
-	  Reason: a previous FileSys.create() created a file, but miscalculated its size in blocks
-
-	at osp.IFLModules.IflTaskCB.bU(IflTaskCB.java:308)
-	at osp.IFLModules.a4.void(IflTaskCB.java:898)
-	at osp.a.x.b(EventCallback.java:48)
-	at osp.a.u.s(EventDriver.java:124)
-	at osp.a.t.run(EngineThread.java:60)
-
-Sim:0 [Utilities.SnapshotTaker]  
-	
-
-[Snapshot at 0]
-
-MEMORY:
-  Free frames: 30(100%) out of 30
-  Locked frames: 0 out of 30
-  Reserved frames: 0 out of 30
-  Referenced frames: 0 out of 30
-
-Memory map:
-|----------|------------------------------|
-|Frame     |000000000011111111112222222222|
-|number    |012345678901234567890123456789|
-|----------|------------------------------|
-|free      |FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF|
-|lock      |000000000000000000000000000000|
-|reserved  |                              |
-|dirty     |                              |
-|referenced|                              |
-|----------|------------------------------|
-|          |                              |
-|page      |                              |
-|number    |                              |
-|----------|------------------------------|
-|          |                              |
-|owner     |                              |
-|task      |                              |
-|----------|------------------------------|
-
-
-Page table for Task 1:
-  Valid pages: 0 out of 64
-|------|----------------------------------------------------------------|
-|Page  |0000000000111111111122222222223333333333444444444455555555556666|
-|number|0123456789012345678901234567890123456789012345678901234567890123|
-|------|----------------------------------------------------------------|
-|valid |                                                                |
-|------|----------------------------------------------------------------|
-|      |                                                                |
-|frame |                                                                |
-|number|                                                                |
-|------|----------------------------------------------------------------|
-
-
-DEVICES:
-  Device 0: Swap Device   (mount point: /vm/)
-	    Number of pages read = 0
-	    Number of pages written = 0
-	    Average number of cylinders swept per disk access = 0
-	      Total number of cylinders swept = 0
-	    Service time per I/O request: 0
-	    Device queue:  Empty
-  Device 1: Disk   (mount point: /etc/go/)
-	    Number of pages read = 0
-	    Number of pages written = 0
-	    Average number of cylinders swept per disk access = 0
-	      Total number of cylinders swept = 0
-	    Service time per I/O request: 0
-	    Device queue:  Empty
-  Device 2: Disk   (mount point: /etc/)
-	    Number of pages read = 0
-	    Number of pages written = 0
-	    Average number of cylinders swept per disk access = 0
-	      Total number of cylinders swept = 0
-	    Service time per I/O request: 0
-	    Device queue:  Empty
-
-TASKS and THREADS:
-  CPU Utilization: NaN%
-  Average service time per thread: 0.0
-  Average normalized service time per thread: 0.0
-  Total number of tasks: 1
-  Running thread(s): none
-  Threads summary: 1 alive
-  Among live threads: 0 running
-                      0 suspended
-                      1 ready
-  ready queue = (0:1)
-  running thread(s) = ()
-  waiting thread(s) = ()
-  thread(s) in pagefault = ()
-  killed thread(s) = ()
-
-FILES:
-  Total number of files: 0
-  Total number of directories: 3
-  Total number of open files: 0
-  Device 0: 1535 out of 1536 blocks are free, 0.06510615% used
-  Device 1: 40 out of 40 blocks are free, 0.0% used
-  Device 2: 16 out of 16 blocks are free, 0.0% used
-
-
-PORTS:
-  Number of Live Ports: 	0
-  Number of Ports Created: 	0
-  Number of Ports Destroyed: 	0
-  Number of Messages Sent: 	0
-  Number of Messages Received: 	0
-
-
-
-RESOURCES:
-  Total number of acquire() calls: 0
-  Total number of release() calls: 0
-
-    Resource Availability Table
-|---------------|-------------------------|
-|Resource Type  |0    1    2    3    4    |
-|---------------|-------------------------|
-|  Total        |8    8    8    6    9    |
-|---------------|-------------------------|
-|  Available    |8    8    8    6    9    |
-|---------------|-------------------------|
-
-
-
-    Resource Allocation Table
-|------------------|-----------------------------------|
-|Resource Type     |0      1      2      3      4      |
-|------------------|-----------------------------------|
-|------------------|-----------------------------------|
-
-
-
-
-The suspended  RRBs: 
-
-
------------------------------------------------
-
-Sim: 0 [Utilities.Simulation]  
-	Elapsed time: 0 seconds
-
+	System call create(`/vm/1')  failed, as expected
