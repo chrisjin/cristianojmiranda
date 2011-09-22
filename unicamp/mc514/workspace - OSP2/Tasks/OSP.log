@@ -1,5 +1,5 @@
 Sim: 0 [EventEngine.EventDriver]  
-	Simulation Start Time: Thu Sep 15 22:37:57 BRT 2011
+	Simulation Start Time: Thu Sep 22 20:24:55 BRT 2011
 	Parameter file: Misc\params.osp
 
 	Legend:
@@ -40,19 +40,19 @@ Sim: 0 [IFLModules.OpenFile]
 	File `/vm/1' opened as Openfile(0:1/0)
 Sim: 0 [IFLModules.FileSys]  
 	System call open(`/vm/1')  succeeded, as expected
-Sim: 0 <<Warning!>> [IFLModules.ThreadCB]  
-	After do_create(Task(1/L)): dispatch() should have been called
-
-	at osp.IFLModules.a0.O(IflThreadCB.java:577)
-	at osp.IFLModules.IflTaskCB.bU(IflTaskCB.java:252)
-	at osp.IFLModules.a4.void(IflTaskCB.java:898)
-	at osp.a.x.b(EventCallback.java:48)
-	at osp.a.u.s(EventDriver.java:124)
-	at osp.a.t.run(EngineThread.java:60)
+Sim: 0 [IFLModules.ThreadCB]  
+	Trying to create new thread for Task(1/L)
+Mod: 0 [Threads.ThreadCB]  
+	Created Thread(0:null/NN)
+Mod: 0 [Threads.ThreadCB]  
+	Successfully added Thread(0:1/RD) to Task(1/L)
+Sim: 0 [IFLModules.ThreadCB]  
+	Created new thread Thread(0:1/RD)
 Sim: 0 <<Error!>> [IFLModules.TaskCB]  
-	After do_create(Task(1/L)): The total number of threads didn't increase
+	Task(1/L): Swap file has wrong size: 1 blocks; should be: 64
+	  Reason: a previous FileSys.create() created a file, but miscalculated its size in blocks
 
-	at osp.IFLModules.IflTaskCB.bU(IflTaskCB.java:289)
+	at osp.IFLModules.IflTaskCB.bU(IflTaskCB.java:308)
 	at osp.IFLModules.a4.void(IflTaskCB.java:898)
 	at osp.a.x.b(EventCallback.java:48)
 	at osp.a.u.s(EventDriver.java:124)
@@ -129,15 +129,15 @@ DEVICES:
 
 TASKS and THREADS:
   CPU Utilization: NaN%
-  Average service time per thread: NaN
-  Average normalized service time per thread: NaN
+  Average service time per thread: 0.0
+  Average normalized service time per thread: 0.0
   Total number of tasks: 1
   Running thread(s): none
-  Threads summary: 0 alive
+  Threads summary: 1 alive
   Among live threads: 0 running
                       0 suspended
-                      0 ready
-  ready queue = ()
+                      1 ready
+  ready queue = (0:1)
   running thread(s) = ()
   waiting thread(s) = ()
   thread(s) in pagefault = ()
