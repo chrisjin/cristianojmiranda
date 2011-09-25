@@ -39,9 +39,6 @@ public class TaskCB extends IflTaskCB {
 	 */
 	private List<PortCB> portList = null;
 
-	private int MaxThreadsPerTask = 100;
-	private int MaxPortsPerTask = 10;
-
 	/**
 	 * The task constructor. Must have
 	 * 
@@ -58,6 +55,8 @@ public class TaskCB extends IflTaskCB {
 		this.threadList = new ArrayList<ThreadCB>();
 		this.portList = new ArrayList<PortCB>();
 		this.files = new ArrayList<OpenFile>();
+
+		System.out.println("***Create task: " + this);
 
 	}
 
@@ -102,6 +101,8 @@ public class TaskCB extends IflTaskCB {
 		task.setStatus(TaskLive);
 		System.out.println("Status: " + TaskLive);
 
+		task.setPriority(1);
+
 		System.out.println("Generate swap file Name");
 		String swapFileName = generateSwapFileName(task);
 
@@ -112,14 +113,21 @@ public class TaskCB extends IflTaskCB {
 			System.out.println("VirtualAddresBits: "
 					+ MMU.getVirtualAddressBits());
 
-			if (FileSys.create(swapFileName,
-					(int) Math.pow(5.0, MMU.getVirtualAddressBits())) == FAILURE) {
+			if (FileSys.create(swapFileName, 64 * 64 * MMU
+					.getVirtualAddressBits()) == FAILURE) {
 
 				return null;
 			}
 
 			System.out.println("Attach swap file to task");
 			task.setSwapFile(OpenFile.open(swapFileName, task));
+
+			System.out.println("Verify create swap file");
+			if (task.getSwapFile() == null) {
+				ThreadCB.dispatch();
+				task.do_kill();
+				return null;
+			}
 
 		} catch (Exception e) {
 			System.out.println("Exception occurs: ");
@@ -128,7 +136,8 @@ public class TaskCB extends IflTaskCB {
 		}
 
 		System.out.println("Creating first thread for task");
-		create(task);
+		// create(task);
+		ThreadCB.create(task);
 
 		// Return task instance
 		return task;
@@ -153,27 +162,32 @@ public class TaskCB extends IflTaskCB {
 	 */
 	public void do_kill() {
 
-		// Kill threads
-		for (ThreadCB thread : this.threadList) {
-			thread.kill();
-
-			// Remove thread from task
-			this.do_removeThread(thread);
-		}
-
-		// Remove ports
-		for (PortCB port : this.portList) {
-			this.do_removePort(port);
-		}
-
 		// Set status like Term
 		this.setStatus(TaskTerm);
 
-		// Deallocate memory from task page
-		this.getPageTable().deallocateMemory();
+		// Kill threads
+		for (int i = 0; i < this.threadList.size(); i++) {
+
+			System.out.println("Removing thread: " + this.threadList.get(i));
+
+			this.threadList.get(i).kill();
+
+			// Remove thread from task
+			// this.do_removeThread(this.threadList.get(i));
+		}
+
+		System.out.println("Thread already in task: "
+				+ this.do_getThreadCount());
+
+		// Remove ports
+		for (PortCB port : this.portList) {
+			// this.do_removePort(port);
+			port.destroy();
+		}
 
 		for (OpenFile file : this.files) {
-			this.do_removeFile(file);
+			// this.do_removeFile(file);
+			file.close();
 		}
 
 		// Realease swap file
@@ -186,6 +200,11 @@ public class TaskCB extends IflTaskCB {
 		this.threadList = null;
 		this.portList.clear();
 		this.portList = null;
+
+		this.kill();
+
+		System.out.println("Dealocating memory page.");
+		this.getPageTable().deallocateMemory();
 
 	}
 
@@ -210,10 +229,18 @@ public class TaskCB extends IflTaskCB {
 	 */
 	public int do_addThread(ThreadCB thread) {
 
+		System.out.println("Add thread: " + thread + " " + thread.hashCode());
 		assert (thread.c9().getID() == this.getID());
 
 		// Verify full list
-		if (this.threadList.size() >= this.MaxThreadsPerTask) {
+		// this.MaxThreadsPerTask
+		if (this.threadList.size() >= ThreadCB.MaxThreadsPerTask) {
+			System.out.println("Exceeded maxthread per task size");
+			return FAILURE;
+		}
+
+		if (this.threadList.contains(thread)) {
+			System.out.println("Thread already in task");
 			return FAILURE;
 		}
 
@@ -231,12 +258,17 @@ public class TaskCB extends IflTaskCB {
 	 */
 	public int do_removeThread(ThreadCB thread) {
 
+		System.out.println("Removing thread: " + thread);
+
 		if (!this.threadList.contains(thread)) {
 			return FAILURE;
 		}
 
-		this.threadList.remove(thread);
-		return SUCCESS;
+		if (this.threadList.remove(thread)) {
+			return SUCCESS;
+		}
+
+		return FAILURE;
 
 	}
 
@@ -256,7 +288,7 @@ public class TaskCB extends IflTaskCB {
 	 */
 	public int do_addPort(PortCB newPort) {
 
-		if (this.portList.size() >= MaxPortsPerTask) {
+		if (this.portList.size() >= PortCB.MaxPortsPerTask) {
 			return FAILURE;
 		}
 		this.portList.add(newPort);
@@ -338,7 +370,7 @@ public class TaskCB extends IflTaskCB {
 
 	public final static void dispatch() {
 
-		do_create();
+		// do_create();
 
 	}
 
@@ -346,13 +378,13 @@ public class TaskCB extends IflTaskCB {
 
 		System.out.println("Creating thread for task " + task.getID());
 		ThreadCB thread = null;
-		if (task != null) {
-			thread = ThreadCB.create(task);
-			task.do_addThread(thread);
-		}
+		/*
+		 * if (task != null) { thread = ThreadCB.create(task);
+		 * System.out.println("Creating first thread: " + thread);
+		 * task.do_addThread(thread); }
+		 */
 
 		// dispatch();
-
 		return thread;
 
 	}
