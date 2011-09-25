@@ -197,6 +197,12 @@ public class TaskCB extends IflTaskCB {
 		System.out.println("Deleting swap file: " + generateSwapFileName(this));
 		FileSys.delete(generateSwapFileName(this));
 
+		
+		/*System.out.println("Clean lists");
+		this.portList.clear();
+		this.threadList.clear();
+		this.files.clear();*/
+
 	}
 
 	/**
