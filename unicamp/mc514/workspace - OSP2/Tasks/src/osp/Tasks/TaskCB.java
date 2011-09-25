@@ -13,6 +13,7 @@ import osp.Ports.PortCB;
 import osp.Threads.ThreadCB;
 
 /**
+ * 
  * The student module dealing with the creation and killing of tasks. A task
  * acts primarily as a container for threads and as a holder of resources.
  * Execution is associated entirely with threads. The primary methods that the
@@ -20,6 +21,7 @@ import osp.Threads.ThreadCB;
  * can choose how to keep track of which threads are part of a task. In this
  * implementation, an array is used.
  * 
+ * @author - Cristiano J. Miranda ra: 083382
  * @OSPProject Tasks
  */
 public class TaskCB extends IflTaskCB {
@@ -50,13 +52,12 @@ public class TaskCB extends IflTaskCB {
 	 */
 	public TaskCB() {
 
-		// your code goes here
 		super();
 		this.threadList = new ArrayList<ThreadCB>();
 		this.portList = new ArrayList<PortCB>();
 		this.files = new ArrayList<OpenFile>();
 
-		System.out.println("***Create task: " + this);
+		System.out.println("Creating task: " + this);
 
 	}
 
@@ -67,11 +68,7 @@ public class TaskCB extends IflTaskCB {
 	 * @OSPProject Tasks
 	 */
 	public static void init() {
-		// your code goes here
-
-		// This method is called at the very beginning of simulation and can be
-		// used to initialize static variables of the class, if necessary.
-
+		System.out.println("Running init...");
 	}
 
 	/**
@@ -87,8 +84,6 @@ public class TaskCB extends IflTaskCB {
 	static public TaskCB do_create() {
 
 		TaskCB task = new TaskCB();
-
-		// allocation of resources to the task, and various initializations
 
 		System.out.println("Create a new page");
 		task.setPageTable(new PageTable(task));
@@ -124,6 +119,9 @@ public class TaskCB extends IflTaskCB {
 
 			System.out.println("Verify create swap file");
 			if (task.getSwapFile() == null) {
+
+				System.out.println("Erro!");
+
 				ThreadCB.dispatch();
 				task.do_kill();
 				return null;
@@ -136,7 +134,6 @@ public class TaskCB extends IflTaskCB {
 		}
 
 		System.out.println("Creating first thread for task");
-		// create(task);
 		ThreadCB.create(task);
 
 		// Return task instance
@@ -144,6 +141,12 @@ public class TaskCB extends IflTaskCB {
 
 	}
 
+	/**
+	 * Generate swap file name.
+	 * 
+	 * @param task
+	 * @return
+	 */
 	private static String generateSwapFileName(TaskCB task) {
 		// Create swap file name
 		String swapFileName = SwapDeviceMountPoint
@@ -162,49 +165,37 @@ public class TaskCB extends IflTaskCB {
 	 */
 	public void do_kill() {
 
-		// Set status like Term
-		this.setStatus(TaskTerm);
-
-		// Kill threads
-		for (int i = 0; i < this.threadList.size(); i++) {
-
+		System.out.println("Kill threads");
+		int i = this.threadList.size() - 1;
+		while (!this.threadList.isEmpty()) {
 			System.out.println("Removing thread: " + this.threadList.get(i));
-
-			this.threadList.get(i).kill();
-
-			// Remove thread from task
-			// this.do_removeThread(this.threadList.get(i));
+			this.threadList.get(i--).kill();
 		}
 
 		System.out.println("Thread already in task: "
 				+ this.do_getThreadCount());
 
-		// Remove ports
-		for (PortCB port : this.portList) {
-			// this.do_removePort(port);
-			port.destroy();
+		System.out.println("Remove ports");
+		i = this.portList.size() - 1;
+		while (!this.portList.isEmpty()) {
+			this.portList.get(i--).destroy();
 		}
 
-		for (OpenFile file : this.files) {
-			// this.do_removeFile(file);
-			file.close();
+		System.out.println("Remove files");
+		i = this.files.size() - 1;
+		while (i >= 0) {
+			this.files.get(i).close();
+			i--;
 		}
 
-		// Realease swap file
-		this.getSwapFile().close();
-		this.do_removeFile(getSwapFile());
-		FileSys.delete(generateSwapFileName(this));
-
-		// Clear lists
-		this.threadList.clear();
-		this.threadList = null;
-		this.portList.clear();
-		this.portList = null;
-
-		this.kill();
+		System.out.println("Set status like Term");
+		this.setStatus(TaskTerm);
 
 		System.out.println("Dealocating memory page.");
 		this.getPageTable().deallocateMemory();
+
+		System.out.println("Deleting swap file: " + generateSwapFileName(this));
+		FileSys.delete(generateSwapFileName(this));
 
 	}
 
@@ -232,8 +223,7 @@ public class TaskCB extends IflTaskCB {
 		System.out.println("Add thread: " + thread + " " + thread.hashCode());
 		assert (thread.c9().getID() == this.getID());
 
-		// Verify full list
-		// this.MaxThreadsPerTask
+		System.out.println(" Verify full list");
 		if (this.threadList.size() >= ThreadCB.MaxThreadsPerTask) {
 			System.out.println("Exceeded maxthread per task size");
 			return FAILURE;
@@ -330,13 +320,16 @@ public class TaskCB extends IflTaskCB {
 	 */
 	public int do_removeFile(OpenFile file) {
 
+		System.out.println("Removing file: " + file);
 		if (!this.files.contains(file)) {
 			return FAILURE;
 		}
 
-		this.files.remove(file);
+		if (this.files.remove(file)) {
+			return SUCCESS;
+		}
 
-		return SUCCESS;
+		return FAILURE;
 
 	}
 
@@ -349,7 +342,6 @@ public class TaskCB extends IflTaskCB {
 	 * @OSPProject Tasks
 	 */
 	public static void atError() {
-		// your code goes here
 
 		System.out.println("ERROR Custom !");
 
@@ -370,23 +362,25 @@ public class TaskCB extends IflTaskCB {
 
 	public final static void dispatch() {
 
-		// do_create();
+		System.out.println("Running dispatch...");
 
 	}
 
-	public final static ThreadCB create(TaskCB task) {
+	@Override
+	public String toString() {
 
-		System.out.println("Creating thread for task " + task.getID());
-		ThreadCB thread = null;
-		/*
-		 * if (task != null) { thread = ThreadCB.create(task);
-		 * System.out.println("Creating first thread: " + thread);
-		 * task.do_addThread(thread); }
-		 */
+		StringBuffer buff = new StringBuffer();
+		buff.append("Task[id=");
+		buff.append(this.getID());
+		buff.append(", threads=");
+		buff.append(this.threadList.size());
+		buff.append(", ports=");
+		buff.append(this.portList.size());
+		buff.append(", files=");
+		buff.append(this.files.size());
+		buff.append("]");
 
-		// dispatch();
-		return thread;
-
+		return buff.toString();
 	}
 
 	/*
