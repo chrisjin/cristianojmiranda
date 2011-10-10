@@ -21,6 +21,7 @@ public class TimerInterruptHandler extends IflTimerInterruptHandler {
 		System.out.println("handleInterrupt!");
 		System.out.println("----------------\n");
 
+		//HTimer.set(1);
 		ThreadCB.dispatch();
 	}
 
