@@ -1,7 +1,10 @@
 package osp.Threads;
 
+import java.util.PriorityQueue;
 import java.util.Vector;
 import java.util.Enumeration;
+import java.util.concurrent.PriorityBlockingQueue;
+
 import osp.Utilities.*;
 import osp.IFLModules.*;
 import osp.Tasks.*;
@@ -58,9 +61,32 @@ public class ThreadCB extends IflThreadCB {
 	 * @return thread or null
 	 * @OSPProject Threads
 	 */
-	static public ThreadCB do_create(TaskCB task) {
-		// your code goes here
-		return null;
+	public static ThreadCB do_create(TaskCB task) {
+
+		System.out.println("Criando uma thread...");
+		ThreadCB thread = new ThreadCB();
+
+		System.out.println("Relacionando a thread á task...");
+		if (task.addThread(thread) == FAILURE) {
+
+			System.out
+					.println("Excedeu o numero de threads por task, operação não pode ser realizada.");
+			return null;
+		}
+
+		System.out.println("Relacionando a task á thread...");
+		thread.setTask(task);
+
+		System.out.println("Setando prioridade a thread...");
+		thread.setPriority(1);
+
+		System.out.println("Setando status da thread para Ready...");
+		thread.setStatus(ThreadReady);
+
+		// TODO: deve ser colocada na fila de ready ?
+
+		System.out.println("Retonando a thread criada.");
+		return thread;
 
 	}
 
@@ -78,7 +104,62 @@ public class ThreadCB extends IflThreadCB {
 	 * @OSPProject Threads
 	 */
 	public void do_kill() {
-		// your code goes here
+
+		System.out.println("Destruindo a thread...");
+
+		System.out.println("Verificando status da thrad atual...");
+		if (this.getStatus() == ThreadWaiting) {
+
+			System.out.println("Thread no status Waiting.");
+
+			System.out.println("Obtendo IORB...");
+			IORB iorb = new IORB(this, null, 0, 0, 0, null);
+
+			System.out.println("Procurando dispositivo a ser cancelado...");
+			for (int i = 0; i <= Device.getTableSize(); i++) {
+
+				Device device = Device.get(i);
+				System.out.println("Verificando dispositivo: "
+						+ device.toString());
+				if (device.getID() == iorb.getDeviceID()) {
+
+					System.out
+							.println("Dispositivo encontrado! Cancelando IO...");
+					device.cancelPendingIO(this);
+					System.out.println("IO finalizado com sucesso!");
+
+				}
+
+			}
+
+		}
+
+		// TODO: and a number of other actions must be performed depending on
+		// the current status of the thread (getStatus())
+
+		System.out.println("Setando o status da thread para Kill...");
+		this.setStatus(ThreadKill);
+
+		// TODO: remover da fila de ready ?
+		// TODO: remover do controle da CPU
+
+		System.out.println("Liberando recursos alocados...");
+		ResourceCB.giveupResources(this);
+
+		// TODO: esta correto ?
+		dispatch();
+
+		System.out
+				.println("Verificando se a Task apresenta alguma outra thread...");
+		if (this.getTask().getThreadCount() == 1) {
+
+			System.out
+					.println("Finalizando a Task, pois todas as suas threads foram finalizada...");
+			this.getTask().kill();
+
+		}
+
+		System.out.println("Thread destruida com sucesso.");
 
 	}
 
@@ -99,7 +180,37 @@ public class ThreadCB extends IflThreadCB {
 	 * @OSPProject Threads
 	 */
 	public void do_suspend(Event event) {
-		// your code goes here
+
+		System.out.println("Suspendendo thread...");
+
+		System.out.println("Verificando status atual da thread");
+		if (this.getStatus() == ThreadRunning) {
+
+			System.out.println("Thread running. Atualizando para Waiting...");
+			this.setStatus(ThreadWaiting);
+
+			System.out.println("Adicionado a thread a lista do evento...");
+			event.addThread(this);
+
+			// TODO: a thread em questão deve perder o controle da CPU ! (como
+			// fazer isso?)
+
+		} else if (this.getStatus() >= ThreadWaiting) {
+
+			System.out.println("Thread Waiting. Atualizando para Waiting+1...");
+			this.setStatus(this.getStatus() + 1);
+
+			System.out.println("Adicionado a thread a lista do evento...");
+			event.addThread(this);
+
+		} else {
+			System.out
+					.println("Atenção! A thread a ser suspensa não se encontra nem no status Running, nem no status Waiting.");
+
+		}
+
+		// Esta correto?
+		dispatch();
 
 	}
 
@@ -113,7 +224,24 @@ public class ThreadCB extends IflThreadCB {
 	 * @OSPProject Threads
 	 */
 	public void do_resume() {
-		// your code goes here
+
+		System.out.println("Resume thread...");
+
+		if (this.getStatus() > ThreadWaiting) {
+
+			System.out.println("Diminuindo o nivel de espera da thread...");
+			this.setStatus(this.getStatus() - 1);
+
+		} else if (this.getStatus() == ThreadWaiting) {
+
+			System.out.println("Setando o status da thread para Ready...");
+			this.setStatus(ThreadReady);
+
+			// TODO: colocar na fila. Como?
+
+		}
+		
+		dispatch();
 
 	}
 
