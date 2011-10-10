@@ -1,5 +1,6 @@
 package osp.Threads;
 
+import osp.Hardware.HTimer;
 import osp.IFLModules.IflTimerInterruptHandler;
 
 /**
@@ -21,7 +22,7 @@ public class TimerInterruptHandler extends IflTimerInterruptHandler {
 		System.out.println("handleInterrupt!");
 		System.out.println("----------------\n");
 
-		//HTimer.set(1);
+		HTimer.set(1);
 		ThreadCB.dispatch();
 	}
 
