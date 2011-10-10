@@ -19,7 +19,7 @@ import osp.Tasks.TaskCB;
  */
 public class ThreadCB extends IflThreadCB {
 
-	// Lista com as threads criadas.
+	// Lista com as threads no estado ready.
 	private static List<ThreadCB> threadsReady;
 
 	/**
@@ -48,7 +48,7 @@ public class ThreadCB extends IflThreadCB {
 
 		System.out.println("executando o metodo init().");
 
-		// Inicializando a lista de threads
+		// Inicializando a lista de threads ready.
 		threadsReady = new ArrayList<ThreadCB>();
 
 	}
@@ -70,7 +70,8 @@ public class ThreadCB extends IflThreadCB {
 	 */
 	public static ThreadCB do_create(TaskCB task) {
 
-		System.out.println("Executando o metodo: do_create()");
+		long initTime = System.currentTimeMillis();
+		System.out.println("INICIANDO do_create.");
 
 		System.out.println("Verificando limite de threads por tasks.");
 		if (task.getThreadCount() == ThreadCB.MaxThreadsPerTask) {
@@ -78,6 +79,9 @@ public class ThreadCB extends IflThreadCB {
 			System.out
 					.println("Excedeu o numero de threads por task, operação não pode ser realizada.");
 			dispatch();
+
+			System.out.println("FINALIZANDO do_create. Em "
+					+ (System.currentTimeMillis() - initTime) + " ms.");
 			return null;
 
 		}
@@ -90,15 +94,18 @@ public class ThreadCB extends IflThreadCB {
 
 			System.out
 					.println("Excedeu o numero de threads por task, operação não pode ser realizada.");
-			// dispatch();
+			dispatch();
+
+			System.out.println("FINALIZANDO do_create. Em "
+					+ (System.currentTimeMillis() - initTime) + " ms.");
 			return null;
 		}
 
 		System.out.println("Relacionando a task á thread...");
 		thread.setTask(task);
 
-		// System.out.println("Setando prioridade a thread...");
-		// thread.setPriority(1);
+		System.out.println("Setando prioridade a thread...");
+		thread.setPriority(1);
 
 		System.out.println("Setando status da thread para Ready...");
 		thread.setStatus(ThreadReady);
@@ -106,11 +113,11 @@ public class ThreadCB extends IflThreadCB {
 		System.out.println("Colocando thread na fila ready.");
 		threadsReady.add(thread);
 
-		// MMU.setPTBR(task.getPageTable());
-
 		dispatch();
 
 		System.out.println("Retonando a thread criada.");
+		System.out.println("FINALIZANDO do_create. Em "
+				+ (System.currentTimeMillis() - initTime) + " ms.");
 		return thread;
 
 	}
@@ -130,11 +137,14 @@ public class ThreadCB extends IflThreadCB {
 	 */
 	public void do_kill() {
 
-		System.out.println("Destruindo a thread...");
+		long initTime = System.currentTimeMillis();
+		System.out.println("INICIALIZNADO do_kill().");
+		System.out.println("Destruindo a thread " + this.getID());
 
 		System.out.println("Verificando status da thrad atual...");
 		if (this.getStatus() == ThreadReady) {
 
+			System.out.println("Removendo a thread da lista de ready.");
 			threadsReady.remove(this);
 
 		}
@@ -142,6 +152,8 @@ public class ThreadCB extends IflThreadCB {
 		else if (this.getStatus() == ThreadRunning) {
 
 			dispatch();
+
+			System.out.println("Removendo a thread da lista de ready.");
 			threadsReady.remove(this);
 
 			System.out.println("Remove a thread do processador...");
@@ -167,14 +179,8 @@ public class ThreadCB extends IflThreadCB {
 			return;
 		}
 
-		// TODO: and a number of other actions must be performed depending on
-		// the current status of the thread (getStatus())
-
 		System.out.println("Setando o status da thread para Kill...");
 		this.setStatus(ThreadKill);
-
-		// TODO: remover da fila de ready ?
-		// TODO: remover do controle da CPU
 
 		System.out.println("Liberando recursos alocados...");
 		ResourceCB.giveupResources(this);
@@ -192,6 +198,8 @@ public class ThreadCB extends IflThreadCB {
 		dispatch();
 
 		System.out.println("Thread destruida com sucesso.");
+		System.out.println("FINALIZANDO do_kill(). Em "
+				+ (System.currentTimeMillis() - initTime) + " ms.");
 
 	}
 
@@ -213,7 +221,9 @@ public class ThreadCB extends IflThreadCB {
 	 */
 	public void do_suspend(Event event) {
 
-		System.out.println("Suspendendo thread...");
+		long initTime = System.currentTimeMillis();
+		System.out.println("INICIALIZANDO do_suspend().");
+		System.out.println("Suspendendo thread " + this.getID());
 
 		System.out.println("Verificando status atual da thread");
 		if (this.getStatus() == ThreadRunning) {
@@ -257,8 +267,10 @@ public class ThreadCB extends IflThreadCB {
 		System.out.println("Adicionado a thread a lista do evento...");
 		event.addThread(this);
 
-		// Esta correto?
 		dispatch();
+
+		System.out.println("FINALIZANDO do_suspend(). Em "
+				+ (System.currentTimeMillis() - initTime) + " ms.");
 
 	}
 
@@ -273,12 +285,16 @@ public class ThreadCB extends IflThreadCB {
 	 */
 	public void do_resume() {
 
-		System.out.println("Resume thread...");
+		long initTime = System.currentTimeMillis();
+		System.out.println("INICIALIZANDO do_resume().");
+
+		System.out.println("Resume thread " + this.getID());
 
 		if (this.getStatus() > ThreadWaiting) {
 
 			System.out.println("Nivel atual: " + this.getStatus());
-			System.out.println("Diminuindo o nivel de espera da thread...");
+			System.out
+					.println("Diminuindo o nivel de espera da thread para ThreadWaiting-1");
 			this.setStatus(this.getStatus() - 1);
 
 		} else if (this.getStatus() == ThreadWaiting) {
@@ -289,10 +305,15 @@ public class ThreadCB extends IflThreadCB {
 			threadsReady.add(this);
 
 		} else if (this.getStatus() == ThreadReady) {
+			System.out.println("FINALIZANDO do_resume(). Em "
+					+ (System.currentTimeMillis() - initTime) + " ms.");
 			return;
 		}
 
 		dispatch();
+
+		System.out.println("FINALIZANDO do_resume(). Em "
+				+ (System.currentTimeMillis() - initTime) + " ms.");
 
 	}
 
@@ -309,7 +330,8 @@ public class ThreadCB extends IflThreadCB {
 	 */
 	public static int do_dispatch() {
 
-		System.out.println("Executando o metodo do_dispatch().");
+		long initTime = System.currentTimeMillis();
+		System.out.println("INICIALIZANDO do_dispatch().");
 
 		if (MMU.getPTBR() == null) {
 
@@ -343,10 +365,20 @@ public class ThreadCB extends IflThreadCB {
 		if (currentThreadCB != null) {
 
 			if (currentThreadCB.getStatus() == ThreadKill) {
+
+				System.out.println("Thread no status kill.");
+
+				System.out.println("FINALIZANDO do_dispatch(). Em "
+						+ (System.currentTimeMillis() - initTime) + " ms.");
 				return SUCCESS;
 			}
 
-			if (currentThreadCB.getTimeOnCPU() % 2 < 1) {
+			if (currentThreadCB.getTimeOnCPU() % 1001 < 1000) {
+
+				System.out.println("Thread não atingiu ainda o time slice.");
+				System.out.println("FINALIZANDO do_dispatch(). Em "
+						+ (System.currentTimeMillis() - initTime) + " ms.");
+
 				return SUCCESS;
 			}
 
@@ -361,6 +393,8 @@ public class ThreadCB extends IflThreadCB {
 
 			System.out.println("Coloca a thread atual na fila de ready.");
 			threadsReady.add(currentThreadCB);
+		} else {
+			System.out.println("Task não apresenta thread rodando.");
 		}
 
 		System.out.println("Caso a fila de threads ready não esteja vazia...");
@@ -382,14 +416,20 @@ public class ThreadCB extends IflThreadCB {
 			System.out.println("Seta o time slice.");
 
 			System.out.println("Dispatch realizado com sucesso!");
+
+			System.out.println("FINALIZANDO do_dispatch(). Em "
+					+ (System.currentTimeMillis() - initTime) + " ms.");
+
 			return SUCCESS;
 		}
-
-		// HTimer.set(100);
 
 		System.out
 				.println("Não havia threads a serem escaladas. Operação finalizada com erro.");
 		MMU.setPTBR(null);
+
+		System.out.println("FINALIZANDO do_dispatch(). Em "
+				+ (System.currentTimeMillis() - initTime) + " ms.");
+
 		return FAILURE;
 
 	}
