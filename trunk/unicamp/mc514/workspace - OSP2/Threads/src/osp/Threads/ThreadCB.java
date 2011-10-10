@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import osp.Devices.Device;
+import osp.Hardware.HTimer;
 import osp.IFLModules.Event;
 import osp.IFLModules.IflThreadCB;
 import osp.Memory.MMU;
@@ -90,21 +91,23 @@ public class ThreadCB extends IflThreadCB {
 
 			System.out
 					.println("Excedeu o numero de threads por task, operação não pode ser realizada.");
-			dispatch();
+			// dispatch();
 			return null;
 		}
 
 		System.out.println("Relacionando a task á thread...");
 		thread.setTask(task);
 
-		System.out.println("Setando prioridade a thread...");
-		thread.setPriority(1);
+		// System.out.println("Setando prioridade a thread...");
+		// thread.setPriority(1);
 
 		System.out.println("Setando status da thread para Ready...");
 		thread.setStatus(ThreadReady);
 
-		// TODO: deve ser colocada na fila de ready ?
+		System.out.println("Colocando thread na fila ready.");
 		threadsReady.add(thread);
+
+		// MMU.setPTBR(task.getPageTable());
 
 		dispatch();
 
@@ -141,25 +144,25 @@ public class ThreadCB extends IflThreadCB {
 
 		}
 
-		else if (this.getStatus() == ThreadWaiting) {
+		else if (this.getStatus() == ThreadRunning) {
+
+			dispatch();
+			threadsReady.remove(this);
+
+			System.out.println("Remove a thread do processador...");
+			// MMU.getPTBR().getTask().setCurrentThread(null);
+
+		} else {
 
 			System.out.println("Thread no status Waiting.");
 
-			// TODO: verificar se esta correto
-			System.out.println("Obtendo IORB...");
-
 			System.out.println("Procurando dispositivo a ser cancelado...");
-			for (int i = 0; i <= Device.getTableSize(); i++) {
+			for (int i = 0; i < Device.getTableSize(); i++) {
 
 				System.out.println("Verificando dispositivo...");
 				Device.get(i).cancelPendingIO(this);
 
 			}
-
-		} else if (this.getStatus() == ThreadRunning) {
-
-			System.out.println("Remove a thread do processador...");
-			MMU.getPTBR().getTask().setCurrentThread(null);
 
 		}
 
@@ -191,7 +194,6 @@ public class ThreadCB extends IflThreadCB {
 
 		}
 
-		// TODO: esta correto ?
 		dispatch();
 
 		System.out.println("Thread destruida com sucesso.");
@@ -224,10 +226,26 @@ public class ThreadCB extends IflThreadCB {
 			System.out.println("Thread running. Atualizando para Waiting...");
 			this.setStatus(ThreadWaiting);
 
+			System.out
+					.println("Remove a thread que esta sendo executada do processador.");
+			MMU.getPTBR().getTask().setCurrentThread(null);
+
+			System.out.println("Remove a task do processador.");
+			MMU.setPTBR(null);
+
 			System.out.println("Remove a thread do processador...");
 			this.getTask().setCurrentThread(null);
 
+		} else if (this.getStatus() == ThreadReady) {
+
+			System.out.println("Remove a thread do evento...");
+			event.removeThread(this);
+			this.setStatus(ThreadWaiting);
+
 		} else if (this.getStatus() >= ThreadWaiting) {
+
+			System.out.println("Remove a thread do evento...");
+			event.removeThread(this);
 
 			System.out.println("Thread Waiting. Atualizando para Waiting+1...");
 			this.setStatus(this.getStatus() + 1);
@@ -264,6 +282,7 @@ public class ThreadCB extends IflThreadCB {
 
 		if (this.getStatus() > ThreadWaiting) {
 
+			System.out.println("Nivel atual: " + this.getStatus());
 			System.out.println("Diminuindo o nivel de espera da thread...");
 			this.setStatus(this.getStatus() - 1);
 
@@ -274,6 +293,8 @@ public class ThreadCB extends IflThreadCB {
 
 			threadsReady.add(this);
 
+		} else if (this.getStatus() == ThreadReady) {
+			return;
 		}
 
 		dispatch();
@@ -294,50 +315,80 @@ public class ThreadCB extends IflThreadCB {
 	public static int do_dispatch() {
 
 		System.out.println("Executando o metodo do_dispatch().");
-		
-		// Local variables
-        TaskCB currentTaskCB = null;
-        ThreadCB currentThreadCB = null;
-        ThreadCB newThreadCB = null;
 
-        // Getting the current thread to be stopped.
-        try {
-                currentTaskCB = MMU.getPTBR().getTask();
-                currentThreadCB = currentTaskCB.getCurrentThread();
-        } catch (Exception e) {
-        }
+		if (MMU.getPTBR() == null) {
 
-        if (currentThreadCB != null) {
-                // To dispatch a new thread, first we need to remove the current
-                // thread from the device.
-                currentTaskCB.setCurrentThread(null);
-                // Set the stopped thread as ready
-                currentThreadCB.setStatus(ThreadReady);
-                // Remove thread page from MMU
-                MMU.setPTBR(null);
-                // Put the stopped thread in the array.
-                listThreads.add(currentThreadCB);
-        }
-        // Get the first thread in the array
-        if (listThreads.size() > 0) {
-                newThreadCB = listThreads.remove(0);
-                // Set the page file to be the current thread page
-                MMU.setPTBR(newThreadCB.getTask().getPageTable());
-                // Set the task's thread as the new thread
-                newThreadCB.getTask().setCurrentThread(newThreadCB);
+			System.out.println("Não existe threads executando");
 
-                newThreadCB.setStatus(ThreadRunning);
+			if (threadsReady.isEmpty()) {
+				return FAILURE;
+			}
 
-                // Set the time quantum
-                HTimer.set(100);
+			System.out.println("Obtendo a primeira thread da fila de ready...");
+			ThreadCB current = threadsReady.remove(0);
 
-                return GlobalVariables.SUCCESS;
-        }
-        // no thread to be executed, we must clean PTBR
-        MMU.setPTBR(null);
-        return GlobalVariables.FAILURE;
-		
-		return 0;
+			System.out.println("Setando o status da thread para running");
+			current.setStatus(ThreadRunning);
+
+			System.out.println("Setando pagina da task a ser executada");
+			MMU.setPTBR(current.getTask().getPageTable());
+
+			System.out
+					.println("Setando a thread que esta sendo executada na task.");
+			current.getTask().setCurrentThread(current);
+
+			System.out.println("Operação realizacao com sucesso.");
+			return SUCCESS;
+
+		}
+
+		System.out.println("Obtem a thread local a ser parada...");
+		TaskCB currentTaskCB = MMU.getPTBR().getTask();
+		ThreadCB currentThreadCB = currentTaskCB.getCurrentThread();
+
+		if (currentThreadCB != null
+				&& currentThreadCB.getStatus() != ThreadKill) {
+
+			System.out.println("Seta o status da thread atual para Ready.");
+			currentThreadCB.setStatus(ThreadReady);
+
+			System.out.println("Seta a thread atual da task como null.");
+			currentTaskCB.setCurrentThread(null);
+
+			System.out.println("Remove a thread atual do processador");
+			MMU.setPTBR(null);
+
+			System.out.println("Coloca a thread atual na fila de ready.");
+			threadsReady.add(currentThreadCB);
+		}
+
+		System.out.println("Caso a fila de threads ready não esteja vazia...");
+		if (!threadsReady.isEmpty()) {
+
+			System.out.println("Obtem a primeira thread da fila.");
+			ThreadCB newThreadCB = threadsReady.remove(0);
+
+			System.out.println("Seta a pagina para a nova thread.");
+			MMU.setPTBR(newThreadCB.getTask().getPageTable());
+
+			System.out
+					.println("Atualiza a task para a thread atual como sendo a nova.");
+			newThreadCB.getTask().setCurrentThread(newThreadCB);
+
+			System.out.println("Seta o status da nova thread para running.");
+			newThreadCB.setStatus(ThreadRunning);
+
+			System.out.println("Seta o time slice.");
+			HTimer.set(100);
+
+			System.out.println("Dispatch realizado com sucesso!");
+			return SUCCESS;
+		}
+
+		System.out
+				.println("Não havia threads a serem escaladas. Operação finalizada com erro.");
+		MMU.setPTBR(null);
+		return FAILURE;
 
 	}
 
