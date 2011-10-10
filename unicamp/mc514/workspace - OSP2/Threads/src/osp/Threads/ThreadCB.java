@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import osp.Devices.Device;
-import osp.Hardware.HTimer;
 import osp.IFLModules.Event;
 import osp.IFLModules.IflThreadCB;
 import osp.Memory.MMU;
@@ -136,11 +135,7 @@ public class ThreadCB extends IflThreadCB {
 		System.out.println("Verificando status da thrad atual...");
 		if (this.getStatus() == ThreadReady) {
 
-			if (!threadsReady.remove(this)) {
-				System.out
-						.println("A thread que esta sendo removida não se encontra na lista de ready!");
-				return;
-			}
+			threadsReady.remove(this);
 
 		}
 
@@ -150,7 +145,7 @@ public class ThreadCB extends IflThreadCB {
 			threadsReady.remove(this);
 
 			System.out.println("Remove a thread do processador...");
-			// MMU.getPTBR().getTask().setCurrentThread(null);
+			MMU.getPTBR().getTask().setCurrentThread(null);
 
 		} else {
 
@@ -341,13 +336,19 @@ public class ThreadCB extends IflThreadCB {
 			return SUCCESS;
 
 		}
-
 		System.out.println("Obtem a thread local a ser parada...");
 		TaskCB currentTaskCB = MMU.getPTBR().getTask();
 		ThreadCB currentThreadCB = currentTaskCB.getCurrentThread();
 
-		if (currentThreadCB != null
-				&& currentThreadCB.getStatus() != ThreadKill) {
+		if (currentThreadCB != null) {
+
+			if (currentThreadCB.getStatus() == ThreadKill) {
+				return SUCCESS;
+			}
+
+			if (currentThreadCB.getTimeOnCPU() % 2 < 1) {
+				return SUCCESS;
+			}
 
 			System.out.println("Seta o status da thread atual para Ready.");
 			currentThreadCB.setStatus(ThreadReady);
@@ -379,11 +380,12 @@ public class ThreadCB extends IflThreadCB {
 			newThreadCB.setStatus(ThreadRunning);
 
 			System.out.println("Seta o time slice.");
-			HTimer.set(100);
 
 			System.out.println("Dispatch realizado com sucesso!");
 			return SUCCESS;
 		}
+
+		// HTimer.set(100);
 
 		System.out
 				.println("Não havia threads a serem escaladas. Operação finalizada com erro.");
