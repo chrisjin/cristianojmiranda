@@ -8,6 +8,7 @@ import osp.IFLModules.IflTimerInterruptHandler;
  * interrupts.
  * 
  * @OSPProject Threads
+ * @author Cristiano J. Miranda ra083382
  */
 public class TimerInterruptHandler extends IflTimerInterruptHandler {
 	/**
@@ -22,6 +23,7 @@ public class TimerInterruptHandler extends IflTimerInterruptHandler {
 		System.out.println("handleInterrupt!");
 		System.out.println("----------------\n");
 
+		System.out.println("Setando o time slice...");
 		HTimer.set(1000);
 		ThreadCB.dispatch();
 	}

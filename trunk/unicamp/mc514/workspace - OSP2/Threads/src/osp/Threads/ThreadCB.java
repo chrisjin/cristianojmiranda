@@ -20,7 +20,7 @@ import osp.Tasks.TaskCB;
 public class ThreadCB extends IflThreadCB {
 
 	// Lista com as threads no estado ready.
-	private static List<ThreadCB> threadsReady;
+	private static List<ThreadCB> threadsReadyQueue;
 
 	/**
 	 * The thread constructor. Must call
@@ -49,7 +49,7 @@ public class ThreadCB extends IflThreadCB {
 		System.out.println("executando o metodo init().");
 
 		// Inicializando a lista de threads ready.
-		threadsReady = new ArrayList<ThreadCB>();
+		threadsReadyQueue = new ArrayList<ThreadCB>();
 
 	}
 
@@ -71,7 +71,7 @@ public class ThreadCB extends IflThreadCB {
 	public static ThreadCB do_create(TaskCB task) {
 
 		long initTime = System.currentTimeMillis();
-		System.out.println("INICIANDO do_create.");
+		System.out.println("INICIANDO do_create().");
 
 		System.out.println("Verificando limite de threads por tasks.");
 		if (task.getThreadCount() == ThreadCB.MaxThreadsPerTask) {
@@ -89,7 +89,7 @@ public class ThreadCB extends IflThreadCB {
 		System.out.println("Criando uma thread...");
 		ThreadCB thread = new ThreadCB();
 
-		System.out.println("Relacionando a thread á task...");
+		System.out.println("Relacionando a thread a task...");
 		if (task.addThread(thread) == FAILURE) {
 
 			System.out
@@ -111,7 +111,7 @@ public class ThreadCB extends IflThreadCB {
 		thread.setStatus(ThreadReady);
 
 		System.out.println("Colocando thread na fila ready.");
-		threadsReady.add(thread);
+		threadsReadyQueue.add(thread);
 
 		dispatch();
 
@@ -145,7 +145,7 @@ public class ThreadCB extends IflThreadCB {
 		if (this.getStatus() == ThreadReady) {
 
 			System.out.println("Removendo a thread da lista de ready.");
-			threadsReady.remove(this);
+			threadsReadyQueue.remove(this);
 
 		}
 
@@ -154,7 +154,7 @@ public class ThreadCB extends IflThreadCB {
 			dispatch();
 
 			System.out.println("Removendo a thread da lista de ready.");
-			threadsReady.remove(this);
+			threadsReadyQueue.remove(this);
 
 			System.out.println("Remove a thread do processador...");
 			MMU.getPTBR().getTask().setCurrentThread(null);
@@ -262,7 +262,7 @@ public class ThreadCB extends IflThreadCB {
 		}
 
 		System.out.println("Remove a thread da lista de ready...");
-		threadsReady.remove(this);
+		threadsReadyQueue.remove(this);
 
 		System.out.println("Adicionado a thread a lista do evento...");
 		event.addThread(this);
@@ -302,7 +302,7 @@ public class ThreadCB extends IflThreadCB {
 			System.out.println("Setando o status da thread para Ready...");
 			this.setStatus(ThreadReady);
 
-			threadsReady.add(this);
+			threadsReadyQueue.add(this);
 
 		} else if (this.getStatus() == ThreadReady) {
 			System.out.println("FINALIZANDO do_resume(). Em "
@@ -333,88 +333,99 @@ public class ThreadCB extends IflThreadCB {
 		long initTime = System.currentTimeMillis();
 		System.out.println("INICIALIZANDO do_dispatch().");
 
+		// Verifica se tem alguma task no processador
 		if (MMU.getPTBR() == null) {
 
 			System.out.println("Não existe threads executando");
 
-			if (threadsReady.isEmpty()) {
+			// Verifica se a fila de ready esta vazia
+			if (threadsReadyQueue.isEmpty()) {
+				System.out.println("\nFila de Ready vazia!");
 				return FAILURE;
 			}
 
 			System.out.println("Obtendo a primeira thread da fila de ready...");
-			ThreadCB current = threadsReady.remove(0);
+			ThreadCB threadAtual = threadsReadyQueue.remove(0);
 
 			System.out.println("Setando o status da thread para running");
-			current.setStatus(ThreadRunning);
+			threadAtual.setStatus(ThreadRunning);
 
 			System.out.println("Setando pagina da task a ser executada");
-			MMU.setPTBR(current.getTask().getPageTable());
+			MMU.setPTBR(threadAtual.getTask().getPageTable());
 
 			System.out
 					.println("Setando a thread que esta sendo executada na task.");
-			current.getTask().setCurrentThread(current);
+			threadAtual.getTask().setCurrentThread(threadAtual);
 
 			System.out.println("Operação realizacao com sucesso.");
 			return SUCCESS;
 
 		}
 		System.out.println("Obtem a thread local a ser parada...");
-		TaskCB currentTaskCB = MMU.getPTBR().getTask();
-		ThreadCB currentThreadCB = currentTaskCB.getCurrentThread();
+		TaskCB taskAtual = MMU.getPTBR().getTask();
 
-		if (currentThreadCB != null) {
+		// Obtem a thread atual que esta sendo executada e será preempted
+		ThreadCB threadAtual = taskAtual.getCurrentThread();
 
-			if (currentThreadCB.getStatus() == ThreadKill) {
+		// Verifica se existe thread
+		if (threadAtual != null) {
+
+			// Veriifica o status da thread que esta executando
+			if (threadAtual.getStatus() == ThreadKill) {
 
 				System.out.println("Thread no status kill.");
-
 				System.out.println("FINALIZANDO do_dispatch(). Em "
 						+ (System.currentTimeMillis() - initTime) + " ms.");
 				return SUCCESS;
 			}
 
-			if (currentThreadCB.getTimeOnCPU() % 1001 < 1000) {
+			System.out.println("Verificando se ocorreu o time slice...");
+			if (threadAtual.getTimeOnCPU() % 1001 < 1000) {
 
+				System.out
+						.println("\n\n----------------------------------------------");
 				System.out.println("Thread não atingiu ainda o time slice.");
 				System.out.println("FINALIZANDO do_dispatch(). Em "
 						+ (System.currentTimeMillis() - initTime) + " ms.");
+				System.out
+						.println("----------------------------------------------\n\n");
 
 				return SUCCESS;
 			}
 
 			System.out.println("Seta o status da thread atual para Ready.");
-			currentThreadCB.setStatus(ThreadReady);
+			threadAtual.setStatus(ThreadReady);
 
 			System.out.println("Seta a thread atual da task como null.");
-			currentTaskCB.setCurrentThread(null);
+			taskAtual.setCurrentThread(null);
 
 			System.out.println("Remove a thread atual do processador");
 			MMU.setPTBR(null);
 
 			System.out.println("Coloca a thread atual na fila de ready.");
-			threadsReady.add(currentThreadCB);
+			threadsReadyQueue.add(threadAtual);
+
 		} else {
 			System.out.println("Task não apresenta thread rodando.");
 		}
 
 		System.out.println("Caso a fila de threads ready não esteja vazia...");
-		if (!threadsReady.isEmpty()) {
+		if (!threadsReadyQueue.isEmpty()) {
 
-			System.out.println("Obtem a primeira thread da fila.");
-			ThreadCB newThreadCB = threadsReady.remove(0);
+			System.out.println("Obtem a primeira thread da fila....");
+			ThreadCB novaThread = threadsReadyQueue.remove(0);
 
 			System.out.println("Seta a pagina para a nova thread.");
-			MMU.setPTBR(newThreadCB.getTask().getPageTable());
+			MMU.setPTBR(novaThread.getTask().getPageTable());
 
 			System.out
 					.println("Atualiza a task para a thread atual como sendo a nova.");
-			newThreadCB.getTask().setCurrentThread(newThreadCB);
+			novaThread.getTask().setCurrentThread(novaThread);
 
 			System.out.println("Seta o status da nova thread para running.");
-			newThreadCB.setStatus(ThreadRunning);
+			novaThread.setStatus(ThreadRunning);
 
 			System.out.println("Seta o time slice.");
-
 			System.out.println("Dispatch realizado com sucesso!");
 
 			System.out.println("FINALIZANDO do_dispatch(). Em "
