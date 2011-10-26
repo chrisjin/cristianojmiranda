@@ -24,16 +24,11 @@ public class ResourceTable extends IflResourceTable {
 	 * @OSPProject Resources
 	 */
 	public ResourceTable() {
-		// your code goes here
+
+		super();
+
+		System.out.println("Executando o construtor ResourceTable().");
 
 	}
 
-	/*
-	 * Feel free to add methods/fields to improve the readability of your code
-	 */
-
 }
-
-/*
- * Feel free to add local classes to improve the readability of your code
- */
