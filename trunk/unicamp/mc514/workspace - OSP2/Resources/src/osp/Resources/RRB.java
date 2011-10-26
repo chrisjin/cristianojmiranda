@@ -33,13 +33,14 @@ public class RRB extends IflRRB {
 	 */
 	public void do_grant() {
 
+		long timer = System.currentTimeMillis();
 		System.out.println("Inciando do_grant().");
-
-		System.out.println("Obtendo a thread atual.");
-		ThreadCB threadAtual = getThread();
 
 		System.out.println("Obtendo o resource atual.");
 		ResourceCB resourceAtual = getResource();
+
+		System.out.println("Obtendo a thread atual.");
+		ThreadCB threadAtual = getThread();
 
 		System.out.println("Calculando quantidade...");
 		int qtd = (resourceAtual.getAvailable()) - (getQuantity());
@@ -60,7 +61,8 @@ public class RRB extends IflRRB {
 		System.out.println("Notificando threads...");
 		notifyThreads();
 
-		System.out.println("Finalizando do_grant(). Tempo: ");
+		System.out.println("Finalizando do_grant(). Tempo: "
+				+ (System.currentTimeMillis() - timer));
 
 	}
 
