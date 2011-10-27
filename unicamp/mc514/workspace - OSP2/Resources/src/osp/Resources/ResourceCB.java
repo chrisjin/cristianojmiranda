@@ -10,6 +10,7 @@ import osp.IFLModules.IflResourceCB;
 import osp.Memory.MMU;
 import osp.Tasks.TaskCB;
 import osp.Threads.ThreadCB;
+import osp.Utilities.MyOut;
 
 /**
  * Class ResourceCB is the core of the resource management module. Students
@@ -154,7 +155,7 @@ public class ResourceCB extends IflResourceCB {
 	 * @param recurso
 	 * @return
 	 */
-	private boolean bankerVerify(ThreadCB thread, int quantity,
+	private static boolean bankerVerify(ThreadCB thread, int quantity,
 			ResourceCB recurso) {
 
 		long timer = System.currentTimeMillis();
@@ -213,7 +214,7 @@ public class ResourceCB extends IflResourceCB {
 	 * @param claimMatrix
 	 * @param allocationMatrix
 	 */
-	private void contabilizarRecursos(int quantity, ResourceCB recurso,
+	private static void contabilizarRecursos(int quantity, ResourceCB recurso,
 			int[] resourcesAvailables, int[][] claimMatrix,
 			int[][] allocationMatrix) {
 
@@ -258,7 +259,7 @@ public class ResourceCB extends IflResourceCB {
 	 * @param recurso
 	 * @param resourcesAvailables
 	 */
-	private void contabilizarRecursosDisponiveis(int quantity,
+	private static void contabilizarRecursosDisponiveis(int quantity,
 			ResourceCB recurso, int[] resourcesAvailables) {
 		for (int i = 0; i < ResourceTable.getSize(); i++) {
 
@@ -285,8 +286,9 @@ public class ResourceCB extends IflResourceCB {
 	 * @param allocatedResources
 	 * @return
 	 */
-	private boolean verificaSistemaEstadoSeguro(int[] availablesResources,
-			int[][] claimResources, int[][] allocatedResources) {
+	private static boolean verificaSistemaEstadoSeguro(
+			int[] availablesResources, int[][] claimResources,
+			int[][] allocatedResources) {
 
 		boolean threadFinaliza[] = new boolean[threadsSistema.size()];
 
@@ -304,7 +306,7 @@ public class ResourceCB extends IflResourceCB {
 			}
 
 			if (finaliza) {
-				
+
 				for (int k = 0; k < ResourceTable.getSize(); k++) {
 
 					availablesResources[k] = availablesResources[k]
@@ -337,9 +339,8 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public static Vector do_deadlockDetection() {
-		// your code goes here
-		return null;
 
+		return null;
 	}
 
 	/**
@@ -351,7 +352,41 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public static void do_giveupResources(ThreadCB thread) {
-		// your code goes here
+
+		// Retira a thread da lista de threads do sistema
+		threadsSistema.remove(thread);
+
+		// Poe todas as rrbs que estao alocadas para a thread na lista
+		// serem excluidas e tambem verficar se ha alguma outra rrb que pode dar
+		// grant
+
+		for (int i = 0; i < ResourceTable.getSize(); i++) {
+			ResourceCB resource = ResourceTable.getResourceCB(i);
+			int disponivel = resource.getAvailable();
+			int alocado = resource.getAllocated(thread);
+			// a thread nao aloca mais nenhum resource
+			resource.setAllocated(thread, 0);
+			disponivel = (disponivel + alocado);
+			resource.setAvailable(disponivel);
+			threadsSuspenas.get(i).remove(thread);
+		}
+
+		for (int i = 0; i < ResourceTable.getSize(); i++) {
+
+			ResourceCB resource = ResourceTable.getResourceCB(i);
+
+			for (ThreadCB thread2 : threadsSuspenas.get(i).keySet()) {
+
+				RRB rrb = (RRB) (threadsSuspenas.get(i).get(thread2));
+				if (rrb == null) {
+					continue;
+				}
+				if ((bankerVerify(thread2, rrb.getQuantity(), resource))) {
+					rrb.grant();
+				}
+			}
+
+		}
 
 	}
 
@@ -362,7 +397,51 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public void do_release(int quantity) {
-		// your code goes here
+
+		long timer = System.currentTimeMillis();
+		System.out.println("Iniciando do_release().");
+
+		System.out.println("Threads suspensas=" + threadsSuspenas);
+		HashMap<ThreadCB, RRB> hash = threadsSuspenas.get(getID());
+
+		if (hash == null) {
+			System.out.println("Ops! hash null.");
+			return;
+		}
+
+		List<RRB> rrbsgranted = new ArrayList<RRB>();
+
+		ThreadCB thread_atual = MMU.getPTBR().getTask().getCurrentThread();
+		MyOut.print("Uira", "Alocado: " + this.getAllocated(thread_atual)
+				+ " Livre: " + this.getAvailable());
+
+		this.setAllocated(thread_atual,
+				((this.getAllocated(thread_atual)) - quantity));
+		this.setAvailable((this.getAvailable()) + quantity);
+
+		for (ThreadCB thread : hash.keySet()) {
+
+			RRB rrb = (RRB) threadsSuspenas.get(getID()).get(thread);
+			if (rrb == null) {
+				continue;
+			}
+
+			if ((rrb.getQuantity() <= quantity)
+					&& (bankerVerify(thread, rrb.getQuantity(), rrb
+							.getResource()))) {
+				rrb.grant();
+			}
+		}
+		if (!rrbsgranted.isEmpty()) {
+
+			for (RRB rrb : rrbsgranted) {
+				threadsSuspenas.get(getID()).remove(rrb.getThread());
+			}
+
+		}
+
+		System.out.println("Finalizado do_release(). Em "
+				+ (System.currentTimeMillis() - timer) + "ms.");
 
 	}
 
