@@ -10,7 +10,9 @@ import osp.IFLModules.IflResourceCB;
 import osp.Memory.MMU;
 import osp.Tasks.TaskCB;
 import osp.Threads.ThreadCB;
+import osp.Utilities.GlobalVariables;
 import osp.Utilities.MyOut;
+import sun.awt.windows.ThemeReader;
 
 /**
  * Class ResourceCB is the core of the resource management module. Students
@@ -35,7 +37,7 @@ public class ResourceCB extends IflResourceCB {
 	 */
 	public ResourceCB(int qty) {
 		super(qty);
-		System.out.println("Executando contrutor ResourceCB().");
+		System.out.println("\n\nExecutando contrutor ResourceCB().");
 	}
 
 	/**
@@ -46,7 +48,7 @@ public class ResourceCB extends IflResourceCB {
 	 */
 	public static void init() {
 
-		System.out.println("Executando o metodo init().");
+		System.out.println("\n\nExecutando o metodo init().");
 
 	}
 
@@ -63,7 +65,9 @@ public class ResourceCB extends IflResourceCB {
 	public RRB do_acquire(int quantity) {
 
 		long timer = System.currentTimeMillis();
-		System.out.println("Iniciando do_acquire().");
+		System.out.println("\n\nIniciando do_acquire().");
+
+		System.out.println("ThreadsSuspensas=" + threadsSuspenas);
 
 		System.out
 				.println("Verifica se esta sendo solicitado uma quantidade valida de recursos.");
@@ -110,6 +114,66 @@ public class ResourceCB extends IflResourceCB {
 		RRB request = new RRB(threadAtual, this, quantity);
 
 		System.out
+				.println("Verificando tipo de metodo de tratamento de deadLock a ser empregado...");
+		if (getDeadlockMethod() == Avoidance) {
+			avoidanceDeadLock(quantity, threadAtual, request);
+		} else if (getDeadlockMethod() == Detection) {
+			detectionDeadlock(quantity, threadAtual, request);
+		}
+
+		else {
+			System.out
+					.println("\n\n\n------------------------------------------------------------------");
+			System.out
+					.println("ATENCAO! Tratamento de deadlock empregado diferente de avoidance e detection.\n");
+		}
+
+		System.out.println("Finalizando do_acquire(). Em "
+				+ (System.currentTimeMillis() - timer) + "ms.");
+
+		return request;
+
+	}
+
+	private void detectionDeadlock(int quantity, ThreadCB threadAtual,
+			RRB request) {
+		if (quantity <= getAvailable()) {
+
+			request.grant();
+
+		} else {
+
+			if (threadAtual.getStatus() != ThreadWaiting) {
+
+				request.setStatus(Suspended);
+				threadAtual.suspend(request);
+
+			}
+
+			System.out
+					.println("Inserindo requisição na map de itens suspensos...");
+			if (threadsSuspenas.containsKey(getID())) {
+				System.out
+						.println("Já existem itens suspensos para esse id, inserindo outro mais...");
+				threadsSuspenas.get(getID()).put(threadAtual, request);
+			} else {
+
+				System.out
+						.println("Inserindo o primeiro item suspenso para o id...");
+				HashMap<ThreadCB, RRB> map = new HashMap<ThreadCB, RRB>();
+				map.put(threadAtual, request);
+				threadsSuspenas.put(getID(), map);
+			}
+
+			System.out.println("ThreadsSuspensas=" + threadsSuspenas);
+		}
+	}
+
+	private void avoidanceDeadLock(int quantity, ThreadCB threadAtual,
+			RRB request) {
+		System.out.println("Deadlock avoindance! Usando Banker Algorithms.");
+
+		System.out
 				.println("Simula a atribuição do recurso antes de fato atribui-lo...");
 		if (bankerVerify(threadAtual, quantity, this)) {
 
@@ -139,12 +203,6 @@ public class ResourceCB extends IflResourceCB {
 			System.out.println("Seta a thread atual como suspensa...");
 			threadAtual.suspend(request);
 		}
-
-		System.out.println("Finalizando do_acquire(). Em "
-				+ (System.currentTimeMillis() - timer) + "ms.");
-
-		return request;
-
 	}
 
 	/**
@@ -159,7 +217,7 @@ public class ResourceCB extends IflResourceCB {
 			ResourceCB recurso) {
 
 		long timer = System.currentTimeMillis();
-		System.out.println("Iniciando bankerVerify().");
+		System.out.println("\n\nIniciando bankerVerify().");
 
 		// Impede a alocação caso tente alocar menos que zero recurso,
 		// ou não haja recursos disponiveis para alocação ou
@@ -221,7 +279,7 @@ public class ResourceCB extends IflResourceCB {
 		// Executa a contagem de recursos disponiveis
 		contabilizarRecursosDisponiveis(quantity, recurso, resourcesAvailables);
 
-		System.out.println("Monta a mapTemporaria...");
+		System.out.println("\n\nMonta a mapTemporaria...");
 		Map<ThreadCB, Integer> tempHash = new HashMap<ThreadCB, Integer>();
 		int count = 0;
 		for (ThreadCB t : threadsSistema) {
@@ -268,8 +326,7 @@ public class ResourceCB extends IflResourceCB {
 				System.out
 						.println("Setando disponibilidade para o recurso a ser alocado...");
 				resourcesAvailables[i] = ResourceTable.getResourceCB(i)
-						.getAvailable()
-						- quantity;
+						.getAvailable() - quantity;
 			} else {
 
 				resourcesAvailables[i] = ResourceTable.getResourceCB(i)
@@ -292,31 +349,35 @@ public class ResourceCB extends IflResourceCB {
 
 		boolean threadFinaliza[] = new boolean[threadsSistema.size()];
 
-		for (int i = 0; i < threadsSistema.size(); i++) {
+		for (int n = 0; n < threadsSistema.size(); n++) {
 
-			boolean finaliza = true;
+			for (int i = 0; i < threadsSistema.size(); i++) {
 
-			for (int j = 0; j < ResourceTable.getSize(); j++) {
-				if (availablesResources[j] < (claimResources[i][j] - allocatedResources[i][j])) {
-					System.out
-							.println("Esta sendo alocado mais recusos do que o disponivel!");
-					finaliza = false;
-					break;
+				if (!threadFinaliza[i]) {
+					boolean finaliza = true;
+
+					for (int j = 0; j < ResourceTable.getSize(); j++) {
+						if (availablesResources[j] < (claimResources[i][j] - allocatedResources[i][j])) {
+							System.out
+									.println("Esta sendo alocado mais recusos do que o disponivel!");
+							finaliza = false;
+							break;
+						}
+					}
+
+					if (finaliza) {
+
+						for (int k = 0; k < ResourceTable.getSize(); k++) {
+
+							availablesResources[k] = availablesResources[k]
+									+ allocatedResources[i][k];
+
+							allocatedResources[i][k] = 0;
+						}
+						threadFinaliza[i] = true;
+					}
 				}
 			}
-
-			if (finaliza) {
-
-				for (int k = 0; k < ResourceTable.getSize(); k++) {
-
-					availablesResources[k] = availablesResources[k]
-							+ allocatedResources[i][k];
-
-					allocatedResources[i][k] = 0;
-				}
-				threadFinaliza[i] = true;
-			}
-
 		}
 
 		for (int i = 0; i < threadsSistema.size(); i++) {
@@ -340,6 +401,7 @@ public class ResourceCB extends IflResourceCB {
 	 */
 	public static Vector do_deadlockDetection() {
 
+		System.out.println("ThreadsSuspensas=" + threadsSuspenas);
 		return null;
 	}
 
@@ -352,6 +414,11 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public static void do_giveupResources(ThreadCB thread) {
+
+		long timer = System.currentTimeMillis();
+		System.out.println("\n\nIniciando do_giveupResources().");
+
+		System.out.println("ThreadsSuspensas=" + threadsSuspenas);
 
 		// Retira a thread da lista de threads do sistema
 		threadsSistema.remove(thread);
@@ -388,6 +455,9 @@ public class ResourceCB extends IflResourceCB {
 
 		}
 
+		System.out.println("Finalizando do_giveupResources(). Em "
+				+ (System.currentTimeMillis() - timer) + "ms.");
+
 	}
 
 	/**
@@ -399,7 +469,7 @@ public class ResourceCB extends IflResourceCB {
 	public void do_release(int quantity) {
 
 		long timer = System.currentTimeMillis();
-		System.out.println("Iniciando do_release().");
+		System.out.println("\n\nIniciando do_release().");
 
 		System.out.println("Threads suspensas=" + threadsSuspenas);
 		HashMap<ThreadCB, RRB> hash = threadsSuspenas.get(getID());
@@ -427,8 +497,8 @@ public class ResourceCB extends IflResourceCB {
 			}
 
 			if ((rrb.getQuantity() <= quantity)
-					&& (bankerVerify(thread, rrb.getQuantity(), rrb
-							.getResource()))) {
+					&& (bankerVerify(thread, rrb.getQuantity(),
+							rrb.getResource()))) {
 				rrb.grant();
 			}
 		}
@@ -454,7 +524,7 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public static void atError() {
-		System.out.println("Executando atError().");
+		System.out.println("\n\nExecutando atError().");
 	}
 
 	/**
@@ -466,7 +536,7 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public static void atWarning() {
-		System.out.println("Executando atWarning().");
+		System.out.println("\n\nExecutando atWarning().");
 
 	}
 
