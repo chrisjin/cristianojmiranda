@@ -10,9 +10,7 @@ import osp.IFLModules.IflResourceCB;
 import osp.Memory.MMU;
 import osp.Tasks.TaskCB;
 import osp.Threads.ThreadCB;
-import osp.Utilities.GlobalVariables;
 import osp.Utilities.MyOut;
-import sun.awt.windows.ThemeReader;
 
 /**
  * Class ResourceCB is the core of the resource management module. Students
@@ -28,6 +26,9 @@ public class ResourceCB extends IflResourceCB {
 
 	// Map para armazenar as requests suspensas.
 	private static Map<Integer, HashMap<ThreadCB, RRB>> threadsSuspenas = new HashMap<Integer, HashMap<ThreadCB, RRB>>();
+
+	// Vetor com as threads em deadlock
+	private static Vector<ThreadCB> deadLockVector = new Vector<ThreadCB>();
 
 	/**
 	 * Creates a new ResourceCB instance with the given number of available
@@ -90,7 +91,7 @@ public class ResourceCB extends IflResourceCB {
 		threadsSistema.add(threadAtual);
 
 		System.out
-				.println("Verifica se a quantidade de recursos alocados mais a quantidade solicitada é maior que o total...");
+				.println("Verifica se a quantidade de recursos alocados mais a quantidade solicitada eh maior que o total...");
 		if ((this.getAllocated(threadAtual)) + quantity > this.getTotal()) {
 			System.out
 					.println("Impossivel alocar mais recursos que existentes.");
@@ -135,8 +136,14 @@ public class ResourceCB extends IflResourceCB {
 
 	}
 
+	/**
+	 * @param quantity
+	 * @param threadAtual
+	 * @param request
+	 */
 	private void detectionDeadlock(int quantity, ThreadCB threadAtual,
 			RRB request) {
+
 		if (quantity <= getAvailable()) {
 
 			request.grant();
@@ -151,10 +158,10 @@ public class ResourceCB extends IflResourceCB {
 			}
 
 			System.out
-					.println("Inserindo requisição na map de itens suspensos...");
+					.println("Inserindo requisicao na map de itens suspensos...");
 			if (threadsSuspenas.containsKey(getID())) {
 				System.out
-						.println("Já existem itens suspensos para esse id, inserindo outro mais...");
+						.println("Ja existem itens suspensos para esse id, inserindo outro mais...");
 				threadsSuspenas.get(getID()).put(threadAtual, request);
 			} else {
 
@@ -169,27 +176,32 @@ public class ResourceCB extends IflResourceCB {
 		}
 	}
 
+	/**
+	 * @param quantity
+	 * @param threadAtual
+	 * @param request
+	 */
 	private void avoidanceDeadLock(int quantity, ThreadCB threadAtual,
 			RRB request) {
 		System.out.println("Deadlock avoindance! Usando Banker Algorithms.");
 
 		System.out
-				.println("Simula a atribuição do recurso antes de fato atribui-lo...");
+				.println("Simula a atribuicao do recurso antes de fato atribui-lo...");
 		if (bankerVerify(threadAtual, quantity, this)) {
 
-			System.out.println("Autoriza a requisição...");
+			System.out.println("Autoriza a requisiaÂ§aÂ£o...");
 			request.grant();
 
 		} else {
 
-			System.out.println("Suspende a requisição...");
+			System.out.println("Suspende a requisiaÂ§aÂ£o...");
 			request.setStatus(RRB.Suspended);
 
 			System.out
-					.println("Inserindo requisição na map de itens suspensos...");
+					.println("Inserindo requisicao na map de itens suspensos...");
 			if (threadsSuspenas.containsKey(getID())) {
 				System.out
-						.println("Já existem itens suspensos para esse id, inserindo outro mais...");
+						.println("JaÂ¡ existem itens suspensos para esse id, inserindo outro mais...");
 				threadsSuspenas.get(getID()).put(threadAtual, request);
 			} else {
 
@@ -219,17 +231,17 @@ public class ResourceCB extends IflResourceCB {
 		long timer = System.currentTimeMillis();
 		System.out.println("\n\nIniciando bankerVerify().");
 
-		// Impede a alocação caso tente alocar menos que zero recurso,
-		// ou não haja recursos disponiveis para alocação ou
+		// Impede a alocacao caso tente alocar menos que zero recurso,
+		// ou nao haja recursos disponiveis para alocacao ou
 		// a quantidade de recursos a serem alocados seja superior a quantidade
 		// de recursos declarados.
-		System.out.println("Verifica a validade da requisição...");
+		System.out.println("Verifica a validade da requisicao...");
 		if (quantity <= 0
 				|| recurso.getAvailable() < quantity
 				|| (recurso.getAllocated(thread) + quantity) > recurso
 						.getMaxClaim(thread)) {
 
-			System.out.println("Requisição invalida. Não permite alocar.");
+			System.out.println("Requisicao invalida. Nao permite alocar.");
 			System.out.println("Finalizando bankerVerify(). Em "
 					+ (System.currentTimeMillis() - timer) + "ms.");
 			return false;
@@ -243,7 +255,7 @@ public class ResourceCB extends IflResourceCB {
 		int claimMatrix[][] = new int[threadsSistema.size()][ResourceTable
 				.getSize()];
 
-		// Monta a matrix de alocação dos recursos
+		// Monta a matrix de alocacao dos recursos
 		int allocationMatrix[][] = new int[threadsSistema.size()][ResourceTable
 				.getSize()];
 
@@ -255,7 +267,7 @@ public class ResourceCB extends IflResourceCB {
 		if (verificaSistemaEstadoSeguro(resourcesAvailables, claimMatrix,
 				allocationMatrix)) {
 
-			System.out.println("Sistema em estado seguro. Alocação permitida!");
+			System.out.println("Sistema em estado seguro. alocacao permitida!");
 			return true;
 		}
 
@@ -347,6 +359,12 @@ public class ResourceCB extends IflResourceCB {
 			int[] availablesResources, int[][] claimResources,
 			int[][] allocatedResources) {
 
+		long timer = System.currentTimeMillis();
+		System.out.println("\n\nIniciando verificaSistemaEstadoSeguro().s");
+
+		System.out.println("\n\n\n-------------------------------------");
+		System.out.println("Vetor de deadLock = " + deadLockVector);
+
 		boolean threadFinaliza[] = new boolean[threadsSistema.size()];
 
 		for (int n = 0; n < threadsSistema.size(); n++) {
@@ -380,16 +398,22 @@ public class ResourceCB extends IflResourceCB {
 			}
 		}
 
+		deadLockVector.clear();
+
+		boolean estadoSeguro = true;
 		for (int i = 0; i < threadsSistema.size(); i++) {
 			if (!threadFinaliza[i]) {
 
 				System.out
-						.println("Existem threads que não finalizam. Sistema não se encontra seguro.");
-				return false;
+						.println("Existem threads que nao finalizam. Sistema nao se encontra seguro.");
+				estadoSeguro = false;
+
+				// Monta o vetor de threads em deadlock
+				deadLockVector.add(threadsSistema.get(i));
 			}
 		}
 
-		return true;
+		return estadoSeguro;
 
 	}
 
@@ -402,7 +426,45 @@ public class ResourceCB extends IflResourceCB {
 	public static Vector do_deadlockDetection() {
 
 		System.out.println("ThreadsSuspensas=" + threadsSuspenas);
-		return null;
+
+		// Monta vetor de recursos disponiveis
+		int resourcesAvailables[] = new int[ResourceTable.getSize()];
+
+		// Monta Matrix de recursos previamente pretendidos(necessarios) para a
+		// task
+		int claimMatrix[][] = new int[threadsSistema.size()][ResourceTable
+				.getSize()];
+
+		// Monta a matrix de alocacao dos recursos
+		int allocationMatrix[][] = new int[threadsSistema.size()][ResourceTable
+				.getSize()];
+
+		// Executa a contagem de recursos disponiveis e alocados
+		contabilizarRecursos(0, null, resourcesAvailables, claimMatrix,
+				allocationMatrix);
+
+		// Verifica o estado do sistema atualizando a matriz de deadlock
+		verificaSistemaEstadoSeguro(resourcesAvailables, claimMatrix,
+				allocationMatrix);
+
+		/* Se nÂ‹o tem deadlock, retorna null */
+		if (deadLockVector.size() == 0) {
+			return null;
+		}
+
+		/* Killing thread until it is deadlock free. */
+		Vector<ThreadCB> newvec = deadLockVector;
+		while (newvec != null) { /* Quando for null, nao tem mais deadlocks. */
+			ThreadCB thread = newvec.get(0); /* Pega a primeira da lista */
+			thread.kill(); /* Mata a thread */
+			newvec = ResourceCB.do_deadlockDetection(); /*
+														 * Checa por deadlocks
+														 * novamente
+														 */
+		}
+
+		return deadLockVector;
+
 	}
 
 	/**
@@ -476,6 +538,7 @@ public class ResourceCB extends IflResourceCB {
 
 		if (hash == null) {
 			System.out.println("Ops! hash null.");
+
 			return;
 		}
 
