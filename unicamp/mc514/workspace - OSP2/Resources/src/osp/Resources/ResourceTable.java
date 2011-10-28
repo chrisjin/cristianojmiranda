@@ -26,8 +26,7 @@ public class ResourceTable extends IflResourceTable {
 	public ResourceTable() {
 
 		super();
-
-		System.out.println("Executando o construtor ResourceTable().");
+		System.out.println("\n\nExecutando o construtor ResourceTable().");
 
 	}
 
