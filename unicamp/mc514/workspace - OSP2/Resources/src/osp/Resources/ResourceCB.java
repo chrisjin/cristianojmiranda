@@ -1,16 +1,14 @@
 package osp.Resources;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import osp.IFLModules.IflResourceCB;
 import osp.Memory.MMU;
-import osp.Tasks.TaskCB;
 import osp.Threads.ThreadCB;
-import osp.Utilities.MyOut;
 
 /**
  * Class ResourceCB is the core of the resource management module. Students
@@ -21,14 +19,42 @@ import osp.Utilities.MyOut;
  */
 public class ResourceCB extends IflResourceCB {
 
-	// Threads do sistema
-	private static List<ThreadCB> threadsSistema = new ArrayList<ThreadCB>();
+	/**
+	 * Array com os recursos disponiveis.
+	 */
+	private static List<Integer> recDisponiveis = new ArrayList<Integer>(
+			ResourceTable.getSize());
 
-	// Map para armazenar as requests suspensas.
-	private static Map<Integer, HashMap<ThreadCB, RRB>> threadsSuspenas = new HashMap<Integer, HashMap<ThreadCB, RRB>>();
+	/**
+	 * Hash com os recursos alocados, indexados por id de processos.
+	 */
+	private static List<Hashtable<Integer, Integer>> recAlocados = new ArrayList<Hashtable<Integer, Integer>>(
+			ResourceTable.getSize());
 
-	// Vetor com as threads em deadlock
-	private static Vector<ThreadCB> deadLockVector = new Vector<ThreadCB>();
+	/**
+	 * Requests.
+	 */
+	private static Hashtable<Integer, Integer> requisicoes[];
+
+	/**
+	 * Threads do sistema.
+	 */
+	private static Hashtable<Integer, ThreadCB> threads = new Hashtable<Integer, ThreadCB>();
+
+	/**
+	 * Vetor de recursos.
+	 */
+	private static Vector<RRB> RRBs;
+
+	/**
+	 * Hash com os recursos esperados por um processo.
+	 */
+	private static Hashtable<Integer, Integer> recEsperados[];
+
+	/**
+	 * Hash com o status dos recursos.
+	 */
+	private static Hashtable<Integer, Boolean> recFinalizados[];
 
 	/**
 	 * Creates a new ResourceCB instance with the given number of available
@@ -38,6 +64,7 @@ public class ResourceCB extends IflResourceCB {
 	 */
 	public ResourceCB(int qty) {
 		super(qty);
+		recDisponiveis.add(this.getID(), qty);
 		System.out.println("\n\nExecutando contrutor ResourceCB().");
 	}
 
@@ -47,10 +74,22 @@ public class ResourceCB extends IflResourceCB {
 	 * 
 	 * @OSPProject Resources
 	 */
+	@SuppressWarnings("unchecked")
 	public static void init() {
 
 		System.out.println("\n\nExecutando o metodo init().");
 
+		requisicoes = new Hashtable[ResourceTable.getSize()];
+		recEsperados = new Hashtable[ResourceTable.getSize()];
+		RRBs = new Vector();
+		recFinalizados = new Hashtable[ResourceTable.getSize()];
+
+		for (int i = 0; i < ResourceTable.getSize(); i++) {
+			recAlocados.add(i, new Hashtable<Integer, Integer>());
+			requisicoes[i] = new Hashtable();
+			recEsperados[i] = new Hashtable();
+			recFinalizados[i] = new Hashtable();
+		}
 	}
 
 	/**
@@ -64,357 +103,112 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public RRB do_acquire(int quantity) {
-
 		long timer = System.currentTimeMillis();
 		System.out.println("\n\nIniciando do_acquire().");
 
-		System.out.println("ThreadsSuspensas=" + threadsSuspenas);
+		int i, numRecursos = ResourceTable.getSize();
 
-		System.out
-				.println("Verifica se esta sendo solicitado uma quantidade valida de recursos.");
-		if (quantity <= 0) {
+		// Hashtable<Integer, Boolean> Finish[] = new Hashtable[numRecursos];
 
-			System.out
-					.println("Deve ser fornecido quantidades superiores a 0 de recursos...");
-			System.out.println("Finalizando do_acquire(). Em "
-					+ (System.currentTimeMillis() - timer) + "ms.");
-			return null;
+		boolean flag = true, flag1 = true;
+
+		ThreadCB thread = MMU.getPTBR().getTask().getCurrentThread(), auxThread;
+
+		int work, alocado, necessario = (this.getMaxClaim(thread) - this
+				.getAllocated(thread));
+
+		int id = this.getID();
+
+		Enumeration keys_need = recEsperados[id].keys(), en;
+
+		Vector<RRB> rrbs = new Vector();
+
+		RRB rrb = new RRB(thread, this, quantity), rrbaux;
+
+		// inicializar o vetor need
+
+		en = RRBs.elements();
+
+		while (en.hasMoreElements()) {
+			rrbaux = (RRB) en.nextElement();
+			if (rrbaux.getID() == id)
+				rrbs.add(rrbaux); // se for um rrb desta thread entao "fingimos"
+			// que alocamos
 		}
 
-		System.out.println("Obtendo a task atual...");
-		TaskCB taskAtual = MMU.getPTBR().getTask();
+		if (quantity <= (this.getMaxClaim(thread) - this.getAllocated(thread))
+				&& quantity <= this.getMaxClaim(thread)) {
+			if (quantity <= this.getAvailable()) {
+				if (ResourceCB.getDeadlockMethod() == Avoidance) {
+					work = this.getAvailable() - quantity;
+					en = rrbs.elements();
+					while (en.hasMoreElements()) { // verifica todos os rrbs até
+						// encontrar um que possa
+						// ser satisfeito.
+						rrbaux = (RRB) en.nextElement();
+						if (rrbaux.getQuantity() <= work) {
+							work += rrbaux.getQuantity();
+							rrbs.remove(rrbaux); // remove o rrb que pode ser
+							// granted
+							en = rrbs.elements();
+						}
+					}
+				} // banqueiro
 
-		System.out.println("Obtendo a thread que esta executando...");
-		ThreadCB threadAtual = taskAtual.getCurrentThread();
+				if (!(rrbs.isEmpty()))
+					flag = false; // se esse vetor estiver vazio eh porque todos
+				// os rrbs puderam ser granted
+			} else {
+				// processo deve esperar
+				rrb.setStatus(Suspended);
+				thread.suspend(rrb);
+				if (requisicoes[id].keys().hasMoreElements()) {
+					if (requisicoes[id].contains(thread.getID()))
+						requisicoes[id].put(thread.getID(), requisicoes[id]
+								.get(thread.getID())
+								+ quantity);
+					else
+						requisicoes[id].put(thread.getID(), quantity);
+				} else
+					requisicoes[id].put(thread.getID(), quantity);
+				threads.put(thread.getID(), thread);
+				RRBs.add(rrb);
+				return rrb;
+			}
+		} else
+			return null;// processo excedeu o máximo pedido
 
-		System.out.println("Adiciona thread a lista de threads do sistema...");
-		threadsSistema.add(threadAtual);
+		if (flag) {
+			// sistema em estado seguro
 
-		System.out
-				.println("Verifica se a quantidade de recursos alocados mais a quantidade solicitada eh maior que o total...");
-		if ((this.getAllocated(threadAtual)) + quantity > this.getTotal()) {
-			System.out
-					.println("Impossivel alocar mais recursos que existentes.");
-			System.out.println("Finalizando do_acquire(). Em "
-					+ (System.currentTimeMillis() - timer) + "ms.");
-			return null;
-		}
-
-		System.out
-				.println("Verificando se a quantidade de recursos solicitados supera os recursos esperados para a task...");
-		if ((this.getAllocated(threadAtual)) + quantity > this
-				.getMaxClaim(threadAtual)) {
-			System.out
-					.println("Recursos solicitados superam os valores declarados para essa task...");
-			System.out.println("Finalizando do_acquire(). Em "
-					+ (System.currentTimeMillis() - timer) + "ms.");
-			return null;
-		}
-
-		System.out.println("Montando a request....");
-		RRB request = new RRB(threadAtual, this, quantity);
-
-		System.out
-				.println("Verificando tipo de metodo de tratamento de deadLock a ser empregado...");
-		if (getDeadlockMethod() == Avoidance) {
-			avoidanceDeadLock(quantity, threadAtual, request);
-		} else if (getDeadlockMethod() == Detection) {
-			detectionDeadlock(quantity, threadAtual, request);
-		}
-
-		else {
-			System.out
-					.println("\n\n\n------------------------------------------------------------------");
-			System.out
-					.println("ATENCAO! Tratamento de deadlock empregado diferente de avoidance e detection.\n");
+			if (recAlocados.get(id).get(thread.getID()) != null)
+				recAlocados.get(id).put(thread.getID(),
+						(recAlocados.get(id).get(thread.getID()) + quantity));
+			else
+				recAlocados.get(id).put(thread.getID(), quantity);
+			recDisponiveis.add(id, this.getAvailable() - quantity);
+			rrb.grant();
+			threads.put(thread.getID(), thread);
+		} else {
+			// sistema em estado inseguro
+			rrb.setStatus(Suspended);
+			thread.suspend(rrb);
+			RRBs.add(rrb);
+			if (requisicoes[id].keys().hasMoreElements()) {
+				if (requisicoes[id].contains(thread.getID()))
+					requisicoes[id].put(thread.getID(), requisicoes[id]
+							.get(thread.getID())
+							+ quantity);
+				else
+					requisicoes[id].put(thread.getID(), quantity);
+			} else
+				requisicoes[id].put(thread.getID(), quantity);
+			threads.put(thread.getID(), thread);
 		}
 
 		System.out.println("Finalizando do_acquire(). Em "
 				+ (System.currentTimeMillis() - timer) + "ms.");
-
-		return request;
-
-	}
-
-	/**
-	 * @param quantity
-	 * @param threadAtual
-	 * @param request
-	 */
-	private void detectionDeadlock(int quantity, ThreadCB threadAtual,
-			RRB request) {
-
-		if (quantity <= getAvailable()) {
-
-			request.grant();
-
-		} else {
-
-			if (threadAtual.getStatus() != ThreadWaiting) {
-
-				request.setStatus(Suspended);
-				threadAtual.suspend(request);
-
-			}
-
-			System.out
-					.println("Inserindo requisicao na map de itens suspensos...");
-			if (threadsSuspenas.containsKey(getID())) {
-				System.out
-						.println("Ja existem itens suspensos para esse id, inserindo outro mais...");
-				threadsSuspenas.get(getID()).put(threadAtual, request);
-			} else {
-
-				System.out
-						.println("Inserindo o primeiro item suspenso para o id...");
-				HashMap<ThreadCB, RRB> map = new HashMap<ThreadCB, RRB>();
-				map.put(threadAtual, request);
-				threadsSuspenas.put(getID(), map);
-			}
-
-			System.out.println("ThreadsSuspensas=" + threadsSuspenas);
-		}
-	}
-
-	/**
-	 * @param quantity
-	 * @param threadAtual
-	 * @param request
-	 */
-	private void avoidanceDeadLock(int quantity, ThreadCB threadAtual,
-			RRB request) {
-		System.out.println("Deadlock avoindance! Usando Banker Algorithms.");
-
-		System.out
-				.println("Simula a atribuicao do recurso antes de fato atribui-lo...");
-		if (bankerVerify(threadAtual, quantity, this)) {
-
-			System.out.println("Autoriza a requisiaÂ§aÂ£o...");
-			request.grant();
-
-		} else {
-
-			System.out.println("Suspende a requisiaÂ§aÂ£o...");
-			request.setStatus(RRB.Suspended);
-
-			System.out
-					.println("Inserindo requisicao na map de itens suspensos...");
-			if (threadsSuspenas.containsKey(getID())) {
-				System.out
-						.println("JaÂ¡ existem itens suspensos para esse id, inserindo outro mais...");
-				threadsSuspenas.get(getID()).put(threadAtual, request);
-			} else {
-
-				System.out
-						.println("Inserindo o primeiro item suspenso para o id...");
-				HashMap<ThreadCB, RRB> map = new HashMap<ThreadCB, RRB>();
-				map.put(threadAtual, request);
-				threadsSuspenas.put(getID(), map);
-			}
-
-			System.out.println("Seta a thread atual como suspensa...");
-			threadAtual.suspend(request);
-		}
-	}
-
-	/**
-	 * Verifica a integridade do sistema com base no banker algorithm.
-	 * 
-	 * @param thread
-	 * @param quantity
-	 * @param recurso
-	 * @return
-	 */
-	private static boolean bankerVerify(ThreadCB thread, int quantity,
-			ResourceCB recurso) {
-
-		long timer = System.currentTimeMillis();
-		System.out.println("\n\nIniciando bankerVerify().");
-
-		// Impede a alocacao caso tente alocar menos que zero recurso,
-		// ou nao haja recursos disponiveis para alocacao ou
-		// a quantidade de recursos a serem alocados seja superior a quantidade
-		// de recursos declarados.
-		System.out.println("Verifica a validade da requisicao...");
-		if (quantity <= 0
-				|| recurso.getAvailable() < quantity
-				|| (recurso.getAllocated(thread) + quantity) > recurso
-						.getMaxClaim(thread)) {
-
-			System.out.println("Requisicao invalida. Nao permite alocar.");
-			System.out.println("Finalizando bankerVerify(). Em "
-					+ (System.currentTimeMillis() - timer) + "ms.");
-			return false;
-		}
-
-		// Monta vetor de recursos disponiveis
-		int resourcesAvailables[] = new int[ResourceTable.getSize()];
-
-		// Monta Matrix de recursos previamente pretendidos(necessarios) para a
-		// task
-		int claimMatrix[][] = new int[threadsSistema.size()][ResourceTable
-				.getSize()];
-
-		// Monta a matrix de alocacao dos recursos
-		int allocationMatrix[][] = new int[threadsSistema.size()][ResourceTable
-				.getSize()];
-
-		// Executa a contagem de recursos disponiveis e alocados
-		contabilizarRecursos(quantity, recurso, resourcesAvailables,
-				claimMatrix, allocationMatrix);
-
-		System.out.println("Verificando se o sistema esta em estado seguro...");
-		if (verificaSistemaEstadoSeguro(resourcesAvailables, claimMatrix,
-				allocationMatrix)) {
-
-			System.out.println("Sistema em estado seguro. alocacao permitida!");
-			return true;
-		}
-
-		System.out.println("Finalizando bankerVerify(). Em "
-				+ (System.currentTimeMillis() - timer) + "ms.");
-
-		return false;
-	}
-
-	/**
-	 * @param quantity
-	 * @param recurso
-	 * @param resourcesAvailables
-	 * @param claimMatrix
-	 * @param allocationMatrix
-	 */
-	private static void contabilizarRecursos(int quantity, ResourceCB recurso,
-			int[] resourcesAvailables, int[][] claimMatrix,
-			int[][] allocationMatrix) {
-
-		// Executa a contagem de recursos disponiveis
-		contabilizarRecursosDisponiveis(quantity, recurso, resourcesAvailables);
-
-		System.out.println("\n\nMonta a mapTemporaria...");
-		Map<ThreadCB, Integer> tempHash = new HashMap<ThreadCB, Integer>();
-		int count = 0;
-		for (ThreadCB t : threadsSistema) {
-			tempHash.put(t, new Integer(count++));
-		}
-
-		System.out
-				.println("Contabiliza recursos alocados x recursos declarados.");
-		for (int resourceIndex = 0; resourceIndex < ResourceTable.getSize(); resourceIndex++) {
-
-			for (ThreadCB td : threadsSistema) {
-
-				// Obtem o index da thread
-				int threadIndex = tempHash.get(td);
-
-				claimMatrix[threadIndex][resourceIndex] = ResourceTable
-						.getResourceCB(resourceIndex).getMaxClaim(td);
-
-				if (recurso == ResourceTable.getResourceCB(resourceIndex)) {
-					allocationMatrix[threadIndex][resourceIndex] = ResourceTable
-							.getResourceCB(resourceIndex).getAllocated(td)
-							+ quantity;
-				} else {
-					allocationMatrix[threadIndex][resourceIndex] = ResourceTable
-							.getResourceCB(resourceIndex).getAllocated(td);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Monta a matrix de recursos disponiveis.
-	 * 
-	 * @param quantity
-	 * @param recurso
-	 * @param resourcesAvailables
-	 */
-	private static void contabilizarRecursosDisponiveis(int quantity,
-			ResourceCB recurso, int[] resourcesAvailables) {
-		for (int i = 0; i < ResourceTable.getSize(); i++) {
-
-			if (recurso == ResourceTable.getResourceCB(i)) {
-
-				System.out
-						.println("Setando disponibilidade para o recurso a ser alocado...");
-				resourcesAvailables[i] = ResourceTable.getResourceCB(i)
-						.getAvailable() - quantity;
-			} else {
-
-				resourcesAvailables[i] = ResourceTable.getResourceCB(i)
-						.getAvailable();
-			}
-		}
-	}
-
-	/**
-	 * Verifica se o sistema esta em estado seguro.
-	 * 
-	 * @param availablesResources
-	 * @param claimResources
-	 * @param allocatedResources
-	 * @return
-	 */
-	private static boolean verificaSistemaEstadoSeguro(
-			int[] availablesResources, int[][] claimResources,
-			int[][] allocatedResources) {
-
-		long timer = System.currentTimeMillis();
-		System.out.println("\n\nIniciando verificaSistemaEstadoSeguro().s");
-
-		System.out.println("\n\n\n-------------------------------------");
-		System.out.println("Vetor de deadLock = " + deadLockVector);
-
-		boolean threadFinaliza[] = new boolean[threadsSistema.size()];
-
-		for (int n = 0; n < threadsSistema.size(); n++) {
-
-			for (int i = 0; i < threadsSistema.size(); i++) {
-
-				if (!threadFinaliza[i]) {
-					boolean finaliza = true;
-
-					for (int j = 0; j < ResourceTable.getSize(); j++) {
-						if (availablesResources[j] < (claimResources[i][j] - allocatedResources[i][j])) {
-							System.out
-									.println("Esta sendo alocado mais recusos do que o disponivel!");
-							finaliza = false;
-							break;
-						}
-					}
-
-					if (finaliza) {
-
-						for (int k = 0; k < ResourceTable.getSize(); k++) {
-
-							availablesResources[k] = availablesResources[k]
-									+ allocatedResources[i][k];
-
-							allocatedResources[i][k] = 0;
-						}
-						threadFinaliza[i] = true;
-					}
-				}
-			}
-		}
-
-		deadLockVector.clear();
-
-		boolean estadoSeguro = true;
-		for (int i = 0; i < threadsSistema.size(); i++) {
-			if (!threadFinaliza[i]) {
-
-				System.out
-						.println("Existem threads que nao finalizam. Sistema nao se encontra seguro.");
-				estadoSeguro = false;
-
-				// Monta o vetor de threads em deadlock
-				deadLockVector.add(threadsSistema.get(i));
-			}
-		}
-
-		return estadoSeguro;
-
+		return rrb;
 	}
 
 	/**
@@ -424,47 +218,73 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public static Vector do_deadlockDetection() {
+		Vector<ThreadCB> threadsEmDeadlock = new Vector();
+		Hashtable<Integer, Boolean> finish = new Hashtable();
+		int threadID;
+		int numRecursos = ResourceTable.getSize();
+		List<Integer> work = new ArrayList<Integer>(numRecursos);
+		RRB rrb;
+		Enumeration en;
+		boolean fim = false;
 
-		System.out.println("ThreadsSuspensas=" + threadsSuspenas);
+		// work = available
+		// System.arraycopy(recDisponiveis, 0, work, 0, numRecursos);
+		work.addAll(recDisponiveis);
 
-		// Monta vetor de recursos disponiveis
-		int resourcesAvailables[] = new int[ResourceTable.getSize()];
+		// se a thread nao tem nenhum recurso alocado seta finish como true,
+		// caso contrario, seta como false
+		en = threads.keys();
+		while (en.hasMoreElements()) {
+			threadID = (Integer) en.nextElement();
+			for (int i = 0; i < numRecursos; i++) {
+				if (recAlocados.get(i).containsKey(threadID)) {
+					if (!finish.containsKey(threadID))
+						finish.put(threadID, true);
+					if (recAlocados.get(i).get(threadID) != 0)
+						finish.put(threadID, false);
+				}
+			}
+		}
 
-		// Monta Matrix de recursos previamente pretendidos(necessarios) para a
-		// task
-		int claimMatrix[][] = new int[threadsSistema.size()][ResourceTable
-				.getSize()];
+		// testa se as threads conseguirao ser finalizadas sem entrar em
+		// Deadlock
+		test: while (!fim) {
+			en = finish.keys();
+			while (en.hasMoreElements()) {
+				threadID = (Integer) en.nextElement();
+				if (!finish.get(threadID)
+						&& ResourceCB.requestMenorWork(work, threadID)) {
+					for (int i = 0; i < numRecursos; i++) {
+						if (recAlocados.get(i).get(threadID) != null)
+							work.set(i, recAlocados.get(i).get(threadID)
+									+ work.get(i));
 
-		// Monta a matrix de alocacao dos recursos
-		int allocationMatrix[][] = new int[threadsSistema.size()][ResourceTable
-				.getSize()];
+					}
+					finish.put(threadID, true);
+					continue test;
+				}
+			}
+			fim = true;
+		}
 
-		// Executa a contagem de recursos disponiveis e alocados
-		contabilizarRecursos(0, null, resourcesAvailables, claimMatrix,
-				allocationMatrix);
+		// se houver alguma thread com finish igual a false, o sistema
+		// esta em Deadlock
+		en = finish.keys();
+		while (en.hasMoreElements()) {
+			threadID = (Integer) en.nextElement();
+			if (!finish.get(threadID))
+				threadsEmDeadlock.add(threads.get(threadID));
+		}
 
-		// Verifica o estado do sistema atualizando a matriz de deadlock
-		verificaSistemaEstadoSeguro(resourcesAvailables, claimMatrix,
-				allocationMatrix);
-
-		/* Se nÂ‹o tem deadlock, retorna null */
-		if (deadLockVector.size() == 0) {
+		// nao ha threads em Deadlock
+		if (threadsEmDeadlock.isEmpty())
 			return null;
-		}
 
-		/* Killing thread until it is deadlock free. */
-		Vector<ThreadCB> newvec = deadLockVector;
-		while (newvec != null) { /* Quando for null, nao tem mais deadlocks. */
-			ThreadCB thread = newvec.get(0); /* Pega a primeira da lista */
-			thread.kill(); /* Mata a thread */
-			newvec = ResourceCB.do_deadlockDetection(); /*
-														 * Checa por deadlocks
-														 * novamente
-														 */
-		}
+		// mata uma thread e chama do_deadlockDetection recursivamente
+		threadsEmDeadlock.firstElement().kill();
+		ResourceCB.do_deadlockDetection();
 
-		return deadLockVector;
-
+		return threadsEmDeadlock;
 	}
 
 	/**
@@ -476,50 +296,45 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public static void do_giveupResources(ThreadCB thread) {
+		Enumeration en;
+		ResourceCB recurso;
+		RRB rrb;
 
-		long timer = System.currentTimeMillis();
-		System.out.println("\n\nIniciando do_giveupResources().");
-
-		System.out.println("ThreadsSuspensas=" + threadsSuspenas);
-
-		// Retira a thread da lista de threads do sistema
-		threadsSistema.remove(thread);
-
-		// Poe todas as rrbs que estao alocadas para a thread na lista
-		// serem excluidas e tambem verficar se ha alguma outra rrb que pode dar
-		// grant
-
+		// libera todos os recursos alocados para a thread
 		for (int i = 0; i < ResourceTable.getSize(); i++) {
-			ResourceCB resource = ResourceTable.getResourceCB(i);
-			int disponivel = resource.getAvailable();
-			int alocado = resource.getAllocated(thread);
-			// a thread nao aloca mais nenhum resource
-			resource.setAllocated(thread, 0);
-			disponivel = (disponivel + alocado);
-			resource.setAvailable(disponivel);
-			threadsSuspenas.get(i).remove(thread);
+			recurso = ResourceTable.getResourceCB(i);
+			recurso.setAvailable(recurso.getAvailable()
+					+ recurso.getAllocated(thread));
+			recurso.setAllocated(thread, 0);
+			recDisponiveis.add(i, recurso.getAvailable());
+			recAlocados.get(i).remove(thread.getID());
 		}
 
-		for (int i = 0; i < ResourceTable.getSize(); i++) {
+		// remove a thread do lista de RRBs, caso ela esteja na lista
+		en = RRBs.elements();
+		while (en.hasMoreElements()) {
+			rrb = (RRB) en.nextElement();
+			if (rrb.getThread().getID() == thread.getID())
+				RRBs.remove(rrb);
+		}
 
-			ResourceCB resource = ResourceTable.getResourceCB(i);
+		// remove thread da lista de threads
+		threads.remove(thread.getID());
 
-			for (ThreadCB thread2 : threadsSuspenas.get(i).keySet()) {
-
-				RRB rrb = (RRB) (threadsSuspenas.get(i).get(thread2));
-				if (rrb == null) {
-					continue;
-				}
-				if ((bankerVerify(thread2, rrb.getQuantity(), resource))) {
-					rrb.grant();
-				}
+		// verifica se ha algum RRB que pode ter seus recursos alocados
+		en = RRBs.elements();
+		while (en.hasMoreElements()) {
+			rrb = (RRB) en.nextElement();
+			recurso = rrb.getResource();
+			if (rrb.getQuantity() <= recurso.getAvailable()) {
+				rrb.grant();
+				recDisponiveis.add(recurso.getID(), recurso.getAvailable());
+				recAlocados.get(recurso.getID()).put(rrb.getThread().getID(),
+						recurso.getAllocated(rrb.getThread()));
+				RRBs.remove(rrb);
+				en = RRBs.elements();
 			}
-
 		}
-
-		System.out.println("Finalizando do_giveupResources(). Em "
-				+ (System.currentTimeMillis() - timer) + "ms.");
-
 	}
 
 	/**
@@ -529,53 +344,36 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public void do_release(int quantity) {
+		ThreadCB thread = MMU.getPTBR().getTask().getCurrentThread(), auxThread;
 
-		long timer = System.currentTimeMillis();
-		System.out.println("\n\nIniciando do_release().");
+		int id = this.getID(), quant;
 
-		System.out.println("Threads suspensas=" + threadsSuspenas);
-		HashMap<ThreadCB, RRB> hash = threadsSuspenas.get(getID());
+		RRB rrb = null;
 
-		if (hash == null) {
-			System.out.println("Ops! hash null.");
+		ResourceCB recurso;
 
-			return;
-		}
+		Enumeration e = RRBs.elements();
 
-		List<RRB> rrbsgranted = new ArrayList<RRB>();
+		// libera os recursos
+		this.setAvailable((this.getAvailable() + quantity));
+		this.setAllocated(thread, (this.getAllocated(thread) - quantity));
 
-		ThreadCB thread_atual = MMU.getPTBR().getTask().getCurrentThread();
-		MyOut.print("Uira", "Alocado: " + this.getAllocated(thread_atual)
-				+ " Livre: " + this.getAvailable());
+		recDisponiveis.add(id, this.getAvailable());
+		recAlocados.get(id).put(thread.getID(), this.getAllocated(thread));
 
-		this.setAllocated(thread_atual,
-				((this.getAllocated(thread_atual)) - quantity));
-		this.setAvailable((this.getAvailable()) + quantity);
-
-		for (ThreadCB thread : hash.keySet()) {
-
-			RRB rrb = (RRB) threadsSuspenas.get(getID()).get(thread);
-			if (rrb == null) {
-				continue;
-			}
-
-			if ((rrb.getQuantity() <= quantity)
-					&& (bankerVerify(thread, rrb.getQuantity(),
-							rrb.getResource()))) {
+		// verifica se ha algum RRB que pode ter seus recursos alocados
+		while (e.hasMoreElements()) {
+			rrb = (RRB) e.nextElement();
+			recurso = rrb.getResource();
+			if (rrb.getQuantity() <= recurso.getAvailable()) {
 				rrb.grant();
+				recDisponiveis.add(recurso.getID(), recurso.getAvailable());
+				recAlocados.get(recurso.getID()).put(rrb.getThread().getID(),
+						recurso.getAllocated(rrb.getThread()));
+				RRBs.remove(rrb);
+				e = RRBs.elements();
 			}
 		}
-		if (!rrbsgranted.isEmpty()) {
-
-			for (RRB rrb : rrbsgranted) {
-				threadsSuspenas.get(getID()).remove(rrb.getThread());
-			}
-
-		}
-
-		System.out.println("Finalizado do_release(). Em "
-				+ (System.currentTimeMillis() - timer) + "ms.");
-
 	}
 
 	/**
@@ -587,7 +385,8 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public static void atError() {
-		System.out.println("\n\nExecutando atError().");
+		// your code goes here
+
 	}
 
 	/**
@@ -599,8 +398,29 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public static void atWarning() {
-		System.out.println("\n\nExecutando atWarning().");
+		// your code goes here
 
 	}
 
+	/*
+	 * Feel free to add methods/fields to improve the readability of your code
+	 */
+
+	/*
+	 * Método auxiliar (do_deadlockDetection): retorna 'true' se 'request' <
+	 * 'work'. Em vez de usar o próprio 'request', utiliza os rrbs suspensos.
+	 */
+	public static boolean requestMenorWork(List<Integer> work, int threadID) {
+		Enumeration en = RRBs.elements();
+		RRB rrb;
+
+		while (en.hasMoreElements()) {
+			rrb = (RRB) en.nextElement();
+			if (rrb.getThread().getID() == threadID
+					&& rrb.getQuantity() > work.get(rrb.getResource().getID())) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
