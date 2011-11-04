@@ -101,35 +101,39 @@ public class ResourceCB extends IflResourceCB {
 		long timer = System.currentTimeMillis();
 		System.out.println("\n\nIniciando do_acquire().");
 
-		boolean flag = true;
-
+		System.out.println("Obtendo a thread atual...");
 		ThreadCB thread = MMU.getPTBR().getTask().getCurrentThread();
 
-		int work = (this.getMaxClaim(thread) - this.getAllocated(thread));
+		boolean flag = true;
 
-		int id = this.getID();
+		System.out
+				.println("Calculando quantidade de recursos necessarios para completar....");
+		int workDiff = (this.getMaxClaim(thread) - this.getAllocated(thread));
 
+		System.out.println("Montando o vetor de recursos...");
 		Vector<RRB> rrbs = new Vector<RRB>();
-
-		RRB rrb = new RRB(thread, this, quantity);
-
 		for (RRB itRRb : RRBs) {
-			if (itRRb.getID() == id) {
+			if (itRRb.getID() == this.getID()) {
 				rrbs.add(itRRb);
 			}
 		}
 
-		if (quantity <= (this.getMaxClaim(thread) - this.getAllocated(thread))
-				&& quantity <= this.getMaxClaim(thread)) {
+		System.out.println("RRBS=" + rrbs);
+
+		RRB rrb = new RRB(thread, this, quantity);
+
+		System.out
+				.println("Verifiando se a quantidade de recusos solicitados existem disponiveis, e se não ultrapassa o limite maximo declarado para o processo...");
+		if (quantity <= workDiff && quantity <= this.getMaxClaim(thread)) {
 
 			if (quantity <= this.getAvailable()) {
 				if (ResourceCB.getDeadlockMethod() == Avoidance) {
-					work = this.getAvailable() - quantity;
+					workDiff = this.getAvailable() - quantity;
 
 					List<RRB> removeList = new ArrayList<RRB>();
 					for (RRB itRRb : rrbs) {
-						if (itRRb.getQuantity() <= work) {
-							work += itRRb.getQuantity();
+						if (itRRb.getQuantity() <= workDiff) {
+							workDiff += itRRb.getQuantity();
 							removeList.add(itRRb);
 						}
 					}
@@ -147,32 +151,43 @@ public class ResourceCB extends IflResourceCB {
 				// processo deve esperar
 				rrb.setStatus(Suspended);
 				thread.suspend(rrb);
-				if (requisicoes.get(id).keys().hasMoreElements()) {
-					if (requisicoes.get(id).contains(thread.getID()))
-						requisicoes.get(id).put(
+				if (requisicoes.get(this.getID()).keys().hasMoreElements()) {
+					if (requisicoes.get(this.getID()).contains(thread.getID()))
+						requisicoes.get(this.getID()).put(
 								thread.getID(),
-								requisicoes.get(id).get(thread.getID())
+								requisicoes.get(this.getID()).get(
+										thread.getID())
 										+ quantity);
 					else
-						requisicoes.get(id).put(thread.getID(), quantity);
+						requisicoes.get(this.getID()).put(thread.getID(),
+								quantity);
 				} else
-					requisicoes.get(id).put(thread.getID(), quantity);
+					requisicoes.get(this.getID()).put(thread.getID(), quantity);
 				threads.put(thread.getID(), thread);
 				RRBs.add(rrb);
 				return rrb;
 			}
-		} else
-			return null;// processo excedeu o máximo pedido
+		} else {
+
+			System.out
+					.println("ATENCAO! O processo excedeu o limite maximo de recursos declarados para o processo.");
+			System.out.println("Metodo do_acquire() executou em "
+					+ (System.currentTimeMillis() - timer) + "ms.");
+			return null;
+		}
 
 		if (flag) {
 			// sistema em estado seguro
 
-			if (recAlocados.get(id).get(thread.getID()) != null)
-				recAlocados.get(id).put(thread.getID(),
-						(recAlocados.get(id).get(thread.getID()) + quantity));
+			if (recAlocados.get(this.getID()).get(thread.getID()) != null)
+				recAlocados.get(this.getID())
+						.put(
+								thread.getID(),
+								(recAlocados.get(this.getID()).get(
+										thread.getID()) + quantity));
 			else
-				recAlocados.get(id).put(thread.getID(), quantity);
-			recDisponiveis.add(id, this.getAvailable() - quantity);
+				recAlocados.get(this.getID()).put(thread.getID(), quantity);
+			recDisponiveis.add(this.getID(), this.getAvailable() - quantity);
 			rrb.grant();
 			threads.put(thread.getID(), thread);
 		} else {
@@ -181,20 +196,22 @@ public class ResourceCB extends IflResourceCB {
 			rrb.setStatus(Suspended);
 			thread.suspend(rrb);
 			RRBs.add(rrb);
-			if (requisicoes.get(id).keys().hasMoreElements()) {
-				if (requisicoes.get(id).contains(thread.getID())) {
-					requisicoes.get(id).put(thread.getID(),
-							requisicoes.get(id).get(thread.getID()) + quantity);
+			if (requisicoes.get(this.getID()).keys().hasMoreElements()) {
+				if (requisicoes.get(this.getID()).contains(thread.getID())) {
+					requisicoes.get(this.getID()).put(
+							thread.getID(),
+							requisicoes.get(this.getID()).get(thread.getID())
+									+ quantity);
 				} else {
-					requisicoes.get(id).put(thread.getID(), quantity);
+					requisicoes.get(this.getID()).put(thread.getID(), quantity);
 				}
 			} else {
-				requisicoes.get(id).put(thread.getID(), quantity);
+				requisicoes.get(this.getID()).put(thread.getID(), quantity);
 			}
 			threads.put(thread.getID(), thread);
 		}
 
-		System.out.println("Finalizando do_acquire(). Em "
+		System.out.println("Metodo do_acquire() executou em "
 				+ (System.currentTimeMillis() - timer) + "ms.");
 		return rrb;
 	}
