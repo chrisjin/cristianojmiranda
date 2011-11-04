@@ -179,55 +179,47 @@ public class ResourceCB extends IflResourceCB {
 
 		Vector<ThreadCB> deadlockThreads = new Vector<ThreadCB>();
 
-		boolean fim = false;
-
 		System.out.println("Copia a lista de recursos disponiveis...");
 		List<Integer> work = new ArrayList<Integer>(ResourceTable.getSize());
 		work.addAll(recDisponiveis);
 
 		System.out
 				.println("Monta a hash de status das threads por finalidade...");
-		Hashtable<Integer, Boolean> finish = new Hashtable<Integer, Boolean>();
-		createFinishHash(finish);
+		Hashtable<Integer, Boolean> finishHash = new Hashtable<Integer, Boolean>();
+		createFinishHash(finishHash);
 
-		// testa se as threads conseguirao ser finalizadas sem entrar em
-		// Deadlock
-		test: while (!fim) {
+		System.out.println("Tenta finalizar as threads ativas...");
+		tryFinishThreads(work, finishHash);
 
-			for (Integer threadId : finish.keySet()) {
-				if (!finish.get(threadId)
-						&& ResourceCB.getLessWorkDiff(work, threadId)) {
-					for (int i = 0; i < ResourceTable.getSize(); i++) {
-						if (recAlocados.get(i).get(threadId) != null)
-							work.set(i, recAlocados.get(i).get(threadId)
-									+ work.get(i));
+		System.out
+				.println("Verificando se existe alguma thread em deadlock....");
 
-					}
+		for (Integer threadId : finishHash.keySet()) {
 
-					finish.put(threadId, true);
-					continue test;
-				}
+			System.out.print("Verificando deadlock thread: " + threadId);
+			if (!finishHash.get(threadId)) {
+				System.out.println("  -> DEADLOCK!");
+				deadlockThreads.add(threads.get(threadId));
 			}
 
-			fim = true;
+			System.out.println("  -> free!");
 		}
 
-		// se houver alguma thread com finish igual a false, o sistema
-		// esta em Deadlock
-		Enumeration<Integer> en = finish.keys();
-		while (en.hasMoreElements()) {
-			Integer threadID = (Integer) en.nextElement();
-			if (!finish.get(threadID))
-				deadlockThreads.add(threads.get(threadID));
-		}
-
-		// nao ha threads em Deadlock
-		if (deadlockThreads.isEmpty())
+		if (deadlockThreads.isEmpty()) {
+			System.out.println("Nenhuma  thread em deadlock!");
+			System.out.println("Metodo do_deadlockDetection() finalizado em "
+					+ (System.currentTimeMillis() - timer) + "ms.");
 			return null;
+		}
 
-		// mata uma thread e chama do_deadlockDetection recursivamente
+		System.out.println("Killing thread...");
 		deadlockThreads.firstElement().kill();
+
+		System.out.println("Verificando deadlock recursivamente...");
 		ResourceCB.do_deadlockDetection();
+
+		System.out.println("Metodo do_deadlockDetection() finalizado em "
+				+ (System.currentTimeMillis() - timer) + "ms.");
 
 		return deadlockThreads;
 	}
@@ -369,6 +361,43 @@ public class ResourceCB extends IflResourceCB {
 
 		System.out.println("Ops! Ocorreu um warning.");
 
+	}
+
+	/**
+	 * @param work
+	 * @param finishHash
+	 */
+	private static void tryFinishThreads(List<Integer> work,
+			Hashtable<Integer, Boolean> finishHash) {
+
+		System.out
+				.println("Tenta finalizar as threase sem que haja deadlock...");
+		boolean endStatus = false;
+		firstLoop: while (!endStatus) {
+
+			for (Integer threadId : finishHash.keySet()) {
+
+				System.out
+						.println("Tenta finalizar uma thread com os recursos disponiveis....");
+				if (!finishHash.get(threadId)
+						&& getLessWorkDiff(work, threadId)) {
+
+					for (int i = 0; i < ResourceTable.getSize(); i++) {
+
+						if (recAlocados.get(i).get(threadId) != null) {
+							work.set(i, recAlocados.get(i).get(threadId)
+									+ work.get(i));
+						}
+
+					}
+
+					finishHash.put(threadId, true);
+					continue firstLoop;
+				}
+			}
+
+			endStatus = true;
+		}
 	}
 
 	/**
