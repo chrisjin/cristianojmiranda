@@ -4,12 +4,7 @@ package osp.Resources;
  Student's ResourceTable class.
  */
 
-import java.util.*;
-
-import osp.Utilities.*;
-import osp.IFLModules.*;
-import osp.Threads.*;
-import osp.Tasks.*;
+import osp.IFLModules.IflResourceTable;
 
 /**
  * Class that implements the table of resources
