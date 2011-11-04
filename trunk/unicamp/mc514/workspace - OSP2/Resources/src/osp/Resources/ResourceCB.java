@@ -58,9 +58,11 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public ResourceCB(int qty) {
+
 		super(qty);
 		recDisponiveis.add(this.getID(), qty);
 		System.out.println("\n\nExecutando contrutor ResourceCB().");
+
 	}
 
 	/**
@@ -71,6 +73,7 @@ public class ResourceCB extends IflResourceCB {
 	 */
 	public static void init() {
 
+		long timer = System.currentTimeMillis();
 		System.out.println("\n\nExecutando o metodo init().");
 
 		System.out.println("Instanciando lista de hashes...");
@@ -78,6 +81,9 @@ public class ResourceCB extends IflResourceCB {
 			recAlocados.add(i, new Hashtable<Integer, Integer>());
 			requisicoes.add(i, new Hashtable<Integer, Integer>());
 		}
+
+		System.out.println("Init() finalizado em "
+				+ (System.currentTimeMillis() - timer) + "ms.");
 	}
 
 	/**
@@ -95,8 +101,6 @@ public class ResourceCB extends IflResourceCB {
 		long timer = System.currentTimeMillis();
 		System.out.println("\n\nIniciando do_acquire().");
 
-		// Hashtable<Integer, Boolean> Finish[] = new Hashtable[numRecursos];
-
 		boolean flag = true;
 
 		ThreadCB thread = MMU.getPTBR().getTask().getCurrentThread();
@@ -105,38 +109,35 @@ public class ResourceCB extends IflResourceCB {
 
 		int id = this.getID();
 
-		Enumeration<RRB> en = RRBs.elements();
-
 		Vector<RRB> rrbs = new Vector<RRB>();
 
-		RRB rrb = new RRB(thread, this, quantity), rrbaux;
+		RRB rrb = new RRB(thread, this, quantity);
 
-		// inicializar o vetor need
-
-		while (en.hasMoreElements()) {
-			rrbaux = (RRB) en.nextElement();
-			if (rrbaux.getID() == id)
-				rrbs.add(rrbaux); // se for um rrb desta thread entao "fingimos"
-			// que alocamos
+		for (RRB itRRb : RRBs) {
+			if (itRRb.getID() == id) {
+				rrbs.add(itRRb);
+			}
 		}
 
 		if (quantity <= (this.getMaxClaim(thread) - this.getAllocated(thread))
 				&& quantity <= this.getMaxClaim(thread)) {
+
 			if (quantity <= this.getAvailable()) {
 				if (ResourceCB.getDeadlockMethod() == Avoidance) {
 					work = this.getAvailable() - quantity;
-					en = rrbs.elements();
-					while (en.hasMoreElements()) { // verifica todos os rrbs até
-						// encontrar um que possa
-						// ser satisfeito.
-						rrbaux = (RRB) en.nextElement();
-						if (rrbaux.getQuantity() <= work) {
-							work += rrbaux.getQuantity();
-							rrbs.remove(rrbaux); // remove o rrb que pode ser
-							// granted
-							en = rrbs.elements();
+
+					List<RRB> removeList = new ArrayList<RRB>();
+					for (RRB itRRb : rrbs) {
+						if (itRRb.getQuantity() <= work) {
+							work += itRRb.getQuantity();
+							removeList.add(itRRb);
 						}
 					}
+
+					System.out
+							.println("Remove os rrbs que não podem ser atribuidos...");
+					rrbs.removeAll(removeList);
+
 				} // banqueiro
 
 				if (!(rrbs.isEmpty()))
@@ -281,7 +282,6 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public static void do_giveupResources(ThreadCB thread) {
-		Enumeration en;
 		ResourceCB recurso;
 		RRB rrb;
 
@@ -296,7 +296,7 @@ public class ResourceCB extends IflResourceCB {
 		}
 
 		// remove a thread do lista de RRBs, caso ela esteja na lista
-		en = RRBs.elements();
+		Enumeration<RRB> en = RRBs.elements();
 		while (en.hasMoreElements()) {
 			rrb = (RRB) en.nextElement();
 			if (rrb.getThread().getID() == thread.getID())
@@ -329,15 +329,15 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public void do_release(int quantity) {
-		ThreadCB thread = MMU.getPTBR().getTask().getCurrentThread(), auxThread;
+		ThreadCB thread = MMU.getPTBR().getTask().getCurrentThread();
 
-		int id = this.getID(), quant;
+		int id = this.getID();
 
 		RRB rrb = null;
 
 		ResourceCB recurso;
 
-		Enumeration e = RRBs.elements();
+		Enumeration<RRB> e = RRBs.elements();
 
 		// libera os recursos
 		this.setAvailable((this.getAvailable() + quantity));
@@ -370,8 +370,7 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public static void atError() {
-		// your code goes here
-
+		System.out.println("Ops! Ocorreu um error.");
 	}
 
 	/**
@@ -383,20 +382,17 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public static void atWarning() {
-		// your code goes here
+
+		System.out.println("Ops! Ocorreu um warning.");
 
 	}
-
-	/*
-	 * Feel free to add methods/fields to improve the readability of your code
-	 */
 
 	/*
 	 * Método auxiliar (do_deadlockDetection): retorna 'true' se 'request' <
 	 * 'work'. Em vez de usar o próprio 'request', utiliza os rrbs suspensos.
 	 */
 	public static boolean requestMenorWork(List<Integer> work, int threadID) {
-		Enumeration en = RRBs.elements();
+		Enumeration<RRB> en = RRBs.elements();
 		RRB rrb;
 
 		while (en.hasMoreElements()) {
