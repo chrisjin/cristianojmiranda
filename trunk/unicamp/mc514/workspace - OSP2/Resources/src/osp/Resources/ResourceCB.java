@@ -1,7 +1,6 @@
 package osp.Resources;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
@@ -101,6 +100,8 @@ public class ResourceCB extends IflResourceCB {
 		long timer = System.currentTimeMillis();
 		System.out.println("\n\nIniciando do_acquire().");
 
+		printSystemStatus();
+
 		System.out.println("Obtendo a thread atual...");
 		ThreadCB thread = MMU.getPTBR().getTask().getCurrentThread();
 
@@ -175,7 +176,9 @@ public class ResourceCB extends IflResourceCB {
 	public static Vector<ThreadCB> do_deadlockDetection() {
 
 		long timer = System.currentTimeMillis();
-		System.out.println("Iniciando do_deadlockDetection().");
+		System.out.println("\n\nIniciando do_deadlockDetection().");
+
+		printSystemStatus();
 
 		Vector<ThreadCB> deadlockThreads = new Vector<ThreadCB>();
 
@@ -260,7 +263,12 @@ public class ResourceCB extends IflResourceCB {
 	public static void do_giveupResources(ThreadCB thread) {
 
 		long timer = System.currentTimeMillis();
-		System.out.println("Iniciando o metodo do_giveupResources().");
+		System.out.println("\n\nIniciando o metodo do_giveupResources().");
+
+		printSystemStatus();
+
+		System.out.println("Remove a thread do sistema...");
+		threads.remove(thread.getID());
 
 		System.out.println("Liberando os recursos alocados para a thread...");
 		for (int i = 0; i < ResourceTable.getSize(); i++) {
@@ -292,23 +300,39 @@ public class ResourceCB extends IflResourceCB {
 		}
 		RRBVector.removeAll(removeList);
 
-		// remove thread da lista de threads
-		threads.remove(thread.getID());
+		System.out.println("Tenta alocar os recursos...");
+		tryAllocateResources(removeList);
 
-		// verifica se ha algum RRB que pode ter seus recursos alocados
-		Enumeration en = RRBVector.elements();
-		while (en.hasMoreElements()) {
-			RRB rrb = (RRB) en.nextElement();
-			ResourceCB recurso = rrb.getResource();
-			if (rrb.getQuantity() <= recurso.getAvailable()) {
+		System.out.println("Finalizando do_giveupResources() em "
+				+ (System.currentTimeMillis() - timer) + "ms.");
+
+	}
+
+	private static void tryAllocateResources(List<RRB> removeList) {
+		System.out
+				.println("Verifica se consegue alocar algum recurso para algum RRB...");
+		removeList.clear();
+		for (RRB rrb : RRBVector) {
+
+			if (rrb.getQuantity() <= rrb.getResource().getAvailable()) {
+
+				System.out.println("Grant para " + rrb);
 				rrb.grant();
-				recDisponiveis.add(recurso.getID(), recurso.getAvailable());
-				recAlocados.get(recurso.getID()).put(rrb.getThread().getID(),
-						recurso.getAllocated(rrb.getThread()));
-				RRBVector.remove(rrb);
-				en = RRBVector.elements();
+
+				System.out.println("Adiciona a lista de disponiveis...");
+				recDisponiveis.add(rrb.getResource().getID(), rrb.getResource()
+						.getAvailable());
+
+				System.out.println("Adiciona a lista de alocados...");
+				recAlocados.get(rrb.getResource().getID()).put(
+						rrb.getThread().getID(),
+						rrb.getResource().getAllocated(rrb.getThread()));
+
+				System.out.println("Remove do vetor de rrbs...");
+				removeList.add(rrb);
 			}
 		}
+		RRBVector.removeAll(removeList);
 	}
 
 	/**
@@ -318,36 +342,35 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public void do_release(int quantity) {
+
+		long timer = System.currentTimeMillis();
+		System.out.println("\n\nExecutando do_release().");
+
+		printSystemStatus();
+
+		System.out.println("Obten a thread atual...");
 		ThreadCB thread = MMU.getPTBR().getTask().getCurrentThread();
 
-		int id = this.getID();
-
-		RRB rrb = null;
-
-		ResourceCB recurso;
-
-		Enumeration<RRB> e = RRBVector.elements();
-
-		// libera os recursos
+		System.out.println("Libera os recursos do sistema...");
 		this.setAvailable((this.getAvailable() + quantity));
+
+		System.out.println("Seta os recursos alocados...");
 		this.setAllocated(thread, (this.getAllocated(thread) - quantity));
 
-		recDisponiveis.add(id, this.getAvailable());
-		recAlocados.get(id).put(thread.getID(), this.getAllocated(thread));
+		System.out
+				.println("Atualiza hash recursos  de recursos disponiveis...");
+		recDisponiveis.add(this.getID(), this.getAvailable());
 
-		// verifica se ha algum RRB que pode ter seus recursos alocados
-		while (e.hasMoreElements()) {
-			rrb = (RRB) e.nextElement();
-			recurso = rrb.getResource();
-			if (rrb.getQuantity() <= recurso.getAvailable()) {
-				rrb.grant();
-				recDisponiveis.add(recurso.getID(), recurso.getAvailable());
-				recAlocados.get(recurso.getID()).put(rrb.getThread().getID(),
-						recurso.getAllocated(rrb.getThread()));
-				RRBVector.remove(rrb);
-				e = RRBVector.elements();
-			}
-		}
+		System.out.println("Atualiza hash de recursos alocados....");
+		recAlocados.get(this.getID()).put(thread.getID(),
+				this.getAllocated(thread));
+
+		System.out.println("Tenta alocar os recursos...");
+		tryAllocateResources(new ArrayList<RRB>());
+
+		System.out.println("do_release() finalizado em "
+				+ (System.currentTimeMillis() - timer) + "ms.");
+
 	}
 
 	/**
@@ -572,5 +595,20 @@ public class ResourceCB extends IflResourceCB {
 			requisicoes.get(this.getID()).put(thread.getID(), quantity);
 		}
 
+	}
+
+	/**
+	 * Exibe o status do sistema.
+	 */
+	private static void printSystemStatus() {
+
+		System.out
+				.println("\n\n\n==================== STATUS ===============================");
+		System.out.println("RRBVector=" + RRBVector);
+		System.out.println("recDisponiveis=" + recDisponiveis);
+		System.out.println("recAlocados=" + recAlocados);
+		System.out.println("requisicoes=" + requisicoes);
+		System.out
+				.println("===================================================\n\n");
 	}
 }
