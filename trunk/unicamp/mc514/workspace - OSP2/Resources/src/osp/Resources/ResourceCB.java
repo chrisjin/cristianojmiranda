@@ -34,7 +34,8 @@ public class ResourceCB extends IflResourceCB {
 	/**
 	 * Requests.
 	 */
-	private static Hashtable<Integer, Integer> requisicoes[];
+	private static List<Hashtable<Integer, Integer>> requisicoes = new ArrayList<Hashtable<Integer, Integer>>(
+			ResourceTable.getSize());
 
 	/**
 	 * Threads do sistema.
@@ -44,17 +45,11 @@ public class ResourceCB extends IflResourceCB {
 	/**
 	 * Vetor de recursos.
 	 */
-	private static Vector<RRB> RRBs;
-
-	/**
-	 * Hash com os recursos esperados por um processo.
-	 */
-	private static Hashtable<Integer, Integer> recEsperados[];
+	private static Vector<RRB> RRBs = new Vector<RRB>();
 
 	/**
 	 * Hash com o status dos recursos.
 	 */
-	private static Hashtable<Integer, Boolean> recFinalizados[];
 
 	/**
 	 * Creates a new ResourceCB instance with the given number of available
@@ -74,21 +69,14 @@ public class ResourceCB extends IflResourceCB {
 	 * 
 	 * @OSPProject Resources
 	 */
-	@SuppressWarnings("unchecked")
 	public static void init() {
 
 		System.out.println("\n\nExecutando o metodo init().");
 
-		requisicoes = new Hashtable[ResourceTable.getSize()];
-		recEsperados = new Hashtable[ResourceTable.getSize()];
-		RRBs = new Vector();
-		recFinalizados = new Hashtable[ResourceTable.getSize()];
-
+		System.out.println("Instanciando lista de hashes...");
 		for (int i = 0; i < ResourceTable.getSize(); i++) {
 			recAlocados.add(i, new Hashtable<Integer, Integer>());
-			requisicoes[i] = new Hashtable();
-			recEsperados[i] = new Hashtable();
-			recFinalizados[i] = new Hashtable();
+			requisicoes.add(i, new Hashtable<Integer, Integer>());
 		}
 	}
 
@@ -103,31 +91,27 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public RRB do_acquire(int quantity) {
+
 		long timer = System.currentTimeMillis();
 		System.out.println("\n\nIniciando do_acquire().");
 
-		int i, numRecursos = ResourceTable.getSize();
-
 		// Hashtable<Integer, Boolean> Finish[] = new Hashtable[numRecursos];
 
-		boolean flag = true, flag1 = true;
+		boolean flag = true;
 
-		ThreadCB thread = MMU.getPTBR().getTask().getCurrentThread(), auxThread;
+		ThreadCB thread = MMU.getPTBR().getTask().getCurrentThread();
 
-		int work, alocado, necessario = (this.getMaxClaim(thread) - this
-				.getAllocated(thread));
+		int work = (this.getMaxClaim(thread) - this.getAllocated(thread));
 
 		int id = this.getID();
 
-		Enumeration keys_need = recEsperados[id].keys(), en;
+		Enumeration<RRB> en = RRBs.elements();
 
-		Vector<RRB> rrbs = new Vector();
+		Vector<RRB> rrbs = new Vector<RRB>();
 
 		RRB rrb = new RRB(thread, this, quantity), rrbaux;
 
 		// inicializar o vetor need
-
-		en = RRBs.elements();
 
 		while (en.hasMoreElements()) {
 			rrbaux = (RRB) en.nextElement();
@@ -162,15 +146,16 @@ public class ResourceCB extends IflResourceCB {
 				// processo deve esperar
 				rrb.setStatus(Suspended);
 				thread.suspend(rrb);
-				if (requisicoes[id].keys().hasMoreElements()) {
-					if (requisicoes[id].contains(thread.getID()))
-						requisicoes[id].put(thread.getID(), requisicoes[id]
-								.get(thread.getID())
-								+ quantity);
+				if (requisicoes.get(id).keys().hasMoreElements()) {
+					if (requisicoes.get(id).contains(thread.getID()))
+						requisicoes.get(id).put(
+								thread.getID(),
+								requisicoes.get(id).get(thread.getID())
+										+ quantity);
 					else
-						requisicoes[id].put(thread.getID(), quantity);
+						requisicoes.get(id).put(thread.getID(), quantity);
 				} else
-					requisicoes[id].put(thread.getID(), quantity);
+					requisicoes.get(id).put(thread.getID(), quantity);
 				threads.put(thread.getID(), thread);
 				RRBs.add(rrb);
 				return rrb;
@@ -190,19 +175,21 @@ public class ResourceCB extends IflResourceCB {
 			rrb.grant();
 			threads.put(thread.getID(), thread);
 		} else {
-			// sistema em estado inseguro
+
+			System.out.println("\n\n!Sistema em unsafe state...\n");
 			rrb.setStatus(Suspended);
 			thread.suspend(rrb);
 			RRBs.add(rrb);
-			if (requisicoes[id].keys().hasMoreElements()) {
-				if (requisicoes[id].contains(thread.getID()))
-					requisicoes[id].put(thread.getID(), requisicoes[id]
-							.get(thread.getID())
-							+ quantity);
-				else
-					requisicoes[id].put(thread.getID(), quantity);
-			} else
-				requisicoes[id].put(thread.getID(), quantity);
+			if (requisicoes.get(id).keys().hasMoreElements()) {
+				if (requisicoes.get(id).contains(thread.getID())) {
+					requisicoes.get(id).put(thread.getID(),
+							requisicoes.get(id).get(thread.getID()) + quantity);
+				} else {
+					requisicoes.get(id).put(thread.getID(), quantity);
+				}
+			} else {
+				requisicoes.get(id).put(thread.getID(), quantity);
+			}
 			threads.put(thread.getID(), thread);
 		}
 
@@ -217,14 +204,12 @@ public class ResourceCB extends IflResourceCB {
 	 * @return A vector of ThreadCB objects found to be in a deadlock.
 	 * @OSPProject Resources
 	 */
-	public static Vector do_deadlockDetection() {
-		Vector<ThreadCB> threadsEmDeadlock = new Vector();
-		Hashtable<Integer, Boolean> finish = new Hashtable();
+	public static Vector<ThreadCB> do_deadlockDetection() {
+		Vector<ThreadCB> threadsEmDeadlock = new Vector<ThreadCB>();
+		Hashtable<Integer, Boolean> finish = new Hashtable<Integer, Boolean>();
 		int threadID;
 		int numRecursos = ResourceTable.getSize();
 		List<Integer> work = new ArrayList<Integer>(numRecursos);
-		RRB rrb;
-		Enumeration en;
 		boolean fim = false;
 
 		// work = available
@@ -233,7 +218,7 @@ public class ResourceCB extends IflResourceCB {
 
 		// se a thread nao tem nenhum recurso alocado seta finish como true,
 		// caso contrario, seta como false
-		en = threads.keys();
+		Enumeration<Integer> en = threads.keys();
 		while (en.hasMoreElements()) {
 			threadID = (Integer) en.nextElement();
 			for (int i = 0; i < numRecursos; i++) {
