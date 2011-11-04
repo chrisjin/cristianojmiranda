@@ -258,35 +258,48 @@ public class ResourceCB extends IflResourceCB {
 	 * @OSPProject Resources
 	 */
 	public static void do_giveupResources(ThreadCB thread) {
-		ResourceCB recurso;
-		RRB rrb;
 
-		// libera todos os recursos alocados para a thread
+		long timer = System.currentTimeMillis();
+		System.out.println("Iniciando o metodo do_giveupResources().");
+
+		System.out.println("Liberando os recursos alocados para a thread...");
 		for (int i = 0; i < ResourceTable.getSize(); i++) {
-			recurso = ResourceTable.getResourceCB(i);
-			recurso.setAvailable(recurso.getAvailable()
-					+ recurso.getAllocated(thread));
-			recurso.setAllocated(thread, 0);
-			recDisponiveis.add(i, recurso.getAvailable());
+
+			// Obtendo o recurso
+			ResourceCB resource = ResourceTable.getResourceCB(i);
+			System.out.println("Recurso: " + resource);
+
+			System.out.println("Atualizando availability...");
+			resource.setAvailable(resource.getAvailable()
+					+ resource.getAllocated(thread));
+
+			System.out.println("Zerando alocação...");
+			resource.setAllocated(thread, 0);
+
+			System.out.println("Adicionando a lista de disponiveis...");
+			recDisponiveis.add(i, resource.getAvailable());
+
+			System.out.println("Removendo da lista de alocados...");
 			recAlocados.get(i).remove(thread.getID());
 		}
 
-		// remove a thread do lista de RRBs, caso ela esteja na lista
-		Enumeration<RRB> en = RRBVector.elements();
-		while (en.hasMoreElements()) {
-			rrb = (RRB) en.nextElement();
-			if (rrb.getThread().getID() == thread.getID())
-				RRBVector.remove(rrb);
+		System.out.println("Removendo a thread da lista RRB...");
+		List<RRB> removeList = new ArrayList<RRB>();
+		for (RRB rrb : RRBVector) {
+			if (rrb.getThread().getID() == thread.getID()) {
+				removeList.add(rrb);
+			}
 		}
+		RRBVector.removeAll(removeList);
 
 		// remove thread da lista de threads
 		threads.remove(thread.getID());
 
 		// verifica se ha algum RRB que pode ter seus recursos alocados
-		en = RRBVector.elements();
+		Enumeration en = RRBVector.elements();
 		while (en.hasMoreElements()) {
-			rrb = (RRB) en.nextElement();
-			recurso = rrb.getResource();
+			RRB rrb = (RRB) en.nextElement();
+			ResourceCB recurso = rrb.getResource();
 			if (rrb.getQuantity() <= recurso.getAvailable()) {
 				rrb.grant();
 				recDisponiveis.add(recurso.getID(), recurso.getAvailable());
