@@ -20,7 +20,7 @@
 #include "../steiner_cycle_solver.hpp"
 
 // INCLUS�ES ESPECIFICAS DE SEU C�DIGO
-#include "alg_ze.hpp"
+#include "algExato.hpp"
 
 /**
  * \brief My Steiner Cycle Solver class.
@@ -67,7 +67,7 @@ class RA083382: public SteinerCycleSolver {
 
         /** \name Minhas vari�veis */
         //{@
-        AlgZe ze;
+        AlgExato algExato;
         //@}
 };
 
