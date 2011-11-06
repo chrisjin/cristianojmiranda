@@ -48,12 +48,14 @@ void AlgExato::exato1(ListGraph *graph, ListGraph::NodeMap<bool> *terminal,
 
 	Bfs<ListGraph> bfs(*graph);
 
+	int ii = 0;
+	int tmpii = 0;
 	std: vector<ListGraph::Node> nodeMenores;
 	for (unsigned int i = 0; i < terminais.size(); i++) {
 
-		cout << "Executando BFS para o node: " << graph->id(terminais[i])
+		cout << "Executando BFS para o node: " << graph->id(terminais[ii])
 				<< "..." << endl;
-		bfs.run(terminais[i]);
+		bfs.run(terminais[ii]);
 
 		bool insert = false;
 		double distanciaMenor = 999999999;
@@ -61,9 +63,9 @@ void AlgExato::exato1(ListGraph *graph, ListGraph::NodeMap<bool> *terminal,
 
 		for (unsigned int j = 0; j < terminais.size(); j++) {
 
-			if (terminais[i] != terminais[j]) {
+			if (terminais[ii] != terminais[j]) {
 
-				cout << "Processando path " << graph->id(terminais[i])
+				cout << "Processando path " << graph->id(terminais[ii])
 						<< " ate " << graph->id(terminais[j]) << endl;
 
 				cout << "Verificando se o node ja faz parte da resposta..."
@@ -84,17 +86,18 @@ void AlgExato::exato1(ListGraph *graph, ListGraph::NodeMap<bool> *terminal,
 
 					insert = true;
 
-					cout << endl << endl << "Dist: " << bfs.dist(terminais[j]) << endl << endl;
+					cout << endl << endl << "Dist: " << bfs.dist(terminais[j])
+							<< endl << endl;
 
 					if (bfs.dist(terminais[j]) == 1) {
 
 						cout << "Existe uma aresta entre "
-								<< graph->id(terminais[i]) << " e "
+								<< graph->id(terminais[ii]) << " e "
 								<< graph->id(terminais[j]) << endl;
 
 						cout << "Searching edge..." << endl;
 
-						ListGraph::IncEdgeIt e(*graph, terminais[i]);
+						ListGraph::IncEdgeIt e(*graph, terminais[ii]);
 						for (; e != INVALID; ++e) {
 							if ((graph->u(e) == terminais[j])
 									|| (graph->v(e) == terminais[j]))
@@ -109,6 +112,7 @@ void AlgExato::exato1(ListGraph *graph, ListGraph::NodeMap<bool> *terminal,
 								distanciaMenor = (*length)[e];
 								nodeMenores.clear();
 								nodeMenores.push_back(terminais[j]);
+								tmpii = j;
 							}
 
 						} else {
@@ -118,10 +122,11 @@ void AlgExato::exato1(ListGraph *graph, ListGraph::NodeMap<bool> *terminal,
 
 					} else {
 
+						int iiTmp = tmpii;
 						cout << endl << endl << "---------------------------"
 								<< endl;
 						cout << "Existe um caminho entre "
-								<< graph->id(terminais[i]) << " e "
+								<< graph->id(terminais[ii]) << " e "
 								<< graph->id(terminais[j])
 								<< ", calculando distancia..." << endl;
 
@@ -135,7 +140,11 @@ void AlgExato::exato1(ListGraph *graph, ListGraph::NodeMap<bool> *terminal,
 
 						double tmpDist = 0;
 
+						cout << "Passando por: " << graph->id(n1) << ", ";
+
 						while (n2 != INVALID) {
+
+							cout << graph->id(n2) << ", ";
 
 							ListGraph::IncEdgeIt e(*graph, n1);
 							for (; e != INVALID; ++e) {
@@ -153,13 +162,22 @@ void AlgExato::exato1(ListGraph *graph, ListGraph::NodeMap<bool> *terminal,
 								tmpDist = tmpDist + (*length)[e];
 								tmpNode.push_back(n2);
 
+								for (unsigned int m = 0; m < terminais.size();
+										m++) {
+									if (terminais[m] == n2) {
+										tmpii = m;
+										break;
+									}
+								}
+
 							}
 
 							n2 = bfs.predNode(n2);
 							n1 = n2;
 						}
 
-						cout << "TmpDist: " << tmpDist << endl;
+						cout << endl;
+						cout << "Custo caminho composto: " << tmpDist << endl;
 						if (distanciaMenor > tmpDist && tmpNode.size() > 0) {
 							distanciaMenor = tmpDist;
 							nodeMenores.clear();
@@ -170,6 +188,8 @@ void AlgExato::exato1(ListGraph *graph, ListGraph::NodeMap<bool> *terminal,
 
 							tmpNode.clear();
 
+						} else {
+							tmpii = iiTmp;
 						}
 
 					}
@@ -188,6 +208,17 @@ void AlgExato::exato1(ListGraph *graph, ListGraph::NodeMap<bool> *terminal,
 				}
 
 				nodeMenores.clear();
+
+				ii = tmpii;
+
+				cout << endl
+						<< "--------------------------------------------------"
+						<< endl;
+				cout << "Adicionando node " << graph->id(terminais[ii])
+						<< " a resposta. Distancia: " << distanciaMenor;
+				cout << endl
+						<< "--------------------------------------------------"
+						<< endl;
 
 			} else {
 				cout << endl << endl << "OPS! - Nao existe ciclo!!!!";
@@ -237,18 +268,6 @@ void AlgExato::exato1(ListGraph *graph, ListGraph::NodeMap<bool> *terminal,
 	cout << "Distancia: " << distancia << endl;
 
 	cout << "Sucesso......" << endl;
-
-	for (ListGraph::NodeIt n(*graph); n != INVALID; ++n) {
-		if (bfs.reached(n) && bfs.dist(n) <= 20) {
-			std::cout << graph->id(n);
-			ListGraph::Node prev = bfs.predNode(n);
-			while (prev != INVALID) {
-				std::cout << "<-" << graph->id(prev);
-				prev = bfs.predNode(prev);
-			}
-			std::cout << std::endl;
-		}
-	}
 
 }
 
