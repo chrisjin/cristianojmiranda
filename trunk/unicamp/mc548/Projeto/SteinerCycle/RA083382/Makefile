@@ -16,7 +16,7 @@
 OBJLIB = ../libRA083382.a
 
 #!!! COLOQUE AQUI TODOS OS ARQUIVOS-OBJETOS QUE SER�O GERADOS POR SEUS FONTES
-OBJS = RA083382.o alg_ze.o
+OBJS = RA083382.o algExato.o heuristicas.o
 
 ###############################################################################
 # Minhas flags/includes/libs locais. Altere somente se necess�rio.
