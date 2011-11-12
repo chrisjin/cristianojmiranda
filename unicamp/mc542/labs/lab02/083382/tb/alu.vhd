@@ -1,7 +1,7 @@
 ----------------------------------------------
 --
 --
--- TestBench - RF (Register File)
+-- TestBench - ULA ()
 -- Autor: Cristiano J. Miranda (ra: 083382)
 --
 ----------------------------------------------
@@ -15,58 +15,92 @@ use ieee.std_logic_arith.all;
 use ieee.std_logic_textio.all;
 use ieee.std_logic_unsigned.all;
 
--- Definicao da entidade
-entity rf is
- port(A1 : in std_logic_vector(4 downto 0);
-	  A2 : in std_logic_vector(4 downto 0);
-	  A3 : in std_logic_vector(4 downto 0);
-	  WD3 : in std_logic_vector(31 downto 0);
-	  clk : in std_logic;
-	  We3 : in std_logic;
-	  RD1 : out std_logic_vector(31 downto 0);
-	  RD2 : out std_logic_vector(31 downto 0));
-	  
-end rf;
+-- Definicao da entidade alu (arithimethic logic unit)
+--  alucontrol definitions
+--  000 A AND B
+--  001 A OR B
+--  010 A + B
+--  011 not used
+--  100 A AND not B
+--  101 A OR not B
+--  110 A - B
+--  111 SLT
+--
+entity alu is
+	generic(w : natural = 32; cw: natural 3);
+	port(srca : in std_logic_vector(w-1 downto 0);
+		 srcb : in std_logic_vector(w-1 downto 0);
+		 alucontrol : in std_logic_vector(cw-1 downto 0);
+		 aluresult : out std_logic_vector(w-1 downto 0);
+		 zero : out std_logic;
+		 overflow : out std_logic
+		 carryout : out std_logic);
+end alu;
 
--- Implementacao da arquitetura Behavior para RF
-architecture rtl of rf is
+-- Implementacao da arquitetura Behavior para ALU
+architecture behavior of alu is
 
-	-- Banco de registradores(RF): 64 registradores de 32 bits cada
-    type reg_type is array (0 to 31) of std_logic_vector(31 downto 0);
+	-- Adder component
+	component adder is
+		generic (N: integer := 32);
+		port (a, b: in std_logic_vector(N-1 downto 0);
+			  cin: in std_logic;
+			  s: out std_logic_vector(N-1 downto 0);
+			  cout: out std_logic);
+	end component;
+	
+	-- Signal for result adder
+	signal adderResult : std_logic_vector(w-1 downto 0);
 	
 begin
 
-		-- Escrita sincrona na borda de subida
-		rf_write : process(A3, WD3, clk, We3)
-			variable output_line : line;
-			variable registers : reg_type;
-		begin
+	-- Main process
+	process(srca, srcb, alucontrol)
+	
+		-- Variables
+		variable srctemp : std_logic_vector(w-1 downto 0);
+		variable resulttemp : std_logic_vector(w-1 downto 0);
+	begin
 		
-			registers(0) := (others => '0');
+		case alucontrol is
 		
-			-- Leitura assincrona no banco de registradores
-			RD1 <= registers(conv_integer(A1));
-			RD2 <= registers(conv_integer(A2));
-		
-			-- Executa a acao no RF apenas na borda de subida
-			if clk'event and clk = '1' then
-				
-				-- Escrita sincrona habilitada no registrador
-				if We3 = '1' then
-				
-				    -- Armazena o valor no registrador com excessao de r0
-					if conv_integer(A3) /= 0 then
-						-- Escreve no registrador especificado
-						registers(conv_integer(A3)) := WD3;
-					end if;
-					
-					-- Para verificar se esta de fato alterando o valor do retorno
-					--registers(conv_integer(A3)) := "11111111111111111111111111111111";
-					
-				end if;
-				
-			end if;
+			-- Evaluate A and B
+			when "000" => resulttemp := srca and srcb;
 			
-		end process rf_write;
+			-- Evaluate A or B
+			when "001" => resulttemp := srca or srcb;
+			
+			-- Evaluate A + B
+			when "010" => ;
+			
+			-- Do nothing
+			when "011" => ;
+			
+			-- Evaluate A and not B
+			when "100" => srctemp := not srcb;
+				resulttemp := srca and srctemp;
+			
+			-- Evaluate A or not B
+			when "101" => srctemp := not srcb;
+				resulttemp := srca or srctemp;
+			
+			-- Evaluate A - B
+			when "110" => srctemp := not srcb;
+			
+			-- SLT
+			when "111" => ;
+		end case;
 		
-end rtl;
+		-- Verifica flag zero
+		if resulttemp = "00000000000000000000000000000000" then
+			zero <= '1';
+		else
+			zero <= '0';
+		end if;
+		
+		-- Seta o resultado
+		aluresult <= resulttemp;
+		
+	end process;
+		
+end behavior;
