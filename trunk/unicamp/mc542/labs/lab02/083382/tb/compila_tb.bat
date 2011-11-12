@@ -3,13 +3,19 @@ ghdl --clean
 ghdl --remove
 
 echo Compiling...
-ghdl -a --ieee=synopsys rf.vhd
-ghdl -a --ieee=synopsys tb_rf.vhd
+ghdl -a --ieee=synopsys adder.vhd
+#ghdl -a --ieee=synopsys alu.vhd
+ghdl -a --ieee=synopsys tb_adder.vhd
+#ghdl -a --ieee=synopsys tb_alu.vhd
 
-ghdl -e --ieee=synopsys rf
-ghdl -e --ieee=synopsys tb_rf
+ghdl -e --ieee=synopsys adder
+#ghdl -e --ieee=synopsys alu
+
+ghdl -e --ieee=synopsys tb_adder
+#ghdl -e --ieee=synopsys tb_alu
 
 echo Running...
-ghdl -r --ieee=synopsys tb_rf
+ghdl -r --ieee=synopsys tb_adder
+#ghdl -r --ieee=synopsys tb_alu
 
 pause
