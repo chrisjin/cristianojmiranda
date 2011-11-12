@@ -61,7 +61,7 @@ begin
 	adder_0 : adder port map (srca, adderSrc, '0', adderResult, carry);
 
 	-- Main process
-	process (alucontrol, srca, srcb)
+	process (alucontrol)
 	
 		-- Variables
 		variable srctemp : std_logic_vector(w-1 downto 0);
@@ -69,54 +69,56 @@ begin
 		
 	begin
 		
-		case alucontrol is
-		
-			-- Evaluate A and B
-			when "000" => 
-				resulttemp := srca and srcb;
+		-- Evaluate A and B
+		if alucontrol = "000" then
+			resulttemp := srca and srcb;
 			
-			-- Evaluate A or B
-			when "001" => 
+		-- Evaluate A or B
+		elsif alucontrol = "001" then
 				resulttemp := srca or srcb;
 			
 			-- Evaluate A + B
-			when "010" => 
-				adderSrc <= srcb;
-				resulttemp := adderResult;
-				carryout <= carry;
+		elsif alucontrol = "010" then
+			adderSrc <= srcb;
+			resulttemp := adderResult;
+			carryout <= carry;
 			
-			-- Do nothing
-			when "011" => 
-				resulttemp := srca and srcb;
+		-- Do nothing
+		elsif alucontrol = "011" then
+			resulttemp := srca and srcb;
 			
 			-- Evaluate A and not B
-			when "100" => 
-				srctemp := not srcb;
-				resulttemp := srca and srctemp;
+		elsif alucontrol =  "100" then
+			srctemp := not srcb;
+			resulttemp := srca and srctemp;
 			
 			-- Evaluate A or not B
-			when "101" => 
-				srctemp := not srcb;
-				resulttemp := srca or srctemp;
+		elsif alucontrol =  "101" then
+			srctemp := not srcb;
+			resulttemp := srca or srctemp;
 			
 			-- Evaluate A - B
-			when "110" => 
-				adderSrc <= not srcb;
-				resulttemp := adderResult;
-				carryout <= carry;
+		elsif alucontrol = "110" then 
+			adderSrc <= not srcb;
+			resulttemp := adderResult;
+			carryout <= carry;
 			
 			-- SLT
-			when "111" => 
-				if srca < srcb then
-					resulttemp := "11111111111111111111111111111111";
-				else
-					resulttemp := "00000000000000000000000000000000";
-				end if;
+		elsif alucontrol = "111" then
+			if srca < srcb then
+				resulttemp := "11111111111111111111111111111111";
+			else
+				resulttemp := "00000000000000000000000000000000";
+			end if;
 				
-		end case;
+		end if;
 		
 		-- Verifica flag zero
-		--zero <= '1' when (resulttemp = "00000000000000000000000000000000") else '0';
+		if (resulttemp = "00000000000000000000000000000000") then
+			zero <= '1';
+		else 
+			zero <= '0';
+		end if;
 		
 		-- Seta o resultado
 		aluresult <= resulttemp;		
