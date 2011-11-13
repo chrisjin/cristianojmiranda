@@ -16,6 +16,6 @@ ghdl -e --ieee=synopsys tb_alu
 
 echo Running...
 #ghdl -r --ieee=synopsys tb_adder
-#ghdl -r --ieee=synopsys tb_alu
+ghdl -r --ieee=synopsys tb_alu
 
 pause
