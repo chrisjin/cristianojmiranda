@@ -1,2 +1,5 @@
-ghdl -a --ieee=synopsys rf.vhd
-ghdl -e --ieee=synopsys rf
+ghdl --clean
+ghdl --remove
+
+ghdl -a --ieee=synopsys alu.vhd
+ghdl -e --ieee=synopsys alu

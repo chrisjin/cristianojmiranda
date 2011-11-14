@@ -1,7 +1,7 @@
 ----------------------------------------------
 --
 --
--- TestBench - RF (Register File)
+-- TestBench - ALU (Arithmetic Logic Unit)
 -- Autor: Cristiano J. Miranda (ra: 083382)
 --
 ----------------------------------------------
@@ -9,64 +9,121 @@ library std;
 library ieee;
 
 use std.textio.all;
-use ieee.numeric_std.all;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
-use ieee.std_logic_textio.all;
-use ieee.std_logic_unsigned.all;
 
--- Definicao da entidade
-entity rf is
- port(A1 : in std_logic_vector(4 downto 0);
-	  A2 : in std_logic_vector(4 downto 0);
-	  A3 : in std_logic_vector(4 downto 0);
-	  WD3 : in std_logic_vector(31 downto 0);
-	  clk : in std_logic;
-	  We3 : in std_logic;
-	  RD1 : out std_logic_vector(31 downto 0);
-	  RD2 : out std_logic_vector(31 downto 0));
-	  
-end rf;
+-- Definicao da entidade alu (arithimethic logic unit)
+--  alucontrol definitions
+--  000 A AND B
+--  001 A OR B
+--  010 A + B
+--  011 not used
+--  100 A AND not B
+--  101 A OR not B
+--  110 A - B
+--  111 SLT
+--
+entity alu is
+	generic(w : natural := 32; cw: natural := 3);
+	port(srca : in std_logic_vector(w-1 downto 0);
+		 srcb : in std_logic_vector(w-1 downto 0);
+		 alucontrol : in std_logic_vector(cw-1 downto 0);
+		 aluresult : out std_logic_vector(w-1 downto 0);
+		 zero : out std_logic;
+		 overflow : out std_logic;
+		 carryout : out std_logic);
+end alu;
 
--- Implementacao da arquitetura Behavior para RF
-architecture rtl of rf is
-
-	-- Banco de registradores(RF): 64 registradores de 32 bits cada
-    type reg_type is array (0 to 31) of std_logic_vector(31 downto 0);
+-- Implementacao da arquitetura Behavior para ALU
+architecture behavior of alu is
+	
+	-- Signal for result adder
+	signal adderResult : std_logic_vector(w-1 downto 0);
+	signal carry : std_logic;
+	
 	
 begin
 
-		-- Escrita sincrona na borda de subida
-		rf_write : process(A3, WD3, clk, We3)
-			variable output_line : line;
-			variable registers : reg_type;
-		begin
+	-- Main process
+	process (alucontrol, srca, srcb)
+	
+		-- Variables
+		variable srctemp : std_logic_vector(w-1 downto 0);
+		variable resulttemp : std_logic_vector(w-1 downto 0);
+		variable resultAdd: STD_LOGIC_VECTOR(w downto 0);
 		
-			registers(0) := (others => '0');
+	begin
+	
+		-- NOP
+		if alucontrol /= "011" then
+			overflow <= '0';
+			carryout <= '0';
+		end if;
 		
-			-- Leitura assincrona no banco de registradores
-			RD1 <= registers(conv_integer(A1));
-			RD2 <= registers(conv_integer(A2));
+		-- Evaluate A and B
+		if alucontrol = "000" then
+			resulttemp := srca and srcb;
+			
+		-- Evaluate A or B
+		elsif alucontrol = "001" then
+				resulttemp := srca or srcb;
+			
+			-- Evaluate A + B
+		elsif alucontrol = "010" then
+			resultAdd :=  unsigned("0" & srca) + unsigned("0" & srcb);
+			resulttemp := resultAdd(w-1 downto 0);
+			carryout <= resultAdd(w);
+			-- Se ocorreu carry, certamente ocorreu overflow
+			overflow <= resultAdd(w);
+			--overflow <= resultAdd(w) XOR srca(w-1) XOR srcb(w-1) XOR resultAdd(w-1);
+			
+		-- Do nothing
+		elsif alucontrol = "011" then
+			resulttemp := srca and srcb;
+			
+		-- Evaluate A and not B
+		elsif alucontrol =  "100" then
+			srctemp := not srcb;
+			resulttemp := srca and srctemp;
+			
+		-- Evaluate A or not B
+		elsif alucontrol =  "101" then
+			srctemp := not srcb;
+			resulttemp := srca or srctemp;
+			
+		-- Evaluate A - B
+		elsif alucontrol = "110" then 
+			resultAdd :=  unsigned("0" & srca) - unsigned("0" & srcb);
+			resulttemp := resultAdd(w-1 downto 0);
+			carryout <= resultAdd(w);
+			-- Se ocorreu carry, certamente ocorreu overflow
+			overflow <= resultAdd(w);
+			
+		-- SLT
+		elsif alucontrol = "111" then
+			if srca < srcb then
+				resulttemp := "11111111111111111111111111111111";
+			else
+				resulttemp := "00000000000000000000000000000000";
+			end if;
+				
+		end if;
 		
-			-- Executa a acao no RF apenas na borda de subida
-			if clk'event and clk = '1' then
-				
-				-- Escrita sincrona habilitada no registrador
-				if We3 = '1' then
-				
-				    -- Armazena o valor no registrador com excessao de r0
-					if conv_integer(A3) /= 0 then
-						-- Escreve no registrador especificado
-						registers(conv_integer(A3)) := WD3;
-					end if;
-					
-					-- Para verificar se esta de fato alterando o valor do retorno
-					--registers(conv_integer(A3)) := "11111111111111111111111111111111";
-					
-				end if;
-				
+		-- NOP
+		if alucontrol /= "011" then
+		
+			-- Verifica flag zero
+			if resulttemp = "00000000000000000000000000000000" then
+				zero <= '1';
+			else 
+				zero <= '0';
 			end if;
 			
-		end process rf_write;
+			-- Seta o resultado
+			aluresult <= resulttemp;
 		
-end rtl;
+		end if;
+		
+	end process;
+		
+end behavior;
