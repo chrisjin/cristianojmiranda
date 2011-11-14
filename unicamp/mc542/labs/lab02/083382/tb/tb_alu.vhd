@@ -52,7 +52,7 @@ architecture tb_alu_behavior of tb_alu is
 
 	--wait for 500 ns;
 	
-	write(output_line, String'("------- [tb_alu] Executando suite de * testes ---------------------------------------"));
+	write(output_line, String'("------- [tb_alu] Executando suite de 24 testes ---------------------------------------"));
 	writeline(output, output_line);
 	
 	----------------------------------------------------------------------------
@@ -589,7 +589,7 @@ architecture tb_alu_behavior of tb_alu is
 	entradaA <= "00000000000000000000000000000001";
 	entradaB <= "00000000000000000000000000000001";
 	
-	-- Setando operacao A and not B
+	-- Setando operacao A or not B
 	controle <= "101";
 	
 	wait for 100 ns;
@@ -614,12 +614,219 @@ architecture tb_alu_behavior of tb_alu is
 	assert isZero = '0' report "FALHA, era esperado zero = '0'." severity failure;
 	assert carry = '0' report "FALHA, não deveria ter ocorrido carry." severity failure;
 	assert isOverflow = '0' report "FALHA, não deveria ter ocorrido overflow." severity failure;
+	
+	
+	----------------------------------------------------------------------------
+	------------------------ TESTE 19 -------------------------------------------
+	----------------------------------------------------------------------------
+	
+	-- Alterando valores de entrada.
+	entradaA <= "00000000000000000000000000000000";
+	entradaB <= "11111111111111111111111111111111";
+	
+	-- Setando operacao A and not B
+	controle <= "101";
+	
+	wait for 100 ns;
+	
+	Write(output_line, String'(" Test19 - Testando A or not B. "));
+	Write(output_line, String'("entradaA="));
+	Write(output_line, entradaA);
+	Write(output_line, String'(", entradaB="));
+	Write(output_line, entradaB);
+	Write(output_line, String'(", controle="));
+	Write(output_line, controle);
+	Write(output_line, String'(", resultado="));
+	Write(output_line, resultado);
+	Write(output_line, String'(", carry="));
+	Write(output_line, carry);
+	Write(output_line, String'(", isZero="));
+	Write(output_line, isZero);
+	Write(output_line, String'(", isOverflow="));
+	Write(output_line, isOverflow);
+	writeline(output, output_line);
+	assert resultado = "00000000000000000000000000000000" report "FALHA, era esperado '00000000000000000000000000000000'." severity failure;
+	assert isZero = '1' report "FALHA, era esperado zero = '1'." severity failure;
+	assert carry = '0' report "FALHA, não deveria ter ocorrido carry." severity failure;
+	assert isOverflow = '0' report "FALHA, não deveria ter ocorrido overflow." severity failure;
+	
+	
+	----------------------------------------------------------------------------
+	------------------------ TESTE 20 -------------------------------------------
+	----------------------------------------------------------------------------
+	
+	-- Alterando valores de entrada.
+	entradaA <= "11111111111111111111111111111111";
+	entradaB <= "11111111111111111111111111111111";
+	
+	-- Setando operacao A - B
+	controle <= "110";
+	
+	wait for 100 ns;
+	
+	Write(output_line, String'(" Test20 - Testando A - B. "));
+	Write(output_line, String'("entradaA="));
+	Write(output_line, entradaA);
+	Write(output_line, String'(", entradaB="));
+	Write(output_line, entradaB);
+	Write(output_line, String'(", controle="));
+	Write(output_line, controle);
+	Write(output_line, String'(", resultado="));
+	Write(output_line, resultado);
+	Write(output_line, String'(", carry="));
+	Write(output_line, carry);
+	Write(output_line, String'(", isZero="));
+	Write(output_line, isZero);
+	Write(output_line, String'(", isOverflow="));
+	Write(output_line, isOverflow);
+	writeline(output, output_line);
+	assert resultado = "00000000000000000000000000000000" report "FALHA, era esperado '00000000000000000000000000000000'." severity failure;
+	assert isZero = '1' report "FALHA, era esperado zero = '1'." severity failure;
+	assert carry = '0' report "FALHA, não deveria ter ocorrido carry." severity failure;
+	assert isOverflow = '0' report "FALHA, não deveria ter ocorrido overflow." severity failure;
+	
+	----------------------------------------------------------------------------
+	------------------------ TESTE 21 -------------------------------------------
+	----------------------------------------------------------------------------
+	
+	-- Alterando valores de entrada.
+	entradaA <= "00000000000000000000000000001010";
+	entradaB <= "00000000000000000000000000000010";
+	
+	-- Setando operacao A - B
+	controle <= "110";
+	
+	wait for 100 ns;
+	
+	Write(output_line, String'(" Test21 - Testando A - B. "));
+	Write(output_line, String'("entradaA="));
+	Write(output_line, entradaA);
+	Write(output_line, String'(", entradaB="));
+	Write(output_line, entradaB);
+	Write(output_line, String'(", controle="));
+	Write(output_line, controle);
+	Write(output_line, String'(", resultado="));
+	Write(output_line, resultado);
+	Write(output_line, String'(", carry="));
+	Write(output_line, carry);
+	Write(output_line, String'(", isZero="));
+	Write(output_line, isZero);
+	Write(output_line, String'(", isOverflow="));
+	Write(output_line, isOverflow);
+	writeline(output, output_line);
+	assert resultado = "00000000000000000000000000001000" report "FALHA, era esperado '00000000000000000000000000001000'." severity failure;
+	assert isZero = '0' report "FALHA, era esperado zero = '0'." severity failure;
+	assert carry = '0' report "FALHA, não deveria ter ocorrido carry." severity failure;
+	assert isOverflow = '0' report "FALHA, não deveria ter ocorrido overflow." severity failure;
+	
+	----------------------------------------------------------------------------
+	------------------------ TESTE 22 -------------------------------------------
+	----------------------------------------------------------------------------
+	
+	-- Alterando valores de entrada.
+	entradaA <= "00000000000000000000000000000010";
+	entradaB <= "00000000000000000000000000001010";
+	
+	-- Setando operacao A - B
+	controle <= "110";
+	
+	wait for 100 ns;
+	
+	Write(output_line, String'(" Test22 - Testando A - B. "));
+	Write(output_line, String'("entradaA="));
+	Write(output_line, entradaA);
+	Write(output_line, String'(", entradaB="));
+	Write(output_line, entradaB);
+	Write(output_line, String'(", controle="));
+	Write(output_line, controle);
+	Write(output_line, String'(", resultado="));
+	Write(output_line, resultado);
+	Write(output_line, String'(", carry="));
+	Write(output_line, carry);
+	Write(output_line, String'(", isZero="));
+	Write(output_line, isZero);
+	Write(output_line, String'(", isOverflow="));
+	Write(output_line, isOverflow);
+	writeline(output, output_line);
+	assert resultado = "11111111111111111111111111111000" report "FALHA, era esperado '11111111111111111111111111111000'." severity failure;
+	assert isZero = '0' report "FALHA, era esperado zero = '0'." severity failure;
+	assert carry = '1' report "FALHA, deveria ter ocorrido carry." severity failure;
+	assert isOverflow = '1' report "FALHA, deveria ter ocorrido overflow." severity failure;
+	
+	----------------------------------------------------------------------------
+	------------------------ TESTE 23 -------------------------------------------
+	----------------------------------------------------------------------------
+	
+	-- Alterando valores de entrada.
+	entradaA <= "00000000000000000000000000000010";
+	entradaB <= "00000000000000000000000000001010";
+	
+	-- Setando operacao SLT
+	controle <= "111";
+	
+	wait for 100 ns;
+	
+	Write(output_line, String'(" Test23 - Testando SLT. "));
+	Write(output_line, String'("entradaA="));
+	Write(output_line, entradaA);
+	Write(output_line, String'(", entradaB="));
+	Write(output_line, entradaB);
+	Write(output_line, String'(", controle="));
+	Write(output_line, controle);
+	Write(output_line, String'(", resultado="));
+	Write(output_line, resultado);
+	Write(output_line, String'(", carry="));
+	Write(output_line, carry);
+	Write(output_line, String'(", isZero="));
+	Write(output_line, isZero);
+	Write(output_line, String'(", isOverflow="));
+	Write(output_line, isOverflow);
+	writeline(output, output_line);
+	assert resultado = "11111111111111111111111111111111" report "FALHA, era esperado '11111111111111111111111111111111'." severity failure;
+	assert isZero = '0' report "FALHA, era esperado zero = '0'." severity failure;
+	assert carry = '0' report "FALHA, não deveria ter ocorrido carry." severity failure;
+	assert isOverflow = '0' report "FALHA, não deveria ter ocorrido overflow." severity failure;
+	
+	----------------------------------------------------------------------------
+	------------------------ TESTE 24 -------------------------------------------
+	----------------------------------------------------------------------------
+	
+	-- Alterando valores de entrada.
+	entradaA <= "00000000000000000000000000001010";
+	entradaB <= "00000000000000000000000000000010";
+	
+	
+	-- Setando operacao SLT
+	controle <= "111";
+	
+	wait for 100 ns;
+	
+	Write(output_line, String'(" Test24 - Testando SLT. "));
+	Write(output_line, String'("entradaA="));
+	Write(output_line, entradaA);
+	Write(output_line, String'(", entradaB="));
+	Write(output_line, entradaB);
+	Write(output_line, String'(", controle="));
+	Write(output_line, controle);
+	Write(output_line, String'(", resultado="));
+	Write(output_line, resultado);
+	Write(output_line, String'(", carry="));
+	Write(output_line, carry);
+	Write(output_line, String'(", isZero="));
+	Write(output_line, isZero);
+	Write(output_line, String'(", isOverflow="));
+	Write(output_line, isOverflow);
+	writeline(output, output_line);
+	assert resultado = "00000000000000000000000000000000" report "FALHA, era esperado '00000000000000000000000000000000'." severity failure;
+	assert isZero = '1' report "FALHA, era esperado zero = '1'." severity failure;
+	assert carry = '0' report "FALHA, não deveria ter ocorrido carry." severity failure;
+	assert isOverflow = '0' report "FALHA, não deveria ter ocorrido overflow." severity failure;
 
 	----------------------------------------------------------------------------
 	------------------------ END OF TESTS --------------------------------------
 	----------------------------------------------------------------------------	
 	-- Finaliza a suite de testes
-	assert false report "End o tests. SUCESS execution." severity failure;
+	assert false report "[tb_alu] End of tests. SUCESS execution." severity failure;
 	wait;
 		
   end process;
