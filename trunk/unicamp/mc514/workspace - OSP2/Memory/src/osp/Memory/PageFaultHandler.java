@@ -1,7 +1,5 @@
 package osp.Memory;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
-
 import osp.IFLModules.IflPageFaultHandler;
 import osp.IFLModules.SystemEvent;
 import osp.Threads.ThreadCB;
@@ -66,96 +64,88 @@ public class PageFaultHandler extends IflPageFaultHandler {
 	 */
 	public static int do_handlePageFault(ThreadCB thread, int referenceType,
 			PageTableEntry page) {
-
-		long timer = System.currentTimeMillis();
-		System.out.println("\nINICIO metodo do_handlePageFault().");
-
-		System.out.println("Page=" + page);
-
-		System.out.println("Verificando se a pagina é valida...");
 		if (page.isValid()) {
+			page.notifyThreads();
 			ThreadCB.dispatch();
-			System.out.println("FIM metodo do_handlePageFault(). "
-					+ (System.currentTimeMillis() - timer) + "ms.");
-			return FAILURE;
+			return FAILURE; // Ako je vec u memoriji
 		}
 
-		System.out.println("Setando thread na pagina...");
-		page.setValidatingThread(thread);
-
-		System.out.println("Obtendo o frame...");
-		FrameTableEntry frame = null;
-		for (int i = 0; i < MMU.getFrameTableSize(); ++i) {
-			FrameTableEntry frm = MMU.getFrame(i);
-			System.out.println("Frame=" + frm);
-			if (!frm.isReferenced() && !frm.isReserved()) {
-				System.out.println("Frame encontrado!");
-				frame = frm;
-				frm.setReserved(thread.getTask());
-				break;
-			}
-		}
-
+		FrameTableEntry frame = findUnlockedFrame();
 		if (frame == null) {
-
-			System.out.println("Frame não encontrado!");
-
-			page.setValidatingThread(null);
+			page.notifyThreads();
 			ThreadCB.dispatch();
-
-			System.out.println("FIM metodo do_handlePageFault(). "
-					+ (System.currentTimeMillis() - timer) + "ms.");
-			return NotEnoughMemory;
+			return NotEnoughMemory; // Ako nema slobodnih frejmova
 		}
 
-		System.out.println("Montando o systemEvent....");
-		SystemEvent systemEvent = new SystemEvent("PageFault");
-		thread.suspend(systemEvent);
+		// if(thread.getStatus() == ThreadKill) {return FAILURE; // Thread
+		// poginuo u medjuvremenu
 
-		if (frame.getPage() != null) {
-			PageTableEntry oldPage = frame.getPage();
-			if (frame.isDirty()) {
+		frame.setReserved(thread.getTask()); // Rezervisanje pejdza
 
-				thread.getTask().getSwapFile().write(frame.getID(), oldPage,
-						thread);
-				oldPage.setValid(false);
-				frame.setDirty(false);
+		SystemEvent suspendEvent = new SystemEvent("PageFault");
+		thread.suspend(suspendEvent); // Obustavljanje threada dok se swappuje
+		if (thread.getStatus() == ThreadKill) {
+			page.notifyThreads();
+			ThreadCB.dispatch();
+			return FAILURE; // Opet mogucnost izgibije
+		}
+
+		if (frame.getPage() != null) // Ako vec ima stranica u okviru
+		{
+			if (frame.isDirty()) // Ako je perverzna
+			{
+				thread.getTask().getSwapFile().write(frame.getID(), // Swap-out
+						frame.getPage(), thread);
+				frame.getPage().setValid(false);
+				frame.getPage().setFrame(null);
 
 				if (thread.getStatus() == ThreadKill) {
-					page.setValidatingThread(null);
+					page.notifyThreads();
 					ThreadCB.dispatch();
-
-					System.out.println("FIM metodo do_handlePageFault(). "
-							+ (System.currentTimeMillis() - timer) + "ms.");
-					return FAILURE;
+					return FAILURE; // ...
 				}
 			}
-			frame.setPage(null);
-		}
-
-		frame.setReferenced(false);
-
-		thread.getTask().getSwapFile().read(page.getID(), page, thread);
-		if (thread.getStatus() == ThreadKill) {
+			frame.setPage(null); // Cisto
 			frame.setDirty(false);
-			ThreadCB.dispatch();
-
-			System.out.println("FIM metodo do_handlePageFault(). "
-					+ (System.currentTimeMillis() - timer) + "ms.");
-			return FAILURE;
 		}
 
-		frame.setDirty(referenceType == MemoryWrite);
+		thread.getTask().getSwapFile().read(frame.getID(), page, thread); // Swap-in
 		frame.setPage(page);
+		page.setFrame(frame);
 		page.setValid(true);
-		page.setValidatingThread(null);
 
-		systemEvent.notifyThreads();
+		if (thread.getStatus() == ThreadKill) {
+			page.notifyThreads();
+			ThreadCB.dispatch();
+			return FAILURE; // ?
+		}
+
+		frame.setReserved(null); // Odrezervisanje
+		frame.setDirty(referenceType == MemoryWrite);
+
+		suspendEvent.notifyThreads();
 		page.notifyThreads();
 		ThreadCB.dispatch();
 
-		System.out.println("FIM metodo do_handlePageFault(). "
-				+ (System.currentTimeMillis() - timer) + "ms.");
 		return SUCCESS;
+
 	}
+
+	private static FrameTableEntry findUnlockedFrame() {
+		for (FrameTableEntry f : MMU.frameTable) {
+			if (!f.isReserved() && !f.isReferenced()) {
+				return f;
+			}
+		}
+		return null;
+	}
+
+	/*
+	 * Feel free to add methods/fields to improve the readability of your code
+	 */
+
 }
+
+/*
+ * Feel free to add local classes to improve the readability of your code
+ */

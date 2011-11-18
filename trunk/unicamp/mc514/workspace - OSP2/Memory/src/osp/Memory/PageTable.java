@@ -7,10 +7,16 @@ package osp.Memory;
 
  @OSPProject Memory
  */
-import osp.IFLModules.IflPageTable;
-import osp.Tasks.TaskCB;
+import java.lang.Math;
+import osp.Tasks.*;
+import osp.Utilities.*;
+import osp.IFLModules.*;
+import osp.Hardware.*;
 
 public class PageTable extends IflPageTable {
+	int maxPages = 0;
+	static int absPage = 0;
+
 	/**
 	 * The page table constructor. Must call
 	 * 
@@ -20,17 +26,19 @@ public class PageTable extends IflPageTable {
 	 * 
 	 * @OSPProject Memory
 	 */
-	private int maxPages;
-
 	public PageTable(TaskCB ownerTask) {
 		super(ownerTask);
 
-		maxPages = (int) Math.pow(2, MMU.getPageAddressBits());
-		this.pages = new PageTableEntry[maxPages];
+		maxPages = (int) Math.pow(2, MMU.getPageAddressBits()); // Broj stranica
+		super.pages = new PageTableEntry[maxPages]; // Inicijalizacija arraya
 
-		for (int i = 0; i < maxPages; ++i) {
-			this.pages[i] = new PageTableEntry(this, i);
+		for (int i = 0; i < maxPages; ++i) // Konstruisanje svake, dijeli im se
+		// po redni broj
+		{
+			// super.pages[i] = new PageTableEntry(this, ++PageTable.absPage);
+			super.pages[i] = new PageTableEntry(this, i);
 		}
+
 	}
 
 	/**
@@ -40,15 +48,27 @@ public class PageTable extends IflPageTable {
 	 * @OSPProject Memory
 	 */
 	public void do_deallocateMemory() {
-		for (int i = 0; i < maxPages; ++i) {
-			if (this.pages[i].isValid()) {
-				if (this.pages[i].getFrame().isReserved())
-					this.pages[i].getFrame().setUnreserved(this.getTask());
+		TaskCB task = super.getTask();
+		for (int i = maxPages - 1; i >= 0; --i) {
+			if (pages[i].isValid()) {
+				if (pages[i].getFrame().getReserved() == task) {
+					pages[i].getFrame().setReserved(null);
+				}
 
-				this.pages[i].getFrame().setDirty(false);
-				this.pages[i].getFrame().setReferenced(false);
-				this.pages[i].getFrame().setPage(null);
+				pages[i].getFrame().setDirty(true);
+				pages[i].getFrame().setReferenced(false);
+				pages[i].getFrame().setPage(null);
 			}
 		}
+
 	}
+
+	/*
+	 * Feel free to add methods/fields to improve the readability of your code
+	 */
+
 }
+
+/*
+ * Feel free to add local classes to improve the readability of your code
+ */
