@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.sauronsoftware</groupId>
 	<artifactId>grab4j</artifactId>
 	<version>1.0-TEST</version>
 	<packaging>jar</packaging>
-	<name>grab4j</name> 
+	<name>grab4j</name>
 	<description>grab4j</description>
 
 	<dependencies>
@@ -18,68 +18,49 @@
 			<scope>system</scope>
 			<systemPath>${project.basedir}/lib/js.jar</systemPath>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>nekohtml</groupId>
 			<artifactId>nekohtml</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/nekohtml.jar</systemPath>
+			<version>1.9.6.2</version>
 		</dependency>
-		
+
 		<dependency>
-			<groupId>xercesImpl</groupId>
+			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/xercesImpl.jar</systemPath>
+			<version>2.8.1</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>xml-apis</groupId>
 			<artifactId>xml-apis</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/xml-apis.jar</systemPath>
+			<version>2.0.2</version>
 		</dependency>
-		
-		
-		
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.sonar</groupId>
+			<artifactId>sonar-maven-plugin</artifactId>
+			<version>2.11</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
+
 		<plugins>
-
-			<!--
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>
-							src/assembly/distribution.xml
-                        </descriptor>
-					</descriptors>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<executable>${JAVA_HOME}/bin/javac</executable>
-					<verbose>true</verbose>
-					<fork>true</fork>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>  
-			-->
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>2.3</version>
 			</plugin>
+
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -87,6 +68,7 @@
 				<version>1.1</version>
 			</plugin>
 		</plugins>
+
 	</build>
 
 </project>
