@@ -1,8 +1,8 @@
 package osp.Memory;
 
-import osp.Devices.IORB;
-import osp.IFLModules.IflPageTableEntry;
-import osp.Threads.ThreadCB;
+import osp.Threads.*;
+import osp.Devices.*;
+import osp.IFLModules.*;
 
 /**
  * The PageTableEntry object contains information about a specific virtual page
@@ -22,11 +22,7 @@ public class PageTableEntry extends IflPageTableEntry {
 	 * @OSPProject Memory
 	 */
 	public PageTableEntry(PageTable ownerPageTable, int pageNumber) {
-
 		super(ownerPageTable, pageNumber);
-		System.out.println("Construtor PageTableEntry(). ownerPageTable="
-				+ ownerPageTable + ", pageNumber=" + pageNumber);
-
 	}
 
 	/**
@@ -40,28 +36,21 @@ public class PageTableEntry extends IflPageTableEntry {
 	 *         locking fails or the that created the IORB thread gets killed.
 	 * @OSPProject Memory
 	 */
+
+	// goal of this method is to increment the lock count of the fram associated
+	// with the page.
 	public int do_lock(IORB iorb) {
-
-		long timer = System.currentTimeMillis();
-		System.out.println("INICIO metodo do_lock().");
-
-		System.out.println("iorb=" + iorb);
-		System.out.println("frame=" + this.getFrame());
-
-		System.out.println("Checando se a pagina esta na memoria...");
-		if (this.getFrame() == null || !isValid()) {
-
-			System.out.println("Instanciando o pagefault....");
-			//PageFaultHandler.handlePageFault(iorb.getThread(), iorb.getDeviceID(), this);
-
-			System.out.println("FIM metodo do_lock(). "
-					+ (System.currentTimeMillis() - timer) + "ms.");
-			return FAILURE;
-		}
-
-		System.out.println("Incrementando o lock count...");
+		// first increment the lock count
 		this.getFrame().incrementLockCount();
 
+		// first check if the page is in main memory by testing the validity bit
+		// of the page
+		if (!isValid()) {
+			// If the page is invalid, a pagefault must be initiated.
+			PageFaultHandler.handlePageFault(iorb.getThread(), iorb
+					.getDeviceID(), this);
+			return FAILURE;
+		}
 		// To help identify the pages that are involved in a pagefault, OSP 2
 		// provides the method getValidatingThread()
 		// this method returns the thread that caused a pagefault on that page
@@ -69,8 +58,6 @@ public class PageTableEntry extends IflPageTableEntry {
 				|| getValidatingThread() == iorb.getThread()) {
 			// If Th2 = Th1, then the proper action is to return right after
 			// incrementing the lock count
-			System.out.println("FIM metodo do_lock(). "
-					+ (System.currentTimeMillis() - timer) + "ms.");
 			return SUCCESS;
 		}
 		if (iorb.getThread() != null
@@ -80,21 +67,14 @@ public class PageTableEntry extends IflPageTableEntry {
 			ThreadCB th = iorb.getThread();
 			th.suspend(this);
 			if (isValid()) {
-				System.out.println("FIM metodo do_lock(). "
-						+ (System.currentTimeMillis() - timer) + "ms.");
 				return SUCCESS;
 				// SUCCESS if the page became valid as a result of the pagefault
 			}
 			// and FAILURE otherwise.
-			System.out.println("FIM metodo do_lock(). "
-					+ (System.currentTimeMillis() - timer) + "ms.");
 			return FAILURE;
 		}
 
-		System.out.println("FIM metodo do_lock(). "
-				+ (System.currentTimeMillis() - timer) + "ms.");
 		return SUCCESS;
-
 	}
 
 	/**
@@ -105,7 +85,6 @@ public class PageTableEntry extends IflPageTableEntry {
 	 * @OSPProject Memory
 	 */
 	public void do_unlock() {
-
 		// lock count ne sme da padne ispod nule
 		if (this.getFrame().getLockCount() > 0) {
 			this.getFrame().decrementLockCount();

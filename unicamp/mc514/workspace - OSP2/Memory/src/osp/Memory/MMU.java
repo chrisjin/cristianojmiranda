@@ -1,9 +1,12 @@
 package osp.Memory;
 
-import osp.Hardware.CPU;
-import osp.IFLModules.IflMMU;
-import osp.Interrupts.InterruptVector;
-import osp.Threads.ThreadCB;
+import java.util.*;
+import osp.IFLModules.*;
+import osp.Threads.*;
+import osp.Tasks.*;
+import osp.Utilities.*;
+import osp.Hardware.*;
+import osp.Interrupts.*;
 
 /**
  * The MMU class contains the student code that performs the work of handling a
@@ -13,6 +16,9 @@ import osp.Threads.ThreadCB;
  * @OSPProject Memory
  */
 public class MMU extends IflMMU {
+	static ArrayList<FrameTableEntry> frameTable;
+	static PageFaultHandler handler;
+
 	/**
 	 * This method is called once before the simulation starts. Can be used to
 	 * initialize the frame table and other static variables.
@@ -20,16 +26,18 @@ public class MMU extends IflMMU {
 	 * @OSPProject Memory
 	 */
 	public static void init() {
-
-		long timer = System.currentTimeMillis();
-		System.out.println("INICIO metodo init().");
-
-		for (int i = 0; i < MMU.getFrameTableSize(); ++i) {
-			MMU.setFrame(i, new FrameTableEntry(i));
+		frameTable = new ArrayList<FrameTableEntry>();
+		// used to initilize the frame table
+		// since the total number of frames is known
+		int size = MMU.getFrameTableSize();
+		for (int i = 0; i < size; i++) {
+			FrameTableEntry fte = new FrameTableEntry(i);
+			frameTable.add(fte);
+			// To set a frame entry, use the method setFrame() in class MMU.
+			MMU.setFrame(i, fte);
 		}
+		// PageFaultHandler is able to access any variable defined in that class
 
-		System.out.println("FIM metodo init(). "
-				+ (System.currentTimeMillis() - timer) + "ms");
 	}
 
 	/**
@@ -50,65 +58,59 @@ public class MMU extends IflMMU {
 	 *            that does the memory access (e.g., MemoryRead or MemoryWrite).
 	 * @return The referenced page.
 	 * @OSPProject Memory
+	 * @author marija
 	 */
+
 	static public PageTableEntry do_refer(int memoryAddress, int referenceType,
 			ThreadCB thread) {
-
-		long timer = System.currentTimeMillis();
-		System.out.println("INICIO metodo do_refer().");
-
-		System.out.println("Calculando o tamanho da pagina...");
 		int pageSize = (int) Math.pow(2, getVirtualAddressBits()
-				- getPageAddressBits());
+				- getPageAddressBits()); // Valjda ipak ovako treba
+		int pageNumber = memoryAddress / pageSize;
+		int pageOffset = memoryAddress % pageSize;
 
-		System.out.println("Calculando o nr de paginas...");
-		int totalPaginas = memoryAddress / pageSize;
+		PageTableEntry page = null; // thread.getReservedFrame().getPage();
 
-		System.out.println("Obtendo a pagina...");
-		PageTableEntry page = thread.getTask().getPageTable().pages[totalPaginas];
+		/*
+		 * MyOut.print("do_refer", "PageSize : " + pageSize);
+		 * MyOut.print("do_refer", "Refered address : " + memoryAddress);
+		 * MyOut.print("do_refer", "PageAddressBits : " + getPageAddressBits());
+		 * MyOut.print("do_refer", "VirtualAddressBits : " +
+		 * getVirtualAddressBits()); MyOut.print("do_refer", "Page number : " +
+		 * pageNumber + "; Total pages : " +
+		 * thread.getTask().getPageTable().pages.length);
+		 */
+
+		page = thread.getTask().getPageTable().pages[pageNumber];
 
 		if (page.isValid()) {
-
-			if (referenceType == MemoryWrite) {
-				page.getFrame().setDirty(true);
-			}
-
+			page.getFrame().setDirty(true);
 			page.getFrame().setReferenced(true);
-			System.out.println("FIM metodo do_refer(). "
-					+ (System.currentTimeMillis() - timer));
 			return page;
-
-		} else {
-			if (page.getValidatingThread() != null) {
+		} else if (!page.isValid()) {
+			if (thread != page.getValidatingThread()) {
 				thread.suspend(page);
-
-				page.getFrame().setReferenced(true); // Kill?
-				if (referenceType == MemoryWrite
-						&& thread.getStatus() != ThreadKill)
-					page.getFrame().setDirty(true);
-
-				System.out.println("FIM metodo do_refer(). "
-						+ (System.currentTimeMillis() - timer));
-				return page;
-			} else {
-				InterruptVector.setInterruptType(PageFault);
+				if (page.isValid()) {
+					if (thread.getStatus() != ThreadCB.ThreadKill) {
+						page.getFrame().setDirty(false);
+						page.getFrame().setReferenced(false);
+						return page;
+					}
+					return null;
+				}
+			} else if (thread == page.getValidatingThread()) {
 				InterruptVector.setPage(page);
-				InterruptVector.setReferenceType(referenceType);
 				InterruptVector.setThread(thread);
-
-				CPU.interrupt(PageFault);
-
-				page.getFrame().setReferenced(true); // Kill?
-				if (referenceType == MemoryWrite
-						&& thread.getStatus() != ThreadKill)
-					page.getFrame().setDirty(true);
-
-				System.out.println("FIM metodo do_refer(). "
-						+ (System.currentTimeMillis() - timer));
-				return page;
+				InterruptVector.setReferenceType(referenceType);
+				CPU.interrupt(PageFault); // prosledi joj se pageFault :?
 			}
 		}
 
+		if (thread.getStatus() != ThreadCB.ThreadKill) {
+			page.getFrame().setDirty(false);
+			page.getFrame().setReferenced(false);
+		}
+
+		return page;
 	}
 
 	/**
@@ -120,7 +122,7 @@ public class MMU extends IflMMU {
 	 * @OSPProject Memory
 	 */
 	public static void atError() {
-		System.out.println("\n\nOps, ocorreu um erro!");
+		System.out.println("MMU error");
 	}
 
 	/**
@@ -132,9 +134,7 @@ public class MMU extends IflMMU {
 	 * @OSPProject Memory
 	 */
 	public static void atWarning() {
-
-		System.out.println("\n\nOps, ocorreu um warning!");
-
+		System.out.println("MMU warning");
 	}
 
 }
