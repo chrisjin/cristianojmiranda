@@ -13,7 +13,7 @@ def openLogger(enable, fileName):
 	
 	enabledLog = enable;
 	if fileName == None or len(fileName) == 0:
-		logFile = open('steinerCycle.log', 'a');
+		logFile = open('steinerCycle.log', 'w');
 	else:
 		logFile = open(fileName, 'a');
 		
