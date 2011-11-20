@@ -9,6 +9,6 @@ def findItemList(lst, item):
 def findHashItem(hs, key):
 	try:
 		hs[key];
-		return 1;
+		return True;
 	except KeyError:
-		return 0;
+		return False;
