@@ -4,20 +4,22 @@ from time import time
 from graphUtils import *
 from steinerCycle1 import *
 from steinerCycle2 import *
+from steinerCycle3 import *
+from steinerCycle4 import *
 from logger import *
 
 # Define qual o melhor algoritimo executado
 def verificaMelhorAlgoritmo(results):
 	
-	logDebug("Resultados: " + str(results));
-	
+	logDebug("Resultados: ");
 	tmp = []
 	for rt in results:
+		logDebug(str(rt));
 		if len(rt) > 0 and 'Y' == rt[0]:
 			tmp.append(rt);
 		
 	if len(tmp) > 0:
-		results = sorted(tmp, key=itemgetter(1));
+		results = sorted(tmp, key=itemgetter(1,3));
 		logDebug("Melhor ciclo: " + str(results[0]));
 		return results[0]
 		
@@ -33,6 +35,10 @@ def run(args):
 		print "Missing Params. Example: steinerCycleMain <file_graph.scp> <timeout>";
 		
 	else:
+	
+		# Seta timeout de processamento
+		setTimeOut(int(args[2]));
+	
 		# Carrega o grafo do arquivo
 		loadGraph(args[1])
 		
@@ -46,18 +52,29 @@ def run(args):
 			st2 = Steiner2()
 			st2.start();
 			
+			# Executa a terceira abordagem
+			st3 = Steiner3();
+			st3.start();
+			
+			# Executa a terceira abordagem
+			st4 = Steiner4();
+			st4.start();
+			
 			# Lock para finalizar as threads
 			logDebug("Esperando processamento.");
-			while(len(st1.result) == 0 or len(st2.result) == 0):
+			while(len(st1.result) == 0 or len(st2.result) == 0 or len(st3.result) == 0 or len(st4.result) == 0):
 				continue;
 			
 			logDebug("=======================Processamento finalizado===================");
 			results = [];
 			results.append(st1.result);
 			results.append(st2.result);
+			results.append(st3.result);
+			results.append(st4.result);
 			
 			melhorAlg = verificaMelhorAlgoritmo(results);
 			if len(melhorAlg) > 0:
+				logDebug("Verificando custo novamente:" + str(computaCiclo(melhorAlg[2])));
 				
 				cl = ""
 				for n in melhorAlg[2]:
