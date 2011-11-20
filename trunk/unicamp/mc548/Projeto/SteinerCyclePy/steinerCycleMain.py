@@ -13,7 +13,7 @@ def verificaMelhorAlgoritmo(results):
 	
 	tmp = []
 	for rt in results:
-		if 'Y' == rt[0]:
+		if len(rt) > 0 and 'Y' == rt[0]:
 			tmp.append(rt);
 		
 	if len(tmp) > 0:
@@ -47,20 +47,26 @@ def run(args):
 			st2.start();
 			
 			# Lock para finalizar as threads
+			logDebug("Esperando processamento.");
 			while(len(st1.result) == 0 or len(st2.result) == 0):
 				continue;
 			
+			logDebug("=======================Processamento finalizado===================");
 			results = [];
 			results.append(st1.result);
 			results.append(st2.result);
 			
 			melhorAlg = verificaMelhorAlgoritmo(results);
 			if len(melhorAlg) > 0:
-				print "Best cycle"
+				
+				cl = ""
 				for n in melhorAlg[2]:
-					print n + " "
-				print "endcycle\n\n"
-				print "Solution & Time & Best Solution Value\n"
+					cl = cl + str(n) + " "
+					
+				print "Best cycle"
+				print cl
+				print "endcycle\n"
+				print "Solution & Time & Best Solution Value"
 				print melhorAlg[0] + " & " + str(melhorAlg[3]) + " & " + str(melhorAlg[1])
 				return;
 			

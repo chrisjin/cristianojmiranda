@@ -7,16 +7,18 @@ from pygraph.classes.digraph import digraph
 from pygraph.algorithms.searching import *
 from pygraph.readwrite.dot import write
 from pygraph.algorithms.cycles import *
-
 from collectionUtils import *
 from graphUtils import *
+from logger import *
 
 gr = graph();
 
 class Steiner2(Thread):
 	result = [];
 	def run(self):
+		logDebug("Thread Steiner2 running...");
 		self.result = steinerCycle2();
+		logDebug("Thread Steiner2 finished");
 
 # --
 def steinerCycle2():

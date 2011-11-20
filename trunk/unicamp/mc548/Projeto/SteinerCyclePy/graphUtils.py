@@ -27,20 +27,20 @@ def loadGraph(fileName):
 	line = file.readline();
 	while line:
 		
-		logDebug("Lendo linha: " + line);
-		str = line.split(' ');
+		logDebug("Lendo linha: " + line.strip("\n"));
+		strLine = line.split(' ');
 		if lineCount == 1:	
 			logDebug("Lendo file header");
-			nrVertices = int(str[0]);
-			nrArestas = int(str[1]);
-			nrTerminais = int(str[2].strip());
+			nrVertices = int(strLine[0]);
+			nrArestas = int(strLine[1]);
+			nrTerminais = int(strLine[2].strip());
 			
-		elif lineCount < nrArestas + 1:			
-			vertice1 = int(str[0]); 
-			vertice2 = int(str[1]);
+		elif lineCount < nrArestas + 2:			
+			vertice1 = int(strLine[0]); 
+			vertice2 = int(strLine[1]);
 			aresta = (vertice1, vertice2);
 			logDebug("Lendo aresta: " + str(aresta));
-			arestas[aresta] = float(str[2]);
+			arestas[aresta] = float(strLine[2]);
 			
 			if findItemList(vertices, vertice1) == -1:
 				vertices.append(vertice1);
@@ -48,9 +48,10 @@ def loadGraph(fileName):
 			if findItemList(vertices, vertice2) == -1:
 				vertices.append(vertice2);
 		
-		elif lineCount < nrArestas + nrVertices + 2:
-			if findItemList(terminais, int(str[0])) == -1:
-				terminais.append(int(str[0]));
+		else:
+			logDebug("Lendo terminal");
+			if findItemList(terminais, int(strLine[0])) == -1:
+				terminais.append(int(strLine[0]));
 				
 		line = file.readline();
 		lineCount = lineCount + 1;
@@ -90,28 +91,36 @@ def findMenorAresta(vorigem, vertices, exclude, checkBothSide):
 		return (aresta[0][0], aresta[0][1]);
 	else:
 		logDebug("Nao existe menor aresta");
-		return (-1, -1);
+		return None;
 	
 
 #-- Computa o tamanho de um cliclo
 def computaCiclo(ciclo):
+	logInfo("\n\nINICIO computaCiclo");
+	logDebug("ciclo=" + str(ciclo));
+	
 	size = 0.0;
 	for i in range(len(ciclo)):
 		arestaA = [];
 		arestaB = [];
-		if i <= (len(ciclo) - 2):
+		if i < len(ciclo)-1:
 			arestaA = (ciclo[i], ciclo[i+1]);
 			arestaB = (ciclo[i+1], ciclo[i]);
 		else:
-			arestaA = (ciclo[0], ciclo[i-1]);
-			arestaB = (ciclo[i-1], ciclo[0]);
+			arestaA = (ciclo[0], ciclo[i]);
+			arestaB = (ciclo[i], ciclo[0]);
 			
-		if findHashItem(arestas, arestaA) == 1:
-			size = size + arestas[arestaA];
-		elif findHashItem(arestas, arestaB) == 1:
-			size = size + arestas[arestaB];
+		if findHashItem(arestas, arestaA):
+			vr = arestas[arestaA];
+			logDebug("arestaA: " + str(arestaA) + ", value: " + str(vr));
+			size = size + vr;
+		elif findHashItem(arestas, arestaB):
+			vr = arestas[arestaB];
+			logDebug("arestaB: " + str(arestaB) +  ", value: " + str(vr));
+			size = size + vr;
 		
-			
+	
+	logInfo("FIM computaCiclo. value=" + str(size));
 	return size;
 	
 	

@@ -11,6 +11,7 @@ class Steiner1(Thread):
 	def run(self):
 		logDebug("Thread Steiner1 running...");
 		self.result = steinerCycle1();
+		logDebug("Thread Steiner1 finished");
 		
 	
 
@@ -34,18 +35,27 @@ def cicloTerminais():
 				exclude = ciclo;
 			aresta = findMenorAresta(ciclo[len(ciclo) - 1],  terminais, exclude, True);
 			
-		if aresta != (-1, -1):
-			if findItemList(ciclo, aresta[1]) == -1:
-				ciclo.append(aresta[1]);
-			if findItemList(ciclo, aresta[0]) == -1:
-				ciclo.append(aresta[0]);
+		vAtual = 1
+		vProxi = 0
+		if aresta != None:
+			if len(ciclo) == 0:
+				if i == aresta[0]:
+					vAtual = 0
+					vProxi = 1
+			elif ciclo[len(ciclo) - 1] == aresta[0]:
+				vAtual = 0;
+				vProxi = 1;
 			
-					
+			if findItemList(ciclo, aresta[vAtual]) == -1:
+				ciclo.append(aresta[vAtual]);
+			if findItemList(ciclo, aresta[vProxi]) == -1:
+				ciclo.append(aresta[vProxi]);
+				
 	# Verifica se existe mesmo o ciclo ligando o ultimo e o primeiro vertice
-	aresta = findMenorAresta(ciclo[len(ciclo)-1], [ciclo[0]], [], False);
+	aresta = findMenorAresta(ciclo[len(ciclo)-1], [ciclo[0]], [], True);
 	
 	logInfo("FIM cicloTerminais\n\n");
-	if aresta != (-1, -1) and len(ciclo) >= len(terminais):
+	if aresta != None and len(ciclo) >= len(terminais):
 		return ['Y', computaCiclo(ciclo), ciclo];
 	else:
 		return ['N', 0, []];
