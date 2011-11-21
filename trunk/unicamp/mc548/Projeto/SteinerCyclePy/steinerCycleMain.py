@@ -6,6 +6,8 @@ from steinerCycle1 import *
 from steinerCycle2 import *
 from steinerCycle3 import *
 from steinerCycle4 import *
+from steinerCycle5 import *
+from steinerCycle6 import *
 from logger import *
 
 # Define qual o melhor algoritimo executado
@@ -56,14 +58,29 @@ def run(args):
 			st3 = Steiner3();
 			st3.start();
 			
-			# Executa a terceira abordagem
+			# Executa a quarta abordagem
 			st4 = Steiner4();
 			st4.start();
 			
+			# Executa a quarta abordagem
+			st5 = Steiner5();
+			st5.start();
+			
+			# Executa a quarta abordagem
+			st6 = Steiner6();
+			st6.start();
+			
 			# Lock para finalizar as threads
 			logDebug("Esperando processamento.");
-			while(len(st1.result) == 0 or len(st2.result) == 0 or len(st3.result) == 0 or len(st4.result) == 0):
-				continue;
+			while(len(st1.result) == 0 or 
+				  len(st2.result) == 0 or 
+				  len(st3.result) == 0 or 
+				  len(st4.result) == 0 or
+				  len(st5.result) == 0 or
+				  len(st6.result) == 0):
+					if (time() - t) >= getTimeOut():
+						logDebug("Timeout!");
+					continue;
 			
 			logDebug("=======================Processamento finalizado===================");
 			results = [];
@@ -71,6 +88,8 @@ def run(args):
 			results.append(st2.result);
 			results.append(st3.result);
 			results.append(st4.result);
+			results.append(st5.result);
+			results.append(st6.result);
 			
 			melhorAlg = verificaMelhorAlgoritmo(results);
 			if len(melhorAlg) > 0:

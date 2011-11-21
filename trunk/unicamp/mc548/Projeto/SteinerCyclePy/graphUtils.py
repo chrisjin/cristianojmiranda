@@ -1,4 +1,5 @@
 import sys, itertools, math
+from time import time;
 from operator import itemgetter, attrgetter
 from pygraph.classes.graph import graph
 from pygraph.classes.digraph import digraph
@@ -45,6 +46,7 @@ timeOut = 3600
 # --
 def loadGraph(fileName):
 
+	loadTime = time();
 	logInfo("\n\nINICIO loadGraph");
 	
 	global gr;
@@ -141,7 +143,7 @@ def loadGraph(fileName):
 	logDebug("adjVertices=" + str(adjVertices ));
 		
 	logDebug("Graph: " + str(gr));
-	logInfo("\nFIM loadGraph");
+	logInfo("\nFIM loadGraph. Tempo de execucao=" + str(time() - loadTime));
 
 
 #--

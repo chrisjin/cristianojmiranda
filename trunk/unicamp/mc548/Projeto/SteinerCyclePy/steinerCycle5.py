@@ -11,12 +11,12 @@ from collectionUtils import *
 from graphUtils import *
 from logger import *
 
-class Steiner4(Thread):
+class Steiner5(Thread):
 	result = [];
 	def run(self):
-		logDebug("Thread Steiner4 running...");
-		self.result = steinerCycle4();
-		logDebug("Thread Steiner4 finished");
+		logDebug("Thread Steiner5 running...");
+		self.result = steinerCycle5();
+		logDebug("Thread Steiner5 finished");
 
 		
 def tentaVizinhoMaisProximoMinimo(tempo, ciclo):
@@ -24,7 +24,7 @@ def tentaVizinhoMaisProximoMinimo(tempo, ciclo):
 	logInfo("Tentando colocar os vizinhos mais proximos...");
 	
 	if len(ciclo) == 0:	
-		return ['N', 0, [], time() - t, 'Steiner4'];
+		return ['N', 0, [], time() - t, 'Steiner5'];
 	
 	# Monta uma lista com os terminais que nao estao no ciclo
 	diff = [];
@@ -91,53 +91,58 @@ def tentaVizinhoMaisProximoMinimo(tempo, ciclo):
 				vb = ciclo[0]
 				
 			if findItemList(adjVertices[va], vb) == -1:
-				return ['N', 0, [], time() - tempo, 'Steiner4']
+				return ['N', 0, [], time() - tempo, 'Steiner5']
 	
 	if containTerminais(ciclo):
-		return ['Y', computaCiclo(ciclo), ciclo, time() - tempo, 'Steiner4'];
+		return ['Y', computaCiclo(ciclo), ciclo, time() - tempo, 'Steiner5'];
 		
-	return ['N', 0, [], time() - tempo, 'Steiner4'];
+	return ['N', 0, [], time() - tempo, 'Steiner5'];
 			
 	
 	
-# Obtem um ciclo de grau 4
-def obtemCicloGrQuatro():
+# Obtem um ciclo de grau 5
+def obtemCicloGrCinco():
 
-	if len(vertices) <= 4:
+	if len(vertices) <= 5:
 		return vertices;
 
 	ctIt = 0
-	for a in terminais:
-		for b in terminais[1:]:
+	for a in vertices:
+		for b in vertices[1:]:
 			if a == b:
 				ctIt = ctIt + 1;
 				continue;
 		
-			for c in vertices:
+			for c in vertices[2:]:
 				if a == c or c == b:
 					ctIt = ctIt + 1;
 					continue;
 				
-				for d in terminais[2:]:
-					ctIt = ctIt + 1;
+				for d in vertices[3:]:
 					if a == d or b == d or c == d:
+						ctIt = ctIt + 1;
 						continue;
-					else:
-						if findItemList(adjVertices[a], b) != -1 and findItemList(adjVertices[b], c) != -1  and findItemList(adjVertices[c], d) != -1 and findItemList(adjVertices[d], a) != -1:
-							logDebug("obtemCicloGrQuatro iteracoes=" + str(ctIt));
-							return [a, b, c, d];
+
+					for e in vertices[4:]:
+						ctIt = ctIt + 1;
+						if a==e or b==e or c==e or d==e:
+							continue;
+						else:
+							if findItemList(adjVertices[a], b) != -1 and findItemList(adjVertices[b], c) != -1  and findItemList(adjVertices[c], d) != -1 and findItemList(adjVertices[d], e) != -1 and findItemList(adjVertices[e], a) != -1:
+								logDebug("obtemCicloGrCinco iteracoes=" + str(ctIt));
+								return [a, b, c, d, e];
 		
 # --
-def steinerCycle4():
+def steinerCycle5():
 	t = time();
 	
-	# Obtem um ciclo de grau 4
-	cycle = obtemCicloGrQuatro()
-	logDebug("Ciclo de grau 4: " + str(cycle));
+	# Obtem um ciclo de grau 5
+	cycle = obtemCicloGrCinco()
+	logDebug("Ciclo de grau 5: " + str(cycle));
 	
 	# Verifica se contain todos os terminais no ciclo
 	if containTerminais(cycle):
-		return ['Y', computaCiclo(cycle), cycle, time() - t, 'Steiner4'];
+		return ['Y', computaCiclo(cycle), cycle, time() - t, 'Steiner5'];
 	else:
 		return tentaVizinhoMaisProximoMinimo(t, cycle)
 
