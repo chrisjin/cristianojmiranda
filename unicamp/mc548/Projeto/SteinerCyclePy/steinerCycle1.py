@@ -16,7 +16,7 @@ class Steiner1(Thread):
 	
 
 #-- Computa o ciclo apenas nos terminais
-def cicloTerminais():
+def cicloTerminais(tempo):
 	
 	logInfo("\n\nINICIO cicloTerminais");
 	
@@ -25,6 +25,10 @@ def cicloTerminais():
 	for i in terminais:
 	
 		logDebug("Processando node: " + str(i));
+		
+		if (time() - tempo) >= getTimeOut():
+			logDebug("Timeout");
+			return ['N', 0, []];
 	
 		aresta = (-1, -1);
 		if len(ciclo) == 0:
@@ -65,7 +69,7 @@ def cicloTerminais():
 #-- Processa o ciclo
 def steinerCycle1():
 	t = time();
-	result = cicloTerminais();
+	result = cicloTerminais(t);
 	result.append(time() - t);
 	result.append('Steiner1');
 	return result;
