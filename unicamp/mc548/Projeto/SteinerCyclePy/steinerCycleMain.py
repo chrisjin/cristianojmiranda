@@ -10,6 +10,11 @@ from steinerCycle5 import *
 from steinerCycle6 import *
 from logger import *
 
+from pygraph.algorithms.accessibility import *
+from pygraph.algorithms.critical import *
+from pygraph.algorithms.heuristics.chow import *
+from pygraph.algorithms.minmax import *
+
 # Define qual o melhor algoritimo executado
 def verificaMelhorAlgoritmo(results):
 	
@@ -43,6 +48,9 @@ def run(args):
 	
 		# Carrega o grafo do arquivo
 		loadGraph(args[1])
+		
+		# todo: remove!
+		return;
 		
 		# Verifica se o grafo apresenta ciclos
 		if validaGrafo():
@@ -114,6 +122,33 @@ openLogger(True, None);
 
 # Executa a verificacao do ciclo
 run(sys.argv);
+
+print getGraph();
+
+print "cut_edges"
+print cut_edges(getGraph());
+
+print "cut_nodes"
+print cut_nodes(getGraph());
+
+print "mutual_accessibility"
+print mutual_accessibility(getGraph())
+
+print "connected_components"
+print connected_components(getGraph())
+
+print "critical_path"
+print critical_path(getGraph())
+
+print "transitive_edges"
+print transitive_edges(getGraph());
+
+print "chow"
+c = chow( "Wales", "North Korea", "Russia" );
+print c.optimize(getGraph());
+
+print heuristic_search(getGraph(), 1, 3
+, c);
 
 # Fecha o arquivo de log
 closeLogger();
