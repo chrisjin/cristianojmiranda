@@ -49,13 +49,6 @@
 			<version>2.11</version>
 		</dependency>
 
-		<dependency>
-			<groupId>com.nhncorp.jumble</groupId>
-			<artifactId>maven-jumble-plugin</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-
-
 	</dependencies>
 
 	<build>
@@ -72,6 +65,19 @@
 				<artifactId>maven-scm-plugin</artifactId>
 				<version>1.1</version>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<executable>${JAVA_HOME}/bin/javac</executable>
+					<verbose>true</verbose>
+					<fork>true</fork>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+
 		</plugins>
 
 	</build>
