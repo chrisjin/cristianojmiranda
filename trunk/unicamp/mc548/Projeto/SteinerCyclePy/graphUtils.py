@@ -44,7 +44,7 @@ adjVertices = {}
 timeOut = 3600
 
 # --
-def loadGraph(fileName):
+def loadGraph(fileName, timeInicio):
 
 	loadTime = time();
 	logInfo("\n\nINICIO loadGraph");
@@ -62,6 +62,13 @@ def loadGraph(fileName):
 	lineCount = 1;
 	line = file.readline();
 	while line:
+	
+		# Verificando timeout
+		logDebug("Verificando timeout. limit: " + str(getTimeOut()) + ", atual: " + str(time() - timeInicio), __name__);
+		if (time() - timeInicio) >= getTimeOut():
+			logDebug("Timeout!", __name__);
+			print "Timeout na leitura do arquivo"
+			exit(1);
 		
 		logDebug("Lendo linha: " + line.strip("\n"));
 		strLine = line.split(' ');
@@ -211,6 +218,9 @@ def computaCiclo(ciclo):
 	
 # -- Verifica se o ciclo contem todos os terminais --
 def containTerminais(ciclo):
+
+	if ciclo == None:
+		return False;
 	
 	logDebug('Verificando se ciclo contem todos os terminais: ' + str(ciclo) + ", terminais=" + str(terminais));
 	if len(ciclo) < len(terminais):
@@ -228,6 +238,38 @@ def containTerminais(ciclo):
 	
 	logDebug('2-Ciclo incompleto.')
 	return False;
+	
+	
+def existeCiclo(ciclo):
+	
+	# Verifica vertices duplicados
+	dp = {};
+	for v in ciclo:
+		if findHashItem(dp, v):
+			return False;
+		else:
+			dp[v] = 1;
+			
+			
+	for i in range(len(ciclo)):
+		va = -1
+		vb = -1
+		if i < len(ciclo) - 1:
+			va = ciclo[i]
+			vb = ciclo[i+1]
+		else:
+			va = ciclo[i]
+			vb = ciclo[0]
+			
+		if findItemList(adjVertices[va], vb) == -1:
+			return False;
+	
+	
+	return True;
+		
+			
+			
+		
 	
 #-- Verifica se o grafo e valido para a busca
 def validaGrafo():
