@@ -32,7 +32,7 @@ def logInfo(value):
 	
 	
 # -- Log info
-def logDebug(value):
+def logDebug(value, methodName = ''):
 	
 	global enabledLog;
 	global logFile;
@@ -40,7 +40,7 @@ def logDebug(value):
 	if not enabledLog or logFile == None:
 		return;
 	now = datetime.now()
-	logFile.write("\nDEBUG - " + str(now) + " - " + value);
+	logFile.write("\nDEBUG [" + methodName + "] - " + str(now) + " - " + value);
 
 	
 # -- Close logger
@@ -50,4 +50,8 @@ def closeLogger():
 	global logFile;
 	
 	if logFile != None and enabledLog:
-		logFile.close();
+		try:
+			logFile.close();
+			enabledLog = False;
+		except IOError:
+			ops = "Aconteceu um erro";
