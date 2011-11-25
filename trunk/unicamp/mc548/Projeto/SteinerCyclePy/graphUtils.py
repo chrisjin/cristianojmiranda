@@ -142,7 +142,7 @@ def loadGraph(fileName, timeInicio):
 	
 	# Adicionando as arestas
 	for key in arestas.iterkeys():
-		gr.add_edge(key, arestas[key]);
+		gr.add_edge(key, wt=arestas[key]);
 		
 	
 	logDebug("Terminais=" + str(terminais));

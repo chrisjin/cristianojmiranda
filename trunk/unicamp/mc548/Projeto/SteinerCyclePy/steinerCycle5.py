@@ -140,7 +140,7 @@ class Steiner5(Thread):
 		
 		# Obtem um ciclo de grau 5
 		cycle = self.obtemCicloGrCinco()
-		logDebug("Ciclo de grau 5: " + str(cycle));
+		logDebug("Ciclo de grau 5: " + str(cycle), __name__);
 		
 		# Verifica se contain todos os terminais no ciclo
 		if containTerminais(cycle):

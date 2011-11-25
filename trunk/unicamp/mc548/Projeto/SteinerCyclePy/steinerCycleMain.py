@@ -10,6 +10,8 @@ from steinerCycle4 import *
 from steinerCycle5 import *
 from steinerCycle6 import *
 from steinerCycle7 import *
+from steinerCycle8 import *
+from steinerCycle9 import *
 from logger import *
 
 # Define qual o melhor algoritimo executado
@@ -52,7 +54,8 @@ def run(args):
 		if validaGrafo():
 			
 			# Monta a lista com as threads
-			thds = [Steiner1(), Steiner2(), Steiner3(), Steiner4(), Steiner5(), Steiner6(), Steiner7()];
+			#thds = [Steiner1(), Steiner2(), Steiner3(), Steiner4(), Steiner5(), Steiner6(), Steiner7(), Steiner8()];
+			thds = [Steiner9()]
 			
 			# Executa as threads
 			for st in thds:
@@ -107,8 +110,7 @@ enabledLog = False;
 
 if len(sys.argv) > 3 and ('true' == sys.argv[3] or 's' == sys.argv[3]) :
 	enabledLog = True;
-	
-		
+
 # Abre o arquivo de log
 openLogger(enabledLog, None);
 
