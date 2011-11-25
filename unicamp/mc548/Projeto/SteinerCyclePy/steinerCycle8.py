@@ -16,18 +16,18 @@ from pygraph.algorithms.accessibility import *
 from pygraph.algorithms.critical import *
 from pygraph.algorithms.minmax import *
 
-class Steiner7(Thread):
+class Steiner8(Thread):
 
 	time = 0;
 	result = [];
 	
 	def run(self):
-		logDebug("Thread Steiner7 running...", __name__);
-		self.result = self.steinerCycle7();
-		logDebug("Thread Steiner7 finished", __name__);
+		logDebug("Thread Steiner8 running...", __name__);
+		self.result = self.steinerCycle8();
+		logDebug("Thread Steiner8 finished", __name__);
 
 	# --
-	def steinerCycle7(self):
+	def steinerCycle8(self):
 		
 		# Criando um novo grafo
 		g = graph()
@@ -47,16 +47,27 @@ class Steiner7(Thread):
 		logDebug("Verificando timeout. limit: " + str(getTimeOut()) + ", atual: " + str(time() - self.time) );
 		if (time() - self.time) >= getTimeOut():
 			logDebug("Timeout!", __name__);
-			return ['N', 0, [], time() - self.time, 'Steiner7'];
+			return ['N', 0, [], time() - self.time, 'Steiner8'];
 			
 		# Declaracao da heuristica
 		heuristic = euclidean()
 		
+		logDebug("grVertices: " + str(grVertices), __name__);
+		
+		# Obtem vertices com grau maior que 2
+		ctv = []
+		gr = grVertices;
+		for vi in vertices:
+			if findHashItem(gr, vi) and gr[vi] > 2:
+				ctv.append(vi);
+				
+		logDebug("Vertices com grau maior que 2: " + str(ctv), __name__);
+				
+		
 		ta = -1
 		tb = -1
 
-		logDebug("Obtendo os terminais da busca...", __name__);
-		for v in terminais:
+		for v in ctv:
 			for tt in adjVertices[v]:
 				if findItemList(terminais, tt) != -1:
 					ta = v;
@@ -85,7 +96,7 @@ class Steiner7(Thread):
 				tb = t1[0];
 				
 			if ta == tb:
-				return ['N', 0, [], time() - self.time, 'Steiner7'];
+				return ['N', 0, [], time() - self.time, 'Steiner8'];
 
 		g.del_edge((ta, tb));
 		heuristic.optimize(g)
@@ -95,7 +106,7 @@ class Steiner7(Thread):
 		
 		# Nao existe caminho
 		if len(result) == 0:
-			return ['N', 0, [], time() - self.time, 'Steiner7'];
+			return ['N', 0, [], time() - self.time, 'Steiner8'];
 
 		
 		comp = [result]
@@ -133,7 +144,7 @@ class Steiner7(Thread):
 
 		# Caso exista o ciclo
 		if len(comp) == 1 and existeCiclo(comp[0]) and containTerminais(comp[0]):
-			return ['Y', computaCiclo(comp[0]), comp[0], time() - self.time, 'Steiner7'];
+			return ['Y', computaCiclo(comp[0]), comp[0], time() - self.time, 'Steiner8'];
 		
 		else:
 
@@ -197,6 +208,6 @@ class Steiner7(Thread):
 				
 			logDebug("Ciclo: " + str(ciclo), __name__);
 			if len(ciclo) > 0 and existeCiclo(ciclo):
-				return ['Y', computaCiclo(ciclo), ciclo, time() - self.time, 'Steiner7'];
+				return ['Y', computaCiclo(ciclo), ciclo, time() - self.time, 'Steiner8'];
 		
-			return ['N', 0, [], time() - self.time, 'Steiner7'];
+			return ['N', 0, [], time() - self.time, 'Steiner8'];

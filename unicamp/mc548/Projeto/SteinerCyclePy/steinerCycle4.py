@@ -149,7 +149,7 @@ class Steiner4(Thread):
 		
 		# Obtem um ciclo de grau 4
 		cycle = self.obtemCicloGrQuatro()
-		logDebug("Ciclo de grau 4: " + str(cycle));
+		logDebug("Ciclo de grau 4: " + str(cycle), __name__);
 		
 		# Verifica se contain todos os terminais no ciclo
 		if containTerminais(cycle):
