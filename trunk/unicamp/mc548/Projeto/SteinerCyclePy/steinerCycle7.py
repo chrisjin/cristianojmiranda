@@ -196,7 +196,7 @@ class Steiner7(Thread):
 					
 				
 			logDebug("Ciclo: " + str(ciclo), __name__);
-			if len(ciclo) > 0 and existeCiclo(ciclo):
+			if len(ciclo) > 0 and existeCiclo(ciclo) and containTerminais(ciclo):
 				return ['Y', computaCiclo(ciclo), ciclo, time() - self.time, 'Steiner7'];
 		
 			return ['N', 0, [], time() - self.time, 'Steiner7'];
