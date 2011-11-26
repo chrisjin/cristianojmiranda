@@ -11,6 +11,9 @@ from collectionUtils import *
 from graphUtils import *
 from logger import *
 
+# Steiner6 - Chuta um ciclo utilizando o algoritimo(pygraph.algorithms.cycles),
+# Adiciona os terminais faltantes, e remove os vertices nao terminais, e executa isso sucessivamente 
+# ate que nao exista o ciclo, entao retorna o ultimo ciclo processado.
 class Steiner6(Thread):
 	
 	result = [];

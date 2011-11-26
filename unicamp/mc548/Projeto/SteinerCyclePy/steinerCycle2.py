@@ -11,6 +11,9 @@ from collectionUtils import *
 from graphUtils import *
 from logger import *
 
+# Steiner 2 - Obtem o ciclo do grafo atravez de um algoritmo legado (pygraph.algorithms.cycles)
+# Caso o ciclo existe e seja apresente todos os terminais retorna o resultado, caso contrario,
+# tenta encaixar os terminais entre os vertices do ciclo.
 class Steiner2(Thread):
 	result = [];
 	time = 0;
@@ -21,6 +24,7 @@ class Steiner2(Thread):
 		logDebug("Thread Steiner2 finished");
 
 		
+	# Tenta encaixar os terminais entre os vertices do ciclo
 	def tentaVizinhoMaisProximo(self, ciclo):
 		
 		logInfo("Tentando colocar os vizinhos mais proximos...");
@@ -35,12 +39,12 @@ class Steiner2(Thread):
 				diff.append(t);
 				
 			# Verificando timeout
-			logDebug("Verificando timeout. limit: " + str(getTimeOut()) + ", atual: " + str(time() - self.time) );
+			#logDebug("Verificando timeout. limit: " + str(getTimeOut()) + ", atual: " + str(time() - self.time) );
 			if (time() - self.time) >= getTimeOut():
-				logDebug("Timeout!");
+				logDebug("Timeout!", __name__);
 				break;
 				
-		logDebug("Terminais faltantes: " + str(diff));
+		logDebug("Terminais faltantes: " + str(diff), __name__);
 		
 		# Tenta encaixar os terminais
 		for t in diff:
@@ -61,14 +65,14 @@ class Steiner2(Thread):
 					va = ciclo[0];
 					vb = ciclo[i];
 					
-				logDebug("Adj de " + str(t) + " ==> " + str(adjVertices[t]));
-				logDebug("Va=" + str(va) + ", Vb=" + str(vb));
+				logDebug("Adj de " + str(t) + " ==> " + str(adjVertices[t]), __name__);
+				logDebug("Va=" + str(va) + ", Vb=" + str(vb), __name__);
 				# Tenta encaixar o terminal entre os vertices do ciclo
 				if findItemList(adjVertices[t], va) >= 0 and findItemList(adjVertices[t], vb) >= 0:
 					ciclo.insert(i+1, t);
 					break;
 		
-		logDebug("Novo ciclo: " + str(ciclo));
+		logDebug("Novo ciclo: " + str(ciclo), __name__);
 		
 		if containTerminais(ciclo):
 			return ['Y', computaCiclo(ciclo), ciclo, time() - self.time, 'Steiner2'];

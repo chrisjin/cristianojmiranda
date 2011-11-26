@@ -6,6 +6,9 @@ from collectionUtils import *
 from graphUtils import *
 from logger import *
 
+# Algotimo implementa "Vizinho mais proximo para os terminais"
+# Steiner 1 - Tem encontrar um ciclo que conecta
+# exatamente todos os terminais do grafo (considerando o arestas de menor custo)
 class Steiner1(Thread):
 	
 	result = [];
@@ -25,18 +28,23 @@ class Steiner1(Thread):
 		
 		ciclo = [];
 		
+		# Itera nos terminais verificando arestas de menor custo e tenta fechar o ciclo
 		for i in terminais:
 		
 			logDebug("Processando node: " + str(i), __name__);
 			
+			# Valida timeout
 			if (time() - self.time) >= getTimeOut():
 				logDebug("Timeout");
 				return ['N', 0, []];
 		
+			# Tenta obter a aresta de menor custo
 			aresta = (-1, -1);
 			if len(ciclo) == 0:
+				# Caso nao exista vertices no ciclo considera o primeiro terminal da lista
 				aresta = findMenorAresta(i, terminais, ciclo, True);
 			else:
+				# Existe vertices no ciclo, entao pega o ultimo vertice adicionado
 				exclude = []
 				if len(ciclo) != len(terminais):
 					exclude = ciclo;

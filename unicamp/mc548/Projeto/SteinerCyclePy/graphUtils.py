@@ -242,6 +242,8 @@ def containTerminais(ciclo):
 	
 def existeCiclo(ciclo):
 	
+	logDebug("Verificando ciclo: " + str(ciclo), __name__);
+	
 	# Verifica vertices duplicados
 	dp = {};
 	for v in ciclo:
@@ -261,7 +263,7 @@ def existeCiclo(ciclo):
 			va = ciclo[i]
 			vb = ciclo[0]
 			
-		if findItemList(adjVertices[va], vb) == -1:
+		if findHashItem(adjVertices, va) == False or findItemList(adjVertices[va], vb) == -1:
 			return False;
 	
 	
