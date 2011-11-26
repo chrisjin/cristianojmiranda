@@ -54,8 +54,7 @@ def run(args):
 		if validaGrafo():
 			
 			# Monta a lista com as threads
-			#thds = [Steiner1(), Steiner2(), Steiner3(), Steiner4(), Steiner5(), Steiner6(), Steiner7(), Steiner8()];
-			thds = [Steiner9()]
+			thds = [Steiner1(), Steiner2(), Steiner3(), Steiner4(), Steiner5(), Steiner6(), Steiner7(), Steiner8(), Steiner9()];
 			
 			# Executa as threads
 			for st in thds:

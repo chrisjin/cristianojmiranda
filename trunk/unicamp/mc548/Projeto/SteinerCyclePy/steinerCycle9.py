@@ -16,6 +16,8 @@ from pygraph.algorithms.accessibility import *
 from pygraph.algorithms.critical import *
 from pygraph.algorithms.minmax import *
 
+# Steiner9 - Executa aleatoriamente trocando os valores de um vetor e verificando se existe um ciclo valido
+# ate acontecer timeout ou nao haver mais vertices para serem processados.
 class Steiner9(Thread):
 
 	time = 0;
@@ -30,88 +32,42 @@ class Steiner9(Thread):
 	def steinerCycle9(self):
 		
 		# Ciclo
-		ciclo = [];
+		ciclo = list(terminais)
+		random.shuffle(ciclo);
+		random.shuffle(ciclo);
+		random.shuffle(ciclo);
 		
-		# Obtem a lista de terminais embaralhada
-		term = list(terminais);
-		random.shuffle(term);
+		# Obtem os vertices nao terminais
+		nt = list(set(vertices) - set(terminais));
+		random.shuffle(nt);
+		random.shuffle(nt);
 		
-		logDebug("Terminais: " + str(term), __name__);
-		
-		# Criando um novo grafo
-		g = getGraph();
-		
-		while len(term) > 1:
-		
-			logDebug("Ciclo: " + str(ciclo), __name__);
+		while True:
 		
 			# Verifica timeout
 			if (time() - self.time) >= getTimeOut():
 				logDebug("Timeout", __name__);
 				break;
 		
-			va = term.pop();
-			vb = term.pop();
+			vi = False;
+			if len(nt) > 0:
+				vi = nt[random.randint(0, len(nt)-1)];
+				logDebug("Chutando um vertice: " + str(vi), __name__);
+			
+			if existeCiclo(ciclo):
+				logDebug("Ops! Encontrou o ciclo:" + str(ciclo), __name__);
+				return ['Y', computaCiclo(ciclo), ciclo, time() - self.time, 'Steiner9'];
 		
-			# Executa busta em profundidade
-			st, pre, post = depth_first_search(g, root=va)
-			logDebug("ST: " + str(st) + ", PRE: " + str(pre) + ", POST: " + str(post), __name__);
-			
-			# Caso exista um caminho entre os verties
-			if findItemList(pre, vb) >= 0:
-			
-				ciclo.append(va);
+			if len(nt) == 0:
+				break;
 				
-				while va != vb:
+			
+			if vi and random.randint(0, 10) == 1:
+				nt.remove(vi);
+				ciclo.append(vi);
 				
-					# Verifica timeout
-					if (time() - self.time) >= getTimeOut():
-						logDebug("Timeout", __name__);
-						break;
-					
-					# Vertices adjacentes
-					adj = adjVertices[va];
-					
-					# Obtem a menor aresta
-					mnAresta = findMenorAresta(va, adj, ciclo, True);
-					logDebug("Menor aresta de " + str(va) + ": " + str(mnAresta), __name__);
-					
-					if mnAresta == None:
-						break;
-						
-					elif findItemList(ciclo, mnAresta[1]) >= 0:
-					
-						if va == mnAresta[0]:					
-							va = mnAresta[1];
-						elif va == mnAresta[1]:
-							va = mnAresta[0];
-					
-						ciclo.append(va);
 				
-			else:
-				term.append(va);
-				term.append(vb);
+			random.shuffle(ciclo);
 			
-		if len(term) > 0:
-			ciclo.append(term[0]);
-			
-		logDebug("Ciclo: " + str(ciclo), __name__);
-		
-		# caso o ciclo nao esteja completo
-		if not existeCiclo(ciclo):
-		
-			# Executa busta em profundidade
-			st, pre, post = depth_first_search(g, root=ciclo[len(ciclo)-1])
-			logDebug("ST: " + str(st) + ", PRE: " + str(pre) + ", POST: " + str(post), __name__);
-			
-			# Caso seja alcancavel
-			if findItemList(pre, ciclo[0]) >= 0:
-				d = 0;
-		
-		
-		
-		# Caso exista o ciclo
-		if existeCiclo(ciclo) and containTerminais(ciclo):
-			return ['Y', computaCiclo(ciclo), ciclo, time() - self.time, 'Steiner9'];
 		
 		return ['N', 0, [], time() - self.time, 'Steiner9'];

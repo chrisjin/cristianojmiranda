@@ -11,6 +11,10 @@ from collectionUtils import *
 from graphUtils import *
 from logger import *
 
+# Steiner5 - Chuta um ciclo completo de grau 5 (5 vertices aleatorios),
+# Caso seja um ciclo valido retorna, caso contrario tenta encaixar os
+# terminais entre os vertices, depois tenta remover os vertices nao terminais 
+# sem alterar a estrutura do ciclo.
 class Steiner5(Thread):
 
 	result = [];

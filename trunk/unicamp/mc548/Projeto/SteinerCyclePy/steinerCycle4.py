@@ -11,6 +11,9 @@ from collectionUtils import *
 from graphUtils import *
 from logger import *
 
+# Steiner4 - Obtem um ciclo completo de grau 4, considerando 3 terminais e um vertice qualquer,
+# caso retornar um ciclo valido retona, caso contrario tenta encaixar os termais entre os vertices,
+# depois tenta remover os vertices nao terminais sem alterar a estrutura do ciclo.
 class Steiner4(Thread):
 	
 	time = 0;
@@ -118,6 +121,7 @@ class Steiner4(Thread):
 
 		ctIt = 0
 		for a in terminais:
+		
 			for b in terminais[1:]:
 				if a == b:
 					ctIt = ctIt + 1;

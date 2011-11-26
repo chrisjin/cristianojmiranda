@@ -11,6 +11,9 @@ from collectionUtils import *
 from graphUtils import *
 from logger import *
 
+# Steiner3 - Monta o ciclo utilizando o algoritmo legado (pygraph.algorithms.cycles)
+# Caso retornar um ciclo comple com todos os terminais retonar, caso contrario tenta encaixar os terminais entre
+# os vertices, apos esse passo tenta remover os vertices nao terminais mantendo a estrutura do ciclo.
 class Steiner3(Thread):
 	
 	time = 0;
