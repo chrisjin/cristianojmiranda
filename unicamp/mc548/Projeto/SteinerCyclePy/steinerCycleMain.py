@@ -27,6 +27,7 @@ def verificaMelhorAlgoritmo(results):
 	if len(tmp) > 0:
 		results = sorted(tmp, key=itemgetter(1,3));
 		logDebug("Melhor ciclo: " + str(results[0]));
+		print results[0][4]
 		return results[0]
 		
 	logInfo("Nao existe ciclo");
