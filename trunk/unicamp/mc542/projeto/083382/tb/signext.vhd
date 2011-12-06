@@ -1,8 +1,8 @@
 library IEEE; 
 use IEEE.STD_LOGIC_1164.all;
 
-
-entity signext is -- sign extender
+-- sign extender
+entity signext is 
 	port(a: in STD_LOGIC_VECTOR (15 downto 0);
 		y: out STD_LOGIC_VECTOR (31 downto 0));
 end;

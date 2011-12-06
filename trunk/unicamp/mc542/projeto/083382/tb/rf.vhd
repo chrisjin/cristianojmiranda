@@ -15,7 +15,7 @@ use ieee.std_logic_arith.all;
 use ieee.std_logic_textio.all;
 use ieee.std_logic_unsigned.all;
 
--- Definicao da entidade
+-- Definicao da entidade register file
 entity rf is
  port(A1 : in std_logic_vector(4 downto 0);
 	  A2 : in std_logic_vector(4 downto 0);
