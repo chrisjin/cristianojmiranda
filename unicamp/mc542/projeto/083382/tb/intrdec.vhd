@@ -17,6 +17,7 @@ entity instrdec is
 		memwritee out std_logic;
 		branche out std_logic;
 		alucontrole out std_logic(2 downto 0);
+		alusrce out std_logic(4 downto 0);
 		regdste out std_logic;
 		rte out std_logic_vector(nbits -1 downto 0);
 		rde out std_logic_vector(nbits -1 downto 0);
@@ -61,10 +62,28 @@ architecture instrdec_arc of instrdec is
 			q: out STD_LOGIC_VECTOR (width-1 downto 0));
 	end component;
 	
-	-- Sinais de testes
+	component controller is 
+		port (op, funct: in STD_LOGIC_VECTOR (5 downto 0);
+			  regwrited out std_logic;
+			  memtoregd out std_logic;
+			  memwrited out std_logic;
+			  branchd out std_logic;
+			  alucontrold out std_logic(2 downto 0);
+			  alusrcd out std_logic(2 downto 0);
+			  regdstd out std_logic);
+	end component;
+	
+	-- Sinais internos
 	signal rd1 : std_logic_vector(31 downto 0);
 	signal rd2 : std_logic_vector(31 downto 0);
 	signal sigext : std_logic_vector(31 downto 0);
+	signal regwrited : std_logic;
+	signal memtoregd : std_logic;
+	signal memwrited : std_logic;
+	signal branchd : std_logic;
+	signal alucontrold : std_logic(2 downto 0);
+	signal alusrcd : std_logic(4 downto 0);
+	signal regdstd : std_logic;
 	
 	
 begin
@@ -76,5 +95,8 @@ begin
 	
 	-- Signal extend
 	signext_0 : signext port map (a => intrd(15 downto 0), y => sigext);
+
+	-- Controller
+	controller_0 : controller port map (op => instrd(31 downto 26), funct => instrd(5 downto 0);
 
 end instrdec_arc;
