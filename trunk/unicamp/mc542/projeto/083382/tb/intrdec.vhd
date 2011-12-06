@@ -97,6 +97,77 @@ begin
 	signext_0 : signext port map (a => intrd(15 downto 0), y => sigext);
 
 	-- Controller
-	controller_0 : controller port map (op => instrd(31 downto 26), funct => instrd(5 downto 0);
+	controller_0 : controller port map (op => instrd(31 downto 26), funct => instrd(5 downto 0), regwrited => regwrited, memtoregd => memtoregd, memwrited => memwrited, branchd => branchd, alucontrold => alucontrold, alusrcd => alusrcd, regdstd => regdstd);
+	
+	-- Flip flop para armazenar o bit regwritee
+	ffregwritee : process(clk, regwrited)
+	begin
+	
+		if clk'event and clk = '1' then
+			regwritee <= regwrited;
+		end if;
+	
+	end process ffregwritee;
+	
+	-- Flip flop para armazenar o bit memtorege
+	ffmemtorege : process(clk, memtoregd)
+	begin 
+	
+		if clk'event and clk = '1' then
+			memtorege <= memtoregd;
+		end if;
+	
+	end process ffmemtorege;
+	
+	-- Flip flop para armazenar o bit memwritem
+	ffmemwritee : process(clk, memwrited)
+	begin 
+	
+		if clk'event and clk = '1' then
+			memwritee <= memwrited;
+		end if;
+	
+	end process ffmemwritee;
+	
+	-- Flip flop para armazenar o bit branchm
+	ffbranche : process(clk, branchd)
+	begin 
+	
+		if clk'event and clk = '1' then
+			branche <= branchd;
+		end if;
+	
+	end process ffbranche;
+	
+	-- Flip flop para armazenar o bit alucontrold
+	ffalucontrole : process(clk, alucontrold)
+	begin 
+	
+		if clk'event and clk = '1' then
+			alucontrole <= alucontrold;
+		end if;
+	
+	end process ffalucontrole;
+	
+	-- Flip flop para armazenar o bit alusrce
+	ffalusrce : process(clk, alusrcd)
+	begin 
+	
+		if clk'event and clk = '1' then
+			alusrce <= alusrcd;
+		end if;
+	
+	end process ffalusrce;
+	
+	-- Flip flop para armazenar o bit regdste
+	ffregdste : process(clk, regdstd)
+	begin 
+	
+		if clk'event and clk = '1' then
+			regdste <= regdstd;
+		end if;
+	
+	end process ffregdste;
+	
 
 end instrdec_arc;
