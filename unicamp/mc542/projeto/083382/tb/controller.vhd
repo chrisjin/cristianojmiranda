@@ -1,26 +1,20 @@
 library IEEE; 
 use IEEE.STD_LOGIC_1164.all;
 
-entity controller is -- single cycle control decoder
+-- single cycle control decoder
+entity controller is 
 	port (op, funct: in STD_LOGIC_VECTOR (5 downto 0);
-		zero: in STD_LOGIC;
-		memtoreg, memwrite: out STD_LOGIC;
-		pcsrc, alusrc: out STD_LOGIC;
-		regdst, regwrite: out STD_LOGIC;
-		jump: out STD_LOGIC;
-		alucontrol: out STD_LOGIC_VECTOR (2 downto 0));
+		  regwrited out std_logic;
+		  memtoregd out std_logic;
+		  memwrited out std_logic;
+		  branchd out std_logic;
+		  alucontrold out std_logic(2 downto 0);
+		  alusrcd out std_logic(2 downto 0);
+		  regdstd out std_logic);
 end;
 
-architecture struct of controller is
-	
-	component maindec
-		port (op: in STD_LOGIC_VECTOR (5 downto 0);
-			memtoreg, memwrite: out STD_LOGIC;
-			branch, alusrc: out STD_LOGIC;
-			regdst, regwrite: out STD_LOGIC;
-			jump: out STD_LOGIC;
-			aluop: out STD_LOGIC_VECTOR (1 downto 0));
-	end component;
+-- arcquitetura controller
+architecture controller_arc of controller is
 	
 	component aludec
 		port (funct: in STD_LOGIC_VECTOR (5 downto 0);
@@ -31,9 +25,7 @@ architecture struct of controller is
 	
 	signal aluop: STD_LOGIC_VECTOR (1 downto 0);
 	signal branch: STD_LOGIC;
-	begin
-		md: maindec port map (op, memtoreg, memwrite, branch,
-		alusrc, regdst, regwrite, jump, aluop);
-		ad: aludec port map (funct, aluop, alucontrol);
-		pcsrc <= branch and zero;
+	
+begin
+		aludec_0: aludec port map (funct, aluop, alucontrol);
 end;

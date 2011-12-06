@@ -1,31 +1,31 @@
 v 3
-file . "tb_instrmem.vhd" "20111204180054.000" "20111204194350.744":
+file . "tb_instrmem.vhd" "20111204180054.000" "20111205234320.383":
   entity tb_instrmem at 8( 197) + 0 on 29;
   architecture tb_instrmem_behavior of tb_instrmem at 19( 358) + 0 on 30;
-file . "instrfetch.vhd" "20111204214346.000" "20111204194350.676":
+file . "instrfetch.vhd" "20111206012732.000" "20111205234320.319":
   entity instrfetch at 1( 0) + 0 on 25;
   architecture instrfetch_arc of instrfetch at 17( 418) + 0 on 26;
-file . "mux2.vhd" "20111204211836.000" "20111204194350.609":
+file . "mux2.vhd" "20111206013442.000" "20111205234320.251":
   entity mux2 at 1( 0) + 0 on 21;
-  architecture behave of mux2 at 14( 265) + 0 on 22;
-file . "flopr.vhd" "20111204213220.000" "20111204194350.550":
+  architecture behave of mux2 at 14( 266) + 0 on 22;
+file . "flopr.vhd" "20111204213220.000" "20111205234320.188":
   entity flopr at 1( 0) + 0 on 17;
   architecture flopr_arc of flopr at 15( 303) + 0 on 18;
-file . "adder.vhd" "20111204183024.000" "20111204194350.488":
+file . "adder.vhd" "20111204183024.000" "20111205234320.115":
   entity adder at 1( 0) + 0 on 13;
   architecture behave of adder at 12( 210) + 0 on 14;
-file . "rf.vhd" "20111030171700.000" "20111204194350.453":
+file . "rf.vhd" "20111030171700.000" "20111205234320.062":
   entity rf at 8( 188) + 0 on 11;
   architecture rtl of rf at 32( 814) + 0 on 12;
-file . "flop.vhd" "20111204213236.000" "20111204194350.520":
+file . "flop.vhd" "20111204213236.000" "20111205234320.153":
   entity flop at 1( 0) + 0 on 15;
   architecture flop_arc of flop at 15( 295) + 0 on 16;
-file . "floprs.vhd" "20111204205426.000" "20111204194350.581":
+file . "floprs.vhd" "20111206014114.000" "20111205234320.220":
   entity floprs at 1( 0) + 0 on 19;
   architecture floprs_arc of floprs at 16( 373) + 0 on 20;
-file . "instrmem.vhd" "20111204213826.000" "20111204194350.644":
+file . "instrmem.vhd" "20111206012334.000" "20111205234320.287":
   entity instrmem at 8( 219) + 0 on 23;
   architecture instrmem_arc of instrmem at 48( 1370) + 0 on 24;
-file . "tb_instrfetch.vhd" "20111204213554.000" "20111204194350.711":
+file . "tb_instrfetch.vhd" "20111206014318.000" "20111205234320.353":
   entity tb_instrfetch at 8( 197) + 0 on 27;
   architecture tb_instrfetch_behavior of tb_instrfetch at 19( 362) + 0 on 28;
