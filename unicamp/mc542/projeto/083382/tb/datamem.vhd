@@ -28,7 +28,7 @@ entity datamem is
 	  WD : in std_logic_vector(31 downto 0);
 	  RD : out std_logic_vector(31 downto 0));
 	  
-end rf;
+end datamem;
 
 -- Implementacao da arquitetura datamem_arc para data memory
 architecture datamem_arc of datamem is
@@ -65,4 +65,4 @@ begin
 			
 		end process rf_write;
 		
-end rtl;
+end datamem_arc;

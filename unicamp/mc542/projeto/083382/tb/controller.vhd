@@ -9,13 +9,18 @@ entity controller is
 		  memwrited : out std_logic;
 		  branchd : out std_logic;
 		  alucontrold : out std_logic_vector(2 downto 0);
-		  alusrcd : out std_logic_vector(2 downto 0);
+		  alusrcd : out std_logic;
 		  regdstd : out std_logic);
 end;
 
 -- arcquitetura controller
 architecture controller_arc of controller is
 	signal controls: STD_LOGIC_VECTOR(8 downto 0);
+	signal R_TYPE	: STD_LOGIC;
+	signal LW		: STD_LOGIC;
+	signal SW		: STD_LOGIC;
+	signal BEQ		: STD_LOGIC;
+	signal LUI		: STD_LOGIC;
 begin
 
 	-- Controle
@@ -50,6 +55,30 @@ begin
 				when others => alucontrold <= "---"; -- ???
 			end case;
 		end case;
+		
+	end process;
+	
+	--
+	process (OP) 
+	begin
+	
+		R_TYPE <= not OP(5) and not OP(4) and not OP(3) and not OP(2) and not OP(1) and not OP(0);
+		LW <= OP(5) and not OP(4) and not OP(3) and not OP(2) and OP(1) and OP(0);
+		SW <= OP(5) and not OP(4) and 	OP(3) and not OP(2) and OP(1) and OP(0);
+		BEQ <= not OP(5) and not OP(4) and not OP(3) and OP(2) and not OP(1) and not OP(0);
+		LUI <= not OP(5) and not OP(4) and OP(3) and OP(2) and  OP(1) and OP(0);
+	 
+		regwrited	<= R_TYPE or LW or LUI;		
+		memtoregd	<= LW;		
+		branchd		<= BEQ;	
+--		MemRead		<= LW or LUI;
+		memwrited	<= SW;
+		regdstd		<= R_TYPE;
+		alusrcd		<= LW or SW or LUI;
+--		ALUOp0		<= BEQ;
+--		ALUOp1		<= R_TYPE;
+--		ALUOp2		<= LUI;
+	
 	end process;
 		
 end;

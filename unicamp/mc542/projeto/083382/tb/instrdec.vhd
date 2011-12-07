@@ -19,6 +19,8 @@ entity instrdec is
 		alucontrole out std_logic(2 downto 0);
 		alusrce out std_logic(4 downto 0);
 		regdste out std_logic;
+		srcae out std_logic_vector(nbits -1 downto 0);
+		srcbe out std_logic_vector(nbits -1 downto 0);
 		rte out std_logic_vector(nbits -1 downto 0);
 		rde out std_logic_vector(nbits -1 downto 0);
 		signimme out std_logic_vector(nbits -1 downto 0);
