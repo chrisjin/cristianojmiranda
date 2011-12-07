@@ -1,8 +1,6 @@
-echo Cleaning...
 ghdl --clean
 ghdl --remove
 
-echo Compiling...
 ghdl -a --ieee=synopsys rf.vhd
 ghdl -a --ieee=synopsys adder.vhd
 ghdl -a --ieee=synopsys flop.vhd
@@ -60,17 +58,3 @@ ghdl -e --ieee=synopsys tb_datamem
 ghdl -e --ieee=synopsys tb_instrmem
 ghdl -e --ieee=synopsys tb_instrfetch
 ghdl -e --ieee=synopsys tb_imem
-
-echo Running...
-ghdl -r --ieee=synopsys tb_flop
-ghdl -r --ieee=synopsys tb_flopr
-ghdl -r --ieee=synopsys tb_floprs
-ghdl -r --ieee=synopsys tb_adder
-ghdl -r --ieee=synopsys tb_rf
-ghdl -r --ieee=synopsys tb_datamem
-ghdl -r --ieee=synopsys tb_instrmem
-ghdl -r --ieee=synopsys tb_instrfetch
-ghdl -r --ieee=synopsys tb_imem
-
-
-pause
