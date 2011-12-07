@@ -11,20 +11,20 @@ entity instrdec is
 		pcplus4d: in std_logic_vector(nbits -1 downto 0);
 		writeregw in std_logic_vector(4 downto 0);
 		wd3: in std_logic_vector(nbits -1 downto 0);
-		we3 out std_logic;
-		regwritee out std_logic;
-		memtorege out std_logic;
-		memwritee out std_logic;
-		branche out std_logic;
-		alucontrole out std_logic(2 downto 0);
-		alusrce out std_logic(4 downto 0);
-		regdste out std_logic;
-		srcae out std_logic_vector(nbits -1 downto 0);
-		srcbe out std_logic_vector(nbits -1 downto 0);
-		rte out std_logic_vector(nbits -1 downto 0);
-		rde out std_logic_vector(nbits -1 downto 0);
-		signimme out std_logic_vector(nbits -1 downto 0);
-		pcplus4e out std_logic_vector(nbits -1 downto 0););
+		we3: out std_logic;
+		regwritee: out std_logic;
+		memtorege: out std_logic;
+		memwritee: out std_logic;
+		branche: out std_logic;
+		alucontrole: out std_logic_vector(2 downto 0);
+		alusrce: out std_logic_vector(4 downto 0);
+		regdste: out std_logic;
+		srcae: out std_logic_vector(nbits -1 downto 0);
+		srcbe: out std_logic_vector(nbits -1 downto 0);
+		rte: out std_logic_vector(nbits -1 downto 0);
+		rde: out std_logic_vector(nbits -1 downto 0);
+		signimme: out std_logic_vector(nbits -1 downto 0);
+		pcplus4e: out std_logic_vector(nbits -1 downto 0););
 end;
 
 -- Intruction Decode architecture

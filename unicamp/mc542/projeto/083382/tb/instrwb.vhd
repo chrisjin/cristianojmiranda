@@ -6,16 +6,14 @@ use IEEE.STD_LOGIC_ARITH.all;
 --MIPS instrwb (write back)
 entity instrwb is 
 	port(clk, reset: in STD_LOGIC;
-		regwritew in std_logic;
-		memtoregw in std_logic;
-		aluoutw in std_logic_vector(31 downto 0);
-		readdataw in std_logic_vector(31 downto 0);
-		writeregw in std_logic_vector(4 downto 0);
-		regwritewb out std_logic;
-		memtoregwb out std_logic;
-		writeregwb out std_logic_vector(4 downto 0);
-		resultgwb out std_logic_vector(31 downto 0);
-		);
+		regwritew: in std_logic;
+		memtoregw: in std_logic;
+		aluoutw: in std_logic_vector(31 downto 0);
+		readdataw: in std_logic_vector(31 downto 0);
+		writeregw: in std_logic_vector(4 downto 0);
+		regwritewb: out std_logic;
+		writeregwb : out std_logic_vector(4 downto 0);
+		resultgwb : out std_logic_vector(31 downto 0));
 end;
 
 -- Intruction write back arc 
