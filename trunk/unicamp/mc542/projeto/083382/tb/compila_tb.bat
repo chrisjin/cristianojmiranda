@@ -17,6 +17,9 @@ ghdl -a --ieee=synopsys datamem.vhd
 ghdl -a --ieee=synopsys instrmem.vhd
 ghdl -a --ieee=synopsys instrfetch.vhd
 ghdl -a --ieee=synopsys instrdec.vhd
+ghdl -a --ieee=synopsys instrexec.vhd
+ghdl -a --ieee=synopsys imem.vhd
+ghdl -a --ieee=synopsys instrwb.vhd
 ghdl -a --ieee=synopsys datapath.vhd
 ghdl -a --ieee=synopsys tb_instrfetch.vhd
 ghdl -a --ieee=synopsys tb_instrmem.vhd
@@ -35,12 +38,15 @@ ghdl -e --ieee=synopsys datamem
 ghdl -e --ieee=synopsys instrmem
 ghdl -e --ieee=synopsys instrfetch
 ghdl -e --ieee=synopsys instrdec
+ghdl -e --ieee=synopsys instrexec
+ghdl -e --ieee=synopsys imem
+ghdl -e --ieee=synopsys instrwb
 ghdl -e --ieee=synopsys datapath
 ghdl -e --ieee=synopsys tb_instrmem
 ghdl -e --ieee=synopsys tb_instrfetch
 
 echo Running...
---ghdl -r --ieee=synopsys tb_instrmem
---ghdl -r --ieee=synopsys tb_instrfetch
+ghdl -r --ieee=synopsys tb_instrmem
+ghdl -r --ieee=synopsys tb_instrfetch
 
 pause

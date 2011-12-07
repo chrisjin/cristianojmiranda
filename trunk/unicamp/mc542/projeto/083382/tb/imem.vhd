@@ -95,7 +95,7 @@ begin
 	
 
 	-- Flip flop writeregw
-	ff_writeregw : floprs port map (clk => clk, reset = '0', rstin = '00000', d => writeregm, q => writeregw);
+	ff_writeregw : floprs port map (clk => clk, reset => '0', rstin => "00000", d => writeregm, q => writeregw);
 	
 	-- Flip flop para readdataw
 	ff_readdataw : flop port map (clk => clk, d => memout, q => readdataw);
@@ -104,4 +104,4 @@ begin
 	ff_aluoutw : flop port map (clk => clk, d => aluoutm, q => aluoutw);
 	
 
-end instrexec_arc;
+end imem_arc;

@@ -29,7 +29,10 @@ architecture instrwb_arc of instrwb is
 
 begin
 
+	-- Mux alterna entre aluoutw e regdataw
+	mux2_0 : mux2 port map (d0 => aluoutw, d1 => readdataw, s => memtoregw, y => resultgwb);
 	
+	regwritewb <= regwritew;
+	writeregwb <= writeregw;
 	
-
 end instrwb_arc;
