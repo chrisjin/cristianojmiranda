@@ -88,8 +88,8 @@ architecture instrexec_arc of instrexec is
 	signal writerege : std_logic_vector(4 downto 0);
 	signal sigextout : std_logic_vector(31 downto 0);
 	signal adderout : std_logic_vector(31 downto 0);
-	signal overflow : out std_logic;
-	signal carryout : out std_logic;
+	signal overflow : std_logic;
+	signal carryout : std_logic;
 	
 begin
 
@@ -141,7 +141,7 @@ begin
 	end process ffmemwritem;
 	
 	-- Flip flop para armazenar o bit branchm
-	ffbranchm : process(clk, branchm)
+	ffbranchm : process(clk, branche)
 	begin 
 	
 		if clk'event and clk = '1' then
@@ -151,7 +151,7 @@ begin
 	end process ffbranchm;
 	
 	-- Flip flop para armazenar o bit zerom
-	ffzerom : process(clk, zerom)
+	ffzerom : process(clk, aluzero)
 	begin 
 	
 		if clk'event and clk = '1' then
@@ -164,10 +164,10 @@ begin
 	ff_aluout : flop port map (clk => clk, d => aluout, q => aluoutm);
 	
 	-- Flip flop write data m
-	ff_writedatam : flop port map (clk => clk, d => writedatae, q => writedatae);
+	ff_writedatam : flop port map (clk => clk, d => srcbe, q => writedatam);
 
 	-- Flip flop write reg m
-	ff_writeregm : floprs port map (clk => clk, reset = '0', rstin = '00000', d => writerege, q => writeregm);
+	ff_writeregm : floprs port map (clk => clk, reset => '0', rstin => "00000", d => writerege, q => writeregm);
 	
 	-- Flip flop para branch
 	ff_branchm : flop port map (clk => clk, d => adderout, q => pcbranchm);
