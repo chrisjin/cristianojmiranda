@@ -27,6 +27,7 @@ ghdl -a --ieee=synopsys tb_flop.vhd
 ghdl -a --ieee=synopsys tb_flopr.vhd
 ghdl -a --ieee=synopsys tb_floprs.vhd
 ghdl -a --ieee=synopsys tb_rf.vhd
+ghdl -a --ieee=synopsys tb_datamem.vhd
 ghdl -a --ieee=synopsys tb_instrfetch.vhd
 ghdl -a --ieee=synopsys tb_instrmem.vhd
 ghdl -a --ieee=synopsys tb_imem.vhd
@@ -55,6 +56,7 @@ ghdl -e --ieee=synopsys tb_flop
 ghdl -e --ieee=synopsys tb_flopr
 ghdl -e --ieee=synopsys tb_floprs
 ghdl -e --ieee=synopsys tb_rf
+ghdl -e --ieee=synopsys tb_datamem
 ghdl -e --ieee=synopsys tb_instrmem
 ghdl -e --ieee=synopsys tb_instrfetch
 ghdl -e --ieee=synopsys tb_imem
@@ -65,8 +67,10 @@ echo Running...
 --ghdl -r --ieee=synopsys tb_floprs
 --ghdl -r --ieee=synopsys tb_adder
 --ghdl -r --ieee=synopsys tb_rf
+ghdl -r --ieee=synopsys tb_datamem
 --ghdl -r --ieee=synopsys tb_instrmem
 --ghdl -r --ieee=synopsys tb_instrfetch
-ghdl -r --ieee=synopsys tb_imem
+--ghdl -r --ieee=synopsys tb_imem
+
 
 pause

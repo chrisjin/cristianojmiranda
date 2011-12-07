@@ -41,14 +41,14 @@ begin
 		-- Escrita sincrona na borda de subida
 		rf_write : process(A, WD, CLK, WE)
 			variable registers : reg_type;
-			variable addr : std_logic_vector(31 downto 0);
+			variable addr : std_logic_vector(31 downto 0) := X"00000000";
 		begin
 		
 			-- Remove a diferenca
 			addr := A - X"10000000";
 		
 			-- Leitura assincrona no banco de registradores
-			RD <= registers(conv_integer(addr));
+			RD <= registers(conv_integer(addr(8 downto 0)) / 4);
 		
 			-- Executa a acao no RF apenas na borda de subida
 			if clk'event and clk = '1' then
@@ -57,7 +57,7 @@ begin
 				if We = '1' then
 				
 					-- Escreve no registrador especificado
-					registers(conv_integer(addr)) := WD;
+					registers(conv_integer(addr(8 downto 0)) / 4) := WD;
 					
 				end if;
 				
