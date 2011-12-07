@@ -3,91 +3,123 @@ use IEEE.STD_LOGIC_1164.all;
 use IEEE.STD_LOGIC_ARITH.all;
 
 
---MIPS datapath
+-- MIPS datapath
 entity datapath is 
-	port(clk, reset: in STD_LOGIC;
-		memtoreg, pcsrc: in STD_LOGIC;
-		alusrc, regdst: in STD_LOGIC;
-		regwrite, jump: in STD_LOGIC;
-		alucontrol: in STD_LOGIC_VECTOR (2 downto 0);
-		zero: out STD_LOGIC;
-		pc: buffer STD_LOGIC_VECTOR (31 downto 0);
-		instr: in STD_LOGIC_VECTOR(31 downto 0);
-		aluout, writedata: buffer STD_LOGIC_VECTOR (31 downto 0);
-		readdata: in STD_LOGIC_VECTOR(31 downto 0));
+	port(clk, reset: in STD_LOGIC);
 end;
 
-architecture struct of datapath is
-	component alu
-		port(a, b: in STD_LOGIC_VECTOR(31 downto 0);
-			alucontrol: in STD_LOGIC_VECTOR(2 downto 0);
-			result: buffer STD_LOGIC_VECTOR(31 downto 0);
-			zero: out STD_LOGIC);
-end component;
+architecture datapath_arc of datapath is
 
+	-- Instruction fetch
+	component instrfetch is 
+		generic(nbits : positive := 32);
+		port(clk, reset: in STD_LOGIC;
+			pcsrcm: in STD_LOGIC;
+			pcbranchm: in STD_LOGIC_vector(nbits-1 downto 0);
+			intrd: out std_logic_vector(nbits -1 downto 0);
+			pcplus4d: out std_logic_vector(nbits -1 downto 0));
+	end component;
+	
+	-- Instruction decode
+	entity instrdec is 
+		generic(nbits : positive := 32);
+		port(clk, reset: in STD_LOGIC;
+			intrd: in std_logic_vector(nbits -1 downto 0);
+			pcplus4d: in std_logic_vector(nbits -1 downto 0);
+			writeregw in std_logic_vector(4 downto 0);
+			wd3: in std_logic_vector(nbits -1 downto 0);
+			we3 out std_logic;
+			regwritee out std_logic;
+			memtorege out std_logic;
+			memwritee out std_logic;
+			branche out std_logic;
+			alucontrole out std_logic(2 downto 0);
+			alusrce out std_logic(4 downto 0);
+			regdste out std_logic;
+			srcae out std_logic_vector(nbits -1 downto 0);
+			srcbe out std_logic_vector(nbits -1 downto 0);
+			rte out std_logic_vector(nbits -1 downto 0);
+			rde out std_logic_vector(nbits -1 downto 0);
+			signimme out std_logic_vector(nbits -1 downto 0);
+			pcplus4e out std_logic_vector(nbits -1 downto 0));
+	end component;
+	
+	-- Instruction execute
+	component instrexec is 
+		generic(nbits : positive := 32);
+		port(clk, reset: in STD_LOGIC;
+			regwritee in std_logic;
+			memtorege in std_logic;
+			memwritee in std_logic;
+			branche in std_logic;
+			alucontrole in std_logic_vector(2 downto 0);
+			alusrce in std_logic;
+			regdste in std_logic;
+			srcae in std_logic_vector(nbits -1 downto 0);
+			srcbe in std_logic_vector(nbits -1 downto 0);
+			rte in std_logic_vector(nbits -1 downto 0);
+			rde in std_logic_vector(nbits -1 downto 0);
+			signimme in std_logic_vector(nbits -1 downto 0);
+			pcplus4e in std_logic_vector(nbits -1 downto 0);
+			regwritem out std_logic;
+			memtoregm out std_logic;
+			memwritem out std_logic;
+			branchm out std_logic;
+			zerom out std_logic;
+			aluoutm out std_logic_vector(nbits -1 downto 0);
+			writedatam out std_logic_vector(nbits -1 downto 0);
+			writeregm out std_logic_vector(nbits -1 downto 0);
+			pcbranchm out std_logic_vector(nbits -1 downto 0));
+	end component;
 
-component regfile
-	port(clk: in STD_LOGIC;
-		we3: in STD_LOGIC;
-		ra1, ra2, wa3: in STD_LOGIC_VECTOR (4 downto 0);
-		wd3: in STD_LOGIC_VECTOR (31 downto 0);
-		rd1, rd2: out STD_LOGIC_VECTOR (31 downto 0));
-end component;
-
-
-component adder
-	port(a, b: in STD_LOGIC_VECTOR (31 downto 0);
-		y: out STD_LOGIC_VECTOR (31 downto 0));
-end component;
-
-component sl2
-	port(a: in STD_LOGIC_VECTOR (31 downto 0);
-		y: out STD_LOGIC_VECTOR (31 downto 0));
-end component;
-
-component signext
-port(a: in STD_LOGIC_VECTOR (15 downto 0);
-	y: out STD_LOGIC_VECTOR (31 downto 0));
-end component;
-
-component flopr generic (width: integer);
-	port(clk, reset: in STD_LOGIC;
-		d: in STD_LOGIC_VECTOR (width-1 downto 0);
-		q: out STD_LOGIC_VECTOR (width-1 downto 0));
-end component;
-
-
-component mux2 generic (width: integer);
-	port(d0, d1: in STD_LOGIC_VECTOR (width-1 downto 0);
-		s: in STD_LOGIC;
-		y: out STD_LOGIC_VECTOR (width-1 downto 0));
-end component;
-
-
-signal writereg: STD_LOGIC_VECTOR (4 downto 0);
-signal pcjump, pcnext, pcnextbr, pcplus4, pcbranch: STD_LOGIC_VECTOR (31 downto 0);
-signal signimm, signimmsh: STD_LOGIC_VECTOR (31 downto 0);
-signal srca, srcb, result: STD_LOGIC_VECTOR (31 downto 0);
+	
+	
+	-- Sinais internos ao mips
+	signal pcsrcm : std_logic;
+	signal pcbranchm: STD_LOGIC_vector(31 downto 0)
+	signal intrd: std_logic_vector(31 downto 0);
+	signal pcplus4d: std_logic_vector(31 downto 0);
+	signal writeregw: std_logic_vector(4 downto 0);
+	signal wd3 : std_logic_vector(31 downto 0);
+	signal we3 : std_logic;
+	signal regwritee : std_logic;
+	signal memtorege : std_logic;
+	signal memwritee : std_logic;
+	signal branche : std_logic;
+	signal alucontrole : std_logic(2 downto 0);
+	signal alusrce : std_logic(4 downto 0);
+	signal regdste : std_logic;
+	signal srcae : std_logic_vector(31 downto 0);
+	signal srcbe : std_logic_vector(31 downto 0);
+	signal rte : std_logic_vector(31 downto 0);
+	signal rde : std_logic_vector(31 downto 0);
+	signal signimme : std_logic_vector(31 downto 0);
+	signal pcplus4e : std_logic_vector(31 downto 0)
+	signal regwritem : std_logic;
+	signal memtoregm : std_logic;
+	signal memwritem : std_logic;
+	signal branchm : std_logic;
+	signal zerom : std_logic;
+	signal aluoutm : std_logic_vector(nbits -1 downto 0);
+	signal writedatam : std_logic_vector(nbits -1 downto 0);
+	signal writeregm : std_logic_vector(nbits -1 downto 0);
 
 begin
 
-	--next PC logic
-	pcjump <= pcplus4 (31 downto 28) & instr (25 downto 0) & "00";
-	pcreg: flopr generic map(32) port map(clk, reset, pcnext, pc);
-	pcadd1: adder port map(pc, X"00000004", pcplus4);
-	immsh: sl2 port map(signimm, signimmsh);
-	pcadd2: adder port map(pcplus4, signimmsh, pcbranch);
-	pcbrmux: mux2 generic map(32) port map(pcplus4, pcbranch, pcsrc, pcnextbr);
-	pcmux: mux2 generic map(32) port map(pcnextbr, pcjump, jump, pcnext);
+	-- instruction fetch
+	instrfetch_0 : instrfetch port map(clk => clk, reset => reset, pcsrcm => pcsrcm, pcbranchm => pcbranchm, intrd => intrd, pcplus4d => pcplus4d);
+	
+	-- instruction decode
+	instrdec_0 : instrdec port map (clk => clk, reset => reset, intrd => intrd, pcplus4d => pcplus4d, writeregw => writeregw, wd3 => wd3, we3 => we3, 
+		regwritee => regwritee, memtorege => memtorege, memwritee => memwritee, branche => branche, alucontrole => alucontrole, alusrce => alusrce, 
+		regdste => regdste, srcae => srcae, srcbe => srcbe, rte => rte, rde => rde, signimme => signimme, pcplus4e => pcplus4e);
+	
+	-- instruction execute
+	instrexec_0 : instrexec port map (clk => clk, reset => reset, regwritee => regwritee, memtorege => memtorege, memwritee => memwritee, branche => branche,
+		alucontrole => alucontrole, alusrce => alusrce, regdste => regdste, srcae => srcae, srcbe => srcbe, rte => rte, rde => rde, signimme => signimme, 
+		pcplus4e => pcplus4e, regwritem => regwritem, memtoregm => memtoregm, memwritem => memwritem, branchm => branchm, zerom => zerom, aluoutm => aluoutm,
+		writedatam => writedatam, writeregm => writeregm, pcbranchm => pcbranchm;
+	
 
-	-- register file logic
-	rf: regfile port map(clk, regwrite, instr(25 downto 21),
-	instr(20 downto 16), writereg, result, srca, writedata);
-	wrmux: mux2 generic map(5) port map(instr(20 downto 16), instr(15 downto 11), regdst, writereg);
-	resmux: mux2 generic map(32) port map(aluout, readdata, memtoreg, result);
-	se: signext port map(instr(15 downto 0), signimm);
-
-	-- ALU logic
-	srcbmux: mux2 generic map (32) port map(writedata, signimm, alusrc, srcb);
-	mainalu: alu port map(srca, srcb, alucontrol, aluout, zero);
-end;
+	
+end datapath_arc;
