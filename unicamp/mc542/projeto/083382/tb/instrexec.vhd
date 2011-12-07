@@ -27,7 +27,7 @@ entity instrexec is
 		zerom: out std_logic;
 		aluoutm: out std_logic_vector(nbits -1 downto 0);
 		writedatam: out std_logic_vector(nbits -1 downto 0);
-		writeregm: out std_logic_vector(nbits -1 downto 0);
+		writeregm: out std_logic_vector(4 downto 0);
 		pcbranchm: out std_logic_vector(nbits -1 downto 0));
 end;
 

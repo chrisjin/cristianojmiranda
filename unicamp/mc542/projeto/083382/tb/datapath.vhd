@@ -28,13 +28,13 @@ architecture datapath_arc of datapath is
 			pcplus4d: in std_logic_vector(nbits -1 downto 0);
 			writeregw : in std_logic_vector(4 downto 0);
 			wd3: in std_logic_vector(nbits -1 downto 0);
-			we3: out std_logic;
+			we3: in std_logic;
 			regwritee: out std_logic;
 			memtorege: out std_logic;
 			memwritee: out std_logic;
 			branche: out std_logic;
 			alucontrole: out std_logic_vector(2 downto 0);
-			alusrce: out std_logic_vector(4 downto 0);
+			alusrce: out std_logic;
 			regdste: out std_logic;
 			srcae: out std_logic_vector(nbits -1 downto 0);
 			srcbe: out std_logic_vector(nbits -1 downto 0);
@@ -121,7 +121,7 @@ architecture datapath_arc of datapath is
 	signal memwritee : std_logic;
 	signal branche : std_logic;
 	signal alucontrole : std_logic_vector(2 downto 0);
-	signal alusrce : std_logic_vector(4 downto 0);
+	signal alusrce : std_logic;
 	signal regdste : std_logic;
 	signal srcae : std_logic_vector(31 downto 0);
 	signal srcbe : std_logic_vector(31 downto 0);
@@ -136,7 +136,7 @@ architecture datapath_arc of datapath is
 	signal zerom : std_logic;
 	signal aluoutm : std_logic_vector(31 downto 0);
 	signal writedatam : std_logic_vector(31 downto 0);
-	signal writeregm : std_logic_vector(31 downto 0);
+	signal writeregm : std_logic_vector(4 downto 0);
 	signal memtoregw : std_logic;
 	signal aluoutw : std_logic_vector(31 downto 0);
 	signal readdataw : std_logic_vector(31 downto 0);
