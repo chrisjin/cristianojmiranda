@@ -6,22 +6,22 @@ use IEEE.STD_LOGIC_ARITH.all;
 --MIPS imem (datapah com o instruction memory phase)
 entity imem is 
 	port(clk, reset: in STD_LOGIC;
-		regwritem in std_logic;
-		memtoregm in std_logic;
-		memwritem in std_logic;
-		branchm in std_logic;
-		zerom in std_logic;
-		aluoutm in std_logic_vector(31 downto 0);
-		writedatam in std_logic_vector(31 downto 0);
-		writeregm in std_logic_vector(4 downto 0);
-		pcbranchm in std_logic_vector(31 downto 0);
-		regwritew out std_logic;
-		memtoregw out std_logic;
-		aluoutw out std_logic_vector(31 downto 0);
-		readdataw out std_logic_vector(31 downto 0);
-		writeregw out std_logic_vector(4 downto 0);
-		pcbranch out std_logic_vector(31 downto 0);
-		pcsrcm out std_logic);
+		regwritem : in std_logic;
+		memtoregm : in std_logic;
+		memwritem : in std_logic;
+		branchm : in std_logic;
+		zerom : in std_logic;
+		aluoutm : in std_logic_vector(31 downto 0);
+		writedatam : in std_logic_vector(31 downto 0);
+		writeregm : in std_logic_vector(4 downto 0);
+		pcbranchm : in std_logic_vector(31 downto 0);
+		regwritew : out std_logic;
+		memtoregw : out std_logic;
+		aluoutw : out std_logic_vector(31 downto 0);
+		readdataw : out std_logic_vector(31 downto 0);
+		writeregw : out std_logic_vector(4 downto 0);
+		pcbranch : out std_logic_vector(31 downto 0);
+		pcsrcm : out std_logic);
 end;
 
 -- Intruction memory path architecture
