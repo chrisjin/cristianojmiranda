@@ -9,22 +9,22 @@ entity instrdec is
 	port(clk, reset: in STD_LOGIC;
 		intrd: in std_logic_vector(nbits -1 downto 0);
 		pcplus4d: in std_logic_vector(nbits -1 downto 0);
-		writeregw in std_logic_vector(4 downto 0);
+		writeregw: in std_logic_vector(4 downto 0);
 		wd3: in std_logic_vector(nbits -1 downto 0);
-		we3: out std_logic;
+		we3: in std_logic;
 		regwritee: out std_logic;
 		memtorege: out std_logic;
 		memwritee: out std_logic;
 		branche: out std_logic;
 		alucontrole: out std_logic_vector(2 downto 0);
-		alusrce: out std_logic_vector(4 downto 0);
+		alusrce: out std_logic;
 		regdste: out std_logic;
 		srcae: out std_logic_vector(nbits -1 downto 0);
 		srcbe: out std_logic_vector(nbits -1 downto 0);
 		rte: out std_logic_vector(nbits -1 downto 0);
 		rde: out std_logic_vector(nbits -1 downto 0);
 		signimme: out std_logic_vector(nbits -1 downto 0);
-		pcplus4e: out std_logic_vector(nbits -1 downto 0););
+		pcplus4e: out std_logic_vector(nbits -1 downto 0));
 end;
 
 -- Intruction Decode architecture
@@ -66,13 +66,13 @@ architecture instrdec_arc of instrdec is
 	
 	component controller is 
 		port (op, funct: in STD_LOGIC_VECTOR (5 downto 0);
-			  regwrited out std_logic;
-			  memtoregd out std_logic;
-			  memwrited out std_logic;
-			  branchd out std_logic;
-			  alucontrold out std_logic(2 downto 0);
-			  alusrcd out std_logic(2 downto 0);
-			  regdstd out std_logic);
+			  regwrited: out std_logic;
+			  memtoregd: out std_logic;
+			  memwrited: out std_logic;
+			  branchd: out std_logic;
+			  alucontrold : out std_logic_vector(2 downto 0);
+			  alusrcd: out std_logic;
+			  regdstd: out std_logic);
 	end component;
 	
 	-- Sinais internos
@@ -83,8 +83,8 @@ architecture instrdec_arc of instrdec is
 	signal memtoregd : std_logic;
 	signal memwrited : std_logic;
 	signal branchd : std_logic;
-	signal alucontrold : std_logic(2 downto 0);
-	signal alusrcd : std_logic(4 downto 0);
+	signal alucontrold : std_logic_vector(2 downto 0);
+	signal alusrcd : std_logic;
 	signal regdstd : std_logic;
 	
 	
@@ -93,13 +93,13 @@ begin
 	-- Bind das portas dos componentes 
 	
 	-- Register file
-	rt_0 : rt port map(a1 => intrd(25 downto 21), a2 => intrd(20 downto 16), a3 => writeregw, wd3 => wd3, clk => clk, we3 => we3, rd1 => rd1, rd2 => rd2);
+	rf_0 : rf port map(a1 => intrd(25 downto 21), a2 => intrd(20 downto 16), a3 => writeregw, wd3 => wd3, clk => clk, we3 => we3, rd1 => rd1, rd2 => rd2);
 	
 	-- Signal extend
 	signext_0 : signext port map (a => intrd(15 downto 0), y => sigext);
 
 	-- Controller
-	controller_0 : controller port map (op => instrd(31 downto 26), funct => instrd(5 downto 0), regwrited => regwrited, memtoregd => memtoregd, memwrited => memwrited, branchd => branchd, alucontrold => alucontrold, alusrcd => alusrcd, regdstd => regdstd);
+	controller_0 : controller port map (op => intrd(31 downto 26), funct => intrd(5 downto 0), regwrited => regwrited, memtoregd => memtoregd, memwrited => memwrited, branchd => branchd, alucontrold => alucontrold, alusrcd => alusrcd, regdstd => regdstd);
 	
 	-- Flip flop para armazenar o bit regwritee
 	ffregwritee : process(clk, regwrited)
