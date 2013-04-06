@@ -1,9 +1,9 @@
 /*
  ============================================================================
- Name        : mc823-S12013-p1-miniAmazon.c
+ Name        : main.c
  Author      : Cristiano J. Miranda
  Version     :
- Copyright   : Your copyright notice
+ Copyright   : mc832.unicamp.s1.2013
  Description : in C, Ansi-style
  ============================================================================
  */
@@ -13,11 +13,38 @@
 
 #include "controleacesso.h"
 #include "amazonservice.h"
+#include "server.h"
 
 /**
- * Essa classe executa os testes nas principais bibliotecas do sistema.
+ * Classe com a implementação de servidor e client, se for chamado com 
+ * o parametro S (opera em modo server), 
+ * com o parametro C (opera em modo cliente),
+ * com o parametro T (roda os testes unitarios do sistema)
  */
-int main(void) {
+int main(char** argv, int* argc) {
+
+	// Opera me modo server
+	if (strcmp(argv[1], "S") == 0) {
+		executarServidor();
+	} 
+	
+	// Opera em modo cliente
+	else if (strcmp(argv[1], "C") == 0) {
+	
+	} 
+	
+	// Executa os testes unitarios
+	else if (strcmp(argv[1], "T") == 0) {
+		executarTestes();
+	}
+	
+	return EXIT_SUCCESS;
+}
+
+/**
+ * Executa teste dos principais servicos da Mini Amazon
+ */
+void executarTestes() {
 
 	printf("mini Amazon - Testes");
 
@@ -83,7 +110,5 @@ int main(void) {
 	alterarNrExemplaresEstoquePorISBN("000000002", 999);
 	printf("Exemplares em estoque do livro ISBN 000000002: %d\n", obterNrExemplaresEstoque("000000002"));
 	alterarNrExemplaresEstoquePorISBN("notfound", -1);
-	
 
-	return EXIT_SUCCESS;
 }

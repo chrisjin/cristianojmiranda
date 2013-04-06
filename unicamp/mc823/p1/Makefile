@@ -2,13 +2,11 @@
 # Makefile
 
 CPP  = g++
-#CC   = gcc -Wall -g -ggdb
-CC = gcc -L -Wall -g -ggdb
+CC   = gcc -Wall -g -ggdb
 WINDRES = windres.exe
 RES  = 
-OBJ  = mem.o io.o utils.o controleacesso.o amazonservice.o main.o $(RES)
-LINKOBJ  = mem.o io.o utils.o controleacesso.o amazonservice.o main.o  $(RES)
-LINKOBJ_SERVER = mem.o io.o utils.o controleacesso.o amazonservice.o server.o $(RES)
+OBJ  = mem.o io.o utils.o controleacesso.o amazonservice.o server.o main.o $(RES)
+LINKOBJ  = mem.o io.o utils.o controleacesso.o amazonservice.o server.o main.o  $(RES)
 LIBS =   
 INCS = 
 CXXINCS = 
@@ -23,7 +21,6 @@ all: all-before mc823-S2013-p1 all-after
 
 clean: clean-custom
 	${RM} $(OBJ) $(BIN)
-	${RM} $(LINKOBJ_SERVER)
 
 $(BIN): $(OBJ)
 	$(CC) $(LINKOBJ) -o "mc823-S2013-p1-ra083382" -g $(LIBS)
@@ -43,9 +40,8 @@ controleacesso.o: controleacesso.c
 amazonservice.o: amazonservice.c
 	$(CC) -c amazonservice.c -o amazonservice.o $(CFLAGS)
 
+server.o: server.c
+	$(CC) -c server.c -o server.o $(CFLAGS)
+	
 main.o: main.c
 	$(CC) -c main.c -o main.o $(CFLAGS)
-
-server.o: server.c
-	$(CC) server.c -o server.o $(CFLAGS)
-#	$(CC) -c $(LINKOBJ_SERVER) -o "mini-amazon-server" -g $(LIBS)
