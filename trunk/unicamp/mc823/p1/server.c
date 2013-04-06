@@ -10,6 +10,7 @@
 #include <sys/socket.h>
 #include <sys/wait.h>
 
+#include "server.h"
 #include "utils.h"
 #include "controleacesso.h"
 #include "amazonservice.h"
@@ -19,75 +20,6 @@
 
 // Nr de conexoes pendentes na fila
 #define SERVER_BACKLOG 15
-
-int main() {
-
-	// server ouvindo em sock_fd
-	int sock_fd;
-	
-	// novas conexoes em new_fd
-	int	new_fd;  
-	
-	// informacoes da endereco da conexao
-	struct sockaddr_in my_addr;
-	
-	// informacoes das conexoes
-    	struct sockaddr_in their_addr;
-    	int sin_size;
-	void *yes;
-
-	if ((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-	        perror("erro ao abrir o socket");
-        	exit(1);
-    	}
-
-	if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
-	        perror("erro ao configurar socket setsockopt");
-        	exit(1);
-   	}
-
-	// Configura o endereco da conexao
-	my_addr.sin_family = AF_INET;
-	my_addr.sin_port = htons(SERVER_PORT);
-	my_addr.sin_addr.s_addr = INADDR_ANY;
-	bzero(&(my_addr.sin_zero), 8);
-
-	// Bind socket address
-	if (bind(sock_fd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1) {
-	        perror("erro ao fazer socket bind");
-        	exit(1);
-    	}
-	
-	// List socket
-	if (listen(sock_fd, SERVER_BACKLOG) == -1) {
-		perror("erro ao ouvir o socket");
-        	exit(1);
-	}
-
-	// Fica em loop aceitando as conexoes
-	    while(1) {
-	        sin_size = sizeof(struct sockaddr_in);
-	        if ((new_fd = accept(sock_fd, (struct sockaddr *)&their_addr, &sin_size)) == -1) {
-	            perror("erro ao aceitar a conexao");
-	            continue;
-        	}
-		
-        	printf("server: tratando conexao de %s\n", inet_ntoa(their_addr.sin_addr));
-		
-		// Cria um novo processo para tratar a nova conexao
-	        if (!fork()) {
-			tratar_conexao(new_fd);
-	        }
-		
-		// Processo principal n? referencia a nova conexao
-        	close(new_fd);
-
-		// Aguarda para remove todos os processos filhos
-       		while(waitpid(-1,NULL,WNOHANG) > 0);
-    	}
-	
-	return EXIT_SUCCESS;
-}
 
 // Le o comando enviado pelo cliente e autentica usuario pelo nr do documento
 void ler_comando(int new_fd) {
@@ -161,4 +93,73 @@ void tratar_conexao(int new_fd) {
 	
 	// Finaliza o processo filho
 	exit(0);
+}
+
+void executarServidor() {
+
+	// server ouvindo em sock_fd
+	int sock_fd;
+	
+	// novas conexoes em new_fd
+	int	new_fd;  
+	
+	// informacoes da endereco da conexao
+	struct sockaddr_in my_addr;
+	
+	// informacoes das conexoes
+    	struct sockaddr_in their_addr;
+    	int sin_size;
+	void *yes;
+
+	if ((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+	        perror("erro ao abrir o socket");
+        	exit(1);
+    	}
+
+	if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+	        perror("erro ao configurar socket setsockopt");
+        	exit(1);
+   	}
+
+	// Configura o endereco da conexao
+	my_addr.sin_family = AF_INET;
+	my_addr.sin_port = htons(SERVER_PORT);
+	my_addr.sin_addr.s_addr = INADDR_ANY;
+	bzero(&(my_addr.sin_zero), 8);
+
+	// Bind socket address
+	if (bind(sock_fd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1) {
+	        perror("erro ao fazer socket bind");
+        	exit(1);
+    	}
+	
+	// List socket
+	if (listen(sock_fd, SERVER_BACKLOG) == -1) {
+		perror("erro ao ouvir o socket");
+        	exit(1);
+	}
+
+	// Fica em loop aceitando as conexoes
+	    while(1) {
+	        sin_size = sizeof(struct sockaddr_in);
+	        if ((new_fd = accept(sock_fd, (struct sockaddr *)&their_addr, &sin_size)) == -1) {
+	            perror("erro ao aceitar a conexao");
+	            continue;
+        	}
+		
+        	printf("server: tratando conexao de %s\n", inet_ntoa(their_addr.sin_addr));
+		
+		// Cria um novo processo para tratar a nova conexao
+	        if (!fork()) {
+			tratar_conexao(new_fd);
+	        }
+		
+		// Processo principal n? referencia a nova conexao
+        	close(new_fd);
+
+		// Aguarda para remove todos os processos filhos
+       		while(waitpid(-1,NULL,WNOHANG) > 0);
+    	}
+	
+	return EXIT_SUCCESS;
 }
