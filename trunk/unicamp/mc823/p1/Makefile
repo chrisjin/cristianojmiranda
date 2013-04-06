@@ -2,7 +2,7 @@
 # Makefile
 
 CPP  = g++
-CC   = gcc -Wall -g
+CC   = gcc -Wall -g -ggdb
 WINDRES = windres.exe
 RES  = 
 OBJ  = mem.o io.o utils.o controleacesso.o amazonservice.o main.o $(RES)

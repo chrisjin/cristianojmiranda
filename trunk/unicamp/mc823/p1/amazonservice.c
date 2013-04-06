@@ -34,9 +34,9 @@ char* obterTodosISBNS() {
 	
 	char* isbns = NULL;
 	int contador = 0;
-	while (it) {
+	while (it != NULL) {
 		livro lv = it->titulo;
-		if (lv) {
+		if (lv != NULL) {
 		
 			//printf("\nobterTodosISBNS() - isbn: %s\n", lv->isbn);
 			//printf("obterTodosISBNS() - isbns: %s\n", isbns);
@@ -46,14 +46,16 @@ char* obterTodosISBNS() {
 		
 			// Aloca o resultado
 			if (isbns == NULL) {
-				//printf("alocando\n");
 				isbns = MEM_ALLOC_N(char, tam_registro);
+				//printf("alocando size: %d\n", tam_registro);
 				snprintf(isbns, tam_registro, "%s - %s\n", lv->isbn, lv->titulo);				
 			} else {
-				//printf("realocando\n");
-				int tam_registro_realloc = strlen(isbns) + tam_registro;
+				int tam_registro_realloc = strlen(isbns) + tam_registro + 2;
+				//printf("realocando size: %d\n", tam_registro_realloc);
+				char* tmp = MEM_ALLOC_N(char, strlen(isbns) + 1);
+				strcpy(tmp, isbns);
 				isbns = (char*) realloc(isbns, tam_registro_realloc);
-				snprintf(isbns, tam_registro_realloc, "%s%s - %s\n", isbns, lv->isbn, lv->titulo);
+				snprintf(isbns, tam_registro_realloc, "%s%s - %s\n", tmp, lv->isbn, lv->titulo);
 			}
 			
 			//strncat(isbns, lv->isbn, strlen(lv->isbn));
@@ -71,7 +73,7 @@ char* obterTodosISBNS() {
 }
 
 /**
- * Obtem a descrição de um livro dado um ISBN.
+ * Obtem a descri?o de um livro dado um ISBN.
  */
 char* obterDescricaoPorISBN(char* isbn) {
 	
@@ -84,7 +86,7 @@ char* obterDescricaoPorISBN(char* isbn) {
 }
 
 /**
- * Obtem todas as informações de um livro dado um ISBN.
+ * Obtem todas as informa?es de um livro dado um ISBN.
  */
 livro obterLivroPorISBN(char* isbn) {
 
@@ -222,34 +224,17 @@ char* buildCsvLine(livro lv, int lineSize) {
 	int lineSz = lineSize + 10;
 	char* linha = MEM_ALLOC_N(char, lineSz);
 	stripWhiteSpace(linha);
-	
-	// Adicionad isbn
-	snprintf(linha, lineSz, "%s;", lv->isbn);
-	
-	// Adiciona titulo
-	snprintf(linha, lineSz, "%s%s;", linha, lv->titulo);
-	
-	// Adiciona autores
-	snprintf(linha, lineSz, "%s%s;", linha, lv->autores);
-	
-	// Adiciona editora
-	snprintf(linha, lineSz, "%s%s;", linha, lv->editora);
-	
-	// Adiciona descricao
-	snprintf(linha, lineSz, "%s%s;", linha, lv->descricao);
 
-	// Adiociona o ano
-	snprintf(linha, lineSz, "%s%i;", linha, lv->anoPublicacao);
-	
-	// Adiciona o numero de exemplares
-	snprintf(linha, lineSz, "%s%i;\n", linha, lv->exemplaresEstoque);
+	// Remonta a linha do csv a partir do livro
+	snprintf(linha, lineSz, "%s;%s;%s;%s;%s;%i;%i;\n", lv->isbn, lv->titulo, lv->autores, lv->editora, lv->descricao, lv->anoPublicacao, 
+lv->exemplaresEstoque);
 	
 	return linha;
 }
 
 /**
  * Altera o nr de exemplares em estoque para um dado livro.
- * Retona -1 caso não exista o isbn, caso contrario operação realizada com sucesso.
+ * Retona -1 caso n? exista o isbn, caso contrario opera?o realizada com sucesso.
  */
 int alterarNrExemplaresEstoquePorISBN(char* isbn, int quantidade) {
 
@@ -264,7 +249,7 @@ int alterarNrExemplaresEstoquePorISBN(char* isbn, int quantidade) {
 	livro lv = NULL;
 	while (fgets(line, READ_BUFFER_SIZE, dataBaseFile) != NULL) {
 	
-		lineSize = strlen(line) + 1;
+		lineSize = strlen(line);
 		posicaoAtual = posicaoAtual + lineSize;
 		int startLine = posicaoAtual - lineSize;
 		
@@ -317,7 +302,7 @@ int alterarNrExemplaresEstoquePorISBN(char* isbn, int quantidade) {
 
 /**
  * Obtem a quantidade de exemplares em estoque para um determinado ISBN.
- * Caso não encontre o isbn retorna -1;
+ * Caso n? encontre o isbn retorna -1;
  */
 int obterNrExemplaresEstoque(char* isbn) {
 
