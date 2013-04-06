@@ -11,6 +11,17 @@
 #define DATA_BASE_FILE "amazon-db.csv"
 #define IGNORE_CSV_LINE_TOKEN '#'
 
+#define OBTER_TODOS_ISBNS "OBTER_TODOS_ISBNS"
+#define OBTER_DESCRICAO_POR_ISBN "OBTER_DESCRICAO_POR_ISBN"
+#define OBTER_LIVRO_POR_ISBN "OBTER_LIVRO_POR_ISBN"
+#define OBTER_TODOS_LIVROS "OBTER_TODOS_LIVROS"
+#define ALTERAR_NR_EXEMPLARES_ESTOQUE "ALTERAR_NR_EXEMPLARES_ESTOQUE"
+#define OBTER_NR_EXEMPLARES_ESTOQUE "OBTER_NR_EXEMPLARES_ESTOQUE"
+
+#define RESPONSE_END "RESPONSE_END"
+#define RESPONSE_USUARIO_INVALIDO "RESPONSE_USUARIO_INVALIDO"
+#define RESPONSE_USUARIO_SEM_PERMISSAO "RESPONSE_USUARIO_SEM_PERMISSAO"
+
 // Apontador para Livro
 typedef struct livro_s* livro;
 
@@ -40,12 +51,12 @@ struct livro_list_s{
 char* obterTodosISBNS();
 
 /**
- * Obtem a descrição de um livro dado um ISBN.
+ * Obtem a descri?o de um livro dado um ISBN.
  */
 char* obterDescricaoPorISBN(char* isbn);
 
 /**
- * Obtem todas as informações de um livro dado um ISBN.
+ * Obtem todas as informa?es de um livro dado um ISBN.
  */
 livro obterLivroPorISBN(char* isbn);
 /**
@@ -55,13 +66,13 @@ livro_list obtemTodosLivros(int *list_size);
 
 /**
  * Altera o nr de exemplares em estoque para um dado livro.
- * Retona -1 caso não exista o isbn, caso contrario operação realizada com sucesso.
+ * Retona -1 caso n? exista o isbn, caso contrario opera?o realizada com sucesso.
  */
 int alterarNrExemplaresEstoquePorISBN(char* isbn, int quantidade);
 
 /**
  * Obtem a quantidade de exemplares em estoque para um determinado ISBN.
- * Caso não encontre o isbn retorna -1;
+ * Caso n? encontre o isbn retorna -1;
  */
 int obterNrExemplaresEstoque(char* isbn);
 
