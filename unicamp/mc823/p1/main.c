@@ -73,7 +73,7 @@ int main(void) {
 	
 	printf("\nAltenrando o nr de examplares\n");
 	printf("Exemplares em estoque do livro ISBN 000000001: %d\n", obterNrExemplaresEstoque("000000001"));
-	alterarNrExemplaresEstoquePorISBN("000000001", 1000);
+	alterarNrExemplaresEstoquePorISBN("000000001", 100);
 	printf("Exemplares em estoque do livro ISBN 000000001: %d\n", obterNrExemplaresEstoque("000000001"));
 	alterarNrExemplaresEstoquePorISBN("000000001", 2);
 	printf("Exemplares em estoque do livro ISBN 000000001: %d\n", obterNrExemplaresEstoque("000000001"));

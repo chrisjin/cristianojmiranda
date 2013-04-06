@@ -123,7 +123,7 @@ int strCharCount(char *value, char key, boolean caseSensitive) {
 }
 
 /**
- * Obtem uma substring apartir de uma posição inicial e final.
+ * Obtem uma substring apartir de uma posi?o inicial e final.
  *
  */
 char *strSubString(char *value, int start, int end) {
@@ -133,7 +133,7 @@ char *strSubString(char *value, int start, int end) {
 }
 
 /**
- * Obtem uma substring apartir de uma posição inicial e quantidade de caracteres.
+ * Obtem uma substring apartir de uma posi?o inicial e quantidade de caracteres.
  */
 char *substring(char *origem, int inicio, int quant) {
 
@@ -141,8 +141,8 @@ char *substring(char *origem, int inicio, int quant) {
 	strcpy(res, origem);
 	int i = 0;
 
-	// posição inicial menor que 0 ou
-	// posição inicial muito exagerada?
+	// posi?o inicial menor que 0 ou
+	// posi?o inicial muito exagerada?
 	if ((inicio < 0) || (inicio > strlen(origem)))
 		inicio = 0;
 
@@ -260,9 +260,9 @@ long fileSize(char *fileName) {
 }
 
 /*
- Implementação de uma função fileExists() em C. Se
- o arquivo existir o valor true será retornado. Caso
- contrário a função retornará false.
+ Implementa?o de uma fun?o fileExists() em C. Se
+ o arquivo existir o valor true ser?retornado. Caso
+ contr?io a fun?o retornar?false.
  */
 boolean fileExists(const char *filename) {
 	FILE *arquivo;
@@ -295,9 +295,9 @@ int csvParse(char *line, char* list[], int list_size) {
 	int i = 0;
 	char *tok = strtok(line, ";");
 	while (tok != NULL) {
-		list[i] = MEM_ALLOC_N(char, sizeof(tok));
-		//clearString(list[i]);
-		//printf("csvParse index %d valor %s\n", i, tok);
+		list[i] = MEM_ALLOC_N(char, strlen(tok));
+		clearString(list[i]);
+		//printf("csvParse index %d valor '%s', strlen(%d)\n", i, tok, strlen(tok));
 		list[i++] = tok;
 		tok = strtok(NULL, ";");
 		
