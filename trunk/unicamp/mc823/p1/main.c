@@ -23,19 +23,24 @@
  */
 int main(char** argv, int* argc) {
 
-	// Opera me modo server
-	if (strcmp(argv[1], "S") == 0) {
-		executarServidor();
-	} 
-	
-	// Opera em modo cliente
-	else if (strcmp(argv[1], "C") == 0) {
-	
-	} 
-	
-	// Executa os testes unitarios
-	else if (strcmp(argv[1], "T") == 0) {
-		executarTestes();
+	if (argc <= 1) {
+		perror("Informe ao menos um parametro: S - Server, C - Client, T - Test");
+		exit(1);
+	} else {
+		// Opera me modo server
+		if (strcmp(argv[1], "S") == 0) {
+			executarServidor();
+		} 
+		
+		// Opera em modo cliente
+		else if (strcmp(argv[1], "C") == 0) {
+		
+		} 
+		
+		// Executa os testes unitarios
+		else if (strcmp(argv[1], "T") == 0) {
+			executarTestes();
+		}
 	}
 	
 	return EXIT_SUCCESS;
