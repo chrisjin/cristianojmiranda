@@ -27,10 +27,14 @@ void ler_comando(int new_fd) {
         	perror("erro ao ler do socket");
 	        exit(1);
 	}
+
+	printf("Tratando comando '%s'\n", buffer);
 	
 	// Quebra o comando no vetor 
 	char* comando[3];
 	csvParse(buffer, comando, 3);
+	
+	printf("user id: %s\n", comando[0]);
 	
 	// Obtem o usuario
 	Usuario usuario = obterUsuarioPorDocumento(atoi(comando[0]));
@@ -42,6 +46,8 @@ void ler_comando(int new_fd) {
 			perror("erro ao escrever no socket");
 			exit(1);
 		}
+	} else {
+		printf("Tratando conexao do usuario %s\n", usuario->nome);
 	}
 	
 	if (strcmp(comando[1], OBTER_TODOS_ISBNS) == 0) {
@@ -94,7 +100,7 @@ void tratar_conexao(int new_fd) {
 
 void executarServidor(char* porta) {
 
-	printf("inicializando servidor....\n");
+	printf("inicializando servidor no porta '%s'....\n", porta);
 
 	// server ouvindo em sock_fd
 	int sock_fd;
@@ -122,12 +128,13 @@ void executarServidor(char* porta) {
 
 	// Configura o endereco da conexao
 	my_addr.sin_family = AF_INET;
-	my_addr.sin_port = htons(porta);
+//	my_addr.sin_port = htons(porta);
+	my_addr.sin_port = htons(25933);
 	my_addr.sin_addr.s_addr = INADDR_ANY;
 	bzero(&(my_addr.sin_zero), 8);
 
 	printf("my address: %d.%d.%d.%d\n", (int)my_addr.sin_addr.s_addr&0xFF, (int)((my_addr.sin_addr.s_addr&0xFF00)>>8), (int)((my_addr.sin_addr.s_addr&0xFF0000)>>16), (int)((my_addr.sin_addr.s_addr&0xFF000000)>>24));
-	printf("my port is %d\n", ntohs(my_addr.sin_port);
+	printf("my port is %d\n", ntohs(my_addr.sin_port));
 	
 	// Bind socket address
 	if (bind(sock_fd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1) {
@@ -149,7 +156,8 @@ void executarServidor(char* porta) {
 	            continue;
         	}
 		
-        	printf("server: tratando conexao de %s\n", inet_ntoa(their_addr.sin_addr));
+//        	printf("server: tratando conexao de %s\n", inet_ntoa(their_addr.sin_addr));
+		printf("tratando conexao...\n");
 		
 		// Cria um novo processo para tratar a nova conexao
 	        if (!fork()) {
