@@ -1,3 +1,3 @@
 
 // Executa o cliente 
-void executarCliente(char* porta, char* host);
+void executarCliente(int porta, char* host);

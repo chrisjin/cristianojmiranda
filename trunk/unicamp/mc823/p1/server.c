@@ -21,7 +21,9 @@
 // Le o comando enviado pelo cliente e autentica usuario pelo nr do documento
 void ler_comando(int new_fd) {
 
+	// Fica em looping atendendo as demanda do client
 	while(1) {
+	
 		char buffer[256];
 		bzero(buffer,256);
 		if (read(new_fd,buffer, 255) < 0) {
@@ -34,8 +36,6 @@ void ler_comando(int new_fd) {
 		// Quebra o comando no vetor 
 		char* comando[3];
 		csvParse(buffer, comando, 3);
-	
-		printf("user id: %s\n", comando[0]);
 	
 		// Obtem o usuario
 		Usuario usuario = obterUsuarioPorDocumento(atoi(comando[0]));
@@ -120,7 +120,7 @@ void tratar_conexao(int new_fd) {
 	// Le o comando enviado pelo cliente
 	ler_comando(new_fd);
 	
-	printf("Fechando conexao do filho\n");
+	printf("Fechando conexao do processo filho\n");
 	    // Fecha a conexao do filho
 	close(new_fd);
 	
@@ -130,9 +130,9 @@ void tratar_conexao(int new_fd) {
 	exit(0);
 }
 
-void executarServidor(char* porta) {
+void executarServidor(int porta) {
 
-	printf("inicializando servidor no porta '%s'....\n", porta);
+	printf("inicializando servidor na porta '%d'....\n", porta);
 
 	// server ouvindo em sock_fd
 	int sock_fd;
@@ -160,13 +160,10 @@ void executarServidor(char* porta) {
 
 	// Configura o endereco da conexao
 	my_addr.sin_family = AF_INET;
-//	my_addr.sin_port = htons(porta);
-	my_addr.sin_port = htons(25933);
+	my_addr.sin_port = htons(porta);
+	// my_addr.sin_port = htons(25933);
 	my_addr.sin_addr.s_addr = INADDR_ANY;
 	bzero(&(my_addr.sin_zero), 8);
-
-	printf("my address: %d.%d.%d.%d\n", (int)my_addr.sin_addr.s_addr&0xFF, (int)((my_addr.sin_addr.s_addr&0xFF00)>>8), (int)((my_addr.sin_addr.s_addr&0xFF0000)>>16), (int)((my_addr.sin_addr.s_addr&0xFF000000)>>24));
-	printf("my port is %d\n", ntohs(my_addr.sin_port));
 	
 	// Bind socket address
 	if (bind(sock_fd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1) {
@@ -179,6 +176,8 @@ void executarServidor(char* porta) {
 		perror("erro ao ouvir o socket");
         	exit(1);
 	}
+	
+	printf("Servidor operando em: %d.%d.%d.%d:%d\n", (int)my_addr.sin_addr.s_addr&0xFF, (int)((my_addr.sin_addr.s_addr&0xFF00)>>8), (int)((my_addr.sin_addr.s_addr&0xFF0000)>>16), (int)((my_addr.sin_addr.s_addr&0xFF000000)>>24), ntohs(my_addr.sin_port));
 
 	// Fica em loop aceitando as conexoes
 	    while(1) {
@@ -188,21 +187,18 @@ void executarServidor(char* porta) {
 	            continue;
         	}
 		
-//        	printf("server: tratando conexao de %s\n", inet_ntoa(their_addr.sin_addr));
-		printf("tratando conexao...\n");
-		
 		// Cria um novo processo para tratar a nova conexao
 	        if (!fork()) {
 			tratar_conexao(new_fd);
 	        }
 		
-		printf("Fechando new_fd no processo principal\n");
+		//printf("Fechando new_fd no processo principal\n");
 		// Processo principal n? referencia a nova conexao
         	close(new_fd);
 
-		printf("Aguardando todos os processos filhos terminarem...\n");
-		// Aguarda para remove todos os processos filhos
-       		while(waitpid(-1,NULL,WNOHANG) > 0);
+			// Aguarda todos os processos filhos terminarem
+			//printf("Aguardando todos os processos filhos terminarem...\n");
+       		while(waitpid(-1, NULL, WNOHANG) > 0);
     	}
 	
 	return EXIT_SUCCESS;

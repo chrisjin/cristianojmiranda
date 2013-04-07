@@ -25,18 +25,18 @@ int main(int argc, char* argv[]) {
 
 	//printf("argc %d\n", argc);
 	if (argc <= 1) {
-		perror("Informe ao menos um parametro: S - Server, C - Client, T - Test");
+		perror("Informe ao menos um parametro: [S-Server, C-Client, T-Test] [porta] [host]");
 		exit(1);
 	} else {
 		// Opera me modo server
 		if (strcmp(argv[1], "S") == 0) {
 		
 			if (argc < 3) {
-				perror("Para inicilizar o servidor e necessario os parametros: S <port number>");
+				perror("Para inicilizar o servidor e necessario os parametros: [S] [porta]");
 				exit(1);
 			}
 		
-			executarServidor(argv[2]);
+			executarServidor(atoi(argv[2]));
 		} 
 		
 		// Opera em modo cliente
@@ -44,12 +44,12 @@ int main(int argc, char* argv[]) {
 		
 			// Verifica se host e porta foram informados
 			if (argc < 4) {
-				perror("Para inicilizar o cliente e necessario os parametros: C <host name or ip> <port number>");
+				perror("Para inicilizar o cliente e necessario os parametros: [C] [porta] [host]");
 				exit(1);
 			}
 			
 			// Inicializa o client
-			executarCliente(argv[2], argv[3]);
+			executarCliente(atoi(argv[2]), argv[3]);
 		
 		} 
 		
