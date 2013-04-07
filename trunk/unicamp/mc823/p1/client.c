@@ -31,13 +31,9 @@ void printMenu() {
 int lerOperacao() {
 
 	int op = -1;
-	
+
 	do {
-		char operacao[2];
-		bzero(operacao, 2);
-		fgets(operacao, 1, stdin);
-		
-		op = atoi(operacao);
+		scanf("%d", &op);
 		
 	} while (op <= 0 || op > 6);
 	
@@ -46,7 +42,7 @@ int lerOperacao() {
 
 // Obtem um ISBN para operar
 void lerISBN(char* isbn) {
-	pritnf("Informe o ISBN: ");
+	printf("Informe o ISBN: ");
 	bzero(isbn, 11);
 	fgets(isbn, 10, stdin);
 }
@@ -162,9 +158,10 @@ void executarCliente(int porta, char* host) {
 		printf("Cliente inicializado com sucesso\n");
 		
 		// Obtem o documento do usuario
-		pritnf("Entre com o documento do usuario: ");
+		printf("Entre com o documento do usuario: ");
 		bzero(documentoUsuario, 5);
-		fgets(documentoUsuario, 4, stdin);
+		//fgets(documentoUsuario, 4, stdin);
+		scanf("%s", &documentoUsuario);
 		
 		
 		
@@ -188,10 +185,10 @@ void executarCliente(int porta, char* host) {
 			bzero(parametro, 7);
 			if (operacao == 5) {
 				lerParametro(parametro, "Entre com o novo numero de exemplares: ");
-			}
+		}
 			
-			// Monta request
-			montarMensagem(buffer, traduzirOperacao(operacao), documentoUsuario, isbn, parametro) {
+		// Monta request
+		montarMensagem(buffer, traduzirOperacao(operacao), documentoUsuario, isbn, parametro);
 		
 		// Obtem um comando do usuario
 		//printf("Entre com um comando: [COMANDO];[PARAMETROS]");
