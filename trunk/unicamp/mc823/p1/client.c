@@ -35,6 +35,8 @@ void executarCliente(char* porta, char* host) {
     int sentAll = 0, sent = 1;
     struct timeval tv;
     fd_set readfds, writefds;
+	
+	char buffer[256];
     
     FD_ZERO(&readfds);
     FD_ZERO(&writefds);
@@ -87,7 +89,7 @@ void executarCliente(char* porta, char* host) {
     
     while (1) {
         
-        tv.tv_sec = TIMEOUT;
+        tv.tv_sec = 5;
         tv.tv_usec = 0;
         FD_SET(sock_fd, &readfds);
 		
