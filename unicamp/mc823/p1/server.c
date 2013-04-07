@@ -15,9 +15,6 @@
 #include "controleacesso.h"
 #include "amazonservice.h"
 
-// Nr da porta de conecao
-#define SERVER_PORT 9091
-
 // Nr de conexoes pendentes na fila
 #define SERVER_BACKLOG 15
 
@@ -95,7 +92,7 @@ void tratar_conexao(int new_fd) {
 	exit(0);
 }
 
-void executarServidor() {
+void executarServidor(char* porta) {
 
 	printf("inicializando servidor....\n");
 
@@ -125,7 +122,7 @@ void executarServidor() {
 
 	// Configura o endereco da conexao
 	my_addr.sin_family = AF_INET;
-	my_addr.sin_port = htons(SERVER_PORT);
+	my_addr.sin_port = htons(porta);
 	my_addr.sin_addr.s_addr = INADDR_ANY;
 	bzero(&(my_addr.sin_zero), 8);
 
