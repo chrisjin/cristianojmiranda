@@ -122,6 +122,14 @@
 #00000002;titulo2;autor2;editora2;livro2;2013;55;
 #00000002;titulo2;autor2;editora2;livro2;2013;999;
 #00000001;titulo1;autor1;editora1;livro1;2013;100;
+#00000001;titulo1;autor1;editora1;livro1;2013;2;
+#00000002;titulo2;autor2;editora2;livro2;2013;55;
+#00000002;titulo2;autor2;editora2;livro2;2013;999;
+#00000001;titulo1;autor1;editora1;livro1;2013;100;
+#00000001;titulo1;autor1;editora1;livro1;2013;2;
+#00000002;titulo2;autor2;editora2;livro2;2013;55;
+#00000002;titulo2;autor2;editora2;livro2;2013;999;
+#00000001;titulo1;autor1;editora1;livro1;2013;100;
 000000001;titulo1;autor1;editora1;livro1;2013;2;
 #00000002;titulo2;autor2;editora2;livro2;2013;55;
 000000002;titulo2;autor2;editora2;livro2;2013;999;

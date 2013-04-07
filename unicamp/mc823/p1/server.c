@@ -97,6 +97,8 @@ void tratar_conexao(int new_fd) {
 
 void executarServidor() {
 
+	printf("inicializando servidor....\n");
+
 	// server ouvindo em sock_fd
 	int sock_fd;
 	
