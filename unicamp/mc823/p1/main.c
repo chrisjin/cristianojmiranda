@@ -59,7 +59,7 @@ int main(int argc, char* argv[]) {
 		}
 		
 		else {
-			prinf("Parametro invalido. Utilize: S - Server, C - Client, T - Test\n");
+			printf("Parametro invalido. Utilize: S - Server, C - Client, T - Test\n");
 		}
 	}
 	
