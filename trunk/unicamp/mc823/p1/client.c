@@ -42,7 +42,8 @@ void executarCliente(char* porta, char* host) {
     FD_ZERO(&writefds);
 
 	// Obtendo endereco do host
-    if ((he=gethostbyname(host)) == NULL) {
+//    if ((he=gethostbyname(host)) == NULL) {
+	if ((he=gethostbyname("143.106.16.163")) == NULL) {
         perror("erro ao resolver host name");
         exit(1);
     }
@@ -57,11 +58,19 @@ void executarCliente(char* porta, char* host) {
     their_addr.sin_family = AF_INET;         
 	
 	// Seta a porta de conexao
-    their_addr.sin_port = htons(porta);       
+//    their_addr.sin_port = htons(porta);       
+	their_addr.sin_port = htons(25933);
 	
 	// Seta o endereco do host
     their_addr.sin_addr = *((struct in_addr *)he->h_addr);
     bzero(&(their_addr.sin_zero), 8);
+
+    printf("server address: %d.%d.%d.%d\n", (int)their_addr.sin_addr.s_addr&0xFF, 
+(int)((their_addr.sin_addr.s_addr&0xFF00)>>8), 
+(int)((their_addr.sin_addr.s_addr&0xFF0000)>>16), 
+(int)((their_addr.sin_addr.s_addr&0xFF000000)>>24));
+
+	printf("server port is %d\n", ntohs(their_addr.sin_port));
 	
 	// Conectando ao host
     if (connect(sock_fd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) < 0) {
