@@ -30,14 +30,20 @@ int main(int argc, char* argv[]) {
 	} else {
 		// Opera me modo server
 		if (strcmp(argv[1], "S") == 0) {
-			executarServidor();
+		
+			if (argc < 3) {
+				perror("Para inicilizar o servidor e necessario os parametros: S <port number>");
+				exit(1);
+			}
+		
+			executarServidor(argv[2]);
 		} 
 		
 		// Opera em modo cliente
 		else if (strcmp(argv[1], "C") == 0) {
 		
 			// Verifica se host e porta foram informados
-			if (args < 4) {
+			if (argc < 4) {
 				perror("Para inicilizar o cliente e necessario os parametros: C <host name or ip> <port number>");
 				exit(1);
 			}
