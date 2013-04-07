@@ -126,7 +126,7 @@ void executarServidor(char* porta) {
 	my_addr.sin_addr.s_addr = INADDR_ANY;
 	bzero(&(my_addr.sin_zero), 8);
 
-	printf("my address: %d.%d.%d.%d\n", int(my_addr.sin_addr.s_addr&0xFF), int((my_addr.sin_addr.s_addr&0xFF00)>>8), int((my_addr.sin_addr.s_addr&0xFF0000)>>16), int((my_addr.sin_addr.s_addr&0xFF000000)>>24));
+	printf("my address: %d.%d.%d.%d\n", (int)my_addr.sin_addr.s_addr&0xFF, (int)((my_addr.sin_addr.s_addr&0xFF00)>>8), (int)((my_addr.sin_addr.s_addr&0xFF0000)>>16), (int)((my_addr.sin_addr.s_addr&0xFF000000)>>24));
 	
 	// Bind socket address
 	if (bind(sock_fd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1) {
