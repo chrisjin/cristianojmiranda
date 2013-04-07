@@ -92,6 +92,15 @@ void tratar_conexao(int new_fd) {
 	exit(0);
 }
 
+// get port, IPv4 or IPv6:
+in_port_t get_in_port(struct sockaddr *sa){
+    if (sa->sa_family == AF_INET) {
+        return (((struct sockaddr_in*)sa)->sin_port);
+    }
+
+    return (((struct sockaddr_in6*)sa)->sin6_port);
+}
+
 void executarServidor(char* porta) {
 
 	printf("inicializando servidor....\n");
@@ -127,6 +136,7 @@ void executarServidor(char* porta) {
 	bzero(&(my_addr.sin_zero), 8);
 
 	printf("my address: %d.%d.%d.%d\n", (int)my_addr.sin_addr.s_addr&0xFF, (int)((my_addr.sin_addr.s_addr&0xFF00)>>8), (int)((my_addr.sin_addr.s_addr&0xFF0000)>>16), (int)((my_addr.sin_addr.s_addr&0xFF000000)>>24));
+	printf("my port is %d\n",ntohs(get_in_port((struct sockaddr *)my_addr->ai_addr)));
 	
 	// Bind socket address
 	if (bind(sock_fd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1) {
