@@ -14,6 +14,8 @@
 #include "client.h"
 #include "amazonservice.h"
 
+#define BUFFER_SIZE 255
+
 void executarCliente(int porta, char* host) {	
 
 	printf("Inicializando cliente....\n");
@@ -34,7 +36,6 @@ void executarCliente(int porta, char* host) {
 
 	// Obtendo endereco do host
 	if ((he=gethostbyname(host)) == NULL) {
-	//if ((he=gethostbyname("143.106.16.163")) == NULL) {
         	perror("erro ao resolver host name");
         	exit(1);
     	}
@@ -50,7 +51,6 @@ void executarCliente(int porta, char* host) {
 	
 	// Seta a porta de conexao
 	their_addr.sin_port = htons(porta);
-	// their_addr.sin_port = htons(25933);
 	
 	// Seta o endereco do host
 	their_addr.sin_addr = *((struct in_addr *)he->h_addr);
@@ -79,29 +79,29 @@ void executarCliente(int porta, char* host) {
         	tv.tv_usec = 0;
 		
 		// Obtem um comando do usuario
-		printf("Please enter the message: ");
-		bzero(buffer,256);
-		fgets(buffer,255,stdin);
+		printf("Entre com um comando: [DOC USUARIO];[COMANDO];[PARAMETROS]");
+		bzero(buffer, BUFFER_SIZE + 1);
+		fgets(buffer, BUFFER_SIZE,stdin);
 		
-		printf("enviando mensagem...\n");
+		//printf("enviando mensagem...\n");
 		// Envia a mensagem para o usuario
 		if (write(sock_fd, buffer, strlen(buffer)) < 0) {
 			 perror("erro ao escrever no socket");
 			 exit(1);
 		}
 		
-		printf("obtando resposta...\n");
+		//printf("obtando resposta...\n");
 		// Le a resposta do servidor
 		bzero(buffer,256);
-		if (read(sock_fd, buffer, 255) < 0) {
+		if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
 			 perror("erro ao ler o socket");
 			 exit(1);
 		}
 		
-		printf("Resposta: '%s'\n",buffer);
+		printf("\tResposta: '%s'\n",buffer);
 
 		// Finaliza client, pois server finalizou a conexao
-		if (strcmp(buffer, RESPONSE_END) == 0) {
+		if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
 			break;
 		}
     	}
