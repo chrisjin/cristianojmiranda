@@ -2,4 +2,4 @@
 /**
  *
  */
-void executarServidor(char* porta);
+void executarServidor(int porta);
