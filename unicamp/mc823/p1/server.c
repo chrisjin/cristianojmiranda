@@ -21,65 +21,94 @@
 // Le o comando enviado pelo cliente e autentica usuario pelo nr do documento
 void ler_comando(int new_fd) {
 
-	char buffer[256];
-	bzero(buffer,256);
-	if (read(new_fd,buffer, 255) < 0) {
-        	perror("erro ao ler do socket");
-	        exit(1);
-	}
-
-	printf("Tratando comando '%s'\n", buffer);
-	
-	// Quebra o comando no vetor 
-	char* comando[3];
-	csvParse(buffer, comando, 3);
-	
-	printf("user id: %s\n", comando[0]);
-	
-	// Obtem o usuario
-	Usuario usuario = obterUsuarioPorDocumento(atoi(comando[0]));
-	if (usuario == NULL){
-		
-		// retornar usuario invalido 
-		strcpy(buffer, RESPONSE_USUARIO_INVALIDO);
-		if (write(new_fd, buffer, 255) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
+	while(1) {
+		char buffer[256];
+		bzero(buffer,256);
+		if (read(new_fd,buffer, 255) < 0) {
+        		perror("erro ao ler do socket");
+		        exit(1);
 		}
-	} else {
-		printf("Tratando conexao do usuario %s\n", usuario->nome);
-	}
+
+		printf("Tratando comando '%s'\n", buffer);
 	
-	if (strcmp(comando[1], OBTER_TODOS_ISBNS) == 0) {
+		// Quebra o comando no vetor 
+		char* comando[3];
+		csvParse(buffer, comando, 3);
 	
-		char* isbns = obterTodosISBNS();
-		if (write(new_fd, isbns, strlen(isbns)) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		}		
-		
-	} else if (strcmp(comando[1], OBTER_DESCRICAO_POR_ISBN) == 0) {
+		printf("user id: %s\n", comando[0]);
 	
-		char* descricao = obterDescricaoPorISBN(comando[2]);
-		if (write(new_fd, descricao, strlen(descricao)) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		}	
+		// Obtem o usuario
+		Usuario usuario = obterUsuarioPorDocumento(atoi(comando[0]));
+		if (usuario == NULL){
 		
-	} else if (strcmp(comando[1], OBTER_LIVRO_POR_ISBN) == 0) {
+			// retornar usuario invalido 
+			strcpy(buffer, RESPONSE_USUARIO_INVALIDO);
+			if (write(new_fd, buffer, 255) < 0) {
+				perror("erro ao escrever no socket");
+				exit(1);
+			}
+
+			continue;
+
+		} else {
+			printf("Tratando conexao do usuario '%s'\n", 
+usuario->nome);
+		}
 	
-		printf("OBTER_LIVRO_POR_ISBN\n");
+		if (strcmp(comando[1], OBTER_TODOS_ISBNS) == 0) {
+	
+			char* isbns = obterTodosISBNS();
+			if (write(new_fd, isbns, strlen(isbns)) < 0) {
+				perror("erro ao escrever no socket");
+				exit(1);
+			}		
 		
-	} else if (strcmp(comando[1], OBTER_TODOS_LIVROS) == 0) {
+		} else if (strcmp(comando[1], OBTER_DESCRICAO_POR_ISBN) == 0) {
+	
+			char* descricao = obterDescricaoPorISBN(comando[2]);
+			if (write(new_fd, descricao, strlen(descricao)) < 0) {
+				perror("erro ao escrever no socket");
+				exit(1);
+			}	
 		
-		printf("OBTER_TODOS_LIVROS\n");
+		} else if (strcmp(comando[1], OBTER_LIVRO_POR_ISBN) == 0) {
+	
+			printf("OBTER_LIVRO_POR_ISBN\n");
 		
-	} else if (strcmp(comando[1], ALTERAR_NR_EXEMPLARES_ESTOQUE) == 0) {
-//		*param = atoi(comando[2]);
-		printf("ALTERAR_NR_EXEMPLARES_ESTOQUE\n");
+		} else if (strcmp(comando[1], OBTER_TODOS_LIVROS) == 0) {
 		
-	} else if (strcmp(comando[1], OBTER_NR_EXEMPLARES_ESTOQUE) == 0) {
-		printf("OBTER_NR_EXEMPLARES_ESTOQUE\n");
+			printf("OBTER_TODOS_LIVROS\n");
+		
+		} else if (strcmp(comando[1], ALTERAR_NR_EXEMPLARES_ESTOQUE) == 0) {
+
+			//*param = atoi(comando[2]);
+			printf("ALTERAR_NR_EXEMPLARES_ESTOQUE\n");
+		
+		} else if (strcmp(comando[1], OBTER_NR_EXEMPLARES_ESTOQUE) == 0) {
+
+			printf("OBTER_NR_EXEMPLARES_ESTOQUE\n");
+
+		} else if (strcmp(comando[1], REQUEST_END) == 0){
+
+			printf("Finalizando conexao com o cliente...\n");
+
+			// Envia mensagem para o cliente finalizar a conexao
+			strcpy(buffer, RESPONSE_END);
+			if (write(new_fd, buffer, strlen(buffer)) < 0) {
+				perror("erro ao escrever no socket");
+				exit(1);
+			}
+
+			break;
+		} else {
+			// Notifica o cliente sobre comando invalido
+			strcpy(buffer, RESPONSE_COMANDO_INVALIDO);
+			if (write(new_fd, buffer, 255) < 0) {
+				perror("erro ao escrever no socket");
+				exit(1);
+			}
+			printf("comando invalido\n");
+		}
 	}
 
 }
@@ -91,9 +120,12 @@ void tratar_conexao(int new_fd) {
 	// Le o comando enviado pelo cliente
 	ler_comando(new_fd);
 	
+	printf("Fechando conexao do filho\n");
 	    // Fecha a conexao do filho
 	close(new_fd);
 	
+
+	printf("Matando processo filho\n");
 	// Finaliza o processo filho
 	exit(0);
 }
@@ -164,9 +196,11 @@ void executarServidor(char* porta) {
 			tratar_conexao(new_fd);
 	        }
 		
+		printf("Fechando new_fd no processo principal\n");
 		// Processo principal n? referencia a nova conexao
         	close(new_fd);
 
+		printf("Aguardando todos os processos filhos terminarem...\n");
 		// Aguarda para remove todos os processos filhos
        		while(waitpid(-1,NULL,WNOHANG) > 0);
     	}
