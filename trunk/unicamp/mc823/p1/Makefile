@@ -5,8 +5,8 @@ CPP  = g++
 CC   = gcc -Wall -g -ggdb
 WINDRES = windres.exe
 RES  = 
-OBJ  = mem.o io.o utils.o controleacesso.o amazonservice.o server.o main.o $(RES)
-LINKOBJ  = mem.o io.o utils.o controleacesso.o amazonservice.o server.o main.o  $(RES)
+OBJ  = mem.o io.o utils.o controleacesso.o amazonservice.o server.o client.o main.o $(RES)
+LINKOBJ  = mem.o io.o utils.o controleacesso.o amazonservice.o server.o client.o main.o  $(RES)
 LIBS =   
 INCS = 
 CXXINCS = 
@@ -42,6 +42,9 @@ amazonservice.o: amazonservice.c
 
 server.o: server.c
 	$(CC) -c server.c -o server.o $(CFLAGS)
+	
+client.o: client.c
+	$(CC) -c client.c -o client.o $(CFLAGS)	
 	
 main.o: main.c
 	$(CC) -c main.c -o main.o $(CFLAGS)

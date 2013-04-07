@@ -36,11 +36,24 @@ int main(int argc, char* argv[]) {
 		// Opera em modo cliente
 		else if (strcmp(argv[1], "C") == 0) {
 		
+			// Verifica se host e porta foram informados
+			if (args < 4) {
+				perror("Para inicilizar o cliente e necessario os parametros: C <host name or ip> <port number>");
+				exit(1);
+			}
+			
+			// Inicializa o client
+			executarCliente(argv[2], argv[3]);
+		
 		} 
 		
 		// Executa os testes unitarios
 		else if (strcmp(argv[1], "T") == 0) {
 			executarTestes();
+		}
+		
+		else {
+			prinf("Parametro invalido. Utilize: S - Server, C - Client, T - Test\n");
 		}
 	}
 	
