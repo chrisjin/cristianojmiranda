@@ -29,8 +29,8 @@ void executarCliente(char* porta, char* host) {
     clock_t startTime, endTime;
     float elapsedTime;
 	
-    char *rbuffer = (char*)malloc(MAXDATASIZE * sizeof(char));
-    char *wbuffer = (char*)malloc(MAXDATASIZE * sizeof(char));
+    char *rbuffer = (char*)malloc(255 * sizeof(char));
+    char *wbuffer = (char*)malloc(255 * sizeof(char));
     FILE *rsock, *wsock;
     int sentAll = 0, sent = 1;
     struct timeval tv;
