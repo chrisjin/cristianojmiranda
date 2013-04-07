@@ -161,7 +161,6 @@ void executarServidor(int porta) {
 	// Configura o endereco da conexao
 	my_addr.sin_family = AF_INET;
 	my_addr.sin_port = htons(porta);
-	// my_addr.sin_port = htons(25933);
 	my_addr.sin_addr.s_addr = INADDR_ANY;
 	bzero(&(my_addr.sin_zero), 8);
 	
