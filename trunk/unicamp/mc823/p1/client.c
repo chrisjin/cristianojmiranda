@@ -16,6 +16,84 @@
 
 #define BUFFER_SIZE 255
 
+// Imprime o menu de operacoes
+void printMenu() {
+	printf("\n===== MENU =====\n");	
+	printf(" 1 - OBTER TODOS ISBNS\n");
+	printf(" 2 - OBTER DESCRICAO POR_ISBN\n");
+	printf(" 3 - OBTER LIVRO POR ISBN\n");
+	printf(" 4 - OBTER TODOS LIVROS\n");
+	printf(" 5 - ALTERAR NR EXEMPLARES ESTOQUE\n");
+	printf(" 6 - OBTER NR EXEMPLARES ESTOQUE\n\n");
+	printf("Entre com uma operacao: ");
+}
+
+int lerOperacao() {
+
+	int op = -1;
+	
+	do {
+		char operacao[2];
+		bzero(operacao, 2);
+		fgets(operacao, 1, stdin);
+		
+		op = atoi(operacao);
+		
+	} while (op <= 0 || op > 6);
+	
+	return op;
+}
+
+// Obtem um ISBN para operar
+void lerISBN(char* isbn) {
+	pritnf("Informe o ISBN: ");
+	bzero(isbn, 11);
+	fgets(isbn, 10, stdin);
+}
+
+void lerParametro(char *parametro, char *mensagem) {
+	printf("%s", mensagem);
+	bzero(parametro, 7);
+	fgets(parametro, 6, stdin);
+}
+
+void montarMensagem(char* buffer, char* operacao, char* documento, char* isbn, char* parametro) {
+	bzero(buffer, BUFFER_SIZE + 1);
+	snprintf(buffer, BUFFER_SIZE, "%s;%s;%s;%s;", documento, operacao, isbn, parametro);
+	printf("request '%s'\n", buffer);
+}
+
+char* traduzirOperacao(int operacao) {
+
+	if (operacao == 1) {
+	
+		return OBTER_TODOS_ISBNS;
+		
+	} else if (operacao == 2) {
+	
+		return OBTER_DESCRICAO_POR_ISBN;
+		
+	} else if (operacao == 3) {
+	
+		return OBTER_LIVRO_POR_ISBN;
+		
+	} else if (operacao == 4) {
+	
+		return OBTER_TODOS_LIVROS;
+		
+	} else if (operacao == 5) {
+	
+		return ALTERAR_NR_EXEMPLARES_ESTOQUE;
+		
+	} else if (operacao == 6) {
+	
+		return OBTER_NR_EXEMPLARES_ESTOQUE;
+		
+	} 
+	
+	return "XX";
+}
+
 void executarCliente(int porta, char* host) {	
 
 	printf("Inicializando cliente....\n");
@@ -32,7 +110,17 @@ void executarCliente(int porta, char* host) {
     	float elapsedTime;
     	struct timeval tv;
 	
-	char buffer[256];
+	// Buffer de troca de mensagem entre o servidor e o cliente
+	char buffer[BUFFER_SIZE + 1];
+	
+	// Documento do usuario
+	char documentoUsuario[5];
+	
+	// Armazena o isbn para operar
+	char isbn[11];
+	
+	// Parametro de integração do servico
+	char parametro[7];
 
 	// Obtendo endereco do host
 	if ((he=gethostbyname(host)) == NULL) {
@@ -72,27 +160,55 @@ void executarCliente(int porta, char* host) {
     	startTime = times(NULL);
     
 		printf("Cliente inicializado com sucesso\n");
+		
+		// Obtem o documento do usuario
+		pritnf("Entre com o documento do usuario: ");
+		bzero(documentoUsuario, 5);
+		fgets(documentoUsuario, 4, stdin);
+		
+		
+		
     	while (1) {
         
 			// Inicializa o timer
         	tv.tv_sec = 5;
         	tv.tv_usec = 0;
+			
+			// Imprime o menu e obtem a operacao
+			printMenu();
+			int operacao = lerOperacao();
+			
+			// Caso seja necessario obter isbn
+			bzero(isbn, 11);
+			if (operacao == 2 || operacao == 3 || operacao == 5 || operacao == 6) {
+				lerISBN(isbn);
+			}
+			
+			// Caso necessario paramtro para alterar o nr de exemplares
+			bzero(parametro, 7);
+			if (operacao == 5) {
+				lerParametro(parametro, "Entre com o novo numero de exemplares: ");
+			}
+			
+			// Monta request
+			montarMensagem(buffer, traduzirOperacao(operacao), documentoUsuario, isbn, parametro) {
 		
 		// Obtem um comando do usuario
-		printf("Entre com um comando: [DOC USUARIO];[COMANDO];[PARAMETROS]");
-		bzero(buffer, BUFFER_SIZE + 1);
-		fgets(buffer, BUFFER_SIZE,stdin);
+		//printf("Entre com um comando: [COMANDO];[PARAMETROS]");
+		//bzero(buffer, BUFFER_SIZE + 1);
+		//fgets(buffer, BUFFER_SIZE,stdin);
 		
-		//printf("enviando mensagem...\n");
 		// Envia a mensagem para o usuario
+		//printf("enviando mensagem...\n");
 		if (write(sock_fd, buffer, strlen(buffer)) < 0) {
 			 perror("erro ao escrever no socket");
 			 exit(1);
 		}
 		
-		//printf("obtando resposta...\n");
+
 		// Le a resposta do servidor
-		bzero(buffer,256);
+		//printf("obtando resposta...\n");
+		bzero(buffer, BUFFER_SIZE + 1);
 		if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
 			 perror("erro ao ler o socket");
 			 exit(1);

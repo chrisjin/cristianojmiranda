@@ -88,21 +88,21 @@ void executarTestes() {
 
 	// Testando obtencao de descricao de livro por isbn
 	printf("\n");
-	printf("Descricao do livro ISBN 000000001: %s\n", obterDescricaoPorISBN("000000001"));
-	printf("Descricao do livro ISBN 000000002: %s\n", obterDescricaoPorISBN("000000002"));
-	printf("Descricao do livro ISBN 000000003: %s\n", obterDescricaoPorISBN("000000003"));
-	printf("Descricao do livro ISBN 000000004: %s\n", obterDescricaoPorISBN("000000004"));
+	printf("Descricao do livro ISBN 0000000001: %s\n", obterDescricaoPorISBN("0000000001"));
+	printf("Descricao do livro ISBN 0000000002: %s\n", obterDescricaoPorISBN("0000000002"));
+	printf("Descricao do livro ISBN 0000000003: %s\n", obterDescricaoPorISBN("0000000003"));
+	printf("Descricao do livro ISBN 0000000004: %s\n", obterDescricaoPorISBN("0000000004"));
 	printf("Descricao do livro ISBN nao_exist: %s\n", obterDescricaoPorISBN("nao_exist"));
 	printf("Descricao do livro ISBN nao_exist_2: %s\n", obterDescricaoPorISBN("nao_exist_2"));
 	
 	// Testando a obtencao de um livro por isbn
 	printf("\n");
-	printf("Obtendo o livro isbn: 000000001\n");
-	livro livro1 = obterLivroPorISBN("000000001");
+	printf("Obtendo o livro isbn: 0000000001\n");
+	livro livro1 = obterLivroPorISBN("0000000001");
 	printLivro(livro1);
 	
-	printf("Obtendo o livro isbn: 000000002\n");
-	livro livro2 = obterLivroPorISBN("000000002");
+	printf("Obtendo o livro isbn: 0000000002\n");
+	livro livro2 = obterLivroPorISBN("0000000002");
 	printLivro(livro2);
 	
 	printf("Obtendo o livro isbn: nao_exist\n");
@@ -111,10 +111,10 @@ void executarTestes() {
 	
 	// Testando obtencao de numer de exemplares em estoque de livro por isbn
 	printf("\n");
-	printf("Exemplares em estoque do livro ISBN 000000001: %d\n", obterNrExemplaresEstoque("000000001"));
-	printf("Exemplares em estoque do livro ISBN 000000002: %d\n", obterNrExemplaresEstoque("000000002"));
-	printf("Exemplares em estoque do livro ISBN 000000003: %d\n", obterNrExemplaresEstoque("000000003"));
-	printf("Exemplares em estoque do livro ISBN 000000004: %d\n", obterNrExemplaresEstoque("000000004"));
+	printf("Exemplares em estoque do livro ISBN 0000000001: %d\n", obterNrExemplaresEstoque("0000000001"));
+	printf("Exemplares em estoque do livro ISBN 0000000002: %d\n", obterNrExemplaresEstoque("0000000002"));
+	printf("Exemplares em estoque do livro ISBN 0000000003: %d\n", obterNrExemplaresEstoque("0000000003"));
+	printf("Exemplares em estoque do livro ISBN 0000000004: %d\n", obterNrExemplaresEstoque("0000000004"));
 	printf("Exemplares em estoque do livro ISBN nao_exist: %d\n", obterNrExemplaresEstoque("nao_exist"));
 	printf("Exemplares em estoque do livro ISBN nao_exist_2: %d\n", obterNrExemplaresEstoque("nao_exist_2"));
 	
@@ -124,16 +124,16 @@ void executarTestes() {
 	printf("\nTodos os ISBNs: \n%s", isbns);
 	
 	printf("\nAltenrando o nr de examplares\n");
-	printf("Exemplares em estoque do livro ISBN 000000001: %d\n", obterNrExemplaresEstoque("000000001"));
-	alterarNrExemplaresEstoquePorISBN("000000001", 100);
-	printf("Exemplares em estoque do livro ISBN 000000001: %d\n", obterNrExemplaresEstoque("000000001"));
-	alterarNrExemplaresEstoquePorISBN("000000001", 2);
-	printf("Exemplares em estoque do livro ISBN 000000001: %d\n", obterNrExemplaresEstoque("000000001"));
+	printf("Exemplares em estoque do livro ISBN 0000000001: %d\n", obterNrExemplaresEstoque("0000000001"));
+	alterarNrExemplaresEstoquePorISBN("0000000001", 100);
+	printf("Exemplares em estoque do livro ISBN 0000000001: %d\n", obterNrExemplaresEstoque("0000000001"));
+	alterarNrExemplaresEstoquePorISBN("0000000001", 2);
+	printf("Exemplares em estoque do livro ISBN 0000000001: %d\n", obterNrExemplaresEstoque("0000000001"));
 	
-	alterarNrExemplaresEstoquePorISBN("000000002", 55);
-	printf("Exemplares em estoque do livro ISBN 000000002: %d\n", obterNrExemplaresEstoque("000000002"));
-	alterarNrExemplaresEstoquePorISBN("000000002", 999);
-	printf("Exemplares em estoque do livro ISBN 000000002: %d\n", obterNrExemplaresEstoque("000000002"));
+	alterarNrExemplaresEstoquePorISBN("0000000002", 55);
+	printf("Exemplares em estoque do livro ISBN 0000000002: %d\n", obterNrExemplaresEstoque("0000000002"));
+	alterarNrExemplaresEstoquePorISBN("0000000002", 999);
+	printf("Exemplares em estoque do livro ISBN 0000000002: %d\n", obterNrExemplaresEstoque("0000000002"));
 	alterarNrExemplaresEstoquePorISBN("notfound", -1);
 
 }
