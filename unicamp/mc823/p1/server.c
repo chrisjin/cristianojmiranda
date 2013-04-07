@@ -43,12 +43,12 @@ void ler_comando(int new_fd) {
 		
 			// retornar usuario invalido 
 			strcpy(buffer, RESPONSE_USUARIO_INVALIDO);
-			if (write(new_fd, buffer, 255) < 0) {
+			if (write(new_fd, buffer, strlen(buffer)) < 0) {
 				perror("erro ao escrever no socket");
 				exit(1);
 			}
 
-			continue;
+			break;
 
 		} else {
 			printf("Tratando conexao do usuario '%s'\n", 
