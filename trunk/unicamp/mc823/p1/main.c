@@ -16,13 +16,14 @@
 #include "server.h"
 
 /**
- * Classe com a implementação de servidor e client, se for chamado com 
+ * Classe com a implementa?o de servidor e client, se for chamado com 
  * o parametro S (opera em modo server), 
  * com o parametro C (opera em modo cliente),
  * com o parametro T (roda os testes unitarios do sistema)
  */
-int main(char** argv, int* argc) {
+int main(int argc, char* argv[]) {
 
+	//printf("argc %d\n", argc);
 	if (argc <= 1) {
 		perror("Informe ao menos um parametro: S - Server, C - Client, T - Test");
 		exit(1);
