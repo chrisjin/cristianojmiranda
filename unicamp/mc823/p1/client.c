@@ -62,9 +62,9 @@ void executarCliente(char* porta, char* host) {
 	// Seta o endereco do host
     their_addr.sin_addr = *((struct in_addr *)he->h_addr);
     bzero(&(their_addr.sin_zero), 8);
-
+	
 	// Conectando ao host
-    if (connect(sock_fd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) == -1) {
+    if (connect(sock_fd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) < 0) {
         perror("erro ao conectar ao server");
         exit(1);
     }
