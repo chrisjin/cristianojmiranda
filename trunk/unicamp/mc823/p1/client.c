@@ -244,7 +244,6 @@ void executarCliente(int porta, char* host) {
 		if (operacao == 1) {
 			
 			while (1) {
-				printf(".");
 				bzero(buffer, BUFFER_SIZE + 1);
 				if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
 					perror("erro ao ler o socket");
@@ -253,8 +252,6 @@ void executarCliente(int porta, char* host) {
 				
 				// Verifica se o usuario e valido
 				notificarUsuarioInvalido(buffer);
-
-				printf("debug '%s'\n", buffer);				
 
 				// Termina de ler ao receber RESPONSE_END
 				if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
@@ -278,12 +275,13 @@ void executarCliente(int porta, char* host) {
 			}
 			
 			printf("\tResposta: '%s'\n",buffer);
+			
+			// Finaliza client, pois server finalizou a conexao
+			if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
+				break;
+			}
 		}
-
-		// Finaliza client, pois server finalizou a conexao
-		if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
-			break;
-		}
+		
     	}
     
 		// Finaliza o timer
