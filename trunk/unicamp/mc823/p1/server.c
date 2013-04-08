@@ -174,6 +174,33 @@ void alterarNrExemplaresEstoque(int new_fd, char* isbn, int qtd, Usuario usuario
 
 }
 
+// Trata a consulta a todos os dados de livros
+void obterTodosLivros(int new_fd) {
+
+	// Localiza todos os livros da base
+	int list_size;
+	livro_list livros = obtemTodosLivros(&list_size);
+	livro_list it = livros;
+	
+	// Caso nao exista livros na base
+	if (list_size == 0) {
+		return NULL;
+	}
+	
+	int contador = 0;
+	while (it != NULL) {
+		livro lv = it->titulo;
+		if (lv != NULL) {	
+		}
+		
+		if (++contador == list_size) {
+			break;
+		}
+		it = it->proximo;
+	}
+
+}
+
 // Le o comando enviado pelo cliente e autentica usuario pelo nr do documento
 void ler_comando(int new_fd) {
 
@@ -225,7 +252,7 @@ usuario->nome);
 		
 		} else if (strcmp(comando[1], OBTER_TODOS_LIVROS) == 0) {
 		
-			printf("OBTER_TODOS_LIVROS\n");
+			obterTodosLivros(new_fd);
 		
 		} else if (strcmp(comando[1], ALTERAR_NR_EXEMPLARES_ESTOQUE) == 0) {
 		
