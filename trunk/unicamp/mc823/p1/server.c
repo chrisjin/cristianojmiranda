@@ -62,6 +62,12 @@ usuario->nome);
 				perror("erro ao escrever no socket");
 				exit(1);
 			}		
+			
+			// Escreve final da response
+			if (write(new_fd, RESPONSE_END, strlen(RESPONSE_END)) < 0) {
+				perror("erro ao escrever no socket");
+				exit(1);
+			}
 		
 		} else if (strcmp(comando[1], OBTER_DESCRICAO_POR_ISBN) == 0) {
 	
