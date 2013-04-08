@@ -58,10 +58,30 @@ usuario->nome);
 		if (strcmp(comando[1], OBTER_TODOS_ISBNS) == 0) {
 	
 			char* isbns = obterTodosISBNS();
-			if (write(new_fd, isbns, strlen(isbns)) < 0) {
-				perror("erro ao escrever no socket");
-				exit(1);
-			}		
+			if (strlen(isbns) <= 255) {
+			
+				if (write(new_fd, isbns, strlen(isbns)) < 0) {
+					perror("erro ao escrever no socket");
+					exit(1);
+				}
+				
+			} else {
+			
+				int ponteiroInicial = 0;
+				int ponteiroFinal = 255;
+				while(ponteiroFinal < strlen(isbns)) {
+				
+					char* envio = strSubString(isbns, ponteiroInicial, ponteiroFinal);
+					if (write(new_fd, envio, 255) < 0) {
+						perror("erro ao escrever no socket");
+						exit(1);
+					}
+					
+					ponteiroInicial += 255;
+					ponteiroFinal += 255;
+				}
+			
+			}
 			
 			printf("enviando RESPONSE_END\n");
 			// Escreve final da response
@@ -95,7 +115,7 @@ usuario->nome);
 
 			printf("OBTER_NR_EXEMPLARES_ESTOQUE\n");
 
-		} else if (strcmp(comando[1], REQUEST_END) == 0){
+		} else if (strcmp(comando[1], REQUEST_END) == 0) {
 
 			printf("Finalizando conexao com o cliente...\n");
 
