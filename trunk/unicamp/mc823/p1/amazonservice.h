@@ -63,6 +63,12 @@ char* obterDescricaoPorISBN(char* isbn);
  * Obtem todas as informa?es de um livro dado um ISBN.
  */
 livro obterLivroPorISBN(char* isbn);
+
+/**
+ * Parse da linha do csv para um livro.
+ */
+livro parseDbLineToLivro(char* line);
+
 /**
  * Obtem uma lista com todos os livros
  */
