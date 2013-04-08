@@ -46,7 +46,7 @@ void lerISBN(char* isbn) {
 	printf("Informe o ISBN: ");
 	bzero(isbn, 11);
 	//fgets(isbn, 10, stdin);
-	scanf("%s", &isbn);
+	scanf("%s", isbn);
 }
 
 // Obtem o parametro a ser enviado para o servidor
@@ -228,7 +228,7 @@ void executarCliente(int porta, char* host) {
 			if (operacao == 5) {
 				lerParametro(parametro, "Entre com o novo numero de exemplares: ");
 		}
-			
+	
 		// Monta request
 		montarMensagem(buffer, traduzirOperacao(operacao), documentoUsuario, isbn, parametro);
 		
@@ -260,10 +260,7 @@ void executarCliente(int porta, char* host) {
 				} else {
 					printf("%s", buffer);
 				}
-			}
-
-			printf("passei aqui...\n");
-			
+			}			
 		}
 		
 		else {
