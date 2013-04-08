@@ -10,6 +10,7 @@
 #include <sys/socket.h>
 #include <sys/wait.h>
 
+#include "mem.h"
 #include "server.h"
 #include "utils.h"
 #include "controleacesso.h"
