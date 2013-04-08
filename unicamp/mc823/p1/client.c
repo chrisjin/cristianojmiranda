@@ -206,7 +206,7 @@ void executarCliente(int porta, char* host) {
 		// Le a resposta do servidor
 		
 		if (operacao == 1) {
-			
+			printf("ISBN - TITULO\n");
 			while (1) {
 				bzero(buffer, BUFFER_SIZE + 1);
 				if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
@@ -234,7 +234,7 @@ void executarCliente(int porta, char* host) {
 				 exit(1);
 			}
 			
-			printf("\tResposta: '%s'\n",buffer);
+			printf("%s\n",buffer);
 			
 			// Finaliza client, pois server finalizou a conexao
 			if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {

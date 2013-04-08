@@ -57,6 +57,50 @@ void obterTodosIsbns(int new_fd) {
 	}
 }
 
+// Trata a consulta de descricao por isbn
+void tratarObterDescricaoPorIsbn(int new_fd, char* isbn) {
+
+	char* descricao = obterDescricaoPorISBN(isbn);
+	
+	if (descricao == NULL) {
+		
+		if (write(new_fd, ISBN_INVALIDO, strlen(ISBN_INVALIDO)) < 0) {
+			perror("erro ao escrever no socket");
+			exit(1);
+		}
+		
+	} else {	
+		if (write(new_fd, descricao, strlen(descricao)) < 0) {
+			perror("erro ao escrever no socket");
+			exit(1);
+		}
+	}
+}
+
+void tratarObterLivro(int new_fd, char* isbn) {
+
+	// Pesquisa o livro na base
+	livro lv = obterLivroPorISBN(isbn);
+	
+	if (lv == NULL) {
+	
+		if (write(new_fd, ISBN_INVALIDO, strlen(ISBN_INVALIDO)) < 0) {
+			perror("erro ao escrever no socket");
+			exit(1);
+		}
+		
+	} else {
+	
+		char* line = buildCsvLine(lv, 245);
+		if (write(new_fd, line, strlen(line)) < 0) {
+			perror("erro ao escrever no socket");
+			exit(1);
+		}
+	
+	}
+
+}
+
 // Le o comando enviado pelo cliente e autentica usuario pelo nr do documento
 void ler_comando(int new_fd) {
 
@@ -100,15 +144,11 @@ usuario->nome);
 			
 		} else if (strcmp(comando[1], OBTER_DESCRICAO_POR_ISBN) == 0) {
 	
-			char* descricao = obterDescricaoPorISBN(comando[2]);
-			if (write(new_fd, descricao, strlen(descricao)) < 0) {
-				perror("erro ao escrever no socket");
-				exit(1);
-			}
+			tratarObterDescricaoPorIsbn(new_fd, comando[2]);
 		
 		} else if (strcmp(comando[1], OBTER_LIVRO_POR_ISBN) == 0) {
 	
-			printf("OBTER_LIVRO_POR_ISBN\n");
+			tratarObterLivro(new_fd, comando[2]);
 		
 		} else if (strcmp(comando[1], OBTER_TODOS_LIVROS) == 0) {
 		
