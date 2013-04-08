@@ -77,6 +77,7 @@ void tratarObterDescricaoPorIsbn(int new_fd, char* isbn) {
 	}
 }
 
+// Trata a pesquisa de todos os dados de um livro
 void tratarObterLivro(int new_fd, char* isbn) {
 
 	// Pesquisa o livro na base
@@ -99,6 +100,33 @@ void tratarObterLivro(int new_fd, char* isbn) {
 	
 	}
 
+}
+
+// Obtem o numero de exemplares em estoque da livraria
+void obterExemplaresEmEstoque(int new_fd, char* isbn) {
+
+	// Obtem a quantidade de exemplares em estoque
+	int qtd = obterNrExemplaresEstoque(isbn);
+	
+	if (qtd < 0) {
+	
+		if (write(new_fd, ISBN_INVALIDO, strlen(ISBN_INVALIDO)) < 0) {
+			perror("erro ao escrever no socket");
+			exit(1);
+		}
+	
+	} else {
+	
+		char* buffer;
+		bzero(buffer, 255);
+		snprintf(buffer, 255, "%d", qtd);
+		
+		if (write(new_fd, buffer, strlen(buffer)) < 0) {
+			perror("erro ao escrever no socket");
+			exit(1);
+		}
+	
+	}
 }
 
 // Le o comando enviado pelo cliente e autentica usuario pelo nr do documento
@@ -161,7 +189,7 @@ usuario->nome);
 		
 		} else if (strcmp(comando[1], OBTER_NR_EXEMPLARES_ESTOQUE) == 0) {
 
-			printf("OBTER_NR_EXEMPLARES_ESTOQUE\n");
+			obterExemplaresEmEstoque(new_fd, comando[2]);
 
 		} else if (strcmp(comando[1], REQUEST_END) == 0) {
 
