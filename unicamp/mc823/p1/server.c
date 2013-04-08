@@ -110,7 +110,6 @@ void obterExemplaresEmEstoque(int new_fd, char* isbn) {
 
 	// Obtem a quantidade de exemplares em estoque
 	int qtd = obterNrExemplaresEstoque(isbn);
-	
 	printf("Quntidade obtida: %d.\n", qtd);
 	
 	if (qtd < 0) {
@@ -126,14 +125,53 @@ void obterExemplaresEmEstoque(int new_fd, char* isbn) {
 		bzero(buffer, 255);
 		snprintf(buffer, 255, "%d", qtd);
 		
-		printf("buffer: %s\n", buffer);
-		
 		if (write(new_fd, buffer, strlen(buffer)) < 0) {
 			perror("erro ao escrever no socket");
 			exit(1);
 		}
 	
 	}
+}
+
+// Altera o nr de exmplares em estoque da livraria
+void alterarNrExemplaresEstoque(int new_fd, char* isbn, int qtd, Usuario usuario) {
+
+	printf("alterando o nr exemp em estoque do isbn %s para %d\n", isbn, qtd);
+
+	//  Verifica se o usuario pode realizar essa operacao
+	if (strcmp(usuario->tipoUsuario, USUARIO_CLIENTE) == 0) {
+	
+		// Notifica usuario sem acesso
+		if (write(new_fd, RESPONSE_USUARIO_SEM_PERMISSAO, strlen(RESPONSE_USUARIO_SEM_PERMISSAO)) < 0) {
+			perror("erro ao escrever no socket");
+			exit(1);
+		}
+	
+	} else {
+	
+		// Altera o numero de exemplares em estoque
+		int rt = alterarNrExemplaresEstoquePorISBN(isbn, qtd);
+		
+		if (rt < 0) {
+		
+			// Notifica isbn invalido
+			if (write(new_fd, ISBN_INVALIDO, strlen(ISBN_INVALIDO)) < 0) {
+				perror("erro ao escrever no socket");
+				exit(1);
+			}
+		
+		} else {		
+		
+			// Notifica operacao realizada com sucesso
+			if (write(new_fd, RESPONSE_OK, strlen(RESPONSE_OK)) < 0) {
+				perror("erro ao escrever no socket");
+				exit(1);
+			}
+		
+		}
+	
+	}
+
 }
 
 // Le o comando enviado pelo cliente e autentica usuario pelo nr do documento
@@ -190,9 +228,8 @@ usuario->nome);
 			printf("OBTER_TODOS_LIVROS\n");
 		
 		} else if (strcmp(comando[1], ALTERAR_NR_EXEMPLARES_ESTOQUE) == 0) {
-
-			//*param = atoi(comando[2]);
-			printf("ALTERAR_NR_EXEMPLARES_ESTOQUE\n");
+		
+			alterarNrExemplaresEstoque(new_fd, comando[2], atoi(comando[3]), usuario);
 		
 		} else if (strcmp(comando[1], OBTER_NR_EXEMPLARES_ESTOQUE) == 0) {
 

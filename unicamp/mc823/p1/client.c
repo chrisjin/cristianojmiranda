@@ -265,6 +265,11 @@ void executarCliente(int porta, char* host) {
 			}
 		}
 		
+		// Finaliza client para usuario invalido
+		if (strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
+			break;
+		}
+		
     	}
     
 		// Finaliza o timer
