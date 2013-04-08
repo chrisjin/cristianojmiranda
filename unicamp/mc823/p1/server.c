@@ -190,8 +190,8 @@ void ler_comando(int new_fd) {
 		printf("Tratando comando '%s'\n", buffer);
 	
 		// Quebra o comando no vetor 
-		char* comando[3];
-		csvParse(buffer, comando, 3);
+		char* comando[4];
+		csvParse(buffer, comando, 4);
 	
 		// Obtem o usuario
 		Usuario usuario = obterUsuarioPorDocumento(atoi(comando[0]));

@@ -286,13 +286,15 @@ int alterarNrExemplaresEstoquePorISBN(char* isbn, int quantidade) {
 		lv->exemplaresEstoque = quantidade;
 		
 		// Escreve a linha com o novo valor no banco
-		//buildCsvLine(lv, lineSize);
 		fputs(buildCsvLine(lv, lineSize), dataBaseFile);
 	
 		livro_list_cache = NULL;
 	
 		// Fecha o arquivo com a base de dados
 		fclose(dataBaseFile);
+		
+		return 0;
+		
 	} else {
 		printf("Livro nao encontrado.\n");
 	}
