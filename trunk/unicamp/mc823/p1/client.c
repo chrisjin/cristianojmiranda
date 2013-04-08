@@ -228,7 +228,6 @@ void executarCliente(int porta, char* host) {
 			
 			while (1) {
 				printf(".");
-			
 				bzero(buffer, BUFFER_SIZE + 1);
 				if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
 					perror("erro ao ler o socket");
@@ -237,14 +236,19 @@ void executarCliente(int porta, char* host) {
 				
 				// Verifica se o usuario e valido
 				notificarUsuarioInvalido(buffer);
-				
+
+				printf("debug '%s'\n", buffer);				
+
 				// Termina de ler ao receber RESPONSE_END
 				if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
+					printf("todos os bytes recebidos\n");
 					break;
 				} else {
 					printf("%s", buffer);
 				}
 			}
+
+			printf("passei aqui...\n");
 			
 		}
 		
