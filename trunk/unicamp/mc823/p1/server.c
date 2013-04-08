@@ -190,13 +190,25 @@ void obterTodosLivros(int new_fd) {
 	int contador = 0;
 	while (it != NULL) {
 		livro lv = it->titulo;
-		if (lv != NULL) {	
+		if (lv != NULL) {
+		
+			char* line = buildCsvLine(lv, 245);
+			if (read(new_fd, line, 255) < 0) {
+        		perror("erro ao ler do socket");
+		        exit(1);
+			}
 		}
 		
 		if (++contador == list_size) {
 			break;
 		}
 		it = it->proximo;
+	}
+	
+	// Escreve final da response
+	if (write(new_fd, RESPONSE_END, strlen(RESPONSE_END)) < 0) {
+		perror("erro ao escrever no socket");
+		exit(1);
 	}
 
 }

@@ -249,6 +249,29 @@ void executarCliente(int porta, char* host) {
 		
 		}
 		
+		// Trata response para obter todos os livros
+		if (operacao == 4) {
+		
+			while (1) {
+				bzero(buffer, BUFFER_SIZE + 1);
+				if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
+					perror("erro ao ler o socket");
+					exit(1);
+				}
+				
+				// Verifica se o usuario e valido
+				notificarUsuarioInvalido(buffer);
+
+				// Termina de ler ao receber RESPONSE_END
+				if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
+					break;
+				} else {
+					livro lv = parseDbLineToLivro(buffer);
+					printLivro(lv);
+				}
+			}			
+		}
+		
 		else {
 		
 			bzero(buffer, BUFFER_SIZE + 1);
