@@ -45,7 +45,6 @@ int lerOperacao() {
 void lerISBN(char* isbn) {
 	printf("Informe o ISBN: ");
 	bzero(isbn, 11);
-	//fgets(isbn, 10, stdin);
 	scanf("%s", isbn);
 }
 
@@ -53,7 +52,6 @@ void lerISBN(char* isbn) {
 void lerParametro(char *parametro, char *mensagem) {
 	printf("%s", mensagem);
 	bzero(parametro, 7);
-	//fgets(parametro, 6, stdin);
 	scanf("%s", &parametro);
 }
 
@@ -61,74 +59,40 @@ void lerParametro(char *parametro, char *mensagem) {
 void montarMensagem(char* buffer, char* operacao, char* documento, char* isbn, char* parametro) {
 	bzero(buffer, BUFFER_SIZE + 1);
 	snprintf(buffer, BUFFER_SIZE, "%s;%s;%s;%s;", documento, operacao, isbn, parametro);
-	printf("request '%s'\n", buffer);
 }
 
 // Verifica se o usuario e valido
 void notificarUsuarioInvalido(char *response) {
-
-	char* pinv = strstr(response, RESPONSE_USUARIO_INVALIDO);
-	if (strcmp(response, RESPONSE_USUARIO_INVALIDO) == 0 || pinv != NULL) {
+	if (strcmp(response, RESPONSE_USUARIO_INVALIDO) == 0) {
 		printf("Usuario invalido. Fechando a conexao.\n");
 	}
-
 }
 
 // Verifica se o usuario sem acesso a operacao
 void notificarUsuarioSemAcesso(char *response) {
-
 	if (strcmp(response, RESPONSE_USUARIO_SEM_PERMISSAO) == 0) {
 		printf("Usuario nao tem acesso para executar essa operacao.\n");
 	}
-
 }
 
 // Obtem a operacao a ser enviada na request
 char* traduzirOperacao(int operacao) {
 
 	if (operacao == 1) {
-	
 		return OBTER_TODOS_ISBNS;
-		
 	} else if (operacao == 2) {
-	
 		return OBTER_DESCRICAO_POR_ISBN;
-		
 	} else if (operacao == 3) {
-	
 		return OBTER_LIVRO_POR_ISBN;
-		
 	} else if (operacao == 4) {
-	
 		return OBTER_TODOS_LIVROS;
-		
 	} else if (operacao == 5) {
-	
 		return ALTERAR_NR_EXEMPLARES_ESTOQUE;
-		
 	} else if (operacao == 6) {
-	
 		return OBTER_NR_EXEMPLARES_ESTOQUE;
-		
 	} 
 	
 	return "XX";
-}
-
-/**
- * Verifica se a response chegou ao fim
- * ou se o usuario nao tem acesso a funcionalidade
- */
-int fimResponse(char* response) {
-
-	if (strcmp(response, RESPONSE_END) == 0 || strcmp(response, RESPONSE_USUARIO_INVALIDO) == 0) {
-		return 1;
-	}
-	
-	char* pend = strstr(response, RESPONSE_END);
-	char* pinv = strstr(response, RESPONSE_USUARIO_INVALIDO);
-	
-	return pend != NULL || pinv != NULL;
 }
 
 // Executa o cliente
@@ -255,7 +219,6 @@ void executarCliente(int porta, char* host) {
 
 				// Termina de ler ao receber RESPONSE_END
 				if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
-					printf("todos os bytes recebidos\n");
 					break;
 				} else {
 					printf("%s", buffer);
