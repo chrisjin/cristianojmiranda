@@ -67,7 +67,8 @@ void montarMensagem(char* buffer, char* operacao, char* documento, char* isbn, c
 // Verifica se o usuario e valido
 void notificarUsuarioInvalido(char *response) {
 
-	if (strcmp(response, RESPONSE_USUARIO_INVALIDO) == 0) {
+	char* pinv = strstr(response, RESPONSE_USUARIO_INVALIDO);
+	if (strcmp(response, RESPONSE_USUARIO_INVALIDO) == 0 || pinv != NULL) {
 		printf("Usuario invalido. Fechando a conexao.\n");
 	}
 
@@ -112,6 +113,22 @@ char* traduzirOperacao(int operacao) {
 	} 
 	
 	return "XX";
+}
+
+/**
+ * Verifica se a response chegou ao fim
+ * ou se o usuario nao tem acesso a funcionalidade
+ */
+int fimResponse(char* response) {
+
+	if (strcmp(response, RESPONSE_END) == 0 || strcmp(response, RESPONSE_USUARIO_INVALIDO) == 0) {
+		return 1;
+	}
+	
+	char* pend = strstr(response, RESPONSE_END);
+	char* pinv = strstr(response, RESPONSE_USUARIO_INVALIDO);
+	
+	return pend != NULL || pinv != NULL;
 }
 
 // Executa o cliente
