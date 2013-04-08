@@ -1,5 +1,5 @@
 #isbn;titulo;autores;editora;descricao;anoPublicacao;exemplaresEstoque;
-0000000001;titulo1;autor1;editora1;livro1;2013;1;
+#000000001;titulo1;autor1;editora1;livro1;2013;1;
 0000000002;titulo2;autor2;editora2;livro2;2013;10;
 0000000003;titulo3;autor3;editora3;livro3;2010;100;
 0000000004;titulo4;autor4;editora4;livro4;2004;100;
@@ -25,3 +25,8 @@
 0000000024;memorias postumas de bras cubas;machado de assis;companhia das letras;x;19000;1000;
 0000000025;iliada;homero;atenas;Trata se de um poema epico;1488;25;
 0000000026;The Hitchhiker's Guide to the Galaxy;Douglas Adams;bbc;Serie de ficcao cientifica;1979;3;
+#000000001;titulo1;autor1;editora1;livro1;2013;0;
+#000000001;titulo1;autor1;editora1;livro1;2013;0;
+#000000001;titulo1;autor1;editora1;livro1;2013;0;
+#000000001;titulo1;autor1;editora1;livro1;2013;90;
+0000000001;titulo1;autor1;editora1;livro1;2013;666;
