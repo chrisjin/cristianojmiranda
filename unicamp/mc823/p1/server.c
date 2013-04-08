@@ -18,6 +18,45 @@
 // Nr de conexoes pendentes na fila
 #define SERVER_BACKLOG 15
 
+// Trata a obtencao dos isbns
+void obterTodosIsbns(int new_fd) {
+	char* isbns = obterTodosISBNS();
+	if (strlen(isbns) <= 255) {
+	
+		if (write(new_fd, isbns, strlen(isbns)) < 0) {
+			perror("erro ao escrever no socket");
+			exit(1);
+		}
+		
+	} else {
+	
+		int ponteiroInicial = 0;
+		int ponteiroFinal = 255;
+		while(ponteiroInicial < strlen(isbns)) {
+		
+			char* envio = strSubString(isbns, ponteiroInicial, ponteiroFinal);
+			if (write(new_fd, envio, 255) < 0) {
+				perror("erro ao escrever no socket");
+				exit(1);
+			}
+			
+			ponteiroInicial += 255;
+			ponteiroFinal += 255;
+			
+			if (ponteiroFinal > strlen(isbns)) {
+				ponteiroFinal = strlen(isbns);
+			}
+		}
+	
+	}
+	
+	// Escreve final da response
+	if (write(new_fd, RESPONSE_END, strlen(RESPONSE_END)) < 0) {
+		perror("erro ao escrever no socket");
+		exit(1);
+	}
+}
+
 // Le o comando enviado pelo cliente e autentica usuario pelo nr do documento
 void ler_comando(int new_fd) {
 
@@ -56,51 +95,16 @@ usuario->nome);
 		}
 	
 		if (strcmp(comando[1], OBTER_TODOS_ISBNS) == 0) {
-	
-			char* isbns = obterTodosISBNS();
-			if (strlen(isbns) <= 255) {
-			
-				if (write(new_fd, isbns, strlen(isbns)) < 0) {
-					perror("erro ao escrever no socket");
-					exit(1);
-				}
-				
-			} else {
-			
-				int ponteiroInicial = 0;
-				int ponteiroFinal = 255;
-				while(ponteiroInicial < strlen(isbns)) {
-				
-					char* envio = strSubString(isbns, ponteiroInicial, ponteiroFinal);
-					if (write(new_fd, envio, 255) < 0) {
-						perror("erro ao escrever no socket");
-						exit(1);
-					}
-					
-					ponteiroInicial += 255;
-					ponteiroFinal += 255;
-					
-					if (ponteiroFinal > strlen(isbns)) {
-						ponteiroFinal = strlen(isbns);
-					}
-				}
-			
-			}
-			
-			printf("enviando RESPONSE_END\n");
-			// Escreve final da response
-			if (write(new_fd, RESPONSE_END, strlen(RESPONSE_END)) < 0) {
-				perror("erro ao escrever no socket");
-				exit(1);
-			}
 		
+			obterTodosIsbns(new_fd);
+			
 		} else if (strcmp(comando[1], OBTER_DESCRICAO_POR_ISBN) == 0) {
 	
 			char* descricao = obterDescricaoPorISBN(comando[2]);
 			if (write(new_fd, descricao, strlen(descricao)) < 0) {
 				perror("erro ao escrever no socket");
 				exit(1);
-			}	
+			}
 		
 		} else if (strcmp(comando[1], OBTER_LIVRO_POR_ISBN) == 0) {
 	
