@@ -44,13 +44,15 @@ int lerOperacao() {
 void lerISBN(char* isbn) {
 	printf("Informe o ISBN: ");
 	bzero(isbn, 11);
-	fgets(isbn, 10, stdin);
+	//fgets(isbn, 10, stdin);
+	scanf("%s", &isbn);
 }
 
 void lerParametro(char *parametro, char *mensagem) {
 	printf("%s", mensagem);
 	bzero(parametro, 7);
-	fgets(parametro, 6, stdin);
+	//fgets(parametro, 6, stdin);
+	scanf("%s", &parametro);
 }
 
 void montarMensagem(char* buffer, char* operacao, char* documento, char* isbn, char* parametro) {
@@ -201,17 +203,38 @@ void executarCliente(int porta, char* host) {
 			 perror("erro ao escrever no socket");
 			 exit(1);
 		}
-		
 
 		// Le a resposta do servidor
-		//printf("obtando resposta...\n");
-		bzero(buffer, BUFFER_SIZE + 1);
-		if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
-			 perror("erro ao ler o socket");
-			 exit(1);
+		
+		if (operacao == 1) {
+			
+			while (1) {
+				bzero(buffer, BUFFER_SIZE + 1);
+				if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
+					perror("erro ao ler o socket");
+					exit(1);
+				}
+				
+				// Termina de ler ao receber RESPONSE_END
+				if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
+					break;
+				} else {
+					printf("%s", buffer);
+				}
+			}
+			
 		}
 		
-		printf("\tResposta: '%s'\n",buffer);
+		else {
+		
+			bzero(buffer, BUFFER_SIZE + 1);
+			if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
+				 perror("erro ao ler o socket");
+				 exit(1);
+			}
+			
+			printf("\tResposta: '%s'\n",buffer);
+		}
 
 		// Finaliza client, pois server finalizou a conexao
 		if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
