@@ -105,8 +105,12 @@ void tratarObterLivro(int new_fd, char* isbn) {
 // Obtem o numero de exemplares em estoque da livraria
 void obterExemplaresEmEstoque(int new_fd, char* isbn) {
 
+	printf("obterExemplaresEmEstoque() - isbn: %s.\n", isbn);
+
 	// Obtem a quantidade de exemplares em estoque
 	int qtd = obterNrExemplaresEstoque(isbn);
+	
+	printf("Quntidade obtida: %d.\n", qtd);
 	
 	if (qtd < 0) {
 	
@@ -117,9 +121,11 @@ void obterExemplaresEmEstoque(int new_fd, char* isbn) {
 	
 	} else {
 	
-		char* buffer;
+		char* buffer = MEM_ALLOC_N(char, 256);
 		bzero(buffer, 255);
 		snprintf(buffer, 255, "%d", qtd);
+		
+		printf("buffer: %s\n", buffer);
 		
 		if (write(new_fd, buffer, strlen(buffer)) < 0) {
 			perror("erro ao escrever no socket");
