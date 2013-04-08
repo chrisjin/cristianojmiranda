@@ -205,8 +205,9 @@ void executarCliente(int porta, char* host) {
 
 		// Le a resposta do servidor
 		
+		// Trata response para obter todos os isbns
 		if (operacao == 1) {
-			printf("ISBN - TITULO\n");
+			printf("ISBN       - TITULO\n");
 			while (1) {
 				bzero(buffer, BUFFER_SIZE + 1);
 				if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
@@ -224,6 +225,28 @@ void executarCliente(int porta, char* host) {
 					printf("%s", buffer);
 				}
 			}			
+		}
+		
+		// Trata response para obter livro por isbn
+		else if (operacao == 3) {
+		
+			bzero(buffer, BUFFER_SIZE + 1);
+			if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
+				 perror("erro ao ler o socket");
+				 exit(1);
+			}
+			
+			if (strcmp(buffer, ISBN_INVALIDO) == 0) {
+				printf("%s", buffer);
+			} else {
+			
+				// Parse da response
+				livro lv = parseDbLineToLivro(buffer);
+				
+				// Imprime os dados do livro
+				printLivro(lv);
+			}
+		
 		}
 		
 		else {
