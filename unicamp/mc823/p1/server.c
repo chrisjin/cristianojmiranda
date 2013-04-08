@@ -69,7 +69,7 @@ usuario->nome);
 			
 				int ponteiroInicial = 0;
 				int ponteiroFinal = 255;
-				while(ponteiroFinal < strlen(isbns)) {
+				while(ponteiroInicial < strlen(isbns)) {
 				
 					char* envio = strSubString(isbns, ponteiroInicial, ponteiroFinal);
 					if (write(new_fd, envio, 255) < 0) {
@@ -79,6 +79,10 @@ usuario->nome);
 					
 					ponteiroInicial += 255;
 					ponteiroFinal += 255;
+					
+					if (ponteiroFinal > strlen(isbns)) {
+						ponteiroFinal = strlen(isbns);
+					}
 				}
 			
 			}
