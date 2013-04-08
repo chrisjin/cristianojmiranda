@@ -63,6 +63,7 @@ usuario->nome);
 				exit(1);
 			}		
 			
+			printf("enviando RESPONSE_END\n");
 			// Escreve final da response
 			if (write(new_fd, RESPONSE_END, strlen(RESPONSE_END)) < 0) {
 				perror("erro ao escrever no socket");

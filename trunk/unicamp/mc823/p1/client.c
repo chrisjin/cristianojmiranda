@@ -28,6 +28,7 @@ void printMenu() {
 	printf("Entre com uma operacao: ");
 }
 
+// Obter operacao desejada pelo cliente
 int lerOperacao() {
 
 	int op = -1;
@@ -48,6 +49,7 @@ void lerISBN(char* isbn) {
 	scanf("%s", &isbn);
 }
 
+// Obtem o parametro a ser enviado para o servidor
 void lerParametro(char *parametro, char *mensagem) {
 	printf("%s", mensagem);
 	bzero(parametro, 7);
@@ -55,12 +57,32 @@ void lerParametro(char *parametro, char *mensagem) {
 	scanf("%s", &parametro);
 }
 
+// Monta a request
 void montarMensagem(char* buffer, char* operacao, char* documento, char* isbn, char* parametro) {
 	bzero(buffer, BUFFER_SIZE + 1);
 	snprintf(buffer, BUFFER_SIZE, "%s;%s;%s;%s;", documento, operacao, isbn, parametro);
 	printf("request '%s'\n", buffer);
 }
 
+// Verifica se o usuario e valido
+void notificarUsuarioInvalido(char *response) {
+
+	if (strcmp(response, RESPONSE_USUARIO_INVALIDO) == 0) {
+		printf("Usuario invalido. Fechando a conexao.\n");
+	}
+
+}
+
+// Verifica se o usuario sem acesso a operacao
+void notificarUsuarioSemAcesso(char *response) {
+
+	if (strcmp(response, RESPONSE_USUARIO_SEM_PERMISSAO) == 0) {
+		printf("Usuario nao tem acesso para executar essa operacao.\n");
+	}
+
+}
+
+// Obtem a operacao a ser enviada na request
 char* traduzirOperacao(int operacao) {
 
 	if (operacao == 1) {
@@ -92,6 +114,7 @@ char* traduzirOperacao(int operacao) {
 	return "XX";
 }
 
+// Executa o cliente
 void executarCliente(int porta, char* host) {	
 
 	printf("Inicializando cliente....\n");
@@ -192,11 +215,6 @@ void executarCliente(int porta, char* host) {
 		// Monta request
 		montarMensagem(buffer, traduzirOperacao(operacao), documentoUsuario, isbn, parametro);
 		
-		// Obtem um comando do usuario
-		//printf("Entre com um comando: [COMANDO];[PARAMETROS]");
-		//bzero(buffer, BUFFER_SIZE + 1);
-		//fgets(buffer, BUFFER_SIZE,stdin);
-		
 		// Envia a mensagem para o usuario
 		//printf("enviando mensagem...\n");
 		if (write(sock_fd, buffer, strlen(buffer)) < 0) {
@@ -209,11 +227,16 @@ void executarCliente(int porta, char* host) {
 		if (operacao == 1) {
 			
 			while (1) {
+				printf(".");
+			
 				bzero(buffer, BUFFER_SIZE + 1);
 				if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
 					perror("erro ao ler o socket");
 					exit(1);
 				}
+				
+				// Verifica se o usuario e valido
+				notificarUsuarioInvalido(buffer);
 				
 				// Termina de ler ao receber RESPONSE_END
 				if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
