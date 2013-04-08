@@ -52,7 +52,7 @@ void lerISBN(char* isbn) {
 void lerParametro(char *parametro, char *mensagem) {
 	printf("%s", mensagem);
 	bzero(parametro, 7);
-	scanf("%s", &parametro);
+	scanf("%s", parametro);
 }
 
 // Monta a request
