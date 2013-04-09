@@ -65,7 +65,7 @@ void obterTodosIsbns(int new_fd) {
 	}
 	
 	// Loga o tempo de execucao
-	logarTempo(SERVER, OBTER_TODOS_ISBNS, inicio, time(NULL));
+	logarTempo(SERVER, OBTER_TODOS_ISBNS, inicio, clock());
 }
 
 // Trata a consulta de descricao por isbn
@@ -92,7 +92,7 @@ void tratarObterDescricaoPorIsbn(int new_fd, char* isbn) {
 	}
 	
 	// Loga o tempo de execucao
-	logarTempo(SERVER, OBTER_DESCRICAO_POR_ISBN, inicio, time(NULL));
+	logarTempo(SERVER, OBTER_DESCRICAO_POR_ISBN, inicio, clock());
 }
 
 // Trata a pesquisa de todos os dados de um livro
@@ -122,7 +122,7 @@ void tratarObterLivro(int new_fd, char* isbn) {
 	}
 	
 	// Loga o tempo de execucao
-	logarTempo(SERVER, OBTER_LIVRO_POR_ISBN, inicio, time(NULL));
+	logarTempo(SERVER, OBTER_LIVRO_POR_ISBN, inicio, clock());
 
 }
 
@@ -159,7 +159,7 @@ void obterExemplaresEmEstoque(int new_fd, char* isbn) {
 	}
 	
 	// Loga o tempo de execucao
-	logarTempo(SERVER, OBTER_NR_EXEMPLARES_ESTOQUE, inicio, time(NULL));
+	logarTempo(SERVER, OBTER_NR_EXEMPLARES_ESTOQUE, inicio, clock());
 }
 
 // Altera o nr de exmplares em estoque da livraria
@@ -205,7 +205,7 @@ void alterarNrExemplaresEstoque(int new_fd, char* isbn, int qtd, Usuario usuario
 	}
 	
 	// Loga o tempo de execucao
-	logarTempo(SERVER, ALTERAR_NR_EXEMPLARES_ESTOQUE, inicio, time(NULL));
+	logarTempo(SERVER, ALTERAR_NR_EXEMPLARES_ESTOQUE, inicio, clock());
 
 }
 
@@ -254,7 +254,7 @@ void obterTodosLivros(int new_fd) {
 	}
 	
 	// Loga o tempo de execucao
-	logarTempo(SERVER, OBTER_TODOS_LIVROS, inicio, time(NULL));
+	logarTempo(SERVER, OBTER_TODOS_LIVROS, inicio, clock());
 
 }
 
