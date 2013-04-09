@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <fcntl.h>
+#include <time.h>
 
 #include "mem.h"
 #include "utils.h"
@@ -305,4 +306,29 @@ int csvParse(char *line, char* list[], int list_size) {
 			break;
 		}
 	}
+}
+
+// Loga o tempo de execucao
+void logarTempo(char* tipo, char* metodo, clock_t inicio, clock_t fim) {
+
+	// Abre arquivo para computar o tempo
+	FILE *arq = Fopen("timer.csv", "a");
+	
+	// Calcula o intervalo
+	float intervalo = (float)((fim - inicio) / (float)sysconf(_SC_CLK_TCK));
+	
+	fputs(tipo, arq);
+	fputs(";", arq);
+	fputs(metodo, arq);
+	fputs(";", arq);
+	fputs((float)inicio, arq);
+	fputs(";", arq);
+	fputs((float)fim, arq);
+	fputs(";", arq);
+	fpputs(invervalo, arq);
+	fputs(";", arq);
+	
+	// Fecha o arquivo
+	fclose(arq);
+
 }
