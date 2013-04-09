@@ -105,12 +105,7 @@ void executarCliente(int porta, char* host) {
 	struct hostent *he;
 	
 	// Endereco de conexao
-    	struct sockaddr_in their_addr;   
-
-	// Cronometros
-    //clock_t startTime, endTime;
-    //float elapsedTime;
-    //struct timeval tv;
+    struct sockaddr_in their_addr;
 	
 	// Buffer de troca de mensagem entre o servidor e o cliente
 	char buffer[BUFFER_SIZE + 1];
@@ -158,22 +153,14 @@ void executarCliente(int porta, char* host) {
         	exit(1);
     	}
     
-	// Inicia a conta
-    	//startTime = times(NULL);
-    
 		printf("Cliente inicializado com sucesso\n");
 		
 		// Obtem o documento do usuario
 		printf("Entre com o documento do usuario: ");
 		bzero(documentoUsuario, 5);
-		//fgets(documentoUsuario, 4, stdin);
 		scanf("%s", &documentoUsuario);
 
     	while (1) {
-        
-			// Inicializa o timer
-        	//tv.tv_sec = 5;
-        	//tv.tv_usec = 0;
 			
 			// Imprime o menu e obtem a operacao
 			printMenu();
@@ -193,6 +180,9 @@ void executarCliente(int porta, char* host) {
 	
 		// Monta request
 		montarMensagem(buffer, traduzirOperacao(operacao), documentoUsuario, isbn, parametro);
+		
+		// Obtem o tempo inicial
+		clock_t inicio = times(NULL);
 		
 		// Envia a mensagem para o usuario
 		//printf("enviando mensagem...\n");
@@ -287,6 +277,9 @@ void executarCliente(int porta, char* host) {
 				break;
 			}
 		}
+		
+		// Loga o tempo de execucao
+		logarTempo(CLIENT, traduzirOperacao(operacao), inicio, time(NULL));
 		
 		// Finaliza client para usuario invalido
 		if (strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {

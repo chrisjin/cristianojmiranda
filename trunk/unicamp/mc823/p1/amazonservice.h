@@ -25,6 +25,7 @@
 #define ISBN_INVALIDO "ISBN invalido."
 #define RESPONSE_OK "OK"
 #define SERVER "SERVER"
+#define CLIENT "CLIENT"
 
 #define REQUEST_END "FIM"
 
