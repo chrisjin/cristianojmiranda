@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/wait.h>
+#include <time.h>
 
 #include "mem.h"
 #include "server.h"
