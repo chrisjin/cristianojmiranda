@@ -108,9 +108,9 @@ void executarCliente(int porta, char* host) {
     	struct sockaddr_in their_addr;   
 
 	// Cronometros
-    	clock_t startTime, endTime;
-    	float elapsedTime;
-    	struct timeval tv;
+    //clock_t startTime, endTime;
+    //float elapsedTime;
+    //struct timeval tv;
 	
 	// Buffer de troca de mensagem entre o servidor e o cliente
 	char buffer[BUFFER_SIZE + 1];
@@ -172,8 +172,8 @@ void executarCliente(int porta, char* host) {
     	while (1) {
         
 			// Inicializa o timer
-        	tv.tv_sec = 5;
-        	tv.tv_usec = 0;
+        	//tv.tv_sec = 5;
+        	//tv.tv_usec = 0;
 			
 			// Imprime o menu e obtem a operacao
 			printMenu();
@@ -208,7 +208,6 @@ void executarCliente(int porta, char* host) {
 			printf("ISBN       - TITULO\n");
 			while (1) {
 				bzero(buffer, BUFFER_SIZE + 1);
-				printf(".");
 				if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
 					perror("erro ao ler o socket");
 					exit(1);
@@ -219,7 +218,6 @@ void executarCliente(int porta, char* host) {
 
 				// Termina de ler ao receber RESPONSE_END
 				if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
-					printf("recebindo todos os bytes\n");
 					break;
 				} else {
 					printf("%s", buffer);
@@ -255,7 +253,6 @@ void executarCliente(int porta, char* host) {
 		else if (operacao == 4) {
 		
 			while (1) {
-				printf(".");
 				bzero(buffer, BUFFER_SIZE + 1);
 				if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
 					perror("erro ao ler o socket");
@@ -299,8 +296,8 @@ void executarCliente(int porta, char* host) {
     	}
     
 		// Finaliza o timer
-    	endTime = times(NULL);
-    	elapsedTime = (float)((endTime - startTime) / (float)sysconf(_SC_CLK_TCK));
+    	//endTime = times(NULL);
+    	//elapsedTime = (float)((endTime - startTime) / (float)sysconf(_SC_CLK_TCK));
 
 		printf("Fechando conexao\n");
     	close(sock_fd);

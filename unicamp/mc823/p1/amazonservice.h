@@ -24,6 +24,7 @@
 #define RESPONSE_COMANDO_INVALIDO "COMANDO_INVALIDO"
 #define ISBN_INVALIDO "ISBN invalido."
 #define RESPONSE_OK "OK"
+#define SERVER "SERVER"
 
 #define REQUEST_END "FIM"
 

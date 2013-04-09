@@ -21,6 +21,10 @@
 
 // Trata a obtencao dos isbns
 void obterTodosIsbns(int new_fd) {
+
+	// Obtem o tempo inicial
+	clock_t inicio = times(NULL);
+
 	char* isbns = obterTodosISBNS();
 	if (strlen(isbns) <= 255) {
 	
@@ -57,6 +61,9 @@ void obterTodosIsbns(int new_fd) {
 		perror("erro ao escrever no socket");
 		exit(1);
 	}
+	
+	// Loga o tempo de execucao
+	logarTempo(SERVER, OBTER_TODOS_ISBNS, inicio, time(NULL));
 }
 
 // Trata a consulta de descricao por isbn

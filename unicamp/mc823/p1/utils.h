@@ -12,6 +12,8 @@
 
 
  *******************************************************************************/
+#include <time.h>
+ 
 #define boolean int
 #define true 1
 #define false 0
@@ -101,3 +103,6 @@ void showFile(char *fileName);
 char* getLine();
 
 int csvParse(char *line, char* list[], int list_size);
+
+// Loga o tempo de execucao de um metodo
+void logarTempo(char* tipo, char* metodo, clock_t inicio, clock_t fim);
