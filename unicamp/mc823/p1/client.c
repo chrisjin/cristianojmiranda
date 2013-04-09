@@ -208,6 +208,7 @@ void executarCliente(int porta, char* host) {
 			printf("ISBN       - TITULO\n");
 			while (1) {
 				bzero(buffer, BUFFER_SIZE + 1);
+				printf(".");
 				if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
 					perror("erro ao ler o socket");
 					exit(1);
@@ -251,6 +252,7 @@ void executarCliente(int porta, char* host) {
 		if (operacao == 4) {
 		
 			while (1) {
+				printf(".");
 				bzero(buffer, BUFFER_SIZE + 1);
 				if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
 					perror("erro ao ler o socket");
