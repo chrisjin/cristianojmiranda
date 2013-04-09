@@ -326,19 +326,19 @@ void logarTempo(char* tipo, char* metodo, clock_t inicio, clock_t fim) {
 
 	char* buffer = MEM_ALLOC_N(char, 256);
 	bzero(buffer, 255);
-	snprintf(buffer, 255, "%.3d", inicio);
+	snprintf(buffer, 255, "%.3f", inicio);
 
 	fputs(buffer, arq);
 	fputs(";", arq);
 
 	bzero(buffer, 255);
-	snprintf(buffer, 255, ".3%d", fim);
+	snprintf(buffer, 255, ".3%f", fim);
 
 	fputs(buffer, arq);
 	fputs(";", arq);
 
 	bzero(buffer, 255);
-	snprintf(buffer, 255, ".3%d", intervalo);
+	snprintf(buffer, 255, ".3%f", intervalo);
 
 	fputs(buffer, arq);
 	fputs(";\n", arq);

@@ -279,7 +279,8 @@ void executarCliente(int porta, char* host) {
 		}
 		
 		// Loga o tempo de execucao
-		logarTempo(CLIENT, traduzirOperacao(operacao), inicio, clock());
+		clock_t fim = clock();
+		logarTempo(CLIENT, traduzirOperacao(operacao), inicio, fim);
 		
 		// Finaliza client para usuario invalido
 		if (strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
