@@ -26,6 +26,7 @@ void obterTodosIsbns(int new_fd) {
 	// Obtem o tempo inicial
 	clock_t inicio = times(NULL);
 
+	// Pesquisa todos os isbns
 	char* isbns = obterTodosISBNS();
 	if (strlen(isbns) <= 255) {
 	
@@ -70,6 +71,10 @@ void obterTodosIsbns(int new_fd) {
 // Trata a consulta de descricao por isbn
 void tratarObterDescricaoPorIsbn(int new_fd, char* isbn) {
 
+	// Obtem o tempo inicial
+	clock_t inicio = times(NULL);
+
+	// Obtem descricao por isbn
 	char* descricao = obterDescricaoPorISBN(isbn);
 	
 	if (descricao == NULL) {
@@ -85,10 +90,16 @@ void tratarObterDescricaoPorIsbn(int new_fd, char* isbn) {
 			exit(1);
 		}
 	}
+	
+	// Loga o tempo de execucao
+	logarTempo(SERVER, OBTER_DESCRICAO_POR_ISBN, inicio, time(NULL));
 }
 
 // Trata a pesquisa de todos os dados de um livro
 void tratarObterLivro(int new_fd, char* isbn) {
+
+	// Obtem o tempo inicial
+	clock_t inicio = times(NULL);
 
 	// Pesquisa o livro na base
 	livro lv = obterLivroPorISBN(isbn);
@@ -109,12 +120,18 @@ void tratarObterLivro(int new_fd, char* isbn) {
 		}
 	
 	}
+	
+	// Loga o tempo de execucao
+	logarTempo(SERVER, OBTER_LIVRO_POR_ISBN, inicio, time(NULL));
 
 }
 
 // Obtem o numero de exemplares em estoque da livraria
 void obterExemplaresEmEstoque(int new_fd, char* isbn) {
 
+	// Obtem o tempo inicial
+	clock_t inicio = times(NULL);
+	
 	printf("obterExemplaresEmEstoque() - isbn: %s.\n", isbn);
 
 	// Obtem a quantidade de exemplares em estoque
@@ -140,10 +157,16 @@ void obterExemplaresEmEstoque(int new_fd, char* isbn) {
 		}
 	
 	}
+	
+	// Loga o tempo de execucao
+	logarTempo(SERVER, OBTER_NR_EXEMPLARES_ESTOQUE, inicio, time(NULL));
 }
 
 // Altera o nr de exmplares em estoque da livraria
 void alterarNrExemplaresEstoque(int new_fd, char* isbn, int qtd, Usuario usuario) {
+
+	// Obtem o tempo inicial
+	clock_t inicio = times(NULL);
 
 	printf("alterando o nr exemp em estoque do isbn %s para %d\n", isbn, qtd);
 
@@ -180,11 +203,17 @@ void alterarNrExemplaresEstoque(int new_fd, char* isbn, int qtd, Usuario usuario
 		}
 	
 	}
+	
+	// Loga o tempo de execucao
+	logarTempo(SERVER, ALTERAR_NR_EXEMPLARES_ESTOQUE, inicio, time(NULL));
 
 }
 
 // Trata a consulta a todos os dados de livros
 void obterTodosLivros(int new_fd) {
+
+	// Obtem o tempo inicial
+	clock_t inicio = times(NULL);
 
 	// Localiza todos os livros da base
 	int list_size;
@@ -223,6 +252,9 @@ void obterTodosLivros(int new_fd) {
 		perror("erro ao escrever no socket");
 		exit(1);
 	}
+	
+	// Loga o tempo de execucao
+	logarTempo(SERVER, OBTER_TODOS_LIVROS, inicio, time(NULL));
 
 }
 
