@@ -19,6 +19,8 @@
 #include <ctype.h>
 #include <fcntl.h>
 #include <time.h>
+#include <sys/times.h>
+#include <sys/wait.h>
 
 #include "mem.h"
 #include "utils.h"
@@ -315,18 +317,31 @@ void logarTempo(char* tipo, char* metodo, clock_t inicio, clock_t fim) {
 	FILE *arq = Fopen("timer.csv", "a");
 	
 	// Calcula o intervalo
-	float intervalo = (float)((fim - inicio) / (float)sysconf(_SC_CLK_TCK));
+	float intervalo = (float)((fim - inicio) / (float)CLOCKS_PER_SEC);
 	
 	fputs(tipo, arq);
 	fputs(";", arq);
 	fputs(metodo, arq);
 	fputs(";", arq);
-	fputs((float)inicio, arq);
+
+	char* buffer = MEM_ALLOC_N(char, 256);
+	bzero(buffer, 255);
+	snprintf(buffer, 255, "%.3f", inicio);
+
+	fputs(buffer, arq);
 	fputs(";", arq);
-	fputs((float)fim, arq);
+
+	bzero(buffer, 255);
+	snprintf(buffer, 255, ".3%f", fim);
+
+	fputs(buffer, arq);
 	fputs(";", arq);
-	fpputs(invervalo, arq);
-	fputs(";", arq);
+
+	bzero(buffer, 255);
+	snprintf(buffer, 255, ".3%f", intervalo);
+
+	fputs(buffer, arq);
+	fputs(";\n", arq);
 	
 	// Fecha o arquivo
 	fclose(arq);

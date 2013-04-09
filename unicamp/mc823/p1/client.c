@@ -159,7 +159,7 @@ void executarCliente(int porta, char* host) {
     	}
     
 	// Inicia a conta
-    	startTime = times(NULL);
+    	//startTime = times(NULL);
     
 		printf("Cliente inicializado com sucesso\n");
 		
