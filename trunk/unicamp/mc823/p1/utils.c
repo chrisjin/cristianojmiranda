@@ -317,7 +317,7 @@ void logarTempo(char* tipo, char* metodo, clock_t inicio, clock_t fim) {
 	FILE *arq = Fopen("timer.csv", "a");
 	
 	// Calcula o intervalo
-	float intervalo = (float)((fim - inicio) / (float)CLOCKS_PER_SEC);
+	double intervalo = (double)((fim - inicio) / CLOCKS_PER_SEC);
 	
 	fputs(tipo, arq);
 	fputs(";", arq);
@@ -326,19 +326,19 @@ void logarTempo(char* tipo, char* metodo, clock_t inicio, clock_t fim) {
 
 	char* buffer = MEM_ALLOC_N(char, 256);
 	bzero(buffer, 255);
-	snprintf(buffer, 255, "%.3f", inicio);
+	snprintf(buffer, 255, "%.3d", inicio);
 
 	fputs(buffer, arq);
 	fputs(";", arq);
 
 	bzero(buffer, 255);
-	snprintf(buffer, 255, ".3%f", fim);
+	snprintf(buffer, 255, ".3%d", fim);
 
 	fputs(buffer, arq);
 	fputs(";", arq);
 
 	bzero(buffer, 255);
-	snprintf(buffer, 255, ".3%f", intervalo);
+	snprintf(buffer, 255, ".3%d", intervalo);
 
 	fputs(buffer, arq);
 	fputs(";\n", arq);

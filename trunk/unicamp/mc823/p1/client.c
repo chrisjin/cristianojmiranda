@@ -182,7 +182,7 @@ void executarCliente(int porta, char* host) {
 		montarMensagem(buffer, traduzirOperacao(operacao), documentoUsuario, isbn, parametro);
 		
 		// Obtem o tempo inicial
-		clock_t inicio = times(NULL);
+		clock_t inicio = clock();
 		
 		// Envia a mensagem para o usuario
 		//printf("enviando mensagem...\n");
@@ -279,7 +279,7 @@ void executarCliente(int porta, char* host) {
 		}
 		
 		// Loga o tempo de execucao
-		logarTempo(CLIENT, traduzirOperacao(operacao), inicio, time(NULL));
+		logarTempo(CLIENT, traduzirOperacao(operacao), inicio, clock());
 		
 		// Finaliza client para usuario invalido
 		if (strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
@@ -287,10 +287,6 @@ void executarCliente(int porta, char* host) {
 		}
 		
     	}
-    
-		// Finaliza o timer
-    	//endTime = times(NULL);
-    	//elapsedTime = (float)((endTime - startTime) / (float)sysconf(_SC_CLK_TCK));
 
 		printf("Fechando conexao\n");
     	close(sock_fd);
