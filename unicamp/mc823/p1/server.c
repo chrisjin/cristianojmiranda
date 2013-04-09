@@ -52,6 +52,7 @@ void obterTodosIsbns(int new_fd) {
 	}
 	
 	// Escreve final da response
+	printf("enviando response_end\n");
 	if (write(new_fd, RESPONSE_END, strlen(RESPONSE_END)) < 0) {
 		perror("erro ao escrever no socket");
 		exit(1);
@@ -181,31 +182,35 @@ void obterTodosLivros(int new_fd) {
 	int list_size;
 	livro_list livros = obtemTodosLivros(&list_size);
 	livro_list it = livros;
+
+	printf("foram encontrados %d livros\n", list_size);
 	
 	// Caso nao exista livros na base
-	if (list_size == 0) {
-		return NULL;
-	}
+	if (list_size > 0) {
 	
-	int contador = 0;
-	while (it != NULL) {
-		livro lv = it->titulo;
-		if (lv != NULL) {
+	
+		int contador = 0;
+		while (it != NULL) {
+			livro lv = it->titulo;
+			if (lv != NULL) {
 		
-			char* line = buildCsvLine(lv, 245);
-			if (read(new_fd, line, 255) < 0) {
-        		perror("erro ao ler do socket");
-		        exit(1);
+				char* line = buildCsvLine(lv, 245);
+				if (write(new_fd, line, 255) < 0) {
+        				perror("erro ao ler do socket");
+				        exit(1);
+				}
 			}
-		}
 		
-		if (++contador == list_size) {
-			break;
+			printf("contador %d\n", contador);
+			if (++contador == list_size) {
+				break;
+			}
+			it = it->proximo;
 		}
-		it = it->proximo;
 	}
 	
 	// Escreve final da response
+	printf("enviando response_end\n");
 	if (write(new_fd, RESPONSE_END, strlen(RESPONSE_END)) < 0) {
 		perror("erro ao escrever no socket");
 		exit(1);

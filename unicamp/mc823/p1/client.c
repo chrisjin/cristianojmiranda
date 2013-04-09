@@ -219,10 +219,13 @@ void executarCliente(int porta, char* host) {
 
 				// Termina de ler ao receber RESPONSE_END
 				if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
+					printf("recebindo todos os bytes\n");
 					break;
 				} else {
 					printf("%s", buffer);
 				}
+
+				printf("-");
 			}			
 		}
 		
@@ -249,7 +252,7 @@ void executarCliente(int porta, char* host) {
 		}
 		
 		// Trata response para obter todos os livros
-		if (operacao == 4) {
+		else if (operacao == 4) {
 		
 			while (1) {
 				printf(".");
