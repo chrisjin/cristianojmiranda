@@ -168,9 +168,7 @@ void executarCliente(int porta, char* host) {
 		bzero(documentoUsuario, 5);
 		//fgets(documentoUsuario, 4, stdin);
 		scanf("%s", &documentoUsuario);
-		
-		
-		
+
     	while (1) {
         
 			// Inicializa o timer
@@ -191,7 +189,7 @@ void executarCliente(int porta, char* host) {
 			bzero(parametro, 7);
 			if (operacao == 5) {
 				lerParametro(parametro, "Entre com o novo numero de exemplares: ");
-		}
+			}
 	
 		// Monta request
 		montarMensagem(buffer, traduzirOperacao(operacao), documentoUsuario, isbn, parametro);
