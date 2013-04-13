@@ -182,7 +182,8 @@ void executarCliente(int porta, char* host) {
 		montarMensagem(buffer, traduzirOperacao(operacao), documentoUsuario, isbn, parametro);
 		
 		// Obtem o tempo inicial
-		clock_t inicio = clock();
+		struct timeval startTime;
+		gettimeofday(&startTime, NULL);
 		
 		// Envia a mensagem para o usuario
 		//printf("enviando mensagem...\n");
@@ -279,8 +280,7 @@ void executarCliente(int porta, char* host) {
 		}
 		
 		// Loga o tempo de execucao
-		clock_t fim = clock();
-		logarTempo(CLIENT, traduzirOperacao(operacao), inicio, fim);
+		logarTempo2(CLIENT, traduzirOperacao(operacao), startTime);
 		
 		// Finaliza client para usuario invalido
 		if (strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {

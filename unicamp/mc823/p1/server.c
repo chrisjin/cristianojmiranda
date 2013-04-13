@@ -24,7 +24,9 @@
 void obterTodosIsbns(int new_fd) {
 
 	// Obtem o tempo inicial
-	clock_t inicio = times(NULL);
+	struct timeval inicio;
+	gettimeofday(&inicio, NULL);
+
 
 	// Pesquisa todos os isbns
 	char* isbns = obterTodosISBNS();
@@ -65,14 +67,15 @@ void obterTodosIsbns(int new_fd) {
 	}
 	
 	// Loga o tempo de execucao
-	logarTempo(SERVER, OBTER_TODOS_ISBNS, inicio, clock());
+	logarTempo2(SERVER, OBTER_TODOS_ISBNS, inicio);
 }
 
 // Trata a consulta de descricao por isbn
 void tratarObterDescricaoPorIsbn(int new_fd, char* isbn) {
 
 	// Obtem o tempo inicial
-	clock_t inicio = times(NULL);
+	struct timeval inicio;
+	gettimeofday(&inicio, NULL);
 
 	// Obtem descricao por isbn
 	char* descricao = obterDescricaoPorISBN(isbn);
@@ -92,14 +95,15 @@ void tratarObterDescricaoPorIsbn(int new_fd, char* isbn) {
 	}
 	
 	// Loga o tempo de execucao
-	logarTempo(SERVER, OBTER_DESCRICAO_POR_ISBN, inicio, clock());
+	logarTempo2(SERVER, OBTER_DESCRICAO_POR_ISBN, inicio);
 }
 
 // Trata a pesquisa de todos os dados de um livro
 void tratarObterLivro(int new_fd, char* isbn) {
 
 	// Obtem o tempo inicial
-	clock_t inicio = times(NULL);
+	struct timeval inicio;
+	gettimeofday(&inicio, NULL);
 
 	// Pesquisa o livro na base
 	livro lv = obterLivroPorISBN(isbn);
@@ -122,7 +126,7 @@ void tratarObterLivro(int new_fd, char* isbn) {
 	}
 	
 	// Loga o tempo de execucao
-	logarTempo(SERVER, OBTER_LIVRO_POR_ISBN, inicio, clock());
+	logarTempo2(SERVER, OBTER_LIVRO_POR_ISBN, inicio);
 
 }
 
@@ -130,7 +134,8 @@ void tratarObterLivro(int new_fd, char* isbn) {
 void obterExemplaresEmEstoque(int new_fd, char* isbn) {
 
 	// Obtem o tempo inicial
-	clock_t inicio = times(NULL);
+	struct timeval inicio;
+	gettimeofday(&inicio, NULL);
 	
 	printf("obterExemplaresEmEstoque() - isbn: %s.\n", isbn);
 
@@ -159,14 +164,15 @@ void obterExemplaresEmEstoque(int new_fd, char* isbn) {
 	}
 	
 	// Loga o tempo de execucao
-	logarTempo(SERVER, OBTER_NR_EXEMPLARES_ESTOQUE, inicio, clock());
+	logarTempo2(SERVER, OBTER_NR_EXEMPLARES_ESTOQUE, inicio);
 }
 
 // Altera o nr de exmplares em estoque da livraria
 void alterarNrExemplaresEstoque(int new_fd, char* isbn, int qtd, Usuario usuario) {
 
 	// Obtem o tempo inicial
-	clock_t inicio = times(NULL);
+	struct timeval inicio;
+	gettimeofday(&inicio, NULL);
 
 	printf("alterando o nr exemp em estoque do isbn %s para %d\n", isbn, qtd);
 
@@ -205,15 +211,15 @@ void alterarNrExemplaresEstoque(int new_fd, char* isbn, int qtd, Usuario usuario
 	}
 	
 	// Loga o tempo de execucao
-	logarTempo(SERVER, ALTERAR_NR_EXEMPLARES_ESTOQUE, inicio, clock());
-
+	logarTempo2(SERVER, ALTERAR_NR_EXEMPLARES_ESTOQUE, inicio);
 }
 
 // Trata a consulta a todos os dados de livros
 void obterTodosLivros(int new_fd) {
 
 	// Obtem o tempo inicial
-	clock_t inicio = times(NULL);
+	struct timeval inicio;
+	gettimeofday(&inicio, NULL);
 
 	// Localiza todos os livros da base
 	int list_size;
@@ -254,7 +260,7 @@ void obterTodosLivros(int new_fd) {
 	}
 	
 	// Loga o tempo de execucao
-	logarTempo(SERVER, OBTER_TODOS_LIVROS, inicio, clock());
+	logarTempo2(SERVER, OBTER_TODOS_LIVROS, inicio);
 
 }
 
