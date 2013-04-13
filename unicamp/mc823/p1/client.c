@@ -7,8 +7,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include <sys/times.h>
-#include <time.h>
+#include<sys/time.h>
 #include <sys/wait.h>
 
 #include "client.h"

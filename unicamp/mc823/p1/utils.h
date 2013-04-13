@@ -12,7 +12,7 @@
 
 
  *******************************************************************************/
-#include <time.h>
+#include<sys/time.h>
  
 #define boolean int
 #define true 1
