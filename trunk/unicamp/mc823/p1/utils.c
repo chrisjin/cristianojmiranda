@@ -18,8 +18,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <fcntl.h>
-#include <time.h>
-#include <sys/times.h>
+#include<sys/time.h>
 #include <sys/wait.h>
 
 #include "mem.h"
