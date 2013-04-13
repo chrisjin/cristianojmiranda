@@ -105,4 +105,7 @@ char* getLine();
 int csvParse(char *line, char* list[], int list_size);
 
 // Loga o tempo de execucao de um metodo
-void logarTempo(char* tipo, char* metodo, clock_t inicio, clock_t fim);
+void logarTempo(char* tipo, char* metodo, struct timeval startTime, struct timeval endTime);
+
+// Loga o tempo de execucao de um metodo
+void logarTempo2(char* tipo, char* metodo, struct timeval startTime);
