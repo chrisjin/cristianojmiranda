@@ -128,6 +128,12 @@ livro obterLivroPorISBN(char* isbn) {
  */
 livro parseDbLineToLivro(char* line) {
 
+	if (strlen(line) == 0) {
+		printf("Linha vazia\n");
+		return NULL;
+	}
+
+
 	// Aloca o vetor para ler o database
 	char* parsedLine[7];
 
