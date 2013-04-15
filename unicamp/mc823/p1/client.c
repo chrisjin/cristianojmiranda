@@ -212,8 +212,6 @@ void executarCliente(int porta, char* host) {
 				} else {
 					printf("%s", buffer);
 				}
-
-				printf("-");
 			}			
 		}
 		
@@ -244,7 +242,9 @@ void executarCliente(int porta, char* host) {
 		
 			while (1) {
 				bzero(buffer, BUFFER_SIZE + 1);
-				if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
+ 				int n = read(sock_fd, buffer, BUFFER_SIZE);
+				printf("n=%d\n", n);
+				if (n < 0) {
 					perror("erro ao ler o socket");
 					exit(1);
 				}
