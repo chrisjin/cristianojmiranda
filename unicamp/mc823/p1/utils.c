@@ -312,20 +312,16 @@ int csvParse(char *line, char* list[], int list_size) {
 // Loga o tempo de execucao
 void logarTempo(char* tipo, char* metodo, struct timeval startTime, struct timeval endTime) {
 
-	printf("logarTempo: inicio=%f, fim=%f\n", startTime.tv_sec, endTime.tv_sec);
 	
-
 	// Abre arquivo para computar o tempo
 	FILE *arq = Fopen("timer.csv", "a");
 
-       //Converte os tempos para milisegundos
-       double inicio = startTime.tv_sec*1000000 + (startTime.tv_usec);
-       double fim = endTime.tv_sec*1000000 + (endTime.tv_usec);
- 
-       double intervalo = (fim - inicio);
+        //Converte os tempos para milisegundos
+        long inicio = (startTime.tv_sec * 1000000) + (startTime.tv_usec);
+        long fim = (endTime.tv_sec*1000000) + (endTime.tv_usec);
+        long intervalo = (fim - inicio);
 
-
-	printf("logarTempo: inicio=%f, fim=%f, intervalo=%f\n", inicio, fim, intervalo);
+	printf("logarTempo: inicio=%d, fim=%d, intervalo=%d\n", inicio, fim, intervalo);
 	
 	fputs(tipo, arq);
 	fputs(";", arq);
@@ -334,19 +330,19 @@ void logarTempo(char* tipo, char* metodo, struct timeval startTime, struct timev
 
 	char* buffer = MEM_ALLOC_N(char, 256);
 	bzero(buffer, 255);
-	snprintf(buffer, 255, "%.2lf", (double)inicio);
+	snprintf(buffer, 255, "%d", (double)inicio);
 
 	fputs(buffer, arq);
 	fputs(";", arq);
 
 	bzero(buffer, 255);
-	snprintf(buffer, 255, "%.2lf", (double)fim);
+	snprintf(buffer, 255, "%d", (double)fim);
 
 	fputs(buffer, arq);
 	fputs(";", arq);
 
 	bzero(buffer, 255);
-	snprintf(buffer, 255, "%.2lf", intervalo);
+	snprintf(buffer, 255, "%d", intervalo);
 
 	fputs(buffer, arq);
 	fputs(";\n", arq);
