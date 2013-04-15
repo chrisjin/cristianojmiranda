@@ -7,8 +7,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include<sys/time.h>
-#include <sys/wait.h>
+#include <time.h>
 
 #include "client.h"
 #include "amazonservice.h"
@@ -104,7 +103,7 @@ void executarCliente(int porta, char* host) {
 	struct hostent *he;
 	
 	// Endereco de conexao
-    struct sockaddr_in their_addr;
+	struct sockaddr_in their_addr;
 	
 	// Buffer de troca de mensagem entre o servidor e o cliente
 	char buffer[BUFFER_SIZE + 1];
@@ -159,6 +158,7 @@ void executarCliente(int porta, char* host) {
 		bzero(documentoUsuario, 5);
 		scanf("%s", &documentoUsuario);
 
+	double tmInicio = 0.0;
     	while (1) {
 			
 			// Imprime o menu e obtem a operacao
@@ -181,8 +181,8 @@ void executarCliente(int porta, char* host) {
 		montarMensagem(buffer, traduzirOperacao(operacao), documentoUsuario, isbn, parametro);
 		
 		// Obtem o tempo inicial
-		struct timeval startTime;
-		gettimeofday(&startTime, NULL);
+		tmInicio = 0.0;
+	 	getTime(&tmInicio);
 		
 		// Envia a mensagem para o usuario
 		//printf("enviando mensagem...\n");
@@ -279,7 +279,7 @@ void executarCliente(int porta, char* host) {
 		}
 		
 		// Loga o tempo de execucao
-		logarTempo2(CLIENT, traduzirOperacao(operacao), startTime);
+		logarTempo3(CLIENT, traduzirOperacao(operacao), tmInicio);
 		
 		// Finaliza client para usuario invalido
 		if (strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {

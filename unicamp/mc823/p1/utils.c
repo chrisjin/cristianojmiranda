@@ -18,8 +18,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <fcntl.h>
-#include<sys/time.h>
-#include <sys/wait.h>
+#include <time.h>
 
 #include "mem.h"
 #include "utils.h"
@@ -309,6 +308,18 @@ int csvParse(char *line, char* list[], int list_size) {
 	}
 }
 
+// Obtem o tempo atual em milisegundos
+double getTime(double* pt) {
+
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	double timer = (double) (tv.tv_sec * 1000000) + tv.tv_usec;
+
+	//printf("getTimer(): %.2f\n", timer);
+	*pt = timer;
+	return timer;
+}
+
 // Loga o tempo de execucao
 void logarTempo(char* tipo, char* metodo, struct timeval startTime, struct timeval endTime) {
 
@@ -321,7 +332,7 @@ void logarTempo(char* tipo, char* metodo, struct timeval startTime, struct timev
         long fim = (endTime.tv_sec*1000000) + (endTime.tv_usec);
         long intervalo = (fim - inicio);
 
-	printf("logarTempo: inicio=%d, fim=%d, intervalo=%d\n", inicio, fim, intervalo);
+	printf("logarTempo: inicio=%.2f, fim=%.2f, intervalo=%.2f\n", inicio, fim, intervalo);
 	
 	fputs(tipo, arq);
 	fputs(";", arq);
@@ -356,4 +367,45 @@ void logarTempo2(char* tipo, char* metodo, struct timeval startTime) {
 	struct timeval end;
 	gettimeofday(&end, NULL);
 	logarTempo(tipo, metodo, startTime, end);
+}
+
+void logarTempo3(char* tipo, char* metodo, double inicio) {
+
+	// Abre arquivo para computar o tempo
+	FILE *arq = Fopen("timer.csv", "a");
+
+        //Converte os tempos para milisegundos
+        double fim;
+	getTime(&fim);
+        double intervalo = (fim - inicio);
+
+	//printf("logarTempo: inicio=%.2f, fim=%.2f, intervalo=%.2f\n", inicio, fim, intervalo);
+	
+	fputs(tipo, arq);
+	fputs(";", arq);
+	fputs(metodo, arq);
+	fputs(";", arq);
+
+	char* buffer = MEM_ALLOC_N(char, 256);
+	bzero(buffer, 255);
+	snprintf(buffer, 255, "%.2f", inicio);
+
+	fputs(buffer, arq);
+	fputs(";", arq);
+
+	bzero(buffer, 255);
+	snprintf(buffer, 255, "%.2f", fim);
+
+	fputs(buffer, arq);
+	fputs(";", arq);
+
+	bzero(buffer, 255);
+	snprintf(buffer, 255, "%.2f", intervalo);
+
+	fputs(buffer, arq);
+	fputs(";\n", arq);
+	
+	// Fecha o arquivo
+	fclose(arq);
+
 }
