@@ -238,7 +238,9 @@ void obterTodosLivros(int new_fd) {
 			if (lv != NULL) {
 		
 				char* line = buildCsvLine(lv, 245);
-				if (write(new_fd, line, 255) < 0) {
+				int n = write(new_fd, line, 255);
+				printf("n=%d\n", n);
+				if (n < 0) {
         				perror("erro ao ler do socket");
 				        exit(1);
 				}
