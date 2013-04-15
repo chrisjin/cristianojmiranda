@@ -128,6 +128,8 @@ livro obterLivroPorISBN(char* isbn) {
  */
 livro parseDbLineToLivro(char* line) {
 
+	printf("parseDbLineToLivro(), line: '%s'\n", line);
+
 	if (strlen(line) == 0) {
 		printf("Linha vazia\n");
 		return NULL;
