@@ -73,6 +73,11 @@ void notificarUsuarioSemAcesso(char *response) {
 	}
 }
 
+int fimDaResponse(char* request) {
+	char* index = strstr(request, RESPONSE_END);
+	return (index != NULL);
+}
+
 // Obtem a operacao a ser enviada na request
 char* traduzirOperacao(int operacao) {
 
@@ -240,26 +245,29 @@ void executarCliente(int porta, char* host) {
 		// Trata response para obter todos os livros
 		else if (operacao == 4) {
 		
+			char bf[BUFFER_SIZE + 1];
 			while (1) {
-				bzero(buffer, BUFFER_SIZE + 1);
- 				int n = read(sock_fd, buffer, BUFFER_SIZE);
-				printf("n=%d\n", n);
+				bzero(bf, BUFFER_SIZE + 1);
+ 				int n = read(sock_fd, bf, BUFFER_SIZE);
+				//int n = recv(sock_fd, bf, BUFFER_SIZE, 0);
+
+				printf("n=%d, line:'%s'\n", n, bf);
 				if (n < 0) {
 					perror("erro ao ler o socket");
 					exit(1);
 				}
 				
 				// Verifica se o usuario e valido
-				notificarUsuarioInvalido(buffer);
+				notificarUsuarioInvalido(bf);
 
 				// Termina de ler ao receber RESPONSE_END
-				if (strcmp(buffer, RESPONSE_END) == 0 || strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {
+				if (fimDaResponse(bf) || strcmp(bf, RESPONSE_END) == 0 || strcmp(bf, RESPONSE_USUARIO_INVALIDO) == 0) {
 					break;
 				} else {
-					livro lv = parseDbLineToLivro(buffer);
+					livro lv = parseDbLineToLivro(bf);
 					printLivro(lv);
 				}
-			}			
+			}
 		}
 		
 		else {
