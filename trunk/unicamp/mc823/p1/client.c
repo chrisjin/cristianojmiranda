@@ -156,31 +156,34 @@ void executarCliente(int porta, char* host) {
         	exit(1);
     	}
     
-		printf("Cliente inicializado com sucesso\n");
+	printf("Cliente inicializado com sucesso\n");
 		
-		// Obtem o documento do usuario
-		printf("Entre com o documento do usuario: ");
-		bzero(documentoUsuario, 5);
-		scanf("%s", &documentoUsuario);
+	// Obtem o documento do usuario
+	printf("Entre com o documento do usuario: ");
+	bzero(documentoUsuario, 5);
+	scanf("%s", &documentoUsuario);
 
+	// Timer para medir o tempo de execucao de cada operacao
 	struct timeval startTimer;
+
+	// Loop infinito tratando as demandas do usuario
     	while (1) {
 			
-			// Imprime o menu e obtem a operacao
-			printMenu();
-			int operacao = lerOperacao();
+		// Imprime o menu e obtem a operacao
+		printMenu();
+		int operacao = lerOperacao();
+		
+		// Caso seja necessario obter isbn
+		bzero(isbn, 11);
+		if (operacao == 2 || operacao == 3 || operacao == 5 || operacao == 6) {
+			lerISBN(isbn);
+		}
 			
-			// Caso seja necessario obter isbn
-			bzero(isbn, 11);
-			if (operacao == 2 || operacao == 3 || operacao == 5 || operacao == 6) {
-				lerISBN(isbn);
-			}
-			
-			// Caso necessario paramtro para alterar o nr de exemplares
-			bzero(parametro, 7);
-			if (operacao == 5) {
-				lerParametro(parametro, "Entre com o novo numero de exemplares: ");
-			}
+		// Caso necessario paramtro para alterar o nr de exemplares
+		bzero(parametro, 7);
+		if (operacao == 5) {
+			lerParametro(parametro, "Entre com o novo numero de exemplares: ");
+		}
 	
 		// Monta request
 		montarMensagem(buffer, traduzirOperacao(operacao), documentoUsuario, isbn, parametro);
@@ -189,13 +192,12 @@ void executarCliente(int porta, char* host) {
 		gettimeofday(&startTimer, NULL);
 		
 		// Envia a mensagem para o usuario
-		//printf("enviando mensagem...\n");
 		if (write(sock_fd, buffer, strlen(buffer)) < 0) {
 			 perror("erro ao escrever no socket");
 			 exit(1);
 		}
 
-		// Le a resposta do servidor
+		// ------ Lendo a resposta do servidor -------------------------------------
 		
 		// Trata response para obter todos os isbns
 		if (operacao == 1) {
@@ -217,7 +219,7 @@ void executarCliente(int porta, char* host) {
 					printf("%s", buffer);
 				}
 			}			
-		}
+		} 
 		
 		// Trata response para obter livro por isbn
 		else if (operacao == 3) {
@@ -248,9 +250,6 @@ void executarCliente(int porta, char* host) {
 			while (1) {
 				bzero(bf, BUFFER_SIZE + 1);
  				int n = read(sock_fd, bf, BUFFER_SIZE);
-				//int n = recv(sock_fd, bf, BUFFER_SIZE, 0);
-
-				printf("n=%d, line:'%s'\n", n, bf);
 				if (n < 0) {
 					perror("erro ao ler o socket");
 					exit(1);
@@ -270,6 +269,18 @@ void executarCliente(int porta, char* host) {
 		}
 		
 		else {
+
+			if (operacao == 2) {
+				printf("\n\n\tDESCRICAO: ");
+			}
+
+			if (operacao == 5) {
+				printf("\n\n\tRESPOSTA DO SERVIDOR: ");
+			}
+
+			if (operacao == 6) {
+				printf("\n\n\tNR DE EXEMPLARES: ");
+			}
 		
 			bzero(buffer, BUFFER_SIZE + 1);
 			if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
@@ -295,6 +306,6 @@ void executarCliente(int porta, char* host) {
 		
     	}
 
-		printf("Fechando conexao\n");
+	printf("Fechando conexao\n");
     	close(sock_fd);
 }

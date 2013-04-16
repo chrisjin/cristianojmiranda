@@ -38,28 +38,20 @@ char* obterTodosISBNS() {
 		livro lv = it->titulo;
 		if (lv != NULL) {
 		
-			//printf("\nobterTodosISBNS() - isbn: %s\n", lv->isbn);
-			//printf("obterTodosISBNS() - isbns: %s\n", isbns);
-		
 			// Calcula o tamanho de um novo registros
 			int tam_registro = strlen(lv->isbn) + strlen(lv->titulo) + 5;
 		
 			// Aloca o resultado
 			if (isbns == NULL) {
 				isbns = MEM_ALLOC_N(char, tam_registro);
-				//printf("alocando size: %d\n", tam_registro);
 				snprintf(isbns, tam_registro, "%s - %s\n", lv->isbn, lv->titulo);				
 			} else {
 				int tam_registro_realloc = strlen(isbns) + tam_registro + 2;
-				//printf("realocando size: %d\n", tam_registro_realloc);
 				char* tmp = MEM_ALLOC_N(char, strlen(isbns) + 1);
 				strcpy(tmp, isbns);
 				isbns = (char*) realloc(isbns, tam_registro_realloc);
 				snprintf(isbns, tam_registro_realloc, "%s%s - %s\n", tmp, lv->isbn, lv->titulo);
 			}
-			
-			//strncat(isbns, lv->isbn, strlen(lv->isbn));
-			//strncat(isbns, "\n", 1);			
 		}
 		
 		++contador;
@@ -128,10 +120,8 @@ livro obterLivroPorISBN(char* isbn) {
  */
 livro parseDbLineToLivro(char* line) {
 
-	printf("parseDbLineToLivro(), line: '%s'\n", line);
-
+	// Caso linha esteja vazia
 	if (strlen(line) == 0) {
-		printf("Linha vazia\n");
 		return NULL;
 	}
 
@@ -142,8 +132,8 @@ livro parseDbLineToLivro(char* line) {
 	// Realiza o parse da linha do csv
 	csvParse(line, parsedLine, 7);
 
+	// Caso seja um isbn invalido
 	if (strlen(parsedLine[0]) < 10) {
-		printf("empty parse\n");
 		return NULL;
 	}
 
