@@ -149,4 +149,6 @@ char *strConcanteStart(char *value, char *token, int size);
  */
 char *repeatString(char *value, int j);
 
+char* completeString(char* original, char* token, int size);
+
 #endif
