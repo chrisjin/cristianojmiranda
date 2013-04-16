@@ -346,3 +346,13 @@ char *repeatString(char *value, int j) {
 	return result;
 }
 
+char* completeString(char* original, char* token, int size) {
+
+	if (strlen(original) >= size) {
+		return original;
+	}
+
+	char* missing = repeatString(token, size - strlen(original));
+
+	return str_join(original, missing);
+}
