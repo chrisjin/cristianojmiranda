@@ -236,22 +236,20 @@ void obterTodosLivros(int new_fd) {
 			livro lv = it->titulo;
 			if (lv != NULL) {
 		
-				// Build line 
+				// Converte o livro em csv line
 				char* line = buildCsvLine(lv, 245);
-				char* ln = completeString(line, ";", 255);
-				printf("Enviando a linha: '%s', ln: '%s'\n", line, ln);
 
+				// Completa o tamanho da request com ';' para alinhar os buffers
+				char* ln = completeString(line, ";", 255);
+
+				// Envia a mensagem para o servidor
 				int n = write(new_fd, ln, strlen(ln));
-				//int n  = send(new_fd, line, 255, 0);
-				//int n  = send(new_fd, line, strlen(line), 0);
-				printf("n=%d\n", n);
 				if (n < 0) {
         				perror("erro ao ler do socket");
 				        exit(1);
 				}
 			}
-		
-			printf("contador %d\n", contador);
+
 			if (++contador == list_size) {
 				break;
 			}
@@ -375,6 +373,7 @@ void tratar_conexao(int new_fd) {
 	exit(0);
 }
 
+// Executa o servidor na porta parametrizada
 void executarServidor(int porta) {
 
 	printf("inicializando servidor na porta '%d'....\n", porta);

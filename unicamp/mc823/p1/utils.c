@@ -319,31 +319,36 @@ void logarTempo(char* tipo, char* metodo, struct timeval startTime, struct timev
         long intervaloS = (endTime.tv_sec - startTime.tv_sec);
         long intervaloU = (endTime.tv_usec - startTime.tv_usec);
 
+	if (intervaloU < 0) {
+		intervaloU = 1 + intervaloU;
+	}
+
 	//printf("logarTempo: inicio=%ld.%06ld, fim=%ld.%06ld, intervalo=%ld.%06ld\n", startTime.tv_sec, startTime.tv_usec, endTime.tv_sec, endTime.tv_usec, intervaloS, intervaloU );
 	
+	fputs("\"", arq);
 	fputs(tipo, arq);
-	fputs(";", arq);
+	fputs("\";\"", arq);
 	fputs(metodo, arq);
-	fputs(";", arq);
+	fputs("\";\"", arq);
 
 	char* buffer = MEM_ALLOC_N(char, 256);
 	bzero(buffer, 255);
 	snprintf(buffer, 255, "%ld.%06ld", startTime.tv_sec, startTime.tv_usec);
 
 	fputs(buffer, arq);
-	fputs(";", arq);
+	fputs("\";\"", arq);
 
 	bzero(buffer, 255);
 	snprintf(buffer, 255, "%ld.%06ld", endTime.tv_sec, endTime.tv_usec);
 
 	fputs(buffer, arq);
-	fputs(";", arq);
+	fputs("\";\"", arq);
 
 	bzero(buffer, 255);
 	snprintf(buffer, 255, "%ld.%06ld", intervaloS, intervaloU);
 
 	fputs(buffer, arq);
-	fputs(";\n", arq);
+	fputs("\";\n", arq);
 	
 	// Fecha o arquivo
 	fclose(arq);
