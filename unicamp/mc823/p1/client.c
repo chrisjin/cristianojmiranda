@@ -163,7 +163,7 @@ void executarCliente(int porta, char* host) {
 		bzero(documentoUsuario, 5);
 		scanf("%s", &documentoUsuario);
 
-	double tmInicio = 0.0;
+	struct timeval startTimer;
     	while (1) {
 			
 			// Imprime o menu e obtem a operacao
@@ -186,8 +186,7 @@ void executarCliente(int porta, char* host) {
 		montarMensagem(buffer, traduzirOperacao(operacao), documentoUsuario, isbn, parametro);
 		
 		// Obtem o tempo inicial
-		tmInicio = 0.0;
-	 	getTime(&tmInicio);
+		gettimeofday(&startTimer, NULL);
 		
 		// Envia a mensagem para o usuario
 		//printf("enviando mensagem...\n");
@@ -287,7 +286,7 @@ void executarCliente(int porta, char* host) {
 		}
 		
 		// Loga o tempo de execucao
-		logarTempo3(CLIENT, traduzirOperacao(operacao), tmInicio);
+		logarTempo2(CLIENT, traduzirOperacao(operacao), startTimer);
 		
 		// Finaliza client para usuario invalido
 		if (strcmp(buffer, RESPONSE_USUARIO_INVALIDO) == 0) {

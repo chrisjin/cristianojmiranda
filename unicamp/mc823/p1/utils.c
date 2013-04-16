@@ -308,18 +308,6 @@ int csvParse(char *line, char* list[], int list_size) {
 	}
 }
 
-// Obtem o tempo atual em milisegundos
-double getTime(double* pt) {
-
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	double timer = (double) (tv.tv_sec * 1000000) + tv.tv_usec;
-
-	//printf("getTimer(): %.2f\n", timer);
-	*pt = timer;
-	return timer;
-}
-
 // Loga o tempo de execucao
 void logarTempo(char* tipo, char* metodo, struct timeval startTime, struct timeval endTime) {
 
@@ -328,11 +316,10 @@ void logarTempo(char* tipo, char* metodo, struct timeval startTime, struct timev
 	FILE *arq = Fopen("timer.csv", "a");
 
         //Converte os tempos para milisegundos
-        long inicio = (startTime.tv_sec * 1000000) + (startTime.tv_usec);
-        long fim = (endTime.tv_sec*1000000) + (endTime.tv_usec);
-        long intervalo = (fim - inicio);
+        long intervaloS = (endTime.tv_sec - startTime.tv_sec);
+        long intervaloU = (endTime.tv_usec - startTime.tv_usec);
 
-	printf("logarTempo: inicio=%.2f, fim=%.2f, intervalo=%.2f\n", inicio, fim, intervalo);
+	//printf("logarTempo: inicio=%ld.%06ld, fim=%ld.%06ld, intervalo=%ld.%06ld\n", startTime.tv_sec, startTime.tv_usec, endTime.tv_sec, endTime.tv_usec, intervaloS, intervaloU );
 	
 	fputs(tipo, arq);
 	fputs(";", arq);
@@ -341,19 +328,19 @@ void logarTempo(char* tipo, char* metodo, struct timeval startTime, struct timev
 
 	char* buffer = MEM_ALLOC_N(char, 256);
 	bzero(buffer, 255);
-	snprintf(buffer, 255, "%d", (double)inicio);
+	snprintf(buffer, 255, "%ld.%06ld", startTime.tv_sec, startTime.tv_usec);
 
 	fputs(buffer, arq);
 	fputs(";", arq);
 
 	bzero(buffer, 255);
-	snprintf(buffer, 255, "%d", (double)fim);
+	snprintf(buffer, 255, "%ld.%06ld", endTime.tv_sec, endTime.tv_usec);
 
 	fputs(buffer, arq);
 	fputs(";", arq);
 
 	bzero(buffer, 255);
-	snprintf(buffer, 255, "%d", intervalo);
+	snprintf(buffer, 255, "%ld.%06ld", intervaloS, intervaloU);
 
 	fputs(buffer, arq);
 	fputs(";\n", arq);
@@ -367,45 +354,4 @@ void logarTempo2(char* tipo, char* metodo, struct timeval startTime) {
 	struct timeval end;
 	gettimeofday(&end, NULL);
 	logarTempo(tipo, metodo, startTime, end);
-}
-
-void logarTempo3(char* tipo, char* metodo, double inicio) {
-
-	// Abre arquivo para computar o tempo
-	FILE *arq = Fopen("timer.csv", "a");
-
-        //Converte os tempos para milisegundos
-        double fim;
-	getTime(&fim);
-        double intervalo = (fim - inicio);
-
-	//printf("logarTempo: inicio=%.2f, fim=%.2f, intervalo=%.2f\n", inicio, fim, intervalo);
-	
-	fputs(tipo, arq);
-	fputs(";", arq);
-	fputs(metodo, arq);
-	fputs(";", arq);
-
-	char* buffer = MEM_ALLOC_N(char, 256);
-	bzero(buffer, 255);
-	snprintf(buffer, 255, "%.2f", inicio);
-
-	fputs(buffer, arq);
-	fputs(";", arq);
-
-	bzero(buffer, 255);
-	snprintf(buffer, 255, "%.2f", fim);
-
-	fputs(buffer, arq);
-	fputs(";", arq);
-
-	bzero(buffer, 255);
-	snprintf(buffer, 255, "%.2f", intervalo);
-
-	fputs(buffer, arq);
-	fputs(";\n", arq);
-	
-	// Fecha o arquivo
-	fclose(arq);
-
 }
