@@ -142,6 +142,11 @@ livro parseDbLineToLivro(char* line) {
 	// Realiza o parse da linha do csv
 	csvParse(line, parsedLine, 7);
 
+	if (strlen(parsedLine[0]) < 10) {
+		printf("empty parse\n");
+		return NULL;
+	}
+
 	// Aloca memoria para o livro
 	livro lv = (livro) MEM_ALLOC(livro);
 
