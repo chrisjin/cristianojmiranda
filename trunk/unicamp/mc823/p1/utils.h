@@ -103,14 +103,8 @@ char* getLine();
 
 int csvParse(char *line, char* list[], int list_size);
 
-// Obtem o tempo atual em milisegundos
-double getTime(double* pt);
-
 // Loga o tempo de execucao de um metodo
 void logarTempo(char* tipo, char* metodo, struct timeval startTime, struct timeval endTime);
 
 // Loga o tempo de execucao de um metodo
 void logarTempo2(char* tipo, char* metodo, struct timeval startTime);
-
-// Loga o tempo de execucao de um metodo
-void logarTempo3(char* tipo, char* metodo, double inicio);
