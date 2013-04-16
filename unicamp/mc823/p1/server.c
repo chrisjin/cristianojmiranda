@@ -231,7 +231,6 @@ void obterTodosLivros(int new_fd) {
 	// Caso nao exista livros na base
 	if (list_size > 0) {
 	
-	
 		int contador = 0;
 		while (it != NULL) {
 			livro lv = it->titulo;
@@ -239,9 +238,12 @@ void obterTodosLivros(int new_fd) {
 		
 				// Build line 
 				char* line = buildCsvLine(lv, 245);
+				char* ln = completeString(line, ";", 255);
+				printf("Enviando a linha: '%s', ln: '%s'\n", line, ln);
 
-				//int n = write(new_fd, line, 255);
-				int n  = send(new_fd, line, 255, 0);
+				int n = write(new_fd, ln, strlen(ln));
+				//int n  = send(new_fd, line, 255, 0);
+				//int n  = send(new_fd, line, strlen(line), 0);
 				printf("n=%d\n", n);
 				if (n < 0) {
         				perror("erro ao ler do socket");
@@ -259,7 +261,8 @@ void obterTodosLivros(int new_fd) {
 	
 	// Escreve final da response
 	printf("enviando response_end\n");
-	if (write(new_fd, RESPONSE_END, strlen(RESPONSE_END)) < 0) {
+	char* lnEnd = completeString(RESPONSE_END, ";", 255);
+	if (write(new_fd, lnEnd, strlen(lnEnd)) < 0) {
 		perror("erro ao escrever no socket");
 		exit(1);
 	}
