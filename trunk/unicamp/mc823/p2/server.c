@@ -10,6 +10,9 @@
 #include <sys/socket.h>
 #include <sys/wait.h>
 #include <sys/time.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <unistd.h>
 
 #include "mem.h"
 #include "server.h"
