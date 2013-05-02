@@ -13,6 +13,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <netdb.h>
 
 #include "mem.h"
 #include "server.h"
@@ -272,16 +273,18 @@ void obterTodosLivros(int new_fd) {
 
 }
 
-void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], sockaddr_in their_addr, socklen_t sin_size) {
+void enviar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct 
+sockaddr *their_addr, socklen_t sin_size) {
 
-	if (Sendto(sock_fd, buffer, BUFFER_SIZE, 0, their_addr, sin_size) < 0) {
+	if (sendto(sock_fd, buffer, BUFFER_SIZE, 0, their_addr, sin_size) < 
+0) {
 		perror("erro ao escrever no socket");
 		exit(1);
 	}
 }
 
 // Trata as novas conexoes
-void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], sockaddr_in* their_addr, socklen_t sin_size){
+void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr* their_addr, socklen_t sin_size){
 
 	printf("Tratando comando '%s'\n", buffer);
 	
@@ -295,12 +298,10 @@ void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], sockaddr_in* their
 		
 		// retornar usuario invalido 
 		strcpy(buffer, RESPONSE_USUARIO_INVALIDO);
-		if (write(new_fd, buffer, strlen(buffer)) < 0) {
+		if (write(sock_fd, buffer, strlen(buffer)) < 0) {
 			perror("erro ao escrever no socket");
 			exit(1);
 		}
-
-		break;
 
 	} else {
 		printf("Tratando conexao do usuario '%s'\n", 
@@ -309,27 +310,28 @@ usuario->nome);
 
 	if (strcmp(comando[1], OBTER_TODOS_ISBNS) == 0) {
 	
-		obterTodosIsbns(new_fd);
+		obterTodosIsbns(sock_fd);
 		
 	} else if (strcmp(comando[1], OBTER_DESCRICAO_POR_ISBN) == 0) {
 
-		tratarObterDescricaoPorIsbn(new_fd, comando[2]);
+		tratarObterDescricaoPorIsbn(sock_fd, comando[2]);
 	
 	} else if (strcmp(comando[1], OBTER_LIVRO_POR_ISBN) == 0) {
 
-		tratarObterLivro(new_fd, comando[2]);
+		tratarObterLivro(sock_fd, comando[2]);
 	
 	} else if (strcmp(comando[1], OBTER_TODOS_LIVROS) == 0) {
 	
-		obterTodosLivros(new_fd);
+		obterTodosLivros(sock_fd);
 	
 	} else if (strcmp(comando[1], ALTERAR_NR_EXEMPLARES_ESTOQUE) == 0) {
 	
-		alterarNrExemplaresEstoque(new_fd, comando[2], atoi(comando[3]), usuario);
+		alterarNrExemplaresEstoque(sock_fd, comando[2], 
+atoi(comando[3]), usuario);
 	
 	} else if (strcmp(comando[1], OBTER_NR_EXEMPLARES_ESTOQUE) == 0) {
 
-		obterExemplaresEmEstoque(new_fd, comando[2]);
+		obterExemplaresEmEstoque(sock_fd, comando[2]);
 
 	} else if (strcmp(comando[1], REQUEST_END) == 0) {
 
@@ -337,16 +339,15 @@ usuario->nome);
 
 		// Envia mensagem para o cliente finalizar a conexao
 		strcpy(buffer, RESPONSE_END);
-		if (write(new_fd, buffer, strlen(buffer)) < 0) {
+		if (write(sock_fd, buffer, strlen(buffer)) < 0) {
 			perror("erro ao escrever no socket");
 			exit(1);
 		}
 
-		break;
 	} else {
 		// Notifica o cliente sobre comando invalido
 		strcpy(buffer, RESPONSE_COMANDO_INVALIDO);
-		if (write(new_fd, buffer, BUFFER_SIZE) < 0) {
+		if (write(sock_fd, buffer, BUFFER_SIZE) < 0) {
 			perror("erro ao escrever no socket");
 			exit(1);
 		}
@@ -368,7 +369,6 @@ void executarServidor(int porta) {
 	// informacoes das conexoes
     	struct sockaddr_in their_addr;
 
-    	int sin_size;
 	void *yes;
 
 	if ((sock_fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
@@ -413,13 +413,14 @@ void executarServidor(int porta) {
 		bzero(buffer, BUFFER_SIZE + 1);
 
 		// Recebe mensagem do cliente via datagrama
-	        socket_t sin_size = sizeof(their_addr);
-		if (Recvfrom(sock_fd, buffer, BUFFER_SIZE, &their_addr, &sin_size) == -1) {
+	        int sin_size = sizeof(their_addr);
+		if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, &their_addr, 
+&sin_size) == -1) {
 	            perror("erro ao aceitar a conexao");
 	            continue;
         	}
 
 		// Trata a mensagem do cliente
-		tratar_mensagem(buffer, &their_addr, sin_size);
+		tratar_mensagem(sock_fd, buffer,(struct sockaddr*)&their_addr, sin_size);
     	}
 }
