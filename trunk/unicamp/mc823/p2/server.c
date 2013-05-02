@@ -9,7 +9,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/wait.h>
-#include<sys/time.h>
+#include <sys/time.h>
 
 #include "mem.h"
 #include "server.h"
@@ -269,7 +269,7 @@ void obterTodosLivros(int new_fd) {
 
 }
 
-void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], SA* their_addr, socklen_t sin_size) {
+void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], sockaddr_in their_addr, socklen_t sin_size) {
 
 	if (Sendto(sock_fd, buffer, BUFFER_SIZE, 0, their_addr, sin_size) < 0) {
 		perror("erro ao escrever no socket");
@@ -278,7 +278,7 @@ void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], SA* their_addr, so
 }
 
 // Trata as novas conexoes
-void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], SA* their_addr, socklen_t sin_size);
+void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], sockaddr_in* their_addr, socklen_t sin_size){
 
 	printf("Tratando comando '%s'\n", buffer);
 	
@@ -410,8 +410,8 @@ void executarServidor(int porta) {
 		bzero(buffer, BUFFER_SIZE + 1);
 
 		// Recebe mensagem do cliente via datagrama
-	        socket_t sin_size = sizeof(struct their_addr);
-		if (Recvfrom(sock_fd, buffer, BUFFER_SIZE, (struct sockaddr *)&their_addr, &sin_size) == -1) {
+	        socket_t sin_size = sizeof(their_addr);
+		if (Recvfrom(sock_fd, buffer, BUFFER_SIZE, &their_addr, &sin_size) == -1) {
 	            perror("erro ao aceitar a conexao");
 	            continue;
         	}
@@ -419,6 +419,4 @@ void executarServidor(int porta) {
 		// Trata a mensagem do cliente
 		tratar_mensagem(buffer, &their_addr, sin_size);
     	}
-	
-	return EXIT_SUCCESS;
 }
