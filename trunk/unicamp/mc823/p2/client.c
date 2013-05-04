@@ -14,6 +14,17 @@
 
 #define BUFFER_SIZE 255
 
+/**
+ * Envia mensagem para o cliente
+ */
+void enviar_mensagem(int sock_fd, char buffer[BUFFER_SIZE], struct sockaddr* their_addr) {
+
+	if (sendto(sock_fd, buffer, BUFFER_SIZE, 0, their_addr, sizeof(their_addr)) < 0) {
+		perror("erro ao escrever no socket");
+		exit(1);
+	}
+}
+
 // Imprime o menu de operacoes
 void printMenu() {
 	printf("\n===== MENU =====\n");	
@@ -124,37 +135,39 @@ void executarCliente(int porta, char* host) {
 
 	// Obtendo endereco do host
 	if ((he=gethostbyname(host)) == NULL) {
-        	perror("erro ao resolver host name");
-        	exit(1);
-    	}
+       	perror("erro ao resolver host name");
+       	exit(1);
+    }
 
 	// Criando descritor de socket
-    	if ((sock_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        	perror("erro ao criar descritor de socket");
-        	exit(1);
-    	}
+    if ((sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+       	perror("erro ao criar descritor de socket");
+       	exit(1);
+    }
 
+	memset((char *) &their_addr, 0, sizeof(their_addr));
+	
 	// Configura a ordem dos bytes
-    	their_addr.sin_family = AF_INET;         
+    their_addr.sin_family = AF_INET;         
 	
 	// Seta a porta de conexao
 	their_addr.sin_port = htons(porta);
 	
 	// Seta o endereco do host
-	their_addr.sin_addr = *((struct in_addr *)he->h_addr);
-    	bzero(&(their_addr.sin_zero), 8);
+	//their_addr.sin_addr = *((struct in_addr *)he->h_addr);
+	if (inet_aton(host, &their_addr.sin_addr)==0) {
+		fprintf(stderr, "inet_aton() failed\n");
+        exit(1);
+    }
+	
+    bzero(&(their_addr.sin_zero), 8);
 
-    	printf("Inicializando conexao com o servidor: %d.%d.%d.%d:%d\n", (int)their_addr.sin_addr.s_addr&0xFF, 
+    printf("Inicializando conexao com o servidor: %d.%d.%d.%d:%d\n", (int)their_addr.sin_addr.s_addr&0xFF, 
 		(int)((their_addr.sin_addr.s_addr&0xFF00)>>8), 
 		(int)((their_addr.sin_addr.s_addr&0xFF0000)>>16), 
 		(int)((their_addr.sin_addr.s_addr&0xFF000000)>>24),
 		ntohs(their_addr.sin_port));
 	
-	// Conectando ao host
-    	if (connect(sock_fd, (struct sockaddr *)&their_addr, sizeof(struct sockaddr)) < 0) {
-        	perror("erro ao conectar ao server");
-        	exit(1);
-    	}
     
 	printf("Cliente inicializado com sucesso\n");
 		
@@ -166,8 +179,10 @@ void executarCliente(int porta, char* host) {
 	// Timer para medir o tempo de execucao de cada operacao
 	struct timeval startTimer;
 
+	int sin_size = sizeof(their_addr);
+	
 	// Loop infinito tratando as demandas do usuario
-    	while (1) {
+    while (1) {
 			
 		// Imprime o menu e obtem a operacao
 		printMenu();
@@ -192,10 +207,7 @@ void executarCliente(int porta, char* host) {
 		gettimeofday(&startTimer, NULL);
 		
 		// Envia a mensagem para o usuario
-		if (write(sock_fd, buffer, strlen(buffer)) < 0) {
-			 perror("erro ao escrever no socket");
-			 exit(1);
-		}
+		enviar_mensagem(sock_fd, buffer, their_addr);
 
 		// ------ Lendo a resposta do servidor -------------------------------------
 		
@@ -204,7 +216,8 @@ void executarCliente(int porta, char* host) {
 			printf("ISBN       - TITULO\n");
 			while (1) {
 				bzero(buffer, BUFFER_SIZE + 1);
-				if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
+				
+				if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, &their_addr, &sin_size) < 0) {
 					perror("erro ao ler o socket");
 					exit(1);
 				}
@@ -225,7 +238,8 @@ void executarCliente(int porta, char* host) {
 		else if (operacao == 3) {
 		
 			bzero(buffer, BUFFER_SIZE + 1);
-			if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
+			
+			if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, &their_addr, &sin_size) < 0) {
 				 perror("erro ao ler o socket");
 				 exit(1);
 			}
@@ -249,8 +263,7 @@ void executarCliente(int porta, char* host) {
 			char bf[BUFFER_SIZE + 1];
 			while (1) {
 				bzero(bf, BUFFER_SIZE + 1);
- 				int n = read(sock_fd, bf, BUFFER_SIZE);
-				if (n < 0) {
+				if (recvfrom(sock_fd, bf, BUFFER_SIZE,0, &their_addr, &sin_size) < 0) {
 					perror("erro ao ler o socket");
 					exit(1);
 				}
@@ -283,7 +296,7 @@ void executarCliente(int porta, char* host) {
 			}
 		
 			bzero(buffer, BUFFER_SIZE + 1);
-			if (read(sock_fd, buffer, BUFFER_SIZE) < 0) {
+			if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, &their_addr, &sin_size) < 0) {
 				 perror("erro ao ler o socket");
 				 exit(1);
 			}
