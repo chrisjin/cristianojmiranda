@@ -315,10 +315,10 @@ void executarServidor(int porta) {
     }
 
 	// TODO: Verificar se necessario comitar isso!
-	/*if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+	if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
 	    perror("erro ao configurar socket setsockopt");
         exit(1);
-   	} */
+   	}
 
 	// Configura o endereco da conexao
 	memset((char *) &my_addr, 0, sizeof(my_addr));
