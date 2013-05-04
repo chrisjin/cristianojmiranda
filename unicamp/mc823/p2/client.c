@@ -8,6 +8,9 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <time.h>
+#include <sys/wait.h>
+#include <sys/time.h>
+#include <arpa/inet.h>
 
 #include "client.h"
 #include "amazonservice.h"
