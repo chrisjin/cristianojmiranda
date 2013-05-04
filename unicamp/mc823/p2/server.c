@@ -218,7 +218,9 @@ void obterTodosLivros(int sock_fd, struct sockaddr* their_addr) {
  */
 void enviar_mensagem(int sock_fd, char buffer[BUFFER_SIZE], struct sockaddr* their_addr) {
 
-	if (sendto(sock_fd, buffer, BUFFER_SIZE, 0, their_addr, sizeof(their_addr)) < 0) {
+	printf("Enviando mensagen para o cliente: '%s'\n", buffer);
+
+	if (sendto(sock_fd, buffer, strlen(buffer), 0, their_addr, sizeof(their_addr)) < 0) {
 		perror("erro ao escrever no socket");
 		exit(1);
 	}
