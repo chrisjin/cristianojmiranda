@@ -65,7 +65,7 @@ void obterTodosIsbns(int sock_fd, struct sockaddr* their_addr) {
 }
 
 // Trata a consulta de descricao por isbn
-void tratarObterDescricaoPorIsbn(int new_fd, char* isbn) {
+void tratarObterDescricaoPorIsbn(int sock_fd, struct sockaddr* their_addr, char* isbn) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -75,17 +75,9 @@ void tratarObterDescricaoPorIsbn(int new_fd, char* isbn) {
 	char* descricao = obterDescricaoPorISBN(isbn);
 	
 	if (descricao == NULL) {
-		
-		if (write(new_fd, ISBN_INVALIDO, strlen(ISBN_INVALIDO)) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		}
-		
-	} else {	
-		if (write(new_fd, descricao, strlen(descricao)) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		}
+		enviar_mensagem(sock_fd, ISBN_INVALIDO, their_addr);
+	} else {
+		enviar_mensagem(sock_fd, descricao, their_addr);
 	}
 	
 	// Loga o tempo de execucao
@@ -93,7 +85,7 @@ void tratarObterDescricaoPorIsbn(int new_fd, char* isbn) {
 }
 
 // Trata a pesquisa de todos os dados de um livro
-void tratarObterLivro(int new_fd, char* isbn) {
+void tratarObterLivro(int sock_fd, struct sockaddr* their_addr, char* isbn) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -103,20 +95,10 @@ void tratarObterLivro(int new_fd, char* isbn) {
 	livro lv = obterLivroPorISBN(isbn);
 	
 	if (lv == NULL) {
-	
-		if (write(new_fd, ISBN_INVALIDO, strlen(ISBN_INVALIDO)) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		}
-		
+		enviar_mensagem(sock_fd, ISBN_INVALIDO, their_addr);
 	} else {
-	
 		char* line = buildCsvLine(lv, BUFFER_SIZE - 10);
-		if (write(new_fd, line, strlen(line)) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		}
-	
+		enviar_mensagem(sock_fd, line, their_addr);
 	}
 	
 	// Loga o tempo de execucao
@@ -125,7 +107,7 @@ void tratarObterLivro(int new_fd, char* isbn) {
 }
 
 // Obtem o numero de exemplares em estoque da livraria
-void obterExemplaresEmEstoque(int new_fd, char* isbn) {
+void obterExemplaresEmEstoque(int sock_fd, struct sockaddr* their_addr, char* isbn) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -138,23 +120,14 @@ void obterExemplaresEmEstoque(int new_fd, char* isbn) {
 	printf("Quntidade obtida: %d.\n", qtd);
 	
 	if (qtd < 0) {
-	
-		if (write(new_fd, ISBN_INVALIDO, strlen(ISBN_INVALIDO)) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		}
-	
+		enviar_mensagem(sock_fd, ISBN_INVALIDO, their_addr);
 	} else {
 	
 		char* buffer = MEM_ALLOC_N(char, BUFFER_SIZE + 1);
 		bzero(buffer, BUFFER_SIZE);
 		snprintf(buffer, BUFFER_SIZE, "%d", qtd);
 		
-		if (write(new_fd, buffer, strlen(buffer)) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		}
-	
+		enviar_mensagem(sock_fd, buffer, their_addr);
 	}
 	
 	// Loga o tempo de execucao
@@ -162,7 +135,7 @@ void obterExemplaresEmEstoque(int new_fd, char* isbn) {
 }
 
 // Altera o nr de exmplares em estoque da livraria
-void alterarNrExemplaresEstoque(int new_fd, char* isbn, int qtd, Usuario usuario) {
+void alterarNrExemplaresEstoque(int sock_fd, struct sockaddr* their_addr, char* isbn, int qtd, Usuario usuario) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -172,36 +145,20 @@ void alterarNrExemplaresEstoque(int new_fd, char* isbn, int qtd, Usuario usuario
 
 	//  Verifica se o usuario pode realizar essa operacao
 	if (strcmp(usuario->tipoUsuario, USUARIO_CLIENTE) == 0) {
-	
 		// Notifica usuario sem acesso
-		if (write(new_fd, RESPONSE_USUARIO_SEM_PERMISSAO, strlen(RESPONSE_USUARIO_SEM_PERMISSAO)) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		}
-	
+		enviar_mensagem(sock_fd, RESPONSE_USUARIO_SEM_PERMISSAO, their_addr);
 	} else {
 	
 		// Altera o numero de exemplares em estoque
 		int rt = alterarNrExemplaresEstoquePorISBN(isbn, qtd);
 		
 		if (rt < 0) {
-		
 			// Notifica isbn invalido
-			if (write(new_fd, ISBN_INVALIDO, strlen(ISBN_INVALIDO)) < 0) {
-				perror("erro ao escrever no socket");
-				exit(1);
-			}
-		
-		} else {		
-		
+			enviar_mensagem(sock_fd, ISBN_INVALIDO, their_addr);
+		} else {
 			// Notifica operacao realizada com sucesso
-			if (write(new_fd, RESPONSE_OK, strlen(RESPONSE_OK)) < 0) {
-				perror("erro ao escrever no socket");
-				exit(1);
-			}
-		
+			enviar_mensagem(sock_fd, RESPONSE_OK, their_addr);
 		}
-	
 	}
 	
 	// Loga o tempo de execucao
@@ -209,7 +166,7 @@ void alterarNrExemplaresEstoque(int new_fd, char* isbn, int qtd, Usuario usuario
 }
 
 // Trata a consulta a todos os dados de livros
-void obterTodosLivros(int new_fd) {
+void obterTodosLivros(int sock_fd, struct sockaddr* their_addr) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -237,11 +194,7 @@ void obterTodosLivros(int new_fd) {
 				char* ln = completeString(line, ";", BUFFER_SIZE);
 
 				// Envia a mensagem para o servidor
-				int n = write(new_fd, ln, strlen(ln));
-				if (n < 0) {
-        				perror("erro ao ler do socket");
-				        exit(1);
-				}
+				enviar_mensagem(sock_fd, ln, their_addr);
 			}
 
 			if (++contador == list_size) {
@@ -254,10 +207,7 @@ void obterTodosLivros(int new_fd) {
 	// Escreve final da response
 	printf("enviando response_end\n");
 	char* lnEnd = completeString(RESPONSE_END, ";", BUFFER_SIZE);
-	if (write(new_fd, lnEnd, strlen(lnEnd)) < 0) {
-		perror("erro ao escrever no socket");
-		exit(1);
-	}
+	enviar_mensagem(sock_fd, lnEnd, their_addr);
 	
 	// Loga o tempo de execucao
 	logarTempo2(SERVER, OBTER_TODOS_LIVROS, inicio);
@@ -302,43 +252,36 @@ void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr* t
 		
 	} else if (strcmp(comando[1], OBTER_DESCRICAO_POR_ISBN) == 0) {
 
-		tratarObterDescricaoPorIsbn(sock_fd, comando[2]);
+		tratarObterDescricaoPorIsbn(sock_fd, their_addr, comando[2]);
 	
 	} else if (strcmp(comando[1], OBTER_LIVRO_POR_ISBN) == 0) {
 
-		tratarObterLivro(sock_fd, comando[2]);
+		tratarObterLivro(sock_fd, their_addr, comando[2]);
 	
 	} else if (strcmp(comando[1], OBTER_TODOS_LIVROS) == 0) {
-	
-		obterTodosLivros(sock_fd);
-	
+		
+		obterTodosLivros(sock_fd, their_addr);
+		
 	} else if (strcmp(comando[1], ALTERAR_NR_EXEMPLARES_ESTOQUE) == 0) {
-	
-		alterarNrExemplaresEstoque(sock_fd, comando[2], 
-atoi(comando[3]), usuario);
-	
+		
+		alterarNrExemplaresEstoque(sock_fd, their_addr, comando[2], atoi(comando[3]), usuario);
+		
 	} else if (strcmp(comando[1], OBTER_NR_EXEMPLARES_ESTOQUE) == 0) {
-
-		obterExemplaresEmEstoque(sock_fd, comando[2]);
-
+	
+		obterExemplaresEmEstoque(sock_fd, their_addr, comando[2]);
+		
 	} else if (strcmp(comando[1], REQUEST_END) == 0) {
 
 		printf("Finalizando conexao com o cliente...\n");
 
 		// Envia mensagem para o cliente finalizar a conexao
 		strcpy(buffer, RESPONSE_END);
-		if (write(sock_fd, buffer, strlen(buffer)) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		}
+		enviar_mensagem(sock_fd, buffer, their_addr);
 
 	} else {
 		// Notifica o cliente sobre comando invalido
 		strcpy(buffer, RESPONSE_COMANDO_INVALIDO);
-		if (write(sock_fd, buffer, BUFFER_SIZE) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		}
+		enviar_mensagem(sock_fd, buffer, their_addr);
 		printf("comando invalido\n");
 	}
 }
@@ -355,19 +298,18 @@ void executarServidor(int porta) {
 	struct sockaddr_in my_addr;
 	
 	// informacoes das conexoes
-    	struct sockaddr_in their_addr;
+    struct sockaddr_in their_addr;
 
 	void *yes;
-
 	if ((sock_fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
-	        perror("erro ao abrir o socket");
-        	exit(1);
-    	}
+	    perror("erro ao abrir o socket");
+       	exit(1);
+    }
 
 	// TODO: Verificar se necessario comitar isso!
 	if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
-	        perror("erro ao configurar socket setsockopt");
-        	exit(1);
+	    perror("erro ao configurar socket setsockopt");
+        exit(1);
    	} 
 
 	// Configura o endereco da conexao
