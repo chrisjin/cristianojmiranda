@@ -273,11 +273,12 @@ void obterTodosLivros(int new_fd) {
 
 }
 
-void enviar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct 
-sockaddr *their_addr, socklen_t sin_size) {
+/**
+ * Envia mensagem para o cliente
+ */
+void enviar_mensagem(int sock_fd, char buffer[BUFFER_SIZE], struct sockaddr* their_addr) {
 
-	if (sendto(sock_fd, buffer, BUFFER_SIZE, 0, their_addr, sin_size) < 
-0) {
+	if (sendto(sock_fd, buffer, BUFFER_SIZE, 0, their_addr, sizeof(their_addr)) < 0) {
 		perror("erro ao escrever no socket");
 		exit(1);
 	}
@@ -295,17 +296,13 @@ void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr* t
 	// Obtem o usuario
 	Usuario usuario = obterUsuarioPorDocumento(atoi(comando[0]));
 	if (usuario == NULL){
-		
+	
 		// retornar usuario invalido 
 		strcpy(buffer, RESPONSE_USUARIO_INVALIDO);
-		if (write(sock_fd, buffer, strlen(buffer)) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		}
+		enviar_mensagem(sock_fd, buffer, their_addr);
 
 	} else {
-		printf("Tratando conexao do usuario '%s'\n", 
-usuario->nome);
+		printf("Tratando conexao do usuario '%s'\n", usuario->nome);
 	}
 
 	if (strcmp(comando[1], OBTER_TODOS_ISBNS) == 0) {
@@ -390,17 +387,9 @@ void executarServidor(int porta) {
 	
 	// Bind socket address
 	if (bind(sock_fd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1) {
-	        perror("erro ao fazer socket bind");
-        	exit(1);
-    	}
-	
-	// List socket
-	/*
-	if (listen(sock_fd, SERVER_BACKLOG) == -1) {
-		perror("erro ao ouvir o socket");
-        	exit(1);
-	}
-	*/
+		perror("erro ao fazer socket bind");
+        exit(1);
+    }
 	
 	printf("Servidor operando em: %d.%d.%d.%d:%d\n", (int)my_addr.sin_addr.s_addr&0xFF, (int)((my_addr.sin_addr.s_addr&0xFF00)>>8), (int)((my_addr.sin_addr.s_addr&0xFF0000)>>16), (int)((my_addr.sin_addr.s_addr&0xFF000000)>>24), ntohs(my_addr.sin_port));
 
@@ -413,14 +402,13 @@ void executarServidor(int porta) {
 		bzero(buffer, BUFFER_SIZE + 1);
 
 		// Recebe mensagem do cliente via datagrama
-	        int sin_size = sizeof(their_addr);
-		if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, &their_addr, 
-&sin_size) == -1) {
-	            perror("erro ao aceitar a conexao");
-	            continue;
-        	}
+	    int sin_size = sizeof(their_addr);
+		if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, &their_addr, &sin_size) == -1) {
+			perror("erro ao aceitar a conexao");
+	        continue;
+        }
 
 		// Trata a mensagem do cliente
 		tratar_mensagem(sock_fd, buffer,(struct sockaddr*)&their_addr, sin_size);
-    	}
+    }
 }
