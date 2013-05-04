@@ -213,7 +213,7 @@ void executarCliente(int porta, char* host) {
 			while (1) {
 				bzero(buffer, BUFFER_SIZE + 1);
 				
-				if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, &their_addr, &sin_size) < 0) {
+				if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, NULL, NULL) < 0) {
 					perror("erro ao ler o socket");
 					exit(1);
 				}
@@ -235,7 +235,7 @@ void executarCliente(int porta, char* host) {
 		
 			bzero(buffer, BUFFER_SIZE + 1);
 			
-			if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, &their_addr, &sin_size) < 0) {
+			if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, NULL, NULL) < 0) {
 				 perror("erro ao ler o socket");
 				 exit(1);
 			}
@@ -259,7 +259,7 @@ void executarCliente(int porta, char* host) {
 			char bf[BUFFER_SIZE + 1];
 			while (1) {
 				bzero(bf, BUFFER_SIZE + 1);
-				if (recvfrom(sock_fd, bf, BUFFER_SIZE,0, &their_addr, &sin_size) < 0) {
+				if (recvfrom(sock_fd, bf, BUFFER_SIZE,0, NULL, NULL) < 0) {
 					perror("erro ao ler o socket");
 					exit(1);
 				}
@@ -292,7 +292,7 @@ void executarCliente(int porta, char* host) {
 			}
 		
 			bzero(buffer, BUFFER_SIZE + 1);
-			if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, &their_addr, &sin_size) < 0) {
+			if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, NULL, NULL) < 0) {
 				 perror("erro ao ler o socket");
 				 exit(1);
 			}
