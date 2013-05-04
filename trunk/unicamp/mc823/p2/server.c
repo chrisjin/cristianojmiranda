@@ -41,7 +41,7 @@ void obterTodosIsbns(int sock_fd, struct sockaddr_in* their_addr) {
 		while(ponteiroInicial < strlen(isbns)) {
 		
 			char* envio = strSubString(isbns, ponteiroInicial, ponteiroFinal);
-			enviar_mensagem(sock_fd, envio, their_addr);
+			enviar_mensagem(sock_fd, envio, &their_addr);
 			
 			ponteiroInicial += BUFFER_SIZE;
 			ponteiroFinal += BUFFER_SIZE;
@@ -57,7 +57,7 @@ void obterTodosIsbns(int sock_fd, struct sockaddr_in* their_addr) {
 	printf("enviando response_end\n");
 	
 	// TODO: Atencao pode ter problema aqui com o tamanha da response usar  strlen(RESPONSE_END)
-	enviar_mensagem(sock_fd, RESPONSE_END, their_addr);
+	enviar_mensagem(sock_fd, RESPONSE_END, &their_addr);
 	
 	// Loga o tempo de execucao
 	logarTempo2(SERVER, OBTER_TODOS_ISBNS, inicio);
