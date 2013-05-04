@@ -24,7 +24,7 @@
 #define BUFFER_SIZE 255
 
 // Trata a obtencao dos isbns
-void obterTodosIsbns(int sock_fd, char buffer[BUFFER_SIZE], struct sockaddr* their_addr) {
+void obterTodosIsbns(int sock_fd, struct sockaddr* their_addr) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -298,7 +298,7 @@ void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr* t
 
 	if (strcmp(comando[1], OBTER_TODOS_ISBNS) == 0) {
 	
-		obterTodosIsbns(sock_fd);
+		obterTodosIsbns(sock_fd, their_addr);
 		
 	} else if (strcmp(comando[1], OBTER_DESCRICAO_POR_ISBN) == 0) {
 
