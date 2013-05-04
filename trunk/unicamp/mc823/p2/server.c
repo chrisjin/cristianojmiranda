@@ -305,7 +305,8 @@ void executarServidor(int porta) {
     struct sockaddr_in their_addr;
 
 	void *yes;
-	if ((sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
+	//if ((sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
+	if ((sock_fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
 	    perror("erro ao abrir o socket");
        	exit(1);
     }
