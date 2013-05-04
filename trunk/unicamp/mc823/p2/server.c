@@ -355,6 +355,12 @@ void executarServidor(int porta) {
         }
 
 		// Trata a mensagem do cliente
-		tratar_mensagem(sock_fd, buffer, &their_addr, sin_size);
+		//tratar_mensagem(sock_fd, buffer, &their_addr, sin_size);
+		
+		// TODO: apenas um test
+		if (sendto(sock_fd, "budega!", strlen("budega!"), 0, &their_addr, sizeof(their_addr)) == -1) {
+			perror("erro sendto");
+			exit(1);
+		}
     }
 }
