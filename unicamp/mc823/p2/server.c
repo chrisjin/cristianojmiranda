@@ -23,7 +23,7 @@
 #define BUFFER_SIZE 255
 
 // Trata a obtencao dos isbns
-void obterTodosIsbns(int sock_fd, struct sockaddr* their_addr) {
+void obterTodosIsbns(int sock_fd, struct sockaddr_in* their_addr) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -64,7 +64,7 @@ void obterTodosIsbns(int sock_fd, struct sockaddr* their_addr) {
 }
 
 // Trata a consulta de descricao por isbn
-void tratarObterDescricaoPorIsbn(int sock_fd, struct sockaddr* their_addr, char* isbn) {
+void tratarObterDescricaoPorIsbn(int sock_fd, struct sockaddr_in* their_addr, char* isbn) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -84,7 +84,7 @@ void tratarObterDescricaoPorIsbn(int sock_fd, struct sockaddr* their_addr, char*
 }
 
 // Trata a pesquisa de todos os dados de um livro
-void tratarObterLivro(int sock_fd, struct sockaddr* their_addr, char* isbn) {
+void tratarObterLivro(int sock_fd, struct sockaddr_in* their_addr, char* isbn) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -106,7 +106,7 @@ void tratarObterLivro(int sock_fd, struct sockaddr* their_addr, char* isbn) {
 }
 
 // Obtem o numero de exemplares em estoque da livraria
-void obterExemplaresEmEstoque(int sock_fd, struct sockaddr* their_addr, char* isbn) {
+void obterExemplaresEmEstoque(int sock_fd, struct sockaddr_in* their_addr, char* isbn) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -134,7 +134,7 @@ void obterExemplaresEmEstoque(int sock_fd, struct sockaddr* their_addr, char* is
 }
 
 // Altera o nr de exmplares em estoque da livraria
-void alterarNrExemplaresEstoque(int sock_fd, struct sockaddr* their_addr, char* isbn, int qtd, Usuario usuario) {
+void alterarNrExemplaresEstoque(int sock_fd, struct sockaddr_in* their_addr, char* isbn, int qtd, Usuario usuario) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -165,7 +165,7 @@ void alterarNrExemplaresEstoque(int sock_fd, struct sockaddr* their_addr, char* 
 }
 
 // Trata a consulta a todos os dados de livros
-void obterTodosLivros(int sock_fd, struct sockaddr* their_addr) {
+void obterTodosLivros(int sock_fd, struct sockaddr_in* their_addr) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -216,19 +216,19 @@ void obterTodosLivros(int sock_fd, struct sockaddr* their_addr) {
 /**
  * Envia mensagem para o cliente
  */
-void enviar_mensagem(int sock_fd, char buffer[BUFFER_SIZE], struct sockaddr* their_addr) {
+void enviar_mensagem(int sock_fd, char buffer[BUFFER_SIZE], struct sockaddr_in* their_addr) {
 
 	printf("Enviando mensagen para o cliente: '%s'\n", buffer);
-	printf("Endereco Cliente %s:%d\n", inet_ntoa(their_addr.sin_addr), ntohs(their_addr.sin_port));
+	printf("Endereco Cliente %s:%d\n", inet_ntoa(their_addr->sin_addr), ntohs(their_addr->sin_port));
 
-	if (sendto(sock_fd, buffer, strlen(buffer), 0, their_addr, sizeof(their_addr)) < 0) {
+	if (sendto(sock_fd, buffer, strlen(buffer), 0, (struct sockaddr*)&their_addr, sizeof(their_addr)) < 0) {
 		perror("erro ao escrever no socket");
 		exit(1);
 	}
 }
 
 // Trata as novas conexoes
-void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr* their_addr, socklen_t sin_size){
+void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr_in* their_addr, socklen_t sin_size){
 
 	printf("Tratando comando '%s'\n", buffer);
 	
@@ -322,7 +322,7 @@ void executarServidor(int porta) {
 	bzero(&(my_addr.sin_zero), 8);
 	
 	// Bind socket address
-	if (bind(sock_fd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr)) == -1) {
+	if (bind(sock_fd, (struct sockaddr*)&my_addr, sizeof(struct sockaddr)) == -1) {
 		perror("erro ao fazer socket bind");
         exit(1);
     }
@@ -349,6 +349,6 @@ void executarServidor(int porta) {
         }
 
 		// Trata a mensagem do cliente
-		tratar_mensagem(sock_fd, buffer,(struct sockaddr*)&their_addr, sin_size);
+		tratar_mensagem(sock_fd, buffer, &their_addr, sin_size);
     }
 }
