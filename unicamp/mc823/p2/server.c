@@ -24,7 +24,7 @@
 #define BUFFER_SIZE 255
 
 // Trata a obtencao dos isbns
-void obterTodosIsbns(int new_fd) {
+void obterTodosIsbns(int sock_fd, char buffer[BUFFER_SIZE], struct sockaddr* their_addr) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -33,13 +33,8 @@ void obterTodosIsbns(int new_fd) {
 
 	// Pesquisa todos os isbns
 	char* isbns = obterTodosISBNS();
-	if (strlen(isbns) <= BUFFER_SIZE) {
-	
-		if (write(new_fd, isbns, strlen(isbns)) < 0) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		}
-		
+	if (strlen(isbns) <= BUFFER_SIZE) {	
+		enviar_mensagem(sock_fd, isbns, their_addr);
 	} else {
 	
 		int ponteiroInicial = 0;
@@ -47,10 +42,7 @@ void obterTodosIsbns(int new_fd) {
 		while(ponteiroInicial < strlen(isbns)) {
 		
 			char* envio = strSubString(isbns, ponteiroInicial, ponteiroFinal);
-			if (write(new_fd, envio, BUFFER_SIZE) < 0) {
-				perror("erro ao escrever no socket");
-				exit(1);
-			}
+			enviar_mensagem(sock_fd, envio, their_addr);
 			
 			ponteiroInicial += BUFFER_SIZE;
 			ponteiroFinal += BUFFER_SIZE;
@@ -64,10 +56,9 @@ void obterTodosIsbns(int new_fd) {
 	
 	// Escreve final da response
 	printf("enviando response_end\n");
-	if (write(new_fd, RESPONSE_END, strlen(RESPONSE_END)) < 0) {
-		perror("erro ao escrever no socket");
-		exit(1);
-	}
+	
+	// TODO: Atencao pode ter problema aqui com o tamanha da response usar  strlen(RESPONSE_END)
+	enviar_mensagem(sock_fd, RESPONSE_END, their_addr);
 	
 	// Loga o tempo de execucao
 	logarTempo2(SERVER, OBTER_TODOS_ISBNS, inicio);
