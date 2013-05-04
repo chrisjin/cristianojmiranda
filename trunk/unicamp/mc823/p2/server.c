@@ -325,10 +325,10 @@ void executarServidor(int porta) {
 	my_addr.sin_family = AF_INET;
 	my_addr.sin_port = htons(porta);
 	my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	bzero(&(my_addr.sin_zero), 8);
+	//bzero(&(my_addr.sin_zero), 8);
 	
 	// Bind socket address
-	if (bind(sock_fd, (struct sockaddr*)&my_addr, sizeof(struct sockaddr)) == -1) {
+	if (bind(sock_fd, (struct sockaddr*)&my_addr, sizeof(my_addr)) == -1) {
 		perror("erro ao fazer socket bind");
         exit(1);
     }
