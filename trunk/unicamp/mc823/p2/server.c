@@ -216,7 +216,7 @@ void obterTodosLivros(int sock_fd, struct sockaddr_in* their_addr) {
 /**
  * Envia mensagem para o cliente
  */
-void enviar_mensagem(int sock_fd, char* buffer, (struct sockaddr_in*) their_addr) {
+void enviar_mensagem(int sock_fd, char* buffer, struct sockaddr_in* their_addr) {
 
 	printf("Enviando mensagen para o cliente: '%s'\n", buffer);
 	printf("Endereco Cliente %s:%d\n", inet_ntoa(their_addr->sin_addr), ntohs(their_addr->sin_port));
