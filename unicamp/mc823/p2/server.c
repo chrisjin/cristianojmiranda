@@ -352,6 +352,6 @@ void executarServidor(int porta) {
         }
 
 		// Trata a mensagem do cliente
-		tratar_mensagem(sock_fd, buffer, their_addr, sin_size);
+		tratar_mensagem(sock_fd, buffer, &their_addr, sin_size);
     }
 }
