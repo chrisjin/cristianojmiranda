@@ -210,7 +210,7 @@ void executarCliente(int porta, char* host) {
 		gettimeofday(&startTimer, NULL);
 		
 		// Envia a mensagem para o usuario
-		enviar_mensagem(sock_fd, buffer, their_addr);
+		enviar_mensagem(sock_fd, buffer, (struct sockaddr*)&their_addr);
 
 		// ------ Lendo a resposta do servidor -------------------------------------
 		
