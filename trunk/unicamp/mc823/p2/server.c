@@ -22,6 +22,8 @@
 
 #define BUFFER_SIZE 255
 
+int sin_size;
+
 // Trata a obtencao dos isbns
 void obterTodosIsbns(int sock_fd, struct sockaddr_in* their_addr) {
 
@@ -223,7 +225,8 @@ void enviar_mensagem(int sock_fd, char* buffer, struct sockaddr_in* their_addr) 
 
 	int strLen = strlen(buffer);
 	size_t sizeAddr = sizeof(their_addr);
-	if (sendto(sock_fd, buffer, strLen, 0, (struct sockaddr *)&their_addr, sizeAddr) < 0) {
+	//if (sendto(sock_fd, buffer, strLen, 0, (struct sockaddr *)&their_addr, sizeAddr) < 0) {
+	if (sendto(sock_fd, buffer, strLen, 0, (struct sockaddr *)&their_addr, sin_size) < 0) {
 		perror("erro ao escrever no socket");
 		exit(1);
 	}
@@ -345,7 +348,7 @@ void executarServidor(int porta) {
 		bzero(buffer, BUFFER_SIZE + 1);
 
 		// Recebe mensagem do cliente via datagrama
-	    int sin_size = sizeof(their_addr);
+	    sin_size = sizeof(their_addr);
 		if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, &their_addr, &sin_size) < 0) {
 			perror("erro ao aceitar a conexao");
 	        continue;
