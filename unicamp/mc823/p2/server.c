@@ -324,7 +324,11 @@ void executarServidor(int porta) {
         exit(1);
     }
 	
-	printf("Servidor operando em: %d.%d.%d.%d:%d\n", (int)my_addr.sin_addr.s_addr&0xFF, (int)((my_addr.sin_addr.s_addr&0xFF00)>>8), (int)((my_addr.sin_addr.s_addr&0xFF0000)>>16), (int)((my_addr.sin_addr.s_addr&0xFF000000)>>24), ntohs(my_addr.sin_port));
+	printf("Servidor operando em: %d.%d.%d.%d:%d\n", (int)my_addr.sin_addr.s_addr&0xFF, 
+		(int)((my_addr.sin_addr.s_addr&0xFF00)>>8), 
+		(int)((my_addr.sin_addr.s_addr&0xFF0000)>>16), 
+		(int)((my_addr.sin_addr.s_addr&0xFF000000)>>24), 
+		ntohs(my_addr.sin_port));
 
 	char buffer[BUFFER_SIZE + 1];
 
@@ -336,7 +340,7 @@ void executarServidor(int porta) {
 
 		// Recebe mensagem do cliente via datagrama
 	    int sin_size = sizeof(their_addr);
-		if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, &their_addr, &sin_size) == -1) {
+		if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, &their_addr, &sin_size) < 0) {
 			perror("erro ao aceitar a conexao");
 	        continue;
         }
