@@ -132,7 +132,8 @@ void executarCliente(int porta, char* host) {
     }
 
 	// Criando descritor de socket
-    if ((sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+    //if ((sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0) {
+	if ((sock_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
        	perror("erro ao criar descritor de socket");
        	exit(1);
     }
