@@ -17,17 +17,6 @@
 
 #define BUFFER_SIZE 255
 
-/**
- * Envia mensagem para o cliente
- */
-void enviar_mensagem(int sock_fd, char buffer[BUFFER_SIZE], struct sockaddr* their_addr) {
-
-	if (sendto(sock_fd, buffer, BUFFER_SIZE, 0, their_addr, sizeof(their_addr)) < 0) {
-		perror("erro ao escrever no socket");
-		exit(1);
-	}
-}
-
 // Imprime o menu de operacoes
 void printMenu() {
 	printf("\n===== MENU =====\n");	
@@ -209,8 +198,11 @@ void executarCliente(int porta, char* host) {
 		// Obtem o tempo inicial
 		gettimeofday(&startTimer, NULL);
 		
-		// Envia a mensagem para o usuario
-		enviar_mensagem(sock_fd, buffer, (struct sockaddr*)&their_addr);
+		// Envia a mensagem para o servidor
+		if (sendto(sock_fd, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&their_addr, sizeof(their_addr)) < 0) {
+			perror("erro ao escrever no socket");
+			exit(1);
+		}
 
 		// ------ Lendo a resposta do servidor -------------------------------------
 		
