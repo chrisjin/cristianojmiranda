@@ -33,7 +33,7 @@ void obterTodosIsbns(int sock_fd, struct sockaddr* their_addr) {
 	// Pesquisa todos os isbns
 	char* isbns = obterTodosISBNS();
 	if (strlen(isbns) <= BUFFER_SIZE) {	
-		enviar_mensagem(sock_fd, isbns, their_addr);
+		enviar_mensagem(sock_fd, isbns, &their_addr);
 	} else {
 	
 		int ponteiroInicial = 0;
@@ -219,6 +219,7 @@ void obterTodosLivros(int sock_fd, struct sockaddr* their_addr) {
 void enviar_mensagem(int sock_fd, char buffer[BUFFER_SIZE], struct sockaddr* their_addr) {
 
 	printf("Enviando mensagen para o cliente: '%s'\n", buffer);
+	printf("Endereco Cliente %s:%d\n", inet_ntoa(their_addr.sin_addr), ntohs(their_addr.sin_port));
 
 	if (sendto(sock_fd, buffer, strlen(buffer), 0, their_addr, sizeof(their_addr)) < 0) {
 		perror("erro ao escrever no socket");
@@ -302,18 +303,19 @@ void executarServidor(int porta) {
     struct sockaddr_in their_addr;
 
 	void *yes;
-	if ((sock_fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+	if ((sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
 	    perror("erro ao abrir o socket");
        	exit(1);
     }
 
 	// TODO: Verificar se necessario comitar isso!
-	if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+	/*if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
 	    perror("erro ao configurar socket setsockopt");
         exit(1);
-   	} 
+   	} */
 
 	// Configura o endereco da conexao
+	memset((char *) &my_addr, 0, sizeof(my_addr));
 	my_addr.sin_family = AF_INET;
 	my_addr.sin_port = htons(porta);
 	my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
