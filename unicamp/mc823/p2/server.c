@@ -353,6 +353,8 @@ void executarServidor(int porta) {
 			perror("erro ao aceitar a conexao");
 	        continue;
         }
+		
+		printf("message: '%s'\n", buffer);
 
 		// Trata a mensagem do cliente
 		//tratar_mensagem(sock_fd, buffer, &their_addr, sin_size);
@@ -362,5 +364,7 @@ void executarServidor(int porta) {
 			perror("erro sendto");
 			exit(1);
 		}
+		
+		printf("resposta enviada!\n");
     }
 }
