@@ -228,20 +228,17 @@ void enviar_mensagem(char* buffer) {
 
 	printf("Enviando mensagen para o cliente: '%s'\n", buffer);
 	printf("Endereco Cliente %s:%d\n", inet_ntoa(their_addr.sin_addr), ntohs(their_addr.sin_port));
-
-	int strLen = strlen(buffer);
-	size_t sizeAddr = sizeof(their_addr);
-	//if (sendto(sock_fd, buffer, strLen, 0, (struct sockaddr *)&their_addr, sizeAddr) < 0) {
-	/*if (sendto(sock_fd, buffer, strLen, 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) < 0) {
-		perror("erro ao escrever no socket");
-		exit(1);
-	}*/
 	
-	// TODO: fake remove me
-	if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) == -1) {
+	if (sendto(sock_fd, buffer, strlen(buffer), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) < 0) {
 		perror("erro ao escrever no socket");
 		exit(1);
 	}
+	
+	// TODO: fake remove me
+	/*if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) == -1) {
+		perror("erro ao escrever no socket");
+		exit(1);
+	}*/
 }
 
 // Trata as novas conexoes
@@ -267,14 +264,14 @@ void tratar_mensagem(char* buffer){
 
 	if (strcmp(comando[1], OBTER_TODOS_ISBNS) == 0) {
 	
-		// TODO: fake remove me
-		if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) == -1) {
+		// TODO: fake remove me ! isso aqui funciona!
+		/*if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) == -1) {
 			perror("erro ao escrever no socket");
 			exit(1);
-		}
-		printf("budega enviada!\n");
+		} 
+		printf("budega enviada!\n"); */
 	
-		//obterTodosIsbns(sock_fd, their_addr);
+		obterTodosIsbns(sock_fd, their_addr);
 		
 	} else if (strcmp(comando[1], OBTER_DESCRICAO_POR_ISBN) == 0) {
 
