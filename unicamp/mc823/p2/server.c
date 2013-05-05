@@ -226,10 +226,12 @@ void enviar_mensagem(int sock_fd, char* buffer, struct sockaddr_in* their_addr) 
 	int strLen = strlen(buffer);
 	size_t sizeAddr = sizeof(their_addr);
 	//if (sendto(sock_fd, buffer, strLen, 0, (struct sockaddr *)&their_addr, sizeAddr) < 0) {
-	if (sendto(sock_fd, buffer, strLen, 0, (struct sockaddr *)&their_addr, sin_size) < 0) {
+	if (sendto(sock_fd, buffer, strLen, 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) < 0) {
 		perror("erro ao escrever no socket");
 		exit(1);
 	}
+	
+	//if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) == -1) {
 }
 
 // Trata as novas conexoes
