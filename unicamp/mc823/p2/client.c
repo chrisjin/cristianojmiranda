@@ -149,13 +149,6 @@ void executarCliente(int porta, char* host) {
 	
 	// Seta o endereco do host
 	server_addr.sin_addr = *((struct in_addr *)he->h_addr);
-	
-	/*if (inet_aton(host, &server_addr.sin_addr)==0) {
-		fprintf(stderr, "inet_aton() failed\n");
-        exit(1);
-    } */
-	
-    //bzero(&(server_addr.sin_zero), 8);
 
     printf("Inicializando conexao com o servidor: %d.%d.%d.%d:%d\n", (int)server_addr.sin_addr.s_addr&0xFF, 
 		(int)((server_addr.sin_addr.s_addr&0xFF00)>>8), 
@@ -215,12 +208,10 @@ void executarCliente(int porta, char* host) {
 			while (1) {
 				bzero(buffer, BUFFER_SIZE + 1);
 				
-				printf("aguardando servidor...\n");
 				if (recvfrom(sock_fd, buffer, BUFFER_SIZE, 0, NULL, NULL) < 0) {
 					perror("erro ao ler o socket");
 					exit(1);
 				}
-				printf("servidor responde!\n");
 				
 				// Verifica se o usuario e valido
 				notificarUsuarioInvalido(buffer);

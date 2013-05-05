@@ -64,7 +64,6 @@ void obterTodosIsbns() {
 	// Escreve final da response
 	printf("enviando response_end\n");
 	
-	// TODO: Atencao pode ter problema aqui com o tamanha da response usar  strlen(RESPONSE_END)
 	enviar_mensagem(RESPONSE_END);
 	
 	// Loga o tempo de execucao
@@ -233,12 +232,6 @@ void enviar_mensagem(char* buffer) {
 		perror("erro ao escrever no socket");
 		exit(1);
 	}
-	
-	// TODO: fake remove me
-	/*if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) == -1) {
-		perror("erro ao escrever no socket");
-		exit(1);
-	}*/
 }
 
 // Trata as novas conexoes
@@ -264,13 +257,6 @@ void tratar_mensagem(char* buffer){
 
 	if (strcmp(comando[1], OBTER_TODOS_ISBNS) == 0) {
 	
-		// TODO: fake remove me ! isso aqui funciona!
-		/*if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) == -1) {
-			perror("erro ao escrever no socket");
-			exit(1);
-		} 
-		printf("budega enviada!\n"); */
-	
 		obterTodosIsbns(sock_fd, their_addr);
 		
 	} else if (strcmp(comando[1], OBTER_DESCRICAO_POR_ISBN) == 0) {
@@ -293,19 +279,13 @@ void tratar_mensagem(char* buffer){
 	
 		obterExemplaresEmEstoque(comando[2]);
 		
-	} else if (strcmp(comando[1], REQUEST_END) == 0) {
-
-		printf("Finalizando conexao com o cliente...\n");
-
-		// Envia mensagem para o cliente finalizar a conexao
-		strcpy(buffer, RESPONSE_END);
-		enviar_mensagem(buffer);
-
 	} else {
+	
 		// Notifica o cliente sobre comando invalido
 		strcpy(buffer, RESPONSE_COMANDO_INVALIDO);
 		enviar_mensagem(buffer);
 		printf("comando invalido\n");
+		
 	}
 }
 
@@ -318,13 +298,11 @@ void executarServidor(int porta) {
 	struct sockaddr_in my_addr;
 
 	void *yes;
-	//if ((sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
 	if ((sock_fd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
 	    perror("erro ao abrir o socket");
        	exit(1);
     }
 
-	// TODO: Verificar se necessario comitar isso!
 	if (setsockopt(sock_fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
 	    perror("erro ao configurar socket setsockopt");
         exit(1);
@@ -336,7 +314,6 @@ void executarServidor(int porta) {
 	my_addr.sin_family = AF_INET;
 	my_addr.sin_port = htons(porta);
 	my_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	//bzero(&(my_addr.sin_zero), 8);
 	
 	// Bind socket address
 	if (bind(sock_fd, (struct sockaddr*)&my_addr, sizeof(my_addr)) == -1) {
@@ -369,13 +346,7 @@ void executarServidor(int porta) {
 
 		// Trata a mensagem do cliente
 		tratar_mensagem(buffer);
-		
-		// TODO: apenas um test
-		/*if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) == -1) {
-			perror("erro sendto");
-			exit(1);
-		}*/
-		
+
 		printf("resposta enviada!\n");
     }
 }
