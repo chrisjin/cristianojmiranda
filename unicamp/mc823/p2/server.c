@@ -22,10 +22,16 @@
 
 #define BUFFER_SIZE 255
 
+// server ouvindo em sock_fd
+int sock_fd;
+
 int sin_size;
 
+// informacoes das conexoes
+struct sockaddr_in their_addr;
+
 // Trata a obtencao dos isbns
-void obterTodosIsbns(int sock_fd, struct sockaddr_in* their_addr) {
+void obterTodosIsbns() {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -35,7 +41,7 @@ void obterTodosIsbns(int sock_fd, struct sockaddr_in* their_addr) {
 	// Pesquisa todos os isbns
 	char* isbns = obterTodosISBNS();
 	if (strlen(isbns) <= BUFFER_SIZE) {	
-		enviar_mensagem(sock_fd, isbns, their_addr);
+		enviar_mensagem(isbns);
 	} else {
 	
 		int ponteiroInicial = 0;
@@ -43,7 +49,7 @@ void obterTodosIsbns(int sock_fd, struct sockaddr_in* their_addr) {
 		while(ponteiroInicial < strlen(isbns)) {
 		
 			char* envio = strSubString(isbns, ponteiroInicial, ponteiroFinal);
-			enviar_mensagem(sock_fd, envio, their_addr);
+			enviar_mensagem(envio);
 			
 			ponteiroInicial += BUFFER_SIZE;
 			ponteiroFinal += BUFFER_SIZE;
@@ -59,14 +65,14 @@ void obterTodosIsbns(int sock_fd, struct sockaddr_in* their_addr) {
 	printf("enviando response_end\n");
 	
 	// TODO: Atencao pode ter problema aqui com o tamanha da response usar  strlen(RESPONSE_END)
-	enviar_mensagem(sock_fd, RESPONSE_END, their_addr);
+	enviar_mensagem(RESPONSE_END);
 	
 	// Loga o tempo de execucao
 	logarTempo2(SERVER, OBTER_TODOS_ISBNS, inicio);
 }
 
 // Trata a consulta de descricao por isbn
-void tratarObterDescricaoPorIsbn(int sock_fd, struct sockaddr_in* their_addr, char* isbn) {
+void tratarObterDescricaoPorIsbn(char* isbn) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -76,9 +82,9 @@ void tratarObterDescricaoPorIsbn(int sock_fd, struct sockaddr_in* their_addr, ch
 	char* descricao = obterDescricaoPorISBN(isbn);
 	
 	if (descricao == NULL) {
-		enviar_mensagem(sock_fd, ISBN_INVALIDO, their_addr);
+		enviar_mensagem(ISBN_INVALIDO);
 	} else {
-		enviar_mensagem(sock_fd, descricao, their_addr);
+		enviar_mensagem(descricao);
 	}
 	
 	// Loga o tempo de execucao
@@ -86,7 +92,7 @@ void tratarObterDescricaoPorIsbn(int sock_fd, struct sockaddr_in* their_addr, ch
 }
 
 // Trata a pesquisa de todos os dados de um livro
-void tratarObterLivro(int sock_fd, struct sockaddr_in* their_addr, char* isbn) {
+void tratarObterLivro(char* isbn) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -96,10 +102,10 @@ void tratarObterLivro(int sock_fd, struct sockaddr_in* their_addr, char* isbn) {
 	livro lv = obterLivroPorISBN(isbn);
 	
 	if (lv == NULL) {
-		enviar_mensagem(sock_fd, ISBN_INVALIDO, their_addr);
+		enviar_mensagem(ISBN_INVALIDO);
 	} else {
 		char* line = buildCsvLine(lv, BUFFER_SIZE - 10);
-		enviar_mensagem(sock_fd, line, their_addr);
+		enviar_mensagem(line);
 	}
 	
 	// Loga o tempo de execucao
@@ -108,7 +114,7 @@ void tratarObterLivro(int sock_fd, struct sockaddr_in* their_addr, char* isbn) {
 }
 
 // Obtem o numero de exemplares em estoque da livraria
-void obterExemplaresEmEstoque(int sock_fd, struct sockaddr_in* their_addr, char* isbn) {
+void obterExemplaresEmEstoque(char* isbn) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -121,14 +127,14 @@ void obterExemplaresEmEstoque(int sock_fd, struct sockaddr_in* their_addr, char*
 	printf("Quntidade obtida: %d.\n", qtd);
 	
 	if (qtd < 0) {
-		enviar_mensagem(sock_fd, ISBN_INVALIDO, their_addr);
+		enviar_mensagem(ISBN_INVALIDO);
 	} else {
 	
 		char* buffer = MEM_ALLOC_N(char, BUFFER_SIZE + 1);
 		bzero(buffer, BUFFER_SIZE);
 		snprintf(buffer, BUFFER_SIZE, "%d", qtd);
 		
-		enviar_mensagem(sock_fd, buffer, their_addr);
+		enviar_mensagem(buffer);
 	}
 	
 	// Loga o tempo de execucao
@@ -136,7 +142,7 @@ void obterExemplaresEmEstoque(int sock_fd, struct sockaddr_in* their_addr, char*
 }
 
 // Altera o nr de exmplares em estoque da livraria
-void alterarNrExemplaresEstoque(int sock_fd, struct sockaddr_in* their_addr, char* isbn, int qtd, Usuario usuario) {
+void alterarNrExemplaresEstoque(char* isbn, int qtd, Usuario usuario) {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -147,7 +153,7 @@ void alterarNrExemplaresEstoque(int sock_fd, struct sockaddr_in* their_addr, cha
 	//  Verifica se o usuario pode realizar essa operacao
 	if (strcmp(usuario->tipoUsuario, USUARIO_CLIENTE) == 0) {
 		// Notifica usuario sem acesso
-		enviar_mensagem(sock_fd, RESPONSE_USUARIO_SEM_PERMISSAO, their_addr);
+		enviar_mensagem(RESPONSE_USUARIO_SEM_PERMISSAO);
 	} else {
 	
 		// Altera o numero de exemplares em estoque
@@ -155,10 +161,10 @@ void alterarNrExemplaresEstoque(int sock_fd, struct sockaddr_in* their_addr, cha
 		
 		if (rt < 0) {
 			// Notifica isbn invalido
-			enviar_mensagem(sock_fd, ISBN_INVALIDO, their_addr);
+			enviar_mensagem(ISBN_INVALIDO);
 		} else {
 			// Notifica operacao realizada com sucesso
-			enviar_mensagem(sock_fd, RESPONSE_OK, their_addr);
+			enviar_mensagem(RESPONSE_OK);
 		}
 	}
 	
@@ -167,7 +173,7 @@ void alterarNrExemplaresEstoque(int sock_fd, struct sockaddr_in* their_addr, cha
 }
 
 // Trata a consulta a todos os dados de livros
-void obterTodosLivros(int sock_fd, struct sockaddr_in* their_addr) {
+void obterTodosLivros() {
 
 	// Obtem o tempo inicial
 	struct timeval inicio;
@@ -195,7 +201,7 @@ void obterTodosLivros(int sock_fd, struct sockaddr_in* their_addr) {
 				char* ln = completeString(line, ";", BUFFER_SIZE);
 
 				// Envia a mensagem para o servidor
-				enviar_mensagem(sock_fd, ln, their_addr);
+				enviar_mensagem(ln);
 			}
 
 			if (++contador == list_size) {
@@ -208,7 +214,7 @@ void obterTodosLivros(int sock_fd, struct sockaddr_in* their_addr) {
 	// Escreve final da response
 	printf("enviando response_end\n");
 	char* lnEnd = completeString(RESPONSE_END, ";", BUFFER_SIZE);
-	enviar_mensagem(sock_fd, lnEnd, their_addr);
+	enviar_mensagem(lnEnd);
 	
 	// Loga o tempo de execucao
 	logarTempo2(SERVER, OBTER_TODOS_LIVROS, inicio);
@@ -218,7 +224,7 @@ void obterTodosLivros(int sock_fd, struct sockaddr_in* their_addr) {
 /**
  * Envia mensagem para o cliente
  */
-void enviar_mensagem(int sock_fd, char* buffer, struct sockaddr_in* their_addr) {
+void enviar_mensagem(char* buffer) {
 
 	printf("Enviando mensagen para o cliente: '%s'\n", buffer);
 	printf("Endereco Cliente %s:%d\n", inet_ntoa(their_addr->sin_addr), ntohs(their_addr->sin_port));
@@ -239,7 +245,7 @@ void enviar_mensagem(int sock_fd, char* buffer, struct sockaddr_in* their_addr) 
 }
 
 // Trata as novas conexoes
-void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr_in* their_addr){
+void tratar_mensagem(char* buffer){
 
 	printf("Tratando comando '%s'\n", buffer);
 	
@@ -253,7 +259,7 @@ void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr_in
 	
 		// retornar usuario invalido 
 		strcpy(buffer, RESPONSE_USUARIO_INVALIDO);
-		enviar_mensagem(sock_fd, buffer, their_addr);
+		enviar_mensagem(buffer);
 
 	} else {
 		printf("Tratando conexao do usuario '%s'\n", usuario->nome);
@@ -272,23 +278,23 @@ void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr_in
 		
 	} else if (strcmp(comando[1], OBTER_DESCRICAO_POR_ISBN) == 0) {
 
-		tratarObterDescricaoPorIsbn(sock_fd, their_addr, comando[2]);
+		tratarObterDescricaoPorIsbn(comando[2]);
 	
 	} else if (strcmp(comando[1], OBTER_LIVRO_POR_ISBN) == 0) {
 
-		tratarObterLivro(sock_fd, their_addr, comando[2]);
+		tratarObterLivro(comando[2]);
 	
 	} else if (strcmp(comando[1], OBTER_TODOS_LIVROS) == 0) {
 		
-		obterTodosLivros(sock_fd, their_addr);
+		obterTodosLivros();
 		
 	} else if (strcmp(comando[1], ALTERAR_NR_EXEMPLARES_ESTOQUE) == 0) {
 		
-		alterarNrExemplaresEstoque(sock_fd, their_addr, comando[2], atoi(comando[3]), usuario);
+		alterarNrExemplaresEstoque(comando[2], atoi(comando[3]), usuario);
 		
 	} else if (strcmp(comando[1], OBTER_NR_EXEMPLARES_ESTOQUE) == 0) {
 	
-		obterExemplaresEmEstoque(sock_fd, their_addr, comando[2]);
+		obterExemplaresEmEstoque(comando[2]);
 		
 	} else if (strcmp(comando[1], REQUEST_END) == 0) {
 
@@ -296,12 +302,12 @@ void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr_in
 
 		// Envia mensagem para o cliente finalizar a conexao
 		strcpy(buffer, RESPONSE_END);
-		enviar_mensagem(sock_fd, buffer, their_addr);
+		enviar_mensagem(buffer);
 
 	} else {
 		// Notifica o cliente sobre comando invalido
 		strcpy(buffer, RESPONSE_COMANDO_INVALIDO);
-		enviar_mensagem(sock_fd, buffer, their_addr);
+		enviar_mensagem(buffer);
 		printf("comando invalido\n");
 	}
 }
@@ -310,15 +316,9 @@ void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr_in
 void executarServidor(int porta) {
 
 	printf("inicializando servidor na porta '%d'....\n", porta);
-
-	// server ouvindo em sock_fd
-	int sock_fd;
 	
 	// informacoes da endereco da conexao
 	struct sockaddr_in my_addr;
-	
-	// informacoes das conexoes
-    struct sockaddr_in their_addr;
 
 	void *yes;
 	//if ((sock_fd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1) {
@@ -371,7 +371,7 @@ void executarServidor(int porta) {
 		printf("message: '%s'\n", buffer);
 
 		// Trata a mensagem do cliente
-		tratar_mensagem(sock_fd, buffer, &their_addr);
+		tratar_mensagem(buffer);
 		
 		// TODO: apenas um test
 		/*if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) == -1) {
