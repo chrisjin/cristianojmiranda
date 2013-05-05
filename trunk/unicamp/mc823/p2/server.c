@@ -227,7 +227,7 @@ void obterTodosLivros() {
 void enviar_mensagem(char* buffer) {
 
 	printf("Enviando mensagen para o cliente: '%s'\n", buffer);
-	printf("Endereco Cliente %s:%d\n", inet_ntoa(their_addr->sin_addr), ntohs(their_addr->sin_port));
+	printf("Endereco Cliente %s:%d\n", inet_ntoa(their_addr.sin_addr), ntohs(their_addr.sin_port));
 
 	int strLen = strlen(buffer);
 	size_t sizeAddr = sizeof(their_addr);
