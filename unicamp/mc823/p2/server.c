@@ -268,7 +268,7 @@ void tratar_mensagem(char* buffer){
 	if (strcmp(comando[1], OBTER_TODOS_ISBNS) == 0) {
 	
 		// TODO: fake remove me
-		if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)their_addr, sizeof(their_addr)) == -1) {
+		if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) == -1) {
 			perror("erro ao escrever no socket");
 			exit(1);
 		}
