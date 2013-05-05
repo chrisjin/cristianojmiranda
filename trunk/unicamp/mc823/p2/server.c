@@ -239,7 +239,7 @@ void enviar_mensagem(int sock_fd, char* buffer, struct sockaddr_in* their_addr) 
 }
 
 // Trata as novas conexoes
-void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr_in* their_addr, socklen_t sin_size){
+void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr_in* their_addr){
 
 	printf("Tratando comando '%s'\n", buffer);
 	
@@ -262,10 +262,11 @@ void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr_in
 	if (strcmp(comando[1], OBTER_TODOS_ISBNS) == 0) {
 	
 		// TODO: fake remove me
-		if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) == -1) {
+		if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)their_addr, sizeof(their_addr)) == -1) {
 			perror("erro ao escrever no socket");
 			exit(1);
 		}
+		printf("budega enviada!\n");
 	
 		//obterTodosIsbns(sock_fd, their_addr);
 		
@@ -370,7 +371,7 @@ void executarServidor(int porta) {
 		printf("message: '%s'\n", buffer);
 
 		// Trata a mensagem do cliente
-		tratar_mensagem(sock_fd, buffer, &their_addr, sin_size);
+		tratar_mensagem(sock_fd, buffer, &their_addr);
 		
 		// TODO: apenas um test
 		/*if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) == -1) {
