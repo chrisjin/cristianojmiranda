@@ -322,6 +322,7 @@ void executarServidor(int porta) {
 
 	// Configura o endereco da conexao
 	memset((char *) &my_addr, 0, sizeof(my_addr));
+	bzero(&my_addr, sizeof(my_addr));
 	my_addr.sin_family = AF_INET;
 	my_addr.sin_port = htons(porta);
 	my_addr.sin_addr.s_addr = htonl(INADDR_ANY);

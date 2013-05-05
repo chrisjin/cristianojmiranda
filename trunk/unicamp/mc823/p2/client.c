@@ -108,10 +108,10 @@ void executarCliente(int porta, char* host) {
 	
 	// Descritor de socket
 	int sock_fd;
-	struct hostent *he;
+	struct hostent* he;
 	
 	// Endereco de conexao
-	struct sockaddr_in their_addr;
+	struct sockaddr_in server_addr;
 	
 	// Buffer de troca de mensagem entre o servidor e o cliente
 	char buffer[BUFFER_SIZE + 1];
@@ -138,28 +138,30 @@ void executarCliente(int porta, char* host) {
        	exit(1);
     }
 
-	memset((char *) &their_addr, 0, sizeof(their_addr));
+	bzero(&server_addr, sizeof(server_addr));
+	memset((char *) &server_addr, 0, sizeof(server_addr));
 	
 	// Configura a ordem dos bytes
-    their_addr.sin_family = AF_INET;         
+    server_addr.sin_family = AF_INET;         
 	
 	// Seta a porta de conexao
-	their_addr.sin_port = htons(porta);
+	server_addr.sin_port = htons(porta);
 	
 	// Seta o endereco do host
-	//their_addr.sin_addr = *((struct in_addr *)he->h_addr);
-	if (inet_aton(host, &their_addr.sin_addr)==0) {
+	server_addr.sin_addr = *((struct in_addr *)he->h_addr);
+	
+	/*if (inet_aton(host, &server_addr.sin_addr)==0) {
 		fprintf(stderr, "inet_aton() failed\n");
         exit(1);
-    }
+    } */
 	
-    bzero(&(their_addr.sin_zero), 8);
+    //bzero(&(server_addr.sin_zero), 8);
 
-    printf("Inicializando conexao com o servidor: %d.%d.%d.%d:%d\n", (int)their_addr.sin_addr.s_addr&0xFF, 
-		(int)((their_addr.sin_addr.s_addr&0xFF00)>>8), 
-		(int)((their_addr.sin_addr.s_addr&0xFF0000)>>16), 
-		(int)((their_addr.sin_addr.s_addr&0xFF000000)>>24),
-		ntohs(their_addr.sin_port));
+    printf("Inicializando conexao com o servidor: %d.%d.%d.%d:%d\n", (int)server_addr.sin_addr.s_addr&0xFF, 
+		(int)((server_addr.sin_addr.s_addr&0xFF00)>>8), 
+		(int)((server_addr.sin_addr.s_addr&0xFF0000)>>16), 
+		(int)((server_addr.sin_addr.s_addr&0xFF000000)>>24),
+		ntohs(server_addr.sin_port));
 	
     
 	printf("Cliente inicializado com sucesso\n");
@@ -172,7 +174,7 @@ void executarCliente(int porta, char* host) {
 	// Timer para medir o tempo de execucao de cada operacao
 	struct timeval startTimer;
 
-	int sin_size = sizeof(their_addr);
+	int sin_size = sizeof(server_addr);
 	
 	// Loop infinito tratando as demandas do usuario
     while (1) {
@@ -200,7 +202,7 @@ void executarCliente(int porta, char* host) {
 		gettimeofday(&startTimer, NULL);
 		
 		// Envia a mensagem para o servidor
-		if (sendto(sock_fd, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&their_addr, sizeof(their_addr)) < 0) {
+		if (sendto(sock_fd, buffer, BUFFER_SIZE, 0, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
 			perror("erro ao escrever no socket");
 			exit(1);
 		}
