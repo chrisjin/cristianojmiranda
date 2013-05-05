@@ -215,10 +215,12 @@ void executarCliente(int porta, char* host) {
 			while (1) {
 				bzero(buffer, BUFFER_SIZE + 1);
 				
-				if (recvfrom(sock_fd, buffer, BUFFER_SIZE,0, NULL, NULL) < 0) {
+				printf("aguardando servidor...\n");
+				if (recvfrom(sock_fd, buffer, BUFFER_SIZE, 0, NULL, NULL) < 0) {
 					perror("erro ao ler o socket");
 					exit(1);
 				}
+				printf("servidor responde!\n");
 				
 				// Verifica se o usuario e valido
 				notificarUsuarioInvalido(buffer);
