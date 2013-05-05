@@ -261,7 +261,13 @@ void tratar_mensagem(int sock_fd, char buffer[BUFFER_SIZE+1], struct sockaddr_in
 
 	if (strcmp(comando[1], OBTER_TODOS_ISBNS) == 0) {
 	
-		obterTodosIsbns(sock_fd, their_addr);
+		// TODO: fake remove me
+		if (sendto(sock_fd, "budega!", strlen("budega!"), 0, (struct sockaddr *)&their_addr, sizeof(their_addr)) == -1) {
+			perror("erro ao escrever no socket");
+			exit(1);
+		}
+	
+		//obterTodosIsbns(sock_fd, their_addr);
 		
 	} else if (strcmp(comando[1], OBTER_DESCRICAO_POR_ISBN) == 0) {
 
