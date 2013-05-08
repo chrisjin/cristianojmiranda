@@ -1,4 +1,4 @@
-# Project: mc823-S2013-p1 - MiniAmazon
+# Project: mc823-S12013-p2 - MiniAmazon
 # Makefile
 
 CPP  = g++
@@ -10,20 +10,20 @@ LINKOBJ  = mem.o io.o utils.o controleacesso.o amazonservice.o server.o client.o
 LIBS =   
 INCS = 
 CXXINCS = 
-BIN  = mc823-S2013-p1
+BIN  = mc823-S12013-p2
 CXXFLAGS = $(CXXINCS)  
 CFLAGS = $(INCS)  
 RM = rm -f
 
 .PHONY: all all-before all-after clean clean-custom
 
-all: all-before mc823-S2013-p1 all-after
+all: all-before mc823-S12013-p2 all-after
 
 clean: clean-custom
 	${RM} $(OBJ) $(BIN)
 
 $(BIN): $(OBJ)
-	$(CC) $(LINKOBJ) -o "mc823-S2013-p1-ra083382" -g $(LIBS)
+	$(CC) $(LINKOBJ) -o "mc823-S12013-p2-ra083382" -g $(LIBS)
         
 mem.o: mem.c
 	$(CC)  -c mem.c -o mem.o $(CFLAGS)
