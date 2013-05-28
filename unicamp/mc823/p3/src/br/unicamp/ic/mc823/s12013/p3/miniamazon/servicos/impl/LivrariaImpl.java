@@ -31,7 +31,7 @@ public class LivrariaImpl implements Livraria {
 		exemplaresDb = new ArrayList<Exemplar>();
 
 		for (int i = 0; i < 100; i++) {
-			exemplaresDb.add(Exemplar.criarExemplarFake());
+			exemplaresDb.add(Exemplar.criarExemplarFake(i));
 		}
 
 	}

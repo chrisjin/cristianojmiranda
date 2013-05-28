@@ -80,9 +80,10 @@ public class Exemplar implements Serializable {
 	}
 
 	/**
+	 * @param i
 	 * @return
 	 */
-	public static Exemplar criarExemplarFake() {
+	public static Exemplar criarExemplarFake(int i) {
 
 		Random rdm = new Random();
 
@@ -91,9 +92,14 @@ public class Exemplar implements Serializable {
 			anoPublicacao = rdm.nextInt(2013);
 		}
 
-		int isbnNr = rdm.nextInt(999999999);
-		String isbn = StringUtils.completarEsquerda(String.valueOf(isbnNr),
-				"0", 10);
+		String isbn = null;
+		if (i < 0) {
+			int isbnNr = rdm.nextInt(999999999);
+			isbn = StringUtils.completarEsquerda(String.valueOf(isbnNr), "0",
+					10);
+		} else {
+			isbn = StringUtils.completarEsquerda(String.valueOf(i), "0", 10);
+		}
 
 		String[] titulos = new String[] {
 				"carlota joaquina a princesa do brasil", "central do brasil",

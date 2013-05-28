@@ -62,16 +62,14 @@ public class MiniAmazonCliente {
 	 */
 	private void imprimirLivro(Exemplar exemplar) {
 
-		System.out.println("\n--- Dados do Livro ---\n");
-		System.out.println("\tISBN: " + exemplar.getIsbn() + "\n");
-		System.out.println("\tTitulo: " + exemplar.getTitulo() + "\n");
-		System.out.println("\tAutores: " + exemplar.getAutores() + "\n");
-		System.out.println("\tEditora: " + exemplar.getEditora() + "\n");
-		System.out.println("\tAno Publicacao: " + exemplar.getAnoPublicacao()
-				+ "\n");
-		System.out.println("\tDescricao: " + exemplar.getDescricao() + "\n");
-		System.out.println("\tEstoque: " + exemplar.getQuantidadeEstoque()
-				+ "\n");
+		System.out.println("\n--- Dados do Livro ---");
+		System.out.println("\tISBN: " + exemplar.getIsbn());
+		System.out.println("\tTitulo: " + exemplar.getTitulo());
+		System.out.println("\tAutores: " + exemplar.getAutores());
+		System.out.println("\tEditora: " + exemplar.getEditora());
+		System.out.println("\tAno Publicacao: " + exemplar.getAnoPublicacao());
+		System.out.println("\tDescricao: " + exemplar.getDescricao());
+		System.out.println("\tEstoque: " + exemplar.getQuantidadeEstoque());
 
 	}
 
@@ -79,10 +77,6 @@ public class MiniAmazonCliente {
 			NotBoundException {
 
 		System.out.println("Iniciando cliente...");
-
-		System.setProperty(
-				"java.security.policy",
-				"C:/Users/Cristiano/Documents/Unicamp/MC823/projetos/svn/unicamp/mc823/p3/resource/acesso.policy");
 
 		if (System.getSecurityManager() == null) {
 			System.setSecurityManager(new SecurityManager());
@@ -265,7 +259,8 @@ public class MiniAmazonCliente {
 	public static void main(String... args) throws RemoteException,
 			NotBoundException {
 
-		new MiniAmazonCliente().executar("localhost");
+		new MiniAmazonCliente().executar(args.length == 0 ? "localhost"
+				: args[0]);
 	}
 
 }

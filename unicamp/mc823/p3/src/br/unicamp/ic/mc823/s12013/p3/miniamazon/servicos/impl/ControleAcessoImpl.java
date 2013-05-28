@@ -31,19 +31,9 @@ public class ControleAcessoImpl implements ControleAcesso {
 				Usuario.TIPO_USUARIO_CLIENTE));
 		usuariosDb.add(new Usuario("cliente02", "cliente 02",
 				Usuario.TIPO_USUARIO_CLIENTE));
-		usuariosDb.add(new Usuario("cliente03", "cliente 03",
-				Usuario.TIPO_USUARIO_CLIENTE));
-		usuariosDb.add(new Usuario("cliente04", "cliente 04",
-				Usuario.TIPO_USUARIO_CLIENTE));
 
 		// Cria a lista de livrarias
 		usuariosDb.add(new Usuario("livraria01", "livraria 01",
-				Usuario.TIPO_USUARIO_LIVRARIA));
-		usuariosDb.add(new Usuario("livraria02", "livraria 02",
-				Usuario.TIPO_USUARIO_LIVRARIA));
-		usuariosDb.add(new Usuario("livraria03", "livraria 03",
-				Usuario.TIPO_USUARIO_LIVRARIA));
-		usuariosDb.add(new Usuario("livraria04", "livraria 04",
 				Usuario.TIPO_USUARIO_LIVRARIA));
 
 	}
