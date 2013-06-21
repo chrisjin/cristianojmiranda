@@ -6,11 +6,14 @@ import pickle
 import random
 from threading import Thread
 
+from sklearn.feature_extraction.text import HashingVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+
 # Dicionario
 class Dicionario:
 
 	# Tokens a serem removidos
-	IGNORE_TOKEN = [',', '.', ':', "'", '"', '?', '@', '!', '&', '*', '(', ')', '$', '%', '+', '-', '_', ';', '{', '}', '[', ']', '=', '#', '\\', '/', '|', '<', '>', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+	IGNORE_TOKEN = [',', '.', ':', "'", '"', '?', '@', '!', '&', '*', '(', ')', '$', '%', '+', '-', '_', ';', '{', '}', '[', ']', '=', '#', '\\', '/', '|', '<', '>', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '~', '^'];
 	
 	# Arquivo de backup
 	BACKUP_FILE = 'dicionario.bkp';
@@ -184,6 +187,9 @@ class Dicionario:
 	
 	def obterDicionario(self, size=100):
 	
+		if size == None:
+			return self.dicionarioPorMensagem;
+	
 		mp = {'x': {}};
 		while not self.dicionarioValido(mp):
 			
@@ -201,3 +207,28 @@ class Dicionario:
 						mp[k][i] = self.dicionarioPorMensagem[k][i];
 						
 		return mp;
+		
+	def exibirDistribuicao(self, dic):
+		for k in dic:
+			print k + ' - ' + str(len(dic[k]));
+			
+	def test(self):
+	
+		f=open('../messages/talk-politics-misc-176946.txt', 'r');
+		content = f.read();
+		f.close();
+		
+		print 'Content: ' + content
+	
+		vectorizer = HashingVectorizer(n_features=100, stop_words='english', non_negative=False, norm='l2', binary=False);
+		X = vectorizer.fit_transform([content]);
+		print 'dir(X): ' + str(dir(X));
+		print 'X' + str(X);
+		#print '--->', X('realtionship');
+		
+		cv = CountVectorizer(analyzer="word", strip_accents='unicode',stop_words='english').build_analyzer();
+		X = cv(content);
+		print 'X' + str(X);
+		print X[0];
+		
+		
