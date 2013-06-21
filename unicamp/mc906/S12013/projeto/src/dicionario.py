@@ -4,6 +4,7 @@ import time
 import os.path
 import pickle
 import random
+from threading import Thread
 
 # Dicionario
 class Dicionario:
@@ -13,6 +14,9 @@ class Dicionario:
 	
 	# Arquivo de backup
 	BACKUP_FILE = 'dicionario.bkp';
+	
+	SLEEP_TIME_S = 1; # 60;
+	NR_THREADS = 200;
 
 	# Lista com palavras a serem ignoradas
 	stopWords = [];
@@ -86,15 +90,35 @@ class Dicionario:
 		fim = time.time();
 		logging.debug('Tempo para processar um arquivo: ' + str(fim - inicio) + 's');
 	
+	def finalizouThreads(self, tds):
+		for ti in tds:
+			if ti.isAlive():
+				return False;
+				
+		return True;
+	
 	# Processa o diretorio com os arquivos de mensagens
 	def processarMensagens(self, messagesPath):
 		for (dirpath, dirnames, filenames) in walk(messagesPath):
 		
 			count = 0;
+			tds = [];
+			
 			for filename in filenames:
 				count += 1;
 				logging.info(' procesando arquivo ' + str(count) + ' de ' + str(len(filenames)));
-				self.processarArquivo(dirpath + '/' + filename);		
+				#self.processarArquivo(dirpath + '/' + filename);
+				t = Thread(target=self.processarArquivo, args=(dirpath + '/' + filename,));
+				t.start();
+				tds.append(t);
+			
+				if len(tds) == self.NR_THREADS:
+					while not self.finalizouThreads(tds):
+						time.sleep(self.SLEEP_TIME_S);
+					tds = [];
+					
+			while not self.finalizouThreads(tds):
+				time.sleep(self.SLEEP_TIME_S);
 
 		logging.debug('dicionario: ' + str(self.dicionario));
 	
@@ -123,7 +147,7 @@ class Dicionario:
 		logging.info('Backup salvo');
 	
 	# Construtor da classe
-	def __init__(self, stopWordsPath='../stopwords/english', messagesPath='../messages', backupDir='../backup/'):
+	def __init__(self, stopWordsPath='../stopwords/english', messagesPath='../_messages', backupDir='../backup/'):
 
 		# Inicio do processamento
 		inicio = time.time();
@@ -163,7 +187,7 @@ class Dicionario:
 		mp = {'x': {}};
 		while not self.dicionarioValido(mp):
 			
-			for i in range(1, random.randint(5, 100)):
+			for i in range(1, random.randint(10, 50)):
 				random.shuffle(self.dicionario);
 				
 			d = self.dicionario[:size];
