@@ -13,7 +13,7 @@ def executar():
 	print '|---------------------------------------------|'
 	print '| Alunos:                                     |' 
 	print '|   Cristiano J. Miranda RA 083382            |'
-	print '|   Fernando Massunari RA                     |'
+	print '|   Fernando Massunari   RA                   |'
 	print '+---------------------------------------------+'
 	print '\n\n\n\n\n'
 	
@@ -22,6 +22,8 @@ def executar():
 	
 	print '-> Criando um dicionario com 100 palavras...'
 	dic100 = dicionario.obterDicionario(100);
+	#for k in dic100:
+	#	print k + ' - ' + str(len(dic100[k]));
 	
 	print '-> Criando um dicionario com 200 palavras...'
 	dic200 = dicionario.obterDicionario(200);
