@@ -1,7 +1,9 @@
-from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
+
+from sklearn.feature_extraction import DictVectorizer
+
 from sklearn.pipeline import Pipeline
 from sklearn import metrics
 
@@ -21,60 +23,86 @@ import numpy as np
 
 class Cluster:
 
-	def executar(self, dataset, labels=[]):
+	# Imprime a clusterizacao
+	def printCluster(self, dados, labels):
 
-		###############################################################################
-		# Load some categories from the training set
-		categories = [
-			'alt.atheism',
-			'talk.religion.misc',
-			'comp.graphics',
-			'sci.space',
-		]
-		# Uncomment the following to do the analysis on all the categories
-		#categories = None
+		print '\n\n - CLUSTERS'
+		k = {};
+		for i in range(len(dados)):
 
-		print "Loading 20 newsgroups dataset for categories:"
-		print categories
+			if labels[i] not in k:
+				k[labels[i]] = [];
 
-		#dataset = fetch_20newsgroups(subset='all', categories=categories, shuffle=True, random_state=42)
+			k[labels[i]].append(dados[i]);
 
-		#print "%d documents" % len(dataset.data)
-		print "%d documents" % len(dataset)
-		#print "%d categories" % len(dataset.target_names)
-		print
+		for i in k:
+			print 'cluster: ' + str(i);
+			for j in k[i]:
+				print '\t - ' + str(j);
+	
+	def printClusterStatistic(self, dados, labels):
+		
+		print '\n\n - CLUSTERS STATISTICS -'
+		k = {};
+		for i in range(len(dados)):
 
-		#labels = dataset.target
-		#true_k = np.unique(labels).shape[0]
-		true_k = 20
+			if labels[i] not in k:
+				k[labels[i]] = {};
 
-		print "Extracting features from the training dataset using a sparse vectorizer"
+			tp = dados[i][:dados[i].rindex('-')]
+			
+			if tp not in k[labels[i]]:
+				k[labels[i]][tp] = 1.0;
+			else:
+				k[labels[i]][tp] += 1.0;
+
+		for i in k:
+			print '\n======================================================'
+			print 'cluster: ' + str(i);
+			for j in k[i]:
+				print '         ---------------------------------------------'
+				#print '\t - ' + str(j) + ':  ' + str(k[i][j]);
+				#print k[i][j], len(k[i]), reduce(lambda x, y: x + y, k[i].values(), 0)
+				print('\t - %s \t\t %.3f\n' % (j, (k[i][j]/reduce(lambda x, y: x + y, k[i].values(), 0))));
+			print '         ---------------------------------------------'
+		print '======================================================'
+
+		
+		
+	# Executa o processo de clusterizacao usando kmeans
+	def executarKmeans(self, dicionarioArquivo, nrClusters=20, verbose=0, seeds=[], featureExtraction=0):
+	
+		print 'Clusterizando ' + str(len(dicionarioArquivo)) + ' arquivos.';
+
 		t0 = time()
-		vectorizer = TfidfVectorizer(max_df=0.5, max_features=10000,stop_words='english', use_idf=True);
-		#X = vectorizer.fit_transform(dataset.data)
-		X = vectorizer.fit_transform(dataset)
+		
+		X = [];
+		
+		# Feature extraction DictVectorizer
+		if featureExtraction == 0:
+			v = DictVectorizer(sparse=True)
+			dp = []
+			arqVt = []
+			for arq in dicionarioArquivo:
+				dp.append(dicionarioArquivo[arq]);
+				arqVt.append(arq);
 
-		print "done in %fs" % (time() - t0)
-		print "n_samples: %d, n_features: %d" % X.shape
-		print
+			X = v.fit_transform(dp);
+		
+		logging.debug('X=' + str(X));		
+		
+		# Instancia kmeans
+		km = KMeans(n_clusters=nrClusters, init='k-means++', max_iter=1000, n_init=1, verbose=verbose);
 
-
-		###############################################################################
-		# Do the actual clustering
-		km = KMeans(n_clusters=true_k, init='k-means++', max_iter=100, n_init=1, verbose=1)
-
-		print "Clustering sparse data with %s" % km
-		t0 = time()
+		if verbose == 1:
+			print "Configuracao K-Means %s" % km
+		
+		# Clusteriza os dados
 		km.fit(X)
-		print "done in %0.3fs" % (time() - t0)
-		print
 
-		print "Homogeneity: %0.3f" % metrics.homogeneity_score(labels, km.labels_)
-		print "Completeness: %0.3f" % metrics.completeness_score(labels, km.labels_)
-		print "V-measure: %0.3f" % metrics.v_measure_score(labels, km.labels_)
-		print "Adjusted Rand-Index: %.3f" % \
-			metrics.adjusted_rand_score(labels, km.labels_)
-		print "Silhouette Coefficient: %0.3f" % metrics.silhouette_score(
-			X, labels, sample_size=1000)
+		# Imprime o resultado
+		#self.printCluster(arqVt, km.labels_);
+		self.printClusterStatistic(arqVt, km.labels_);
 
+		logging.debug("Tempo de clusterizacao %fs" % (time() - t0))
 		print
