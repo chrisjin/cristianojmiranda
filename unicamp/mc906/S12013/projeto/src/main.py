@@ -21,26 +21,21 @@ def executar():
 	print '-> Criando dicionario...';
 	dicionario = Dicionario();
 	
-	#print '\n-> Criando um dicionario com 100 palavras...'
-	#dic100 = dicionario.obterDicionario(100);
-	#dicionario.exibirDistribuicao(dic100);
+	print '\n->Dicionario por tipo de mensagem'
+	dicionario.exibirDistribuicao(dicionario.dicionarioPorMensagem);
 	
-	print '\n-> Criando um dicionario com 200 palavras...'
-	#dic200 = dicionario.obterDicionario(200);
-	#dicionario.exibirDistribuicao(dic200);
+	print '-> Criando Cluster...';
+	cluster = Cluster();
 	
-	print '\n-> Criando um dicionario com 500 palavras...'
-	#dic500 = dicionario.obterDicionario(500);
-	#dicionario.exibirDistribuicao(dic500);
+	for np in [100]:#[100, 200, 500]:
 	
-	print '\n-> Criando um dicionario com todas as palavras processadas...'
-	#dicFull = dicionario.obterDicionario(None);
-	#dicionario.exibirDistribuicao(dicFull);
+		print '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++';
 	
-	dicionario.test();
-	
-	#cluster = Cluster();
-	#cluster.executar(dicionario.dicionario);
+		print '\n-> Criando um dicionario com ' + str(np) + ' palavras...'
+		dic = dicionario.obterDicionario(np, randomFlg=False);
+		
+		print '-> Clusterizando dicionario com ' + str(np) + ' palavras em 20 grupos';
+		cluster.executarKmeans(dic, nrClusters=20);
 	
 
 if __name__ == '__main__':
