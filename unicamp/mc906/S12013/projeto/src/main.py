@@ -19,23 +19,25 @@ def executar():
 	print '\n\n\n\n\n'
 	
 	print '-> Criando dicionario...';
-	dicionario = Dicionario();
+	dicionario = Dicionario(ignoreBackup=True);
 	
-	print '\n->Dicionario por tipo de mensagem'
+	print '\n-> Dicionario por tipo de mensagem'
 	dicionario.exibirDistribuicao(dicionario.dicionarioPorMensagem);
 	
-	print '-> Criando Cluster...';
+	print '\n-> Criando Cluster...';
 	cluster = Cluster();
 	
-	for np in [100]:#[100, 200, 500]:
+	clstr = 3;
+	ftr = 1;
+	for np, nrCluster, feature in [(100, clstr, ftr), (200, clstr, ftr), (500, clstr, ftr)]:#[100, 200, 500]:
 	
-		print '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++';
+		print '\n++++++++++++++++++++++++++++';
 	
 		print '\n-> Criando um dicionario com ' + str(np) + ' palavras...'
 		dic = dicionario.obterDicionario(np, randomFlg=False);
 		
-		print '-> Clusterizando dicionario com ' + str(np) + ' palavras em 20 grupos';
-		cluster.executarKmeans(dic, nrClusters=20);
+		print '\n-> Clusterizando dicionario com ' + str(np) + ' palavras em ' + str(nrCluster) + ' grupos, feature ' + str(feature);
+		cluster.executarKMeans(dic, nrClusters=nrCluster, featureExtraction=feature);
 	
 
 if __name__ == '__main__':

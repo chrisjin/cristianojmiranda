@@ -3,8 +3,8 @@ from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 
 from sklearn.feature_extraction import DictVectorizer
+from sklearn.feature_extraction import FeatureHasher
 
-from sklearn.pipeline import Pipeline
 from sklearn import metrics
 
 from sklearn.cluster import KMeans, MiniBatchKMeans
@@ -40,6 +40,7 @@ class Cluster:
 			for j in k[i]:
 				print '\t - ' + str(j);
 	
+	# Imprime a clusterizacao e a percentagem de cada tipo de mensagem no cluster
 	def printClusterStatistic(self, dados, labels):
 		
 		print '\n\n - CLUSTERS STATISTICS -'
@@ -61,39 +62,45 @@ class Cluster:
 			print 'cluster: ' + str(i);
 			for j in k[i]:
 				print '         ---------------------------------------------'
-				#print '\t - ' + str(j) + ':  ' + str(k[i][j]);
-				#print k[i][j], len(k[i]), reduce(lambda x, y: x + y, k[i].values(), 0)
-				print('\t - %s \t\t %.3f\n' % (j, (k[i][j]/reduce(lambda x, y: x + y, k[i].values(), 0))));
+				print('\t - %s \t\t %.2f\n' % (j, (k[i][j]/reduce(lambda x, y: x + y, k[i].values(), 0))));
 			print '         ---------------------------------------------'
 		print '======================================================'
 
 		
 		
 	# Executa o processo de clusterizacao usando kmeans
-	def executarKmeans(self, dicionarioArquivo, nrClusters=20, verbose=0, seeds=[], featureExtraction=0):
+	def executarKMeans(self, dicionarioArquivo, nrClusters=20, verbose=0, seeds=[], featureExtraction=0):
 	
-		print 'Clusterizando ' + str(len(dicionarioArquivo)) + ' arquivos.';
+		print '\n\tClusterizando via K-Means ' + str(len(dicionarioArquivo)) + ' arquivos.';
 
-		t0 = time()
+		# Tempo de inicio da clusterizacao
+		t0 = time()		
 		
+		# Matrix de clusterizacao
 		X = [];
+		
+		# Vetor com apenas os arquivos a serem clusterizados em ordem
+		arqVt = dicionarioArquivo.keys();
 		
 		# Feature extraction DictVectorizer
 		if featureExtraction == 0:
-			v = DictVectorizer(sparse=True)
-			dp = []
-			arqVt = []
-			for arq in dicionarioArquivo:
-				dp.append(dicionarioArquivo[arq]);
-				arqVt.append(arq);
-
-			X = v.fit_transform(dp);
+				
+			# Ajusta os dados
+			dv = DictVectorizer(sparse=True)
+			X = dv.fit_transform(dicionarioArquivo.values());
+			
+		# Feature extraction FeatureHasher
+		if featureExtraction == 1:
+			fh = FeatureHasher();
+			X = fh.fit_transform(dicionarioArquivo.values());
+		
 		
 		logging.debug('X=' + str(X));		
 		
 		# Instancia kmeans
 		km = KMeans(n_clusters=nrClusters, init='k-means++', max_iter=1000, n_init=1, verbose=verbose);
 
+		# Imprime a configuracao do KMeans
 		if verbose == 1:
 			print "Configuracao K-Means %s" % km
 		
@@ -104,5 +111,6 @@ class Cluster:
 		#self.printCluster(arqVt, km.labels_);
 		self.printClusterStatistic(arqVt, km.labels_);
 
+		# Loga o tempo de clusterizacao
 		logging.debug("Tempo de clusterizacao %fs" % (time() - t0))
 		print
