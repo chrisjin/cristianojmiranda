@@ -13,13 +13,13 @@ from sklearn.feature_extraction.text import CountVectorizer
 class Dicionario:
 
 	# Tokens a serem removidos
-	IGNORE_TOKEN = [',', '.', ':', "'", '"', '?', '@', '!', '&', '*', '(', ')', '$', '%', '+', '-', '_', ';', '{', '}', '[', ']', '=', '#', '\\', '/', '|', '<', '>', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '~', '^', '\n', '\t', '\r'];
+	IGNORE_TOKEN = [',', '.', ':', "'", '"', '?', '@', '!', '&', '*', '(', ')', '$', '%', '+', '-', '_', ';', '{', '}', '[', ']', '=', '#', '\\', '/', '|', '<', '>', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '~', '^', '\n', '\t', '\r', '`'];
 	
 	# Arquivo de backup
 	BACKUP_FILE = 'dicionario.bkp';
 	
 	# Tempo para esperar um grupo de thread executar
-	SLEEP_TIME_S = 2;
+	SLEEP_TIME_S = 1.5;
 	
 	# Nr de threads para leitura dos arquivos
 	NR_THREADS = 800;#700;
@@ -178,13 +178,14 @@ class Dicionario:
 		logging.info('Backup salvo');
 	
 	# Construtor da classe
-	def __init__(self, stopWordsPath='../stopwords/english', messagesPath='../messages', backupDir='../backup/'):
+	def __init__(self, stopWordsPath='../stopwords/english', messagesPath='../messages', backupDir='../backup/', ignoreBackup=False):
 
 		# Inicio do processamento
 		inicio = time.time();
 		
 		# Carrega o backup
-		self.loadBackup(backupDir);
+		if not ignoreBackup:
+			self.loadBackup(backupDir);
 		
 		# Verifica se o backupe foi de fato carregado
 		if len(self.dicionario) == 0:
