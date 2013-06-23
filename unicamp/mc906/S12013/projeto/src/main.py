@@ -19,7 +19,7 @@ def executar():
 	print '\n\n\n\n\n'
 	
 	print '-> Criando dicionario...';
-	dicionario = Dicionario(ignoreBackup=True);
+	dicionario = Dicionario(ignoreBackup=False);
 	
 	print '\n-> Dicionario por tipo de mensagem'
 	dicionario.exibirDistribuicao(dicionario.dicionarioPorMensagem);
@@ -27,17 +27,47 @@ def executar():
 	print '\n-> Criando Cluster...';
 	cluster = Cluster();
 	
-	clstr = 3;
-	ftr = 1;
-	for np, nrCluster, feature in [(100, clstr, ftr), (200, clstr, ftr), (500, clstr, ftr)]:#[100, 200, 500]:
+	# Armazena o resultado das clusterizacoes
+	clusterResult = {};
 	
-		print '\n++++++++++++++++++++++++++++';
+	# Nr de palavras
+	for np in [100, 200, 500]:
 	
-		print '\n-> Criando um dicionario com ' + str(np) + ' palavras...'
-		dic = dicionario.obterDicionario(np, randomFlg=False);
+		# Extraction features a serem testados
+		for f in [0]:
 		
-		print '\n-> Clusterizando dicionario com ' + str(np) + ' palavras em ' + str(nrCluster) + ' grupos, feature ' + str(feature);
-		cluster.executarKMeans(dic, nrClusters=nrCluster, featureExtraction=feature);
+			# Nr de clusters
+			for c in [20]:
+	
+				# Altera a maneira de escolher os centroides
+				for kmeansInit in ['k-means++']:
+	
+					print '\n-> Criando um dicionario com ' + str(np) + ' palavras...'
+					dic = dicionario.obterDicionario(np, randomFlg=False);
+		
+					print '\n-> Clusterizando dicionario com ' + str(np) + ' palavras em ' \
+							+ str(c) + ' grupos, feature ' + str(f) + ', kmeansInit ' + str(kmeansInit);
+					
+					# Armazena o resultado
+					result = cluster.executarKMeans(dic, nrClusters=c, featureExtraction=f, init=kmeansInit, verbose=1);
+					clusterResult[(np, f, c, kmeansInit)] = result;
+				
+	# TODO: Analisar os resultados para ver qual a melhor configuracao
+	# ver: http://www.isa.utl.pt/dm/biocomp/biocomp/aulasclustering.pdf
+	print 'Resultado Clusterizacao (configuracao) - (ho, co, vm, ar, sc): '
+	
+	clusterResultVt = clusterResult.values();
+	clusterResultVt.sort();
+	melhorConfiguracao = None;
+	
+	for c in clusterResult:
+		r =  clusterResult[c];
+		print c, '-', r
+		
+		if r == clusterResultVt[-1]:
+			melhorConfiguracao = c;
+	
+	print 'Melhor configuracao: ' + str(melhorConfiguracao);
 	
 
 if __name__ == '__main__':

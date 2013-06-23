@@ -67,9 +67,25 @@ class Cluster:
 		print '======================================================'
 
 		
+	# Coloca um rotulo em cada tipo de arquivo, dando a clusterizacao esperada
+	def clusterizacaoExperada(self, arquivos):
+		
+		clusterlb = [];
+		
+		for a in arquivos:
+			tp = a[:a.rindex('-')]
+			if tp not in clusterlb:
+				clusterlb.append(tp);
+				
+		e = [];
+		for a in arquivos:
+			tp = a[:a.rindex('-')]
+			e.append(clusterlb.index(tp));
+			
+		return e;
 		
 	# Executa o processo de clusterizacao usando kmeans
-	def executarKMeans(self, dicionarioArquivo, nrClusters=20, verbose=0, seeds=[], featureExtraction=0):
+	def executarKMeans(self, dicionarioArquivo, nrClusters=20, verbose=0, featureExtraction=0, random_state=20, init='k-means++', miniBatch=False):
 	
 		print '\n\tClusterizando via K-Means ' + str(len(dicionarioArquivo)) + ' arquivos.';
 
@@ -86,7 +102,7 @@ class Cluster:
 		if featureExtraction == 0:
 				
 			# Ajusta os dados
-			dv = DictVectorizer(sparse=True)
+			dv = DictVectorizer(sparse=False)
 			X = dv.fit_transform(dicionarioArquivo.values());
 			
 		# Feature extraction FeatureHasher
@@ -98,7 +114,10 @@ class Cluster:
 		logging.debug('X=' + str(X));		
 		
 		# Instancia kmeans
-		km = KMeans(n_clusters=nrClusters, init='k-means++', max_iter=1000, n_init=1, verbose=verbose);
+		if miniBatch:
+			km = MiniBatchKMeans(n_clusters=nrClusters, init=init, max_iter=100, n_init=3, verbose=verbose, random_state=random_state);
+		else:
+			km = KMeans(n_clusters=nrClusters, init=init, max_iter=100, n_init=1, verbose=verbose, random_state=random_state);
 
 		# Imprime a configuracao do KMeans
 		if verbose == 1:
@@ -110,7 +129,26 @@ class Cluster:
 		# Imprime o resultado
 		#self.printCluster(arqVt, km.labels_);
 		self.printClusterStatistic(arqVt, km.labels_);
+		
+		# Computa os resultados
+		labels = self.clusterizacaoExperada(arqVt);
+		
+		ho = metrics.homogeneity_score(labels, km.labels_);
+		co = metrics.completeness_score(labels, km.labels_);
+		vm = metrics.v_measure_score(labels, km.labels_);
+		ar = metrics.adjusted_rand_score(labels, km.labels_);
+		#sc = metrics.silhouette_score(X, np.unique(labels));
+		sc = 0.0;
+		
+		if verbose == 1:
+			print "Homogeneity: %0.3f" % ho;
+			print "Completeness: %0.3f" % co;
+			print "V-measure: %0.3f" % vm;
+			print "Adjusted Rand-Index: %.3f" % ar;
+			print "Silhouette Coefficient: %0.3f" % sc;
 
 		# Loga o tempo de clusterizacao
 		logging.debug("Tempo de clusterizacao %fs" % (time() - t0))
 		print
+		
+		return (ho, co, vm, ar, sc);
