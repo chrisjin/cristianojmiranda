@@ -4,8 +4,9 @@ from dicionario import *
 import time
 
 
-# Executa o processo de custerizacao
+# Executa o processo de custerizacao para um configuracao de K-Means
 def clusterizar(np, c, srndc, kmeansInit, clusterResult, mnbtch, dicionario, cluster):
+	
 	print '\n-> Criando um dicionario com ' + str(np) + ' palavras...'
 	dic = dicionario.obterDicionario(np, randomFlg=False);
 		
@@ -21,31 +22,9 @@ def clusterizar(np, c, srndc, kmeansInit, clusterResult, mnbtch, dicionario, clu
 	result = cluster.executarKMeans(dic, nrClusters=c, init=centroides, verbose=1, random_state=srndc, miniBatch=mnbtch);
 	clusterResult[(np, srndc, c, str(kmeansInit), mnbtch)] = result;
 
-def executar():
+# Realiza processo de clusterizacao K-Means
+def clusterizacaoKmeans(dicionario, cluster):
 
-	# Configura o log
-	logging.basicConfig(filename='../log/mc906.log',level=logging.DEBUG,format='%(asctime)s %(levelname)s %(message)s');
-
-	print '\n\n\n\n\n'
-	print '+---------------------------------------------+'
-	print '| MC906 - Introducao a inteligencia artificial|'
-	print '| Projeto                                     |'
-	print '|---------------------------------------------|'
-	print '| Alunos:                                     |' 
-	print '|   Cristiano J. Miranda RA 083382            |'
-	print '|   Fernando Massunari   RA                   |'
-	print '+---------------------------------------------+'
-	print '\n\n\n\n\n'
-	
-	print '-> Criando dicionario...';
-	dicionario = Dicionario(ignoreBackup=False);
-	
-	print '\n-> Dicionario por tipo de mensagem'
-	dicionario.exibirDistribuicao(dicionario.dicionarioPorMensagem);
-	
-	print '\n-> Criando Cluster...';
-	cluster = Cluster();
-	
 	# Armazena o resultado das clusterizacoes
 	clusterResult = {};
 	
@@ -56,16 +35,16 @@ def executar():
 	for np in [100, 200, 500]:
 	
 		# Seeds para randomizar centroides
-		for srndc in [None, 100, 1000, 10000]:
+		for srndc in [None, 100, 1000]:
 		
 			# Nr de clusters
 			for c in [20]:
 	
 				# Altera a maneira de escolher os centroides
 				for kmeansInit in ['k-means++', 'random', 'ndarray']:
-				
-					for mnbtch in [True, False]:
-						clusterizar(np, c, srndc, kmeansInit, clusterResult, mnbtch, dicionario, cluster);
+
+					# A clusterizacao via minibatch kmeans demonstrou boms resultados
+					clusterizar(np, c, srndc, kmeansInit, clusterResult, True, dicionario, cluster);
 					
 	
 	print 'Tempo total para clusterizacao: ' + str(time.time() - t0cluster) + 's';
@@ -92,6 +71,51 @@ def executar():
 	
 	# realiza a melhor clusterizacao novamente
 	clusterizar(melhorConfiguracao[0], melhorConfiguracao[2], melhorConfiguracao[1], melhorConfiguracao[3], {}, melhorConfiguracao[4], dicionario, cluster)
+	
+def clusterizacaoSpectralClustering(dicionario, cluster):
+	
+	print '\n-> SpectralClustering';
+	
+	print '\n-> Criando um dicionario com 100 palavras...'
+	dic = dicionario.obterDicionario(100);
+	
+	print cluster.executarSpectralClustering(dicionarioArquivo=dic, verbose=1);
+	
+	
+def executar():
+
+	# Configura o log
+	logging.basicConfig(filename='../log/mc906.log',level=logging.DEBUG,format='%(asctime)s %(levelname)s %(message)s');
+
+	print '\n\n\n\n\n'
+	print '+---------------------------------------------+'
+	print '| MC906 - Introducao a inteligencia artificial|'
+	print '| Projeto                                     |'
+	print '|---------------------------------------------|'
+	print '| Alunos:                                     |' 
+	print '|   Cristiano J. Miranda RA 083382            |'
+	print '|   Fernando Massunari   RA                   |'
+	print '+---------------------------------------------+'
+	print '\n\n\n\n\n'
+	
+	print '-> Criando dicionario...';
+	dicionario = Dicionario(ignoreBackup=False);
+	
+	print '\n-> Dicionario por tipo de mensagem'
+	dicionario.exibirDistribuicao(dicionario.dicionarioPorMensagem);
+	
+	print '\n-> Criando Cluster...';
+	cluster = Cluster();
+	
+	# Realiza clusterizacao via K-Means
+	clusterizacaoKmeans(dicionario, cluster);
+	
+	# Realiza clusterizacao via Spectral 
+	#clusterizacaoSpectralClustering(dicionario, cluster);
+	
+	# Reliza a classificacao
+	#classificacao();
+	
 	
 
 if __name__ == '__main__':
