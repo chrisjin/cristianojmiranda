@@ -13,7 +13,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 class Dicionario:
 
 	# Tokens a serem removidos
-	IGNORE_TOKEN = [',', '.', ':', "'", '"', '?', '@', '!', '&', '*', '(', ')', '$', '%', '+', '-', '_', ';', '{', '}', '[', ']', '=', '#', '\\', '/', '|', '<', '>', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '~', '^', '\n', '\t', '\r', '`'];
+	IGNORE_TOKEN = [',', '.', ':', "'", '"', '?', '@', '!', '&', '*', '(', ')', '$', '%', '+', '-', '_', ';', '{', '}', '[', ']', '=', '#', '\\', '/', '|', '<', '>', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '~', '^', '\n', '\t', '\r', '`', 'll', 'ca', 'subject', 'from', 'cs', 'uk', 'did', 'didn', 'mr'];
 	
 	# Arquivo de backup
 	BACKUP_FILE = 'dicionario.bkp';
@@ -22,7 +22,7 @@ class Dicionario:
 	SLEEP_TIME_S = 1.5;
 	
 	# Nr de threads para leitura dos arquivos
-	NR_THREADS = 800;#700;
+	NR_THREADS = 800;
 
 	# Lista com palavras a serem ignoradas
 	stopWords = [];
@@ -35,6 +35,9 @@ class Dicionario:
 
 	# Dicionario por arquivo
 	dicionarioPorArquivo = {};
+	
+	# Cache
+	cachePorArquivo = {};
 
 	# Extrai do nome do arquivo o tipo de mensagem
 	def extrairTipoDeMensagem(self, fileName):
@@ -49,7 +52,7 @@ class Dicionario:
 			self.stopWords.append(l.strip());
 			
 		arq.close();
-		logging.debug("stopWords: " + str(self.stopWords));
+		#logging.debug("stopWords: " + str(self.stopWords));
 	
 	def clearLine(self, line):
 		tmp = line;
@@ -148,7 +151,7 @@ class Dicionario:
 			while not self.finalizouThreads(tds):
 				time.sleep(self.SLEEP_TIME_S);
 
-		logging.debug('dicionario: ' + str(self.dicionario));
+		#logging.debug('dicionario: ' + str(self.dicionario));
 	
 	# Obtem o backup do arquivo para a memoria
 	def loadBackup(self, backupDir):
@@ -227,6 +230,10 @@ class Dicionario:
 		if size == None:
 			return self.dicionarioPorArquivo;
 
+		# Verifica se esta no cache
+		if size in self.cachePorArquivo:
+			return self.cachePorArquivo[size];
+			
 		mp = {};
 		palavras = [];
 		
@@ -254,20 +261,8 @@ class Dicionario:
 		# Obtem amostragem mais frequente
 		else:
 		
-			# Monta a lista de palavras
-			tuplaPalavras = []
-			for k in self.dicionario:
-				tuplaPalavras.append((k, self.dicionario[k]));
-
-			# Ordena pela frequencia
-			tuplaPalavras = sorted(tuplaPalavras, key=lambda tup: tup[1])
-			tuplaPalavras.reverse();
-			tuplaPalavras = tuplaPalavras[:size];
-			
-			logging.debug('Tuplas mais frequentes: ' + str(tuplaPalavras));
-			
-			for i in tuplaPalavras:
-				palavras.append(i[0]);
+			# Obtem as 'size' palavras mais frequentes
+			palavras = self.obterPalavrasMaisFrequentes(size);
 
 			for k in self.dicionarioPorArquivo:
 				for i in self.dicionarioPorArquivo[k]:
@@ -288,7 +283,30 @@ class Dicionario:
 					if k not in mp[ka]:
 						mp[ka][k] = 0;
 
+		# Atualiza o cache
+		self.cachePorArquivo[size] = mp;
+		
 		return mp;
+		
+	# Retorna a lista com as n palavras mais frequentes
+	def obterPalavrasMaisFrequentes(self, size=100):
+		# Monta a lista de palavras
+		tuplaPalavras = []
+		for k in self.dicionario:
+			tuplaPalavras.append((k, self.dicionario[k]));
+
+		# Ordena pela frequencia
+		tuplaPalavras = sorted(tuplaPalavras, key=lambda tup: tup[1])
+		tuplaPalavras.reverse();
+		tuplaPalavras = tuplaPalavras[:size];
+			
+		logging.debug('Tuplas mais frequentes: ' + str(tuplaPalavras));
+			
+		palavras = [];
+		for i in tuplaPalavras:
+			palavras.append(i[0]);
+			
+		return palavras;
 		
 	def exibirDistribuicao(self, dic):
 		for k in dic:
