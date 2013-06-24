@@ -1,21 +1,13 @@
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.feature_extraction.text import HashingVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
-
-from sklearn.feature_extraction import DictVectorizer
-from sklearn.feature_extraction import FeatureHasher
-
-from sklearn import metrics
-
-from sklearn.cluster import KMeans, MiniBatchKMeans
-
-import logging
-from optparse import OptionParser
 import sys
+import logging
+import numpy as np
 from time import time
 
-import numpy as np
-
+from sklearn import metrics
+from sklearn.cluster import spectral_clustering
+from sklearn.cluster import KMeans, MiniBatchKMeans
+from sklearn.feature_extraction import FeatureHasher
+from sklearn.feature_extraction import DictVectorizer
 
 class Cluster:
 
@@ -57,9 +49,7 @@ class Cluster:
 			print '\n======================================================'
 			print 'cluster: ' + str(i);
 			for j in k[i]:
-				#print '         ---------------------------------------------'
 				print('\t - %s \t\t %.2f\n' % (j, (k[i][j]/reduce(lambda x, y: x + y, k[i].values(), 0))));
-			#print '         ---------------------------------------------'
 		print '======================================================'
 
 		
@@ -133,6 +123,55 @@ class Cluster:
 		co = metrics.completeness_score(labels, km.labels_);
 		vm = metrics.v_measure_score(labels, km.labels_);
 		ar = metrics.adjusted_rand_score(labels, km.labels_);
+		
+		# TODO: Verificar isso!
+		#sc = metrics.silhouette_score(X, np.unique(labels));
+		sc = 0.0;
+		
+		if verbose == 1:
+			print "Homogeneity: %0.3f" % ho;
+			print "Completeness: %0.3f" % co;
+			print "V-measure: %0.3f" % vm;
+			print "Adjusted Rand-Index: %.3f" % ar;
+			print "Silhouette Coefficient: %0.3f" % sc;
+
+		# Loga o tempo de clusterizacao
+		logging.debug("Tempo de clusterizacao %fs" % (time() - t0))
+		print
+		
+		return (ho, co, vm, ar, sc);
+		
+	# Executa o processo de clusterizacao usando Spectral Clustering
+	def executarSpectralClustering(self, dicionarioArquivo, nrClusters=20, verbose=0):
+	
+		print '\n\tClusterizando via Spectral Clustering ' + str(len(dicionarioArquivo)) + ' arquivos.';
+
+		# Tempo de inicio da clusterizacao
+		t0 = time()		
+		
+		# Matrix de clusterizacao
+		X = [];
+		
+		# Vetor com apenas os arquivos a serem clusterizados em ordem
+		arqVt = dicionarioArquivo.keys();
+		
+		# Feature extraction DictVectorizer
+		dv = DictVectorizer(sparse=True)
+		X = dv.fit_transform(dicionarioArquivo.values());
+		
+		# Clusteriza os dados
+		labels_ = spectral_clustering(X, n_clusters=nrClusters, eigen_solver='arpack');
+
+		# Imprime o resultado
+		self.printClusterStatistic(arqVt, labels_);
+		
+		# Computa os resultados
+		labels = self.clusterizacaoExperada(arqVt);
+		
+		ho = metrics.homogeneity_score(labels, labels_);
+		co = metrics.completeness_score(labels, labels_);
+		vm = metrics.v_measure_score(labels, labels_);
+		ar = metrics.adjusted_rand_score(labels, labels_);
 		
 		# TODO: Verificar isso!
 		#sc = metrics.silhouette_score(X, np.unique(labels));
