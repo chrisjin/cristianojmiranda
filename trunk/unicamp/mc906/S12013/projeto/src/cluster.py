@@ -17,10 +17,6 @@ from time import time
 import numpy as np
 
 
-'''
-	Referencia: http://scikit-learn.org/stable/auto_examples/document_clustering.html#example-document-clustering-py
-'''
-
 class Cluster:
 
 	# Imprime a clusterizacao
@@ -61,9 +57,9 @@ class Cluster:
 			print '\n======================================================'
 			print 'cluster: ' + str(i);
 			for j in k[i]:
-				print '         ---------------------------------------------'
+				#print '         ---------------------------------------------'
 				print('\t - %s \t\t %.2f\n' % (j, (k[i][j]/reduce(lambda x, y: x + y, k[i].values(), 0))));
-			print '         ---------------------------------------------'
+			#print '         ---------------------------------------------'
 		print '======================================================'
 
 		
@@ -85,7 +81,7 @@ class Cluster:
 		return e;
 		
 	# Executa o processo de clusterizacao usando kmeans
-	def executarKMeans(self, dicionarioArquivo, nrClusters=20, verbose=0, featureExtraction=0, random_state=20, init='k-means++', miniBatch=False):
+	def executarKMeans(self, dicionarioArquivo, nrClusters=20, verbose=0, featureExtraction=0, random_state=20, init='k-means++', miniBatch=True):
 	
 		print '\n\tClusterizando via K-Means ' + str(len(dicionarioArquivo)) + ' arquivos.';
 
@@ -102,7 +98,7 @@ class Cluster:
 		if featureExtraction == 0:
 				
 			# Ajusta os dados
-			dv = DictVectorizer(sparse=False)
+			dv = DictVectorizer(sparse=True)
 			X = dv.fit_transform(dicionarioArquivo.values());
 			
 		# Feature extraction FeatureHasher
@@ -111,13 +107,13 @@ class Cluster:
 			X = fh.fit_transform(dicionarioArquivo.values());
 		
 		
-		logging.debug('X=' + str(X));		
+		#logging.debug('X=' + str(X));		
 		
 		# Instancia kmeans
 		if miniBatch:
-			km = MiniBatchKMeans(n_clusters=nrClusters, init=init, max_iter=100, n_init=3, verbose=verbose, random_state=random_state);
+			km = MiniBatchKMeans(n_clusters=nrClusters, init=init, max_iter=1000, n_init=3, verbose=verbose, random_state=random_state);
 		else:
-			km = KMeans(n_clusters=nrClusters, init=init, max_iter=100, n_init=1, verbose=verbose, random_state=random_state);
+			km = KMeans(n_clusters=nrClusters, init=init, max_iter=1000, n_init=1, verbose=verbose, random_state=random_state);
 
 		# Imprime a configuracao do KMeans
 		if verbose == 1:
@@ -137,6 +133,8 @@ class Cluster:
 		co = metrics.completeness_score(labels, km.labels_);
 		vm = metrics.v_measure_score(labels, km.labels_);
 		ar = metrics.adjusted_rand_score(labels, km.labels_);
+		
+		# TODO: Verificar isso!
 		#sc = metrics.silhouette_score(X, np.unique(labels));
 		sc = 0.0;
 		
@@ -152,3 +150,44 @@ class Cluster:
 		print
 		
 		return (ho, co, vm, ar, sc);
+		
+	# Obtem os centroides iniciais
+	def obterCentroidesIniciais(self, dicionario, size):
+	
+		# Obtem dicionario por mensagem
+		dpm = dicionario.dicionarioPorMensagem;
+		
+		# Obtem as 'size' palavras mais frequentes
+		pf = dicionario.obterPalavrasMaisFrequentes(size);
+		
+		# Filtra em dpm as n palavras mais frequentes
+		dpm_c = {};
+		for ct in dpm:
+		
+			dpm_c[ct] = {};
+			for p in dpm[ct]:
+				if p in pf:
+					dpm_c[ct][p] = dpm[ct][p];
+		
+		# Ajusta as medias
+		for ct in dpm_c:
+			for p in dpm_c[ct]:
+					
+					#nr_arq = int(len(dicionario.dicionarioPorArquivo) / len(dpm));
+					nr_arq = 1.0 * len(dicionario.dicionarioPorArquivo) / len(dpm);
+					#nr_arq = min(dpm_c[ct].values());
+					
+					dpm_c[ct][p] = int(dpm_c[ct][p] / nr_arq);
+			
+		
+		#print 'Nr centroides:', len(dpm_c);
+		#dicionario.exibirDistribuicao(dpm_c);
+		
+		#for i in range(1, 4):
+		#	print '\ncentroides[centroides.keys()[i]]: ', dpm_c.keys()[i], dpm_c[dpm_c.keys()[i]];	
+		
+		dv = DictVectorizer(sparse=False)
+		X = dv.fit_transform(dpm_c.values());
+		
+		return X;
+		
