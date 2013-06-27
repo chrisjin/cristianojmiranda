@@ -4,12 +4,15 @@ import numpy as np
 from time import time
 
 from sklearn import metrics
-from sklearn.cluster import spectral_clustering
+
+from sklearn.cluster import DBSCAN
 from sklearn.cluster import KMeans, MiniBatchKMeans
 from sklearn.feature_extraction import FeatureHasher
 from sklearn.feature_extraction import DictVectorizer
 
 class Cluster:
+
+	centroideCache = {};
 
 	# Imprime a clusterizacao
 	def printCluster(self, dados, labels):
@@ -45,16 +48,33 @@ class Cluster:
 			else:
 				k[labels[i]][tp] += 1.0;
 
+		c = [];
+		kf = {};
 		for i in k:
 			print '\n======================================================'
 			print 'cluster: ' + str(i);
+			kf[i] = [];
 			for j in k[i]:
-				print('\t - %s \t\t %.2f\n' % (j, (k[i][j]/reduce(lambda x, y: x + y, k[i].values(), 0))));
+				soma = reduce(lambda x, y: x + y, k[i].values(), 0);
+				percent = k[i][j] / soma;
+				print('\t - %s \t\t %.2f\n' % (j, percent));
+				kf[i].append((j, percent));
+				
+			kf[i] = sorted(kf[i], key=lambda tup: tup[1])
+			kf[i] = kf[i][-1];
+			
+			if kf[i][0] not in c:
+				c.append(kf[i][0]);
+			
 		print '======================================================'
+		print 'kf=' + str(kf);
+		print 'c(' + str(len(c)) + '): ' + str(c);
+		print '======================================================'
+		return len(c);
 
 		
 	# Coloca um rotulo em cada tipo de arquivo, dando a clusterizacao esperada
-	def clusterizacaoExperada(self, arquivos):
+	def clusterizacaoEsperada(self, arquivos):
 		
 		clusterlb = [];
 		
@@ -68,6 +88,9 @@ class Cluster:
 			tp = a[:a.rindex('-')]
 			e.append(clusterlb.index(tp));
 			
+		logging.debug('Clusterizacao Esperada Size=' + str(len(e)));
+		logging.debug('Clusterizacao Esperada=' + str(e));
+		
 		return e;
 		
 	# Executa o processo de clusterizacao usando kmeans
@@ -101,9 +124,9 @@ class Cluster:
 		
 		# Instancia kmeans
 		if miniBatch:
-			km = MiniBatchKMeans(n_clusters=nrClusters, init=init, max_iter=1000, n_init=3, verbose=verbose, random_state=random_state);
+			km = MiniBatchKMeans(n_clusters=nrClusters, init=init, max_iter=200, n_init=1, verbose=verbose, random_state=random_state);
 		else:
-			km = KMeans(n_clusters=nrClusters, init=init, max_iter=1000, n_init=1, verbose=verbose, random_state=random_state);
+			km = KMeans(n_clusters=nrClusters, init=init, max_iter=200, n_init=1, verbose=verbose, random_state=random_state);
 
 		# Imprime a configuracao do KMeans
 		if verbose == 1:
@@ -114,10 +137,10 @@ class Cluster:
 
 		# Imprime o resultado
 		#self.printCluster(arqVt, km.labels_);
-		self.printClusterStatistic(arqVt, km.labels_);
+		c = self.printClusterStatistic(arqVt, km.labels_);
 		
 		# Computa os resultados
-		labels = self.clusterizacaoExperada(arqVt);
+		labels = self.clusterizacaoEsperada(arqVt);
 		
 		ho = metrics.homogeneity_score(labels, km.labels_);
 		co = metrics.completeness_score(labels, km.labels_);
@@ -139,12 +162,12 @@ class Cluster:
 		logging.debug("Tempo de clusterizacao %fs" % (time() - t0))
 		print
 		
-		return (ho, co, vm, ar, sc);
+		return (c, ho, co, vm, ar, sc);
 		
-	# Executa o processo de clusterizacao usando Spectral Clustering
-	def executarSpectralClustering(self, dicionarioArquivo, nrClusters=20, verbose=0):
+	# Executa o processo de clusterizacao usando DBSCAN
+	def executarDBSCAN(self, dicionarioArquivo, verbose=0, random_state=10, eps=.95):
 	
-		print '\n\tClusterizando via Spectral Clustering ' + str(len(dicionarioArquivo)) + ' arquivos.';
+		print '\n\tClusterizando via Mean Shift ' + str(len(dicionarioArquivo)) + ' arquivos.';
 
 		# Tempo de inicio da clusterizacao
 		t0 = time()		
@@ -156,11 +179,18 @@ class Cluster:
 		arqVt = dicionarioArquivo.keys();
 		
 		# Feature extraction DictVectorizer
-		dv = DictVectorizer(sparse=True)
+		dv = DictVectorizer(sparse=False)
 		X = dv.fit_transform(dicionarioArquivo.values());
 		
 		# Clusteriza os dados
-		labels_ = spectral_clustering(X, n_clusters=nrClusters, eigen_solver='arpack');
+		db = DBSCAN(eps=eps, min_samples=10, random_state=random_state);
+
+		if verbose == 1:
+			print db;
+
+		db.fit(X)
+		labels_ = db.labels_
+		print 'labels: ', labels_
 
 		# Imprime o resultado
 		self.printClusterStatistic(arqVt, labels_);
@@ -191,8 +221,14 @@ class Cluster:
 		return (ho, co, vm, ar, sc);
 		
 	# Obtem os centroides iniciais
-	def obterCentroidesIniciais(self, dicionario, size):
+	def obterCentroidesIniciais(self, dicionario, size, flutuante=False, q='max', opt='mf'):
 	
+		logging.info('size=' + str(size));
+		
+		# Obtem do cache
+		if size in self.centroideCache:
+			return self.centroideCache[size];
+		
 		# Obtem dicionario por mensagem
 		dpm = dicionario.dicionarioPorMensagem;
 		
@@ -210,23 +246,53 @@ class Cluster:
 		
 		# Ajusta as medias
 		for ct in dpm_c:
+		
+			nr_arq = int(len(dicionario.dicionarioPorArquivo) / len(dpm));
+			if flutuante:
+				nr_arq = 1.0 * len(dicionario.dicionarioPorArquivo) / len(dpm);
+			
+			if q == 'min':
+				nr_arq = min(dpm_c[ct].values());
+			
+			if q == 'max':
+				nr_arq = max(dpm_c[ct].values());
+		
+			mf = [];
+			# Obtem as 10% palavras mais frequentes dentro do grupo
+			if opt == 'mf':
+				z = zip(dpm_c[ct].keys(), dpm_c[ct].values());
+				z = sorted(z, key=lambda tup: tup[1]);
+				z.reverse();
+				z = z[:int(.5*len(z))];
+				for i in z:
+					mf.append(i[0]);
+				logging.debug('mf: ' + str(mf));
+		
 			for p in dpm_c[ct]:
-					
-					#nr_arq = int(len(dicionario.dicionarioPorArquivo) / len(dpm));
-					nr_arq = 1.0 * len(dicionario.dicionarioPorArquivo) / len(dpm);
-					#nr_arq = min(dpm_c[ct].values());
-					
+				if opt == 'mf':
+					dpm_c[ct][p] = 0;
+					if p in mf:
+						dpm_c[ct][p] = 1;
+				else:
 					dpm_c[ct][p] = int(dpm_c[ct][p] / nr_arq);
+					if flutuante:
+						dpm_c[ct][p] = dpm_c[ct][p] / nr_arq;
+						
+			if max(dpm_c[ct]) == 0:
+				logging.warning('Cluster ' + ct + 'esta zerado!');
 			
 		
-		#print 'Nr centroides:', len(dpm_c);
-		#dicionario.exibirDistribuicao(dpm_c);
+		logging.debug('Nr centroides:' + str(len(dpm_c)));
+		logging.debug('Distribuicao: ');
+		for k in dpm_c:
+			logging.debug(k + ' - ' + str(len(dpm_c[k])));
 		
-		#for i in range(1, 4):
-		#	print '\ncentroides[centroides.keys()[i]]: ', dpm_c.keys()[i], dpm_c[dpm_c.keys()[i]];	
+		for i in range(len(dpm_c)):
+			logging.debug('centroides[' + dpm_c.keys()[i] + ']: ' +  str(dpm_c[dpm_c.keys()[i]]));
 		
 		dv = DictVectorizer(sparse=False)
 		X = dv.fit_transform(dpm_c.values());
 		
+		# Atualiza o cache
+		self.centroideCache[size] = X;
 		return X;
-		

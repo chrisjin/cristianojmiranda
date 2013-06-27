@@ -13,7 +13,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 class Dicionario:
 
 	# Tokens a serem removidos
-	IGNORE_TOKEN = [',', '.', ':', "'", '"', '?', '@', '!', '&', '*', '(', ')', '$', '%', '+', '-', '_', ';', '{', '}', '[', ']', '=', '#', '\\', '/', '|', '<', '>', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '~', '^', '\n', '\t', '\r', '`', 'll', 'ca', 'subject', 'from', 'cs', 'uk', 'did', 'didn', 'mr'];
+	IGNORE_TOKEN = [',', '.', ':', '"', '?', '@', '!', '&', '*', '(', ')', '$', '%', '+', '-', '_', ';', '{', '}', '[', ']', '=', '#', '\\', '/', '|', '<', '>', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '~', '^', '\n', '\t', '\r', '`', "'"];
 	
 	# Arquivo de backup
 	BACKUP_FILE = 'dicionario.bkp';
@@ -97,12 +97,12 @@ class Dicionario:
 				p = p.lower().strip();
 			
 				# Verifica se a palavra deve ser considerada
-				if p not in self.stopWords:
-					if len(p) > 0:
-						if p in self.dicionario:
-							self.dicionario[p] += 1;
-						else:
-							self.dicionario[p] = 1;
+				if p not in self.stopWords and len(p) > 0:
+				
+					if p in self.dicionario:
+						self.dicionario[p] += 1;
+					else:
+						self.dicionario[p] = 1;
 				
 					# Atualiza o contador de palavra por tipo de mensagem
 					if p in dpm:
@@ -224,8 +224,14 @@ class Dicionario:
 		return True;
 	
 	# Obtem o dicionario completo por arquivo
-	def obterDicionario(self, size=100, randomFlg=False, normalizar=False):
+	# opt in 'random' - para escolher aleatoriamente as palavras
+	# 'mf' - para palavras mais frequentes
+	# 'ta' - para palavras que aparecem em mais arquivos
+	def obterDicionario(self, size=100, opt='mf', normalizar=False):
 
+		logging.info('size=' + str(size));
+		logging.info('opt=' + opt);
+		
 		# Retonar o dicionario completo
 		if size == None:
 			return self.dicionarioPorArquivo;
@@ -238,7 +244,7 @@ class Dicionario:
 		palavras = [];
 		
 		# Obtem amostragem aleatoria
-		if randomFlg:
+		if opt == 'random':
 			
 			mp = {'x': {}};
 			while not self.dicionarioValido(mp):
@@ -250,6 +256,8 @@ class Dicionario:
 					
 				# Obtem todas as palavras
 				palavras = palavras[:size];
+				logging.debug('Palavras selecionadas=' + str(palavras));
+				
 				mp = {};
 					
 				for k in self.dicionarioPorArquivo:
@@ -261,20 +269,38 @@ class Dicionario:
 		# Obtem amostragem mais frequente
 		else:
 		
-			# Obtem as 'size' palavras mais frequentes
-			palavras = self.obterPalavrasMaisFrequentes(size);
+			palavras = [];
+			if opt == 'mf':
+				
+				# Obtem as 'size' palavras mais frequentes
+				palavras = self.obterPalavrasMaisFrequentes(size);
+				
+			else:
+				
+				# Obter as palavras que aparecem em maior numero de arquivos
+				palavras = self.obterPalavrasMaisFrequentesEmArquivos(size);
+				
 
+			logging.debug('Palavras selecionadas=' + str(palavras));
+				
+			arqIgnorados = 0;
 			for k in self.dicionarioPorArquivo:
+				mp[k] = {};
+				
 				for i in self.dicionarioPorArquivo[k]:
 					if i in palavras:
-						if k not in mp:
-							mp[k] = {};
-
 						mp[k][i] = self.dicionarioPorArquivo[k][i];
 						
 				# Verifica se o arquivo ficou fora do map
-				if k not in mp or len(mp[k]) == 0:
+				if len(mp[k]) == 0:
+					arqIgnorados += 1;
 					logging.warning("Atencao, o arquivo " + str(k) + " foi ignorado");
+					logging.debug('dicionarioPorArquivo[' + k + ']=' + str(self.dicionarioPorArquivo[k]));
+					
+					# TODO: verificar oque fazer com arquivos ignorados!
+			
+			logging.warning("Atencao " + str(arqIgnorados) + " arquivos foram ignorados");
+			
 
 		# Normaliza o dicionario de palavras para que todas as palavras estejam em todos os arquivos 
 		if normalizar:
@@ -283,6 +309,12 @@ class Dicionario:
 					if k not in mp[ka]:
 						mp[ka][k] = 0;
 
+		
+		if len(self.dicionarioPorArquivo) != len(mp):
+			print 'Nao retornou corretamente todos os arquivos!'
+			print 'Deveria retornar ' + str(len(self.dicionarioPorArquivo)) + ', mas retornou apenas ' + str(len(mp));
+			exit(-1);
+		
 		# Atualiza o cache
 		self.cachePorArquivo[size] = mp;
 		
@@ -290,6 +322,9 @@ class Dicionario:
 		
 	# Retorna a lista com as n palavras mais frequentes
 	def obterPalavrasMaisFrequentes(self, size=100):
+	
+		logging.info('size=' + str(size));
+		
 		# Monta a lista de palavras
 		tuplaPalavras = []
 		for k in self.dicionario:
@@ -305,6 +340,64 @@ class Dicionario:
 		palavras = [];
 		for i in tuplaPalavras:
 			palavras.append(i[0]);
+			
+		return palavras;
+		
+	# Obter as palavras mais frequentes em arquivos
+	def obterPalavrasMaisFrequentesEmArquivos(self, size=100, opt=1):
+	
+		# TODO:!
+	
+		logging.info('size=' + str(size));
+		
+		# Monta a lista de palavras
+		tp = {};
+		
+		if opt == 0:
+			
+			for k in self.dicionarioPorMensagem:
+				tp[k] = [];
+				for p in self.dicionarioPorMensagem[k]:
+					tp[k].append((p, self.dicionarioPorMensagem[k][p]));				
+				
+				# Ordena pela frequencia
+				tuplaPalavras = sorted(tp[k], key=lambda tup: tup[1])
+				tuplaPalavras.reverse();
+				tp[k] = tuplaPalavras[:size];
+				tp[k].reverse();
+		
+		elif opt == 1:
+		
+			for k in self.dicionarioPorMensagem:
+				tp[k] = [];
+				
+				for p in self.dicionarioPorMensagem[k]:
+				
+					add = True;
+					for a in self.dicionarioPorArquivo:
+						if k in a and p not in self.dicionarioPorArquivo[a]:
+							add= False;
+							break;
+				
+					if add:
+						tp[k].append((p, self.dicionarioPorMensagem[k][p]));				
+				
+				# Ordena pela frequencia
+				tuplaPalavras = sorted(tp[k], key=lambda tup: tup[1])
+				tuplaPalavras.reverse();
+				tp[k] = tuplaPalavras[:size];
+				tp[k].reverse();
+		
+		
+		logging.info('Tupla size: ' + str(len(tp)));
+		logging.debug('Tuplas mais frequentes por mensagem: ' + str(tp));
+			
+		palavras = [];
+		while len(palavras) < size:
+			for k in tp:
+				p = tp[k].pop();
+				if len(p[0]) > 0 and p[0] not in palavras:
+					palavras.append(p[0]);
 			
 		return palavras;
 		
