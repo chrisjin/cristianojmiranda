@@ -1,11 +1,13 @@
+import sys
+import time
 import logging
+
 from cluster import *
 from dicionario import *
-import time
-
+from classificacao import * 
 
 # Executa o processo de custerizacao para um configuracao de K-Means
-def clusterizar(np, c, srndc, kmeansInit, clusterResult, mnbtch, dicionario, cluster):
+def clusterizarKm(np, c, srndc, kmeansInit, clusterResult, mnbtch, dicionario, cluster):
 	
 	print '\n-> Criando um dicionario com ' + str(np) + ' palavras...'
 	dic = dicionario.obterDicionario(np);
@@ -20,6 +22,7 @@ def clusterizar(np, c, srndc, kmeansInit, clusterResult, mnbtch, dicionario, clu
 		centroides = cluster.obterCentroidesIniciais(dicionario, np);
 	
 	# Armazena o resultado
+	print '>>>', (np, srndc, c, str(kmeansInit), mnbtch);
 	result = cluster.executarKMeans(dic, nrClusters=c, init=centroides, verbose=1, random_state=srndc, miniBatch=mnbtch);
 	clusterResult[(np, srndc, c, str(kmeansInit), mnbtch)] = result;
 
@@ -33,27 +36,25 @@ def clusterizacaoKmeans(dicionario, cluster):
 	t0cluster = time.time();
 	
 	# Nr de palavras por dicionario
-	for np in [500]:#[100, 200, 500]:
+	for np in [100, 200, 500, 725, 1000]:
 	
 		# Seeds para randomizar centroides
-		for srndc in [None, 1000, 1500, 2000]:
+		for srndc in [None, 1000, 1500, 2000, 4000, 10000, 5000000, 10000000]:
 		
 			# Nr de clusters
 			for c in [20]:
 	
 				# Altera a maneira de escolher os centroides
-				for kmeansInit in ['ndarray']:#['k-means++', 'random', 'ndarray']:
+				for kmeansInit in ['k-means++', 'random', 'ndarray']:
 
 					# Alterna entre minibatch e kmeans puro
-					# A clusterizacao via minibatch kmeans demonstrou boms resultados
-					for mnbtch in [True]:#[True, False]:
-						clusterizar(np, c, srndc, kmeansInit, clusterResult, mnbtch, dicionario, cluster);
+					# A clusterizacao via minibatch kmeans demonstrou boms resultados !
+					for mnbtch in [True, False]:
+						clusterizarKm(np, c, srndc, kmeansInit, clusterResult, mnbtch, dicionario, cluster);
 	
 	print 'Tempo total para clusterizacao: ' + str(time.time() - t0cluster) + 's';
 	
-	# TODO: Analisar os resultados para ver qual a melhor configuracao
-	# ver: http://www.isa.utl.pt/dm/biocomp/biocomp/aulasclustering.pdf
-	print 'Resultado Clusterizacao (configuracao) - (ho, co, vm, ar, sc): '
+	print 'Resultado Clusterizacao (configuracao) - (c, na, ho, co, vm, ar): '
 	
 	clusterResultVt = clusterResult.values();
 	clusterResultVt.sort();
@@ -70,11 +71,9 @@ def clusterizacaoKmeans(dicionario, cluster):
 	
 	print '\n\n\n\n\n'
 	print '---------------------------------------------------'
-	print 'Melhor configuracao: ' + str(melhorConfiguracao);
+	print 'Melhor configuracao: ' + str(melhorConfiguracao) + ', ' + str(clusterResultVt[-1]);
 	print '---------------------------------------------------'
-	
-	# realiza a melhor clusterizacao novamente
-	clusterizar(melhorConfiguracao[0], melhorConfiguracao[2], melhorConfiguracao[1], melhorConfiguracao[3], {}, melhorConfiguracao[4], dicionario, cluster)
+	print '\n\n\n\n\n'
 	
 # Executa clusterizacao com DBScan
 def clusterizacaoDBSCAN(dicionario, cluster):
@@ -85,22 +84,29 @@ def clusterizacaoDBSCAN(dicionario, cluster):
 	clusterResult = {};
 
 	# Nr de palavras por dicionario
-	for np in [100, 200, 500]:
+	for np in [100]:#[100, 200, 500]:
 
 		print '\n-> Criando um dicionario com ' + str(np) + ' palavras...'
 		dic = dicionario.obterDicionario(np);
 	
 		# Seeds para randomizar centroides
-		for srndc in [None, 100, 50, 1000]:	
+		for srndc in [None]: #[None, 100, 500]:
 
 			# Testa com varios eps
-			for eps in [1, .95, .9, .85, .8, .7, .6, .5, .4, .3, .2, .1, .01]:
+			for eps in [.95]:#[.95]:#[.95, .75, .5, .1, .01]:
 
-				print '\n-> Clusterizando dicionario com ' + str(np) + ', randomize centroids seeds ' + str(srndc) + ', eps ' + str(eps);
-				r = cluster.executarDBSCAN(dicionarioArquivo=dic, verbose=1, random_state=srndc, eps=eps);
+				for sp in [10]:#[.85, 1.04, 1.08, 1.15]:
+				
+					print '\n-> Clusterizando dicionario com ' + str(np) \
+						+ ', randomize centroids seeds ' + str(srndc) \
+						+ ', eps ' + str(eps) \
+						+ ', min_samples ' + str(sp);
+					
+					print '>>>>', (np, srndc, eps, sp);
+					r = cluster.executarDBSCAN(dicionarioArquivo=dic, verbose=1, min_samples=sp, random_state=srndc, eps=eps);
 
-				# Adiciona o resultado
-				clusterResult[(np, srndc, eps)] = r;
+					# Adiciona o resultado
+					clusterResult[(np, srndc, eps, sp)] = r;
 
 	clusterResultVt = clusterResult.values();
 	clusterResultVt.sort();
@@ -117,12 +123,44 @@ def clusterizacaoDBSCAN(dicionario, cluster):
 	
 	print '\n\n\n\n\n'
 	print '---------------------------------------------------'
-	print 'Melhor configuracao: ' + str(melhorConfiguracao);
+	print 'Melhor configuracao: ' + str(melhorConfiguracao) + str(clusterResultVt[-1]);
 	print '---------------------------------------------------'
-	cluster.executarDBSCAN(dicionarioArquivo=dicionario.obterDicionario(melhorConfiguracao[0]), verbose=1, random_state=melhorConfiguracao[1], eps=melhorConfiguracao[2]);
+	print '\n\n\n\n\n'
 	
 	
+# Executa processo de classificacao
+def classificacao(dicionario):
+
+	print 'Classificacao';
+	
+	for vizinhos in range(1,5):
+	
+		for np in [100, 200, 500]:
+		
+			# Obtem o dicionario
+			dic = dicionario.obterDicionario(np);
+		
+			# Realiza a classificacao KNN
+			print '\n\nClassificacao KNN para ' + str(vizinhos) + ' vizinhos e para dicionario de tamanho ' + str(np)			
+			classificacao.knn(dic, vizinhos);
+			
+			# Realiza a classificacao KNN K-Fold
+			print '\n\nClassificacao KNN K-Fold para ' + str(vizinhos) + ' vizinhos e para dicionario de tamanho ' + str(np)
+			classificacao.kfold(dic, n_neighbors=vizinhos);
+	
+	
+	for np in [100, 200, 500]:
+		print '\n\nClassificacao Naive Baise para dicionario de tamanho ' + str(np)
+		classificacao.NaiveBaise(dicionario.obterDicionario(np));
+
+		
+# Executar projeto
 def executar():
+
+	if len(sys.argv) < 2:
+		print 'main.py -cluster para clusterizacao'
+		print 'main.py -classif para classificacao'
+		exit(1);
 
 	# Configura o log
 	logging.basicConfig(filename='../log/mc906.log',level=logging.DEBUG,format='%(asctime)s %(levelname)s %(message)s');
@@ -144,18 +182,21 @@ def executar():
 	print '\n-> Dicionario por tipo de mensagem'
 	dicionario.exibirDistribuicao(dicionario.dicionarioPorMensagem);
 	
-	print '\n-> Criando Cluster...';
-	cluster = Cluster();
+	if  'cluster' in sys.argv[1]:
 	
-	# Realiza clusterizacao via K-Means
-	clusterizacaoKmeans(dicionario, cluster);
+		print '\n-> Criando Cluster...';
+		cluster = Cluster(dicionario);
 	
-	# Realiza clusterizacao via dbscan
-	#clusterizacaoDBSCAN(dicionario, cluster);
+		# Realiza clusterizacao via K-Means
+		clusterizacaoKmeans(dicionario, cluster);
+		
+		# Realiza clusterizacao via dbscan
+		#clusterizacaoDBSCAN(dicionario, cluster);
 	
-	# Reliza a classificacao
-	#classificacao();
+	elif 'classif' in sys.argv[1]:
 	
+		# Reliza a classificacao
+		classificacao(dicionario);
 	
 
 if __name__ == '__main__':
