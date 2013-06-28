@@ -5,16 +5,27 @@ from time import time
 
 from sklearn import metrics
 
+from sklearn import decomposition
+from sklearn.lda import LDA
+from scipy.spatial import distance
 from sklearn.cluster import DBSCAN
 from sklearn.cluster import KMeans, MiniBatchKMeans
 from sklearn.feature_extraction import FeatureHasher
 from sklearn.feature_extraction import DictVectorizer
+from sklearn.metrics import confusion_matrix
+
+from dicionario import *
 
 class Cluster:
-
+	
 	centroideCache = {};
+	dicionario = None;
 
-	# Imprime a clusterizacao
+	# Construtor da classe Cluster
+	def __init__(self, dicionario=None):
+		self.dicionario = dicionario;
+	
+	# Imprime a clusterizacao por arquivo
 	def printCluster(self, dados, labels):
 
 		print '\n\n - CLUSTERS'
@@ -57,7 +68,7 @@ class Cluster:
 			for j in k[i]:
 				soma = reduce(lambda x, y: x + y, k[i].values(), 0);
 				percent = k[i][j] / soma;
-				print('\t - %s \t\t %.2f\n' % (j, percent));
+				print('\t - grupo: %s \tpercent: %.2f \tqtd: %.0f\n' % (j, percent, k[i][j]));
 				kf[i].append((j, percent));
 				
 			kf[i] = sorted(kf[i], key=lambda tup: tup[1])
@@ -67,9 +78,21 @@ class Cluster:
 				c.append(kf[i][0]);
 			
 		print '======================================================'
-		print 'kf=' + str(kf);
-		print 'c(' + str(len(c)) + '): ' + str(c);
+		print 'Distribuicao mais significante nos clusters=' + str(kf);
+		print '\nNr de clusters distintos=' + str(len(c)) + ', ' + str(c);
 		print '======================================================'
+		
+		grupos = [];
+		if self.dicionario != None:
+			grupos = self.dicionario.dicionarioPorMensagem.keys();
+			grupos.sort();
+			
+		print 'matrix de pertinencia (cluster x grupos)'
+		print 'grupos: ', grupos
+		print '======================================================'
+		print DictVectorizer(sparse=False).fit_transform(k.values());
+		print '======================================================'
+		
 		return len(c);
 
 		
@@ -88,8 +111,8 @@ class Cluster:
 			tp = a[:a.rindex('-')]
 			e.append(clusterlb.index(tp));
 			
-		logging.debug('Clusterizacao Esperada Size=' + str(len(e)));
-		logging.debug('Clusterizacao Esperada=' + str(e));
+		#logging.debug('Clusterizacao Esperada Size=' + str(len(e)));
+		#logging.debug('Clusterizacao Esperada=' + str(e));
 		
 		return e;
 		
@@ -99,13 +122,10 @@ class Cluster:
 		print '\n\tClusterizando via K-Means ' + str(len(dicionarioArquivo)) + ' arquivos.';
 
 		# Tempo de inicio da clusterizacao
-		t0 = time()		
+		t0 = time.time()
 		
 		# Matrix de clusterizacao
 		X = [];
-		
-		# Vetor com apenas os arquivos a serem clusterizados em ordem
-		arqVt = dicionarioArquivo.keys();
 		
 		# Feature extraction DictVectorizer
 		if featureExtraction == 0:
@@ -119,8 +139,7 @@ class Cluster:
 			fh = FeatureHasher();
 			X = fh.fit_transform(dicionarioArquivo.values());
 		
-		
-		#logging.debug('X=' + str(X));		
+		logging.debug('X=' + str(X));		
 		
 		# Instancia kmeans
 		if miniBatch:
@@ -136,36 +155,34 @@ class Cluster:
 		km.fit(X)
 
 		# Imprime o resultado
-		#self.printCluster(arqVt, km.labels_);
-		c = self.printClusterStatistic(arqVt, km.labels_);
+		c = self.printClusterStatistic(dicionarioArquivo.keys(), km.labels_);
 		
-		# Computa os resultados
-		labels = self.clusterizacaoEsperada(arqVt);
-		
+		# Processa a clusterizacao esperada a partir dos nomes dos arquivos
+		labels = self.clusterizacaoEsperada(dicionarioArquivo.keys());
+
+		# Computa os resultados		
 		ho = metrics.homogeneity_score(labels, km.labels_);
 		co = metrics.completeness_score(labels, km.labels_);
 		vm = metrics.v_measure_score(labels, km.labels_);
 		ar = metrics.adjusted_rand_score(labels, km.labels_);
-		
-		# TODO: Verificar isso!
-		#sc = metrics.silhouette_score(X, np.unique(labels));
-		sc = 0.0;
+		nrArqReal = len(dicionarioArquivo) - self.dicionario.nrArquivosIgnorados;
 		
 		if verbose == 1:
+			print "Nr Cluster distintos: %.0f" % c
 			print "Homogeneity: %0.3f" % ho;
 			print "Completeness: %0.3f" % co;
 			print "V-measure: %0.3f" % vm;
 			print "Adjusted Rand-Index: %.3f" % ar;
-			print "Silhouette Coefficient: %0.3f" % sc;
+			print "Nr Arquivos dif zero: %.0f" % nrArqReal;
 
 		# Loga o tempo de clusterizacao
-		logging.debug("Tempo de clusterizacao %fs" % (time() - t0))
+		logging.debug("Tempo de clusterizacao %fs" % (time.time() - t0))
 		print
 		
-		return (c, ho, co, vm, ar, sc);
+		return (c, nrArqReal, ho, co, vm, ar);
 		
 	# Executa o processo de clusterizacao usando DBSCAN
-	def executarDBSCAN(self, dicionarioArquivo, verbose=0, random_state=10, eps=.95):
+	def executarDBSCAN(self, dicionarioArquivo, verbose=0, random_state=10, eps=.95, min_samples=None):
 	
 		print '\n\tClusterizando via Mean Shift ' + str(len(dicionarioArquivo)) + ' arquivos.';
 
@@ -179,16 +196,26 @@ class Cluster:
 		arqVt = dicionarioArquivo.keys();
 		
 		# Feature extraction DictVectorizer
-		dv = DictVectorizer(sparse=False)
+		dv = DictVectorizer(sparse=False);
 		X = dv.fit_transform(dicionarioArquivo.values());
+		#lda = LDA(n_components=20)
+		#XX = lda.fit(X);
+		
+		#P = distance.pdist(XX)
+		#D = distance.squareform(P)
+		#S = 1 - (D / np.max(D))
+		
+		pca = decomposition.PCA(n_components=50);
+		S = pca.fit_transform(X)
 		
 		# Clusteriza os dados
-		db = DBSCAN(eps=eps, min_samples=10, random_state=random_state);
+		db = DBSCAN(eps=eps, min_samples=min_samples, random_state=random_state);
 
 		if verbose == 1:
 			print db;
 
-		db.fit(X)
+		db.fit(S)
+		#db.fit(X)
 		labels_ = db.labels_
 		print 'labels: ', labels_
 
@@ -196,7 +223,7 @@ class Cluster:
 		self.printClusterStatistic(arqVt, labels_);
 		
 		# Computa os resultados
-		labels = self.clusterizacaoExperada(arqVt);
+		labels = self.clusterizacaoEsperada(arqVt);
 		
 		ho = metrics.homogeneity_score(labels, labels_);
 		co = metrics.completeness_score(labels, labels_);
@@ -263,7 +290,7 @@ class Cluster:
 				z = zip(dpm_c[ct].keys(), dpm_c[ct].values());
 				z = sorted(z, key=lambda tup: tup[1]);
 				z.reverse();
-				z = z[:int(.5*len(z))];
+				z = z[:int(.1*len(z))];
 				for i in z:
 					mf.append(i[0]);
 				logging.debug('mf: ' + str(mf));

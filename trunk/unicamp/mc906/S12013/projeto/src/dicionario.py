@@ -18,11 +18,11 @@ class Dicionario:
 	# Arquivo de backup
 	BACKUP_FILE = 'dicionario.bkp';
 	
-	# Tempo para esperar um grupo de thread executar
+	# Tempo para esperar um grupo de thread simultaneas executar
 	SLEEP_TIME_S = 1.5;
 	
-	# Nr de threads para leitura dos arquivos
-	NR_THREADS = 800;
+	# Nr de threads para leitura dos arquivos simultaneas
+	NR_THREADS = 850;
 
 	# Lista com palavras a serem ignoradas
 	stopWords = [];
@@ -36,8 +36,11 @@ class Dicionario:
 	# Dicionario por arquivo
 	dicionarioPorArquivo = {};
 	
-	# Cache
+	# Cache por arquivo, indexado por size para otimar performance
 	cachePorArquivo = {};
+	
+	# Nr de arquivos ignoras ao executar obter dicionario
+	nrArquivosIgnorados = 0;
 
 	# Extrai do nome do arquivo o tipo de mensagem
 	def extrairTipoDeMensagem(self, fileName):
@@ -99,10 +102,12 @@ class Dicionario:
 				# Verifica se a palavra deve ser considerada
 				if p not in self.stopWords and len(p) > 0:
 				
+					# Teste, incrementa o contador independente do arquivo
 					if p in self.dicionario:
 						self.dicionario[p] += 1;
 					else:
 						self.dicionario[p] = 1;
+					
 				
 					# Atualiza o contador de palavra por tipo de mensagem
 					if p in dpm:
@@ -110,6 +115,7 @@ class Dicionario:
 					else:
 						dpm[p] = 1;
 
+					# Atualiza o contador por tipo de arquivo
 					if p in dpa:
 						dpa[p] += 1;
 					else:
@@ -210,27 +216,11 @@ class Dicionario:
 		# Obtem o fim do processamento
 		fim = time.time();
 		logging.debug('Tempo de processamento do dicionario ' + str(fim - inicio) + 's');
-
-	#		
-	def dicionarioValido(self, mp):
-	
-		logging.info('Verificando validade dicionario...');
-		for k in mp:
-			if len(mp[k]) == 0:
-				logging.info('Dicionario invalido');
-				return False;
-		
-		logging.info('Dicionario valido');
-		return True;
 	
 	# Obtem o dicionario completo por arquivo
-	# opt in 'random' - para escolher aleatoriamente as palavras
-	# 'mf' - para palavras mais frequentes
-	# 'ta' - para palavras que aparecem em mais arquivos
-	def obterDicionario(self, size=100, opt='mf', normalizar=False):
+	def obterDicionario(self, size=100, normalizar=False):
 
 		logging.info('size=' + str(size));
-		logging.info('opt=' + opt);
 		
 		# Retonar o dicionario completo
 		if size == None:
@@ -241,65 +231,26 @@ class Dicionario:
 			return self.cachePorArquivo[size];
 			
 		mp = {};
-		palavras = [];
 		
-		# Obtem amostragem aleatoria
-		if opt == 'random':
+		# Obtem as 'size' palavras mais frequentes
+		palavras = self.obterPalavrasMaisFrequentes(size);
+		logging.debug('Palavras selecionadas=' + str(palavras));
 			
-			mp = {'x': {}};
-			while not self.dicionarioValido(mp):
-					
-				# Randomiza o dicionario
-				palavras = list(self.dicionario.keys());
-				for i in range(1, random.randint(10, 50)):
-					random.shuffle(palavras);
-					
-				# Obtem todas as palavras
-				palavras = palavras[:size];
-				logging.debug('Palavras selecionadas=' + str(palavras));
-				
-				mp = {};
-					
-				for k in self.dicionarioPorArquivo:
-						mp[k] = {};			
-						for i in self.dicionarioPorArquivo[k]:
-								if i in palavras:
-									mp[k][i] = self.dicionarioPorArquivo[k][i];
-		
-		# Obtem amostragem mais frequente
-		else:
-		
-			palavras = [];
-			if opt == 'mf':
-				
-				# Obtem as 'size' palavras mais frequentes
-				palavras = self.obterPalavrasMaisFrequentes(size);
-				
-			else:
-				
-				# Obter as palavras que aparecem em maior numero de arquivos
-				palavras = self.obterPalavrasMaisFrequentesEmArquivos(size);
-				
-
-			logging.debug('Palavras selecionadas=' + str(palavras));
-				
-			arqIgnorados = 0;
-			for k in self.dicionarioPorArquivo:
-				mp[k] = {};
-				
-				for i in self.dicionarioPorArquivo[k]:
-					if i in palavras:
-						mp[k][i] = self.dicionarioPorArquivo[k][i];
-						
-				# Verifica se o arquivo ficou fora do map
-				if len(mp[k]) == 0:
-					arqIgnorados += 1;
-					logging.warning("Atencao, o arquivo " + str(k) + " foi ignorado");
-					logging.debug('dicionarioPorArquivo[' + k + ']=' + str(self.dicionarioPorArquivo[k]));
-					
-					# TODO: verificar oque fazer com arquivos ignorados!
+		self.nrArquivosIgnorados = 0;
+		for k in self.dicionarioPorArquivo:
+			mp[k] = {};
 			
-			logging.warning("Atencao " + str(arqIgnorados) + " arquivos foram ignorados");
+			for i in self.dicionarioPorArquivo[k]:
+				if i in palavras:
+					mp[k][i] = self.dicionarioPorArquivo[k][i];
+					
+			# Verifica se o arquivo ficou fora do map
+			if len(mp[k]) == 0:
+				self.nrArquivosIgnorados += 1;
+				logging.warning("Atencao, o arquivo " + str(k) + " foi ignorado");
+				logging.debug('dicionarioPorArquivo[' + k + ']=' + str(self.dicionarioPorArquivo[k]));
+		
+		logging.warning("Atencao " + str(self.nrArquivosIgnorados) + " arquivos foram ignorados");
 			
 
 		# Normaliza o dicionario de palavras para que todas as palavras estejam em todos os arquivos 
@@ -310,6 +261,7 @@ class Dicionario:
 						mp[ka][k] = 0;
 
 		
+		# Trava para verificar se todos os arquivos processados estao sendo retornados!
 		if len(self.dicionarioPorArquivo) != len(mp):
 			print 'Nao retornou corretamente todos os arquivos!'
 			print 'Deveria retornar ' + str(len(self.dicionarioPorArquivo)) + ', mas retornou apenas ' + str(len(mp));
@@ -318,6 +270,7 @@ class Dicionario:
 		# Atualiza o cache
 		self.cachePorArquivo[size] = mp;
 		
+		# Retorna os dados filtrados
 		return mp;
 		
 	# Retorna a lista com as n palavras mais frequentes
@@ -325,7 +278,7 @@ class Dicionario:
 	
 		logging.info('size=' + str(size));
 		
-		# Monta a lista de palavras
+		# Monta a tupla de palavras e frequencias
 		tuplaPalavras = []
 		for k in self.dicionario:
 			tuplaPalavras.append((k, self.dicionario[k]));
@@ -343,64 +296,7 @@ class Dicionario:
 			
 		return palavras;
 		
-	# Obter as palavras mais frequentes em arquivos
-	def obterPalavrasMaisFrequentesEmArquivos(self, size=100, opt=1):
-	
-		# TODO:!
-	
-		logging.info('size=' + str(size));
-		
-		# Monta a lista de palavras
-		tp = {};
-		
-		if opt == 0:
-			
-			for k in self.dicionarioPorMensagem:
-				tp[k] = [];
-				for p in self.dicionarioPorMensagem[k]:
-					tp[k].append((p, self.dicionarioPorMensagem[k][p]));				
-				
-				# Ordena pela frequencia
-				tuplaPalavras = sorted(tp[k], key=lambda tup: tup[1])
-				tuplaPalavras.reverse();
-				tp[k] = tuplaPalavras[:size];
-				tp[k].reverse();
-		
-		elif opt == 1:
-		
-			for k in self.dicionarioPorMensagem:
-				tp[k] = [];
-				
-				for p in self.dicionarioPorMensagem[k]:
-				
-					add = True;
-					for a in self.dicionarioPorArquivo:
-						if k in a and p not in self.dicionarioPorArquivo[a]:
-							add= False;
-							break;
-				
-					if add:
-						tp[k].append((p, self.dicionarioPorMensagem[k][p]));				
-				
-				# Ordena pela frequencia
-				tuplaPalavras = sorted(tp[k], key=lambda tup: tup[1])
-				tuplaPalavras.reverse();
-				tp[k] = tuplaPalavras[:size];
-				tp[k].reverse();
-		
-		
-		logging.info('Tupla size: ' + str(len(tp)));
-		logging.debug('Tuplas mais frequentes por mensagem: ' + str(tp));
-			
-		palavras = [];
-		while len(palavras) < size:
-			for k in tp:
-				p = tp[k].pop();
-				if len(p[0]) > 0 and p[0] not in palavras:
-					palavras.append(p[0]);
-			
-		return palavras;
-		
+	# Exibe a distribuicao no dicionario
 	def exibirDistribuicao(self, dic):
 		for k in dic:
 			print k + ' - ' + str(len(dic[k]));
